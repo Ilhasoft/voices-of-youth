@@ -1,0 +1,11 @@
+Django
+dj-database-url
+gunicorn
+whitenoise
+python-decouple
+psycopg2
+django-storages
+unipath
+sorl-thumbnail
+Pillow
+smartmin

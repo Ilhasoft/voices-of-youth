@@ -1,0 +1,8 @@
+-r requirements.txt
+ipython
+django-debug-toolbar
+model_mommy
+django-extensions
+coverage
+Werkzeug
+flake8
