@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'voicesofyouth.users',
     'voicesofyouth.countries',
+    'voicesofyouth.tags',
 ]
 
 if DEBUG:
