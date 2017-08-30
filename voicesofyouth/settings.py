@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'voicesofyouth.users',
     'voicesofyouth.countries',
     'voicesofyouth.tags',
+    'voicesofyouth.boundaries',
 ]
 
 if DEBUG:
