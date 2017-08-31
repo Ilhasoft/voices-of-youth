@@ -7,6 +7,7 @@ from voicesofyouth.projects.models import Project
 
 
 class Tag(SmartModel):
+
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=60, null=False, blank=False, verbose_name=_('Name'))
