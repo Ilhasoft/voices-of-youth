@@ -46,9 +46,8 @@ INSTALLED_APPS = [
     'smartmin',
     'sorl.thumbnail',
     'voicesofyouth.users',
-    'voicesofyouth.countries',
+    'voicesofyouth.projects',
     'voicesofyouth.tags',
-    'voicesofyouth.boundaries',
 ]
 
 if DEBUG:

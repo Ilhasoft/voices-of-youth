@@ -3,11 +3,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from smartmin.models import SmartModel
 
-from voicesofyouth.countries.models import Country
+from voicesofyouth.projects.models import Project
 
 
 class Tag(SmartModel):
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=60, null=False, blank=False, verbose_name=_('Name'))
 
