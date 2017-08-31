@@ -77,3 +77,19 @@ class ReportFavoriteBy(SmartModel):
     class Meta:
         verbose_name = _('Reports Favorite By')
         verbose_name_plural = _('Reports Favorite By')
+
+
+class ReportComments(SmartModel):
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+
+    body = models.TextField(null=False, blank=False, verbose_name=_('Body'))
+
+    def __str__(self):
+        return '{} - {}'.format(self.project.name, self.report.theme.name)
+
+    class Meta:
+        verbose_name = _('Reports Comments')
+        verbose_name_plural = _('Reports Comments')

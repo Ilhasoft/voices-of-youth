@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy
+from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy, ReportComments
 
 
 class ReportAdmin(admin.ModelAdmin):
@@ -43,7 +43,18 @@ class ReportFavoriteByAdmin(admin.ModelAdmin):
         return obj.created_by.display_name
 
 
+class ReportCommentsAdmin(admin.ModelAdmin):
+    list_display = ('project_name', 'body', 'user_name')
+
+    def project_name(self, obj):
+        return obj.project.name
+
+    def user_name(self, obj):
+        return obj.created_by.display_name
+
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(ReportLanguage, ReportLanguageAdmin)
 admin.site.register(ReportTags, ReportTagsAdmin)
 admin.site.register(ReportFavoriteBy, ReportFavoriteByAdmin)
+admin.site.register(ReportComments, ReportCommentsAdmin)
