@@ -6,6 +6,7 @@ from smartmin.models import SmartModel
 
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
+from voicesofyouth.tags.models import Tag
 
 
 class Theme(SmartModel):
@@ -38,3 +39,21 @@ class ThemeLanguage(SmartModel):
 
     def __str__(self):
         return self.title
+
+
+class ThemeTags(SmartModel):
+
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.theme.name, self.tag.name)
+
+
+class ThemeFavoriteBy(SmartModel):
+
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.theme.name, self.created_by.display_name)

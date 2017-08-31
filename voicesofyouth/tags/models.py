@@ -15,3 +15,6 @@ class Tag(SmartModel):
     system_tag = models.BooleanField(default=False, verbose_name=_('Enabled'))
 
     urgency_score = models.IntegerField(verbose_name=_('Urgency Score'), blank=False, default=0)
+
+    def __str__(self):
+        return self.name
