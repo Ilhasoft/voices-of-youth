@@ -15,4 +15,4 @@ class Map(SmartModel):
 
     enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
 
-    location = gismodels.PolygonField(null=False, blank=False)
+    bounds = gismodels.PolygonField(null=False, blank=False)
