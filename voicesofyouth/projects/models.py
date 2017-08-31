@@ -29,6 +29,10 @@ class Setting(SmartModel):
     def __str__(self):
         return self.project.name
 
+    class Meta:
+        verbose_name = _('Settings')
+        verbose_name_plural = _('Settings')
+
 
 class SettingLanguage(SmartModel):
 
@@ -44,3 +48,7 @@ class SettingLanguage(SmartModel):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = _('Settings Languages')
+        verbose_name_plural = _('Settings Languages')

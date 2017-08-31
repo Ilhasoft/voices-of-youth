@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'voicesofyouth.tags',
     'voicesofyouth.maps',
     'voicesofyouth.themes',
+    'voicesofyouth.reports',
 ]
 
 if DEBUG:

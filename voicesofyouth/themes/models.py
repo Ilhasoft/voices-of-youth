@@ -40,6 +40,10 @@ class ThemeLanguage(SmartModel):
     def __str__(self):
         return self.title
 
+    class Meta:
+        verbose_name = _('Themes Languages')
+        verbose_name_plural = _('Themes Languages')
+
 
 class ThemeTags(SmartModel):
 
@@ -50,6 +54,10 @@ class ThemeTags(SmartModel):
     def __str__(self):
         return '{} - {}'.format(self.theme.name, self.tag.name)
 
+    class Meta:
+        verbose_name = _('Themes Tags')
+        verbose_name_plural = _('Themes Tags')
+
 
 class ThemeFavoriteBy(SmartModel):
 
@@ -57,3 +65,7 @@ class ThemeFavoriteBy(SmartModel):
 
     def __str__(self):
         return '{} - {}'.format(self.theme.name, self.created_by.display_name)
+
+    class Meta:
+        verbose_name = _('Themes Favorite By')
+        verbose_name_plural = _('Themes Favorite By')
