@@ -16,3 +16,6 @@ class Map(SmartModel):
     enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
 
     bounds = gismodels.PolygonField(null=False, blank=False)
+
+    def __str__(self):
+        return self.name

@@ -16,12 +16,18 @@ class Project(SmartModel):
 
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
 
+    def __str__(self):
+        return self.name
+
 
 class Setting(SmartModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
     location = gismodels.PolygonField(null=False, blank=False)
+
+    def __str__(self):
+        return self.project.name
 
 
 class SettingLanguage(SmartModel):
@@ -35,3 +41,6 @@ class SettingLanguage(SmartModel):
     description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
 
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
+
+    def __str__(self):
+        return self.title
