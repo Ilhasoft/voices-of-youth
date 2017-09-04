@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
 
@@ -19,3 +20,18 @@ class Map(SmartModel):
 
     def __str__(self):
         return self.name
+
+
+class MapAdmin(SmartModel):
+
+    map = models.ForeignKey(Map, on_delete=models.CASCADE)
+
+    admin = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.map.name
+
+    class Meta:
+        verbose_name = _('Maps Admin')
+        verbose_name_plural = _('Maps Admin')
+        db_table = 'maps_map_admins'
