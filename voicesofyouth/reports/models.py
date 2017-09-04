@@ -11,6 +11,17 @@ from voicesofyouth.themes.models import Theme
 from voicesofyouth.tags.models import Tag
 
 
+STATUS_APPROVED = 1
+STATUS_PENDING = 2
+STATUS_REJECTED = 3
+
+STATUS_CHOICES = (
+    (STATUS_APPROVED, _('Approved')),
+    (STATUS_PENDING, _('Pending')),
+    (STATUS_REJECTED, _('Rejected')),
+)
+
+
 class Report(SmartModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -21,15 +32,17 @@ class Report(SmartModel):
 
     location = gismodels.PointField(null=False, blank=False, srid=4326)
 
-    share_twitter = models.BooleanField(default=True, verbose_name=_('Share On Twitter'))
+    sharing = models.BooleanField(default=True, verbose_name=_('Sharing'))
 
-    share_facebook = models.BooleanField(default=True, verbose_name=_('Share On Facebook'))
+    comments = models.BooleanField(default=True, verbose_name=_('Comments'))
 
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
 
     enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
 
     visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
+
+    status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.project.name, self.map.name, self.theme.name)
@@ -86,6 +99,8 @@ class ReportComments(SmartModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
 
     body = models.TextField(null=False, blank=False, verbose_name=_('Body'))
+
+    status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
 
     def __str__(self):
         return '{} - {}'.format(self.project.name, self.report.theme.name)
