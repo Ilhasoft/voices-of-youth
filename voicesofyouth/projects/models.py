@@ -53,3 +53,18 @@ class SettingLanguage(SmartModel):
         verbose_name = _('Settings Languages')
         verbose_name_plural = _('Settings Languages')
         db_table = 'projects_setting_languages'
+
+
+class Admin(SmartModel):
+
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    admin = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} - {}'.format(self.project.name, self.admin.display_name)
+
+    class Meta:
+        verbose_name = _('Admins')
+        verbose_name_plural = _('Admins')
+        db_table = 'projects_project_admins'

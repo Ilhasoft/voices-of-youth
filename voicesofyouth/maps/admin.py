@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Map, MapAdmin as MapAdminModel
+from .models import Map
 
 
 class MapAdmin(admin.ModelAdmin):
@@ -10,15 +10,4 @@ class MapAdmin(admin.ModelAdmin):
         return obj.project.name
 
 
-class MapAdminsAdmin(admin.ModelAdmin):
-    list_display = ('map_name', 'user_name')
-
-    def map_name(self, obj):
-        return obj.map.name
-
-    def user_name(self, obj):
-        return obj.admin.display_name
-
-
 admin.site.register(Map, MapAdmin)
-admin.site.register(MapAdminModel, MapAdminsAdmin)
