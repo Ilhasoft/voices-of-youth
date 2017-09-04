@@ -64,6 +64,7 @@ class ReportLanguage(SmartModel):
     class Meta:
         verbose_name = _('Reports Languages')
         verbose_name_plural = _('Reports Languages')
+        db_table = 'reports_report_languages'
 
 
 class ReportTags(SmartModel):
@@ -78,6 +79,7 @@ class ReportTags(SmartModel):
     class Meta:
         verbose_name = _('Reports Tags')
         verbose_name_plural = _('Reports Tags')
+        db_table = 'reports_report_tags'
 
 
 class ReportFavoriteBy(SmartModel):
@@ -90,6 +92,7 @@ class ReportFavoriteBy(SmartModel):
     class Meta:
         verbose_name = _('Reports Favorite By')
         verbose_name_plural = _('Reports Favorite By')
+        db_table = 'reports_report_favorite_by'
 
 
 class ReportComments(SmartModel):
@@ -108,3 +111,4 @@ class ReportComments(SmartModel):
     class Meta:
         verbose_name = _('Reports Comments')
         verbose_name_plural = _('Reports Comments')
+        db_table = 'reports_report_comments'

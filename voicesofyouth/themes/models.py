@@ -43,6 +43,7 @@ class ThemeLanguage(SmartModel):
     class Meta:
         verbose_name = _('Themes Languages')
         verbose_name_plural = _('Themes Languages')
+        db_table = 'themes_theme_languages'
 
 
 class ThemeTags(SmartModel):
@@ -57,6 +58,7 @@ class ThemeTags(SmartModel):
     class Meta:
         verbose_name = _('Themes Tags')
         verbose_name_plural = _('Themes Tags')
+        db_table = 'themes_theme_tags'
 
 
 class ThemeFavoriteBy(SmartModel):
@@ -69,3 +71,4 @@ class ThemeFavoriteBy(SmartModel):
     class Meta:
         verbose_name = _('Themes Favorite By')
         verbose_name_plural = _('Themes Favorite By')
+        db_table = 'themes_theme_favorite_by'

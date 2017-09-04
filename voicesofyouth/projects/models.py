@@ -52,3 +52,4 @@ class SettingLanguage(SmartModel):
     class Meta:
         verbose_name = _('Settings Languages')
         verbose_name_plural = _('Settings Languages')
+        db_table = 'projects_setting_languages'
