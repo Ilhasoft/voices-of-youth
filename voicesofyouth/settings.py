@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'storages',
     'smartmin',
     'sorl.thumbnail',
+    'rest_framework',
+    'rest_framework.authtoken',
     'voicesofyouth.users',
     'voicesofyouth.projects',
     'voicesofyouth.tags',
@@ -149,3 +151,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
