@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'voicesofyouth.themes',
     'voicesofyouth.reports',
     'voicesofyouth.medias',
+    'voicesofyouth.api',
 ]
 
 if DEBUG:
