@@ -12,7 +12,7 @@ class Tag(SmartModel):
 
     name = models.CharField(max_length=60, null=False, blank=False, verbose_name=_('Name'))
 
-    system_tag = models.BooleanField(default=False, verbose_name=_('Enabled'))
+    system_tag = models.BooleanField(default=False, verbose_name=_('System Tag'))
 
     urgency_score = models.IntegerField(verbose_name=_('Urgency Score'), blank=False, default=0)
 

@@ -38,8 +38,6 @@ class Report(SmartModel):
 
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
 
-    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
-
     visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
 
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)

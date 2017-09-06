@@ -4,7 +4,7 @@ from .models import Map
 
 
 class MapAdmin(admin.ModelAdmin):
-    list_display = ('name', 'project_name', 'enabled', 'bounds')
+    list_display = ('name', 'project_name', 'is_active', 'bounds')
 
     def project_name(self, obj):
         return obj.project.name

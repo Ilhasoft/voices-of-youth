@@ -19,8 +19,6 @@ class Theme(SmartModel):
 
     visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
 
-    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
-
     cover = models.ImageField(upload_to='cover', null=True, blank=True, verbose_name=_('Cover'))
 
     def __str__(self):

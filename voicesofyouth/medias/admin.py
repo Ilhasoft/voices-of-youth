@@ -4,7 +4,7 @@ from .models import Media
 
 
 class MediaAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'report_name', 'title', 'description', 'media_type', 'language', 'enabled', 'visibled')
+    list_display = ('project_name', 'report_name', 'title', 'description', 'media_type', 'language', 'is_active', 'visibled')
 
     def project_name(self, obj):
         return obj.project.name

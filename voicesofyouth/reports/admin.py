@@ -4,7 +4,7 @@ from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy, Report
 
 
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'map_name', 'theme_name', 'location', 'sharing', 'comments', 'editable', 'enabled', 'visibled')
+    list_display = ('project_name', 'map_name', 'theme_name', 'location', 'sharing', 'comments', 'editable', 'is_active', 'visibled')
 
     def project_name(self, obj):
         return obj.project.name

@@ -54,8 +54,6 @@ class Media(SmartModel):
 
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
 
-    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
-
     visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
 
     def __str__(self):

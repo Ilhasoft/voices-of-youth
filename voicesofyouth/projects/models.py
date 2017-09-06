@@ -12,8 +12,6 @@ class Project(SmartModel):
 
     path = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Path'))
 
-    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
-
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
 
     def __str__(self):

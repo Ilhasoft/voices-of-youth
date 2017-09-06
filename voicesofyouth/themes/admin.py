@@ -4,7 +4,7 @@ from .models import Theme, ThemeLanguage, ThemeTags, ThemeFavoriteBy
 
 
 class ThemeAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'map_name', 'name', 'visibled', 'enabled', 'cover')
+    list_display = ('project_name', 'map_name', 'name', 'visibled', 'is_active', 'cover')
 
     def project_name(self, obj):
         return obj.project.name

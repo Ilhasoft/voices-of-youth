@@ -13,8 +13,6 @@ class Map(SmartModel):
 
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Name'))
 
-    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
-
     bounds = gismodels.PolygonField(null=False, blank=False)
 
     def __str__(self):
