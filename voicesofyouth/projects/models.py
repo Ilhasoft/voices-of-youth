@@ -3,10 +3,10 @@ from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
 
-from smartmin.models import SmartModel
+from voicesofyouth.core.models import BaseModel
 
 
-class Project(SmartModel):
+class Project(BaseModel):
 
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Name'))
 
@@ -18,7 +18,7 @@ class Project(SmartModel):
         return self.name
 
 
-class Setting(SmartModel):
+class Setting(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -32,7 +32,7 @@ class Setting(SmartModel):
         verbose_name_plural = _('Settings')
 
 
-class SettingLanguage(SmartModel):
+class SettingLanguage(BaseModel):
 
     settings = models.ForeignKey(Setting)
 
@@ -53,7 +53,7 @@ class SettingLanguage(SmartModel):
         db_table = 'projects_setting_languages'
 
 
-class Admin(SmartModel):
+class Admin(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

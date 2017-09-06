@@ -7,8 +7,7 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from smartmin.models import SmartModel
-
+from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.reports.models import Report
 
@@ -32,7 +31,7 @@ def get_content_file_path(instance, filename):
     return os.path.join('content/%d/%d/%d/' % (now.year, now.month, now.day), filename)
 
 
-class Media(SmartModel):
+class Media(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

@@ -3,8 +3,7 @@ from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
 
-from smartmin.models import SmartModel
-
+from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme
@@ -22,7 +21,7 @@ STATUS_CHOICES = (
 )
 
 
-class Report(SmartModel):
+class Report(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -46,7 +45,7 @@ class Report(SmartModel):
         return '{} - {} - {}'.format(self.project.name, self.map.name, self.theme.name)
 
 
-class ReportLanguage(SmartModel):
+class ReportLanguage(BaseModel):
 
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
 
@@ -65,7 +64,7 @@ class ReportLanguage(SmartModel):
         db_table = 'reports_report_languages'
 
 
-class ReportTags(SmartModel):
+class ReportTags(BaseModel):
 
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
 
@@ -80,7 +79,7 @@ class ReportTags(SmartModel):
         db_table = 'reports_report_tags'
 
 
-class ReportFavoriteBy(SmartModel):
+class ReportFavoriteBy(BaseModel):
 
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
 
@@ -93,7 +92,7 @@ class ReportFavoriteBy(SmartModel):
         db_table = 'reports_report_favorite_by'
 
 
-class ReportComments(SmartModel):
+class ReportComments(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

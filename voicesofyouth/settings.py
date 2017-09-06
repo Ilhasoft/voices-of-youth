@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'rest_framework',
     'rest_framework.authtoken',
+    'voicesofyouth.core',
     'voicesofyouth.users',
     'voicesofyouth.projects',
     'voicesofyouth.tags',

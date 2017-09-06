@@ -1,12 +1,11 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from smartmin.models import SmartModel
-
+from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 
 
-class Tag(SmartModel):
+class Tag(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 

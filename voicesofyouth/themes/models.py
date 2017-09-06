@@ -2,14 +2,13 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from smartmin.models import SmartModel
-
+from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tags.models import Tag
 
 
-class Theme(SmartModel):
+class Theme(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
@@ -25,7 +24,7 @@ class Theme(SmartModel):
         return self.name
 
 
-class ThemeLanguage(SmartModel):
+class ThemeLanguage(BaseModel):
 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
 
@@ -44,7 +43,7 @@ class ThemeLanguage(SmartModel):
         db_table = 'themes_theme_languages'
 
 
-class ThemeTags(SmartModel):
+class ThemeTags(BaseModel):
 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
 
@@ -59,7 +58,7 @@ class ThemeTags(SmartModel):
         db_table = 'themes_theme_tags'
 
 
-class ThemeFavoriteBy(SmartModel):
+class ThemeFavoriteBy(BaseModel):
 
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
 
