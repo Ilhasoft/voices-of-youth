@@ -3,8 +3,10 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from voicesofyouth.tags.models import Tag
 from voicesofyouth.projects.models import Project
+from voicesofyouth.maps.models import Map
+from voicesofyouth.themes.models import Theme
 
-from .serializers import TagSerializer, ProjectSerializer
+from .serializers import TagSerializer, ProjectSerializer, MapSerializer, ThemeSerializer
 
 
 class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -48,3 +50,39 @@ class TagsEndPoint(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user, modified_by=self.request.user)
+
+
+class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    retrieve:
+    Return the given map.
+
+    list:
+    Return a list of all the existing maps.
+    """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = MapSerializer
+
+    def get_queryset(self):
+        queryset = Map.objects.all().filter(is_active=True)
+        project = self.request.query_params.get('project', None)
+
+        if project is not None:
+            queryset = queryset.filter(project__id=project)
+
+        return queryset
+
+
+class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    retrieve:
+    Return the given theme.
+
+    list:
+    Return a list of all the existing themes by map.
+    """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = ThemeSerializer
+
+    def get_queryset(self):
+        return Theme.objects.all().filter(is_active=True).filter(map__id=self.request.query_params.get('map', None))

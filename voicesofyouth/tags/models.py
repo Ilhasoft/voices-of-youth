@@ -7,7 +7,7 @@ from voicesofyouth.projects.models import Project
 
 class Tag(BaseModel):
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
 
     name = models.CharField(max_length=60, null=False, blank=False, verbose_name=_('Name'))
 
