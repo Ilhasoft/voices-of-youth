@@ -1,3 +1,4 @@
+from django.shortcuts import reverse
 from rest_framework import serializers
 from voicesofyouth.projects.models import Project
 from voicesofyouth.tags.models import Tag
@@ -14,10 +15,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    maps = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'path', 'is_active', 'language')
+        fields = ('id', 'name', 'path', 'is_active', 'language', 'maps')
+
+    def get_maps(self, obj):
+        request = self.context.get('request')
+        return '{}?project={}'.format(request.build_absolute_uri(reverse('maps-list')), obj.id)
 
 
 class TagSerializer(serializers.ModelSerializer):
