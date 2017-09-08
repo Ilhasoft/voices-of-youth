@@ -5,8 +5,9 @@ from voicesofyouth.tags.models import Tag
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme
+from voicesofyouth.users.models import User
 
-from .serializers import TagSerializer, ProjectSerializer, MapSerializer, ThemeSerializer
+from .serializers import TagSerializer, ProjectSerializer, MapSerializer, ThemeSerializer, UserSerializer
 
 
 class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -85,4 +86,19 @@ class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
-        return Theme.objects.all().filter(is_active=True).filter(map__id=self.request.query_params.get('map', None))
+        return Theme.objects.all().filter(is_active=True).filter(visibled=True).filter(map__id=self.request.query_params.get('map', None))
+
+
+class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    retrieve:
+    Return the given theme.
+
+    list:
+    Return a list of all the existing themes by map.
+    """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        return User.objects.all().filter(is_active=True)

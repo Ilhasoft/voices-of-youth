@@ -23,10 +23,13 @@ class Theme(BaseModel):
     def __str__(self):
         return self.name
 
+    def get_languages(self):
+        return self.theme_language.all().filter(theme=self.id)
+
 
 class ThemeLanguage(BaseModel):
 
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_language')
 
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
 
