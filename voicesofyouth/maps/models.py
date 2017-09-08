@@ -16,3 +16,6 @@ class Map(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_themes(self):
+        return self.map_themes.all().filter(map__id=self.id)

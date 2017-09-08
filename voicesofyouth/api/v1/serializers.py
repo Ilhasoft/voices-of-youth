@@ -36,6 +36,18 @@ class MapSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'bounds', 'is_active', 'project')
 
 
+class MapAndThemesSerializer(serializers.ModelSerializer):
+    project = ProjectSerializer(read_only=True)
+    themes = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Map
+        fields = ('id', 'name', 'bounds', 'is_active', 'project', 'themes')
+
+    def get_themes(self, obj):
+        return ThemeSerializer(obj.get_themes(), many=True).data
+
+
 class ThemeLanguageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThemeLanguage

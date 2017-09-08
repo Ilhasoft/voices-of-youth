@@ -12,7 +12,7 @@ class Theme(BaseModel):
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
 
-    map = models.ForeignKey(Map, on_delete=models.CASCADE)
+    map = models.ForeignKey(Map, on_delete=models.CASCADE, related_name='map_themes')
 
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Name'))
 

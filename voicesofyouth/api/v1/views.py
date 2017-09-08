@@ -1,5 +1,6 @@
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from voicesofyouth.tags.models import Tag
 from voicesofyouth.projects.models import Project
@@ -7,7 +8,8 @@ from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme
 from voicesofyouth.users.models import User
 
-from .serializers import TagSerializer, ProjectSerializer, MapSerializer, ThemeSerializer, UserSerializer
+from .serializers import TagSerializer, ProjectSerializer
+from .serializers import MapSerializer, MapAndThemesSerializer, ThemeSerializer, UserSerializer
 
 
 class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -56,7 +58,7 @@ class TagsEndPoint(mixins.CreateModelMixin,
 class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
     """
     retrieve:
-    Return the given map.
+    Return the given map and related themes.
 
     list:
     Return a list of all the existing maps.
@@ -65,13 +67,13 @@ class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = MapSerializer
 
     def get_queryset(self):
-        queryset = Map.objects.all().filter(is_active=True)
-        project = self.request.query_params.get('project', None)
+        return Map.objects.all().filter(is_active=True).filter(project__id=self.request.query_params.get('project', None))
 
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
-
-        return queryset
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = MapAndThemesSerializer
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
