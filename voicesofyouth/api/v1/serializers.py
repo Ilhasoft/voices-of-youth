@@ -3,7 +3,7 @@ from rest_framework import serializers
 from voicesofyouth.projects.models import Project
 from voicesofyouth.tags.models import Tag
 from voicesofyouth.maps.models import Map
-from voicesofyouth.themes.models import Theme, ThemeLanguage, ThemeTags
+from voicesofyouth.themes.models import Theme, ThemeLanguage
 from voicesofyouth.users.models import User
 
 
@@ -68,13 +68,17 @@ class ThemeSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
     languages = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
 
     class Meta:
         model = Theme
-        fields = ('id', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags')
+        fields = ('id', 'url', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags')
 
     def get_languages(self, obj):
         return ThemeLanguageSerializer(obj.get_languages(), many=True).data
 
     def get_tags(self, obj):
         return TagSerializer(obj.get_tags(), many=True).data
+
+    def get_url(self, obj):
+        return reverse('themes-detail', kwargs={'pk': obj.id})
