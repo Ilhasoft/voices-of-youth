@@ -23,11 +23,11 @@ STATUS_CHOICES = (
 
 class Report(BaseModel):
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_reports')
 
-    map = models.ForeignKey(Map, on_delete=models.CASCADE)
+    map = models.ForeignKey(Map, on_delete=models.CASCADE, related_name='map_reports')
 
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_reports')
 
     location = gismodels.PointField(null=False, blank=False, srid=4326)
 

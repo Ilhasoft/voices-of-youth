@@ -30,6 +30,9 @@ class Theme(BaseModel):
         queryset = self.theme_tags.all().filter(theme=self.id)
         return map(lambda tag: tag.tag, queryset)
 
+    def get_total_reports(self):
+        return self.theme_reports.all().filter(theme=self.id).count()
+
 
 class ThemeLanguage(BaseModel):
 

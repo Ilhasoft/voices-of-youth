@@ -69,10 +69,11 @@ class ThemeSerializer(serializers.ModelSerializer):
     languages = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    reports = serializers.SerializerMethodField()
 
     class Meta:
         model = Theme
-        fields = ('id', 'url', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags')
+        fields = ('id', 'url', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags', 'reports')
 
     def get_languages(self, obj):
         return ThemeLanguageSerializer(obj.get_languages(), many=True).data
@@ -82,3 +83,6 @@ class ThemeSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return reverse('themes-detail', kwargs={'pk': obj.id})
+
+    def get_reports(self, obj):
+        return obj.get_total_reports()
