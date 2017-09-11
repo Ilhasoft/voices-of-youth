@@ -27,19 +27,23 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
-    # project = ProjectSerializer(read_only=True)
-
+    
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'system_tag', 'urgency_score', 'is_active', 'project')
+        fields = ('id', 'name', 'system_tag', 'urgency_score', 'is_active')
 
 
 class MapSerializer(serializers.ModelSerializer):
     project = ProjectSerializer(read_only=True)
+    themes = serializers.SerializerMethodField()
 
     class Meta:
         model = Map
-        fields = ('id', 'name', 'bounds', 'is_active', 'project')
+        fields = ('id', 'name', 'bounds', 'is_active', 'project', 'themes')
+
+    def get_themes(self, obj):
+        request = self.context.get('request')
+        return '{}{}/?project={}'.format(request.build_absolute_uri(reverse('maps-list')), obj.id, obj.project.id)
 
 
 class MapAndThemesSerializer(serializers.ModelSerializer):
