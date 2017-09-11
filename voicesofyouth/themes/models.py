@@ -26,6 +26,10 @@ class Theme(BaseModel):
     def get_languages(self):
         return self.theme_language.all().filter(theme=self.id)
 
+    def get_tags(self):
+        queryset = self.theme_tags.all().filter(theme=self.id)
+        return map(lambda tag: tag.tag, queryset)
+
 
 class ThemeLanguage(BaseModel):
 
@@ -48,7 +52,7 @@ class ThemeLanguage(BaseModel):
 
 class ThemeTags(BaseModel):
 
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_tags')
 
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
