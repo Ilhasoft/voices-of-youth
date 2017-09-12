@@ -121,6 +121,12 @@ class ReportSerializer(serializers.ModelSerializer):
         return None
 
 
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportComments
+        fields = ('id', 'body', 'report')
+
+
 class ReportCommentsSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
 

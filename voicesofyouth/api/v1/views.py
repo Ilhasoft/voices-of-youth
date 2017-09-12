@@ -11,7 +11,8 @@ from voicesofyouth.reports.models import Report
 
 from .serializers import TagSerializer, ProjectSerializer
 from .serializers import MapSerializer, MapAndThemesSerializer, ThemeSerializer
-from .serializers import ThemeAndReportsSerializer, UserSerializer, ReportSerializer, ReportAndMediasSerializer
+from .serializers import ThemeAndReportsSerializer, UserSerializer
+from .serializers import ReportSerializer, ReportAndMediasSerializer, CommentSerializer
 
 
 class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -115,6 +116,19 @@ class ReportsEndPoint(viewsets.ReadOnlyModelViewSet):
         instance = Report.objects.get(pk=kwargs.get('pk'))
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+
+class CommentsEndPoint(mixins.CreateModelMixin,
+                       viewsets.GenericViewSet):
+    """
+    create:
+    Create a new comment.
+    """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = CommentSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user, modified_by=self.request.user)
 
 
 class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
