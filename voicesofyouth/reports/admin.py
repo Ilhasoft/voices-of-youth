@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy, ReportComments
+from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy, ReportComments, ReportMedias
 
 
 class ReportAdmin(admin.ModelAdmin):
@@ -53,8 +53,13 @@ class ReportCommentsAdmin(admin.ModelAdmin):
         return obj.created_by.display_name
 
 
+class ReportMediasAdmin(admin.ModelAdmin):
+    list_display = ('title', 'description', 'media_type', 'language', 'is_active', 'visibled')
+
+
 admin.site.register(Report, ReportAdmin)
 admin.site.register(ReportLanguage, ReportLanguageAdmin)
 admin.site.register(ReportTags, ReportTagsAdmin)
 admin.site.register(ReportFavoriteBy, ReportFavoriteByAdmin)
 admin.site.register(ReportComments, ReportCommentsAdmin)
+admin.site.register(ReportMedias, ReportMediasAdmin)

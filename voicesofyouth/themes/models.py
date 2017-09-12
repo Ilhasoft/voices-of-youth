@@ -33,6 +33,14 @@ class Theme(BaseModel):
     def get_total_reports(self):
         return self.theme_reports.all().filter(theme=self.id).count()
 
+    def get_reports(self, limit):
+        queryset = self.theme_reports.all().filter(theme=self.id).filter(visibled=True).filter(status=1)
+
+        if limit is not None:
+            return queryset[:limit]
+
+        return queryset
+
 
 class ThemeLanguage(BaseModel):
 

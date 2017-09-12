@@ -7,9 +7,11 @@ from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme
 from voicesofyouth.users.models import User
+from voicesofyouth.reports.models import Report
 
 from .serializers import TagSerializer, ProjectSerializer
-from .serializers import MapSerializer, MapAndThemesSerializer, ThemeSerializer, UserSerializer
+from .serializers import MapSerializer, MapAndThemesSerializer, ThemeSerializer
+from .serializers import ThemeAndReportsSerializer, UserSerializer, ReportSerializer, ReportAndMediasSerializer
 
 
 class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -89,6 +91,30 @@ class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Theme.objects.all().filter(is_active=True).filter(visibled=True).filter(map__id=self.request.query_params.get('map', None))
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = ThemeAndReportsSerializer
+        instance = Theme.objects.get(pk=kwargs.get('pk'))
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+class ReportsEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    retrieve:
+    Return the given report.
+
+    list:
+    Return a list of all the existing reports
+    """
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    serializer_class = ReportSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        self.serializer_class = ReportAndMediasSerializer
+        instance = Report.objects.get(pk=kwargs.get('pk'))
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
 
 class UsersEndPoint(viewsets.ReadOnlyModelViewSet):

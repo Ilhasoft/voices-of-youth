@@ -5,6 +5,7 @@ from voicesofyouth.tags.models import Tag
 from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme, ThemeLanguage
 from voicesofyouth.users.models import User
+from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -86,3 +87,82 @@ class ThemeSerializer(serializers.ModelSerializer):
 
     def get_reports(self, obj):
         return obj.get_total_reports()
+
+
+class ReportMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportMedias
+        fields = ('id', 'title', 'description', 'media_type', 'url', 'file', 'screenshot', 'extra', 'language')
+
+
+class ReportLanguageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReportLanguage
+        fields = ('id', 'language', 'title', 'description', 'created_on', 'modified_on')
+
+
+class ReportSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Report
+        fields = ('id', 'url', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'image')
+
+    def get_url(self, obj):
+        return reverse('reports-detail', kwargs={'pk': obj.id})
+
+    def get_image(self, obj):
+        images = obj.get_medias(media_type='image')
+
+        if len(images) > 0:
+            return ReportMediaSerializer(images[0]).data
+
+        return None
+
+
+class ReportAndMediasSerializer(serializers.ModelSerializer):
+    images = serializers.SerializerMethodField()
+    links = serializers.SerializerMethodField()
+    videos = serializers.SerializerMethodField()
+    languages = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Report
+        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags')
+
+    def get_images(self, obj):
+        return ReportMediaSerializer(obj.get_medias(media_type='image'), many=True).data
+
+    def get_links(self, obj):
+        return ReportMediaSerializer(obj.get_medias(media_type='link'), many=True).data
+
+    def get_videos(self, obj):
+        return ReportMediaSerializer(obj.get_medias(media_type='video'), many=True).data
+
+    def get_languages(self, obj):
+        return ReportLanguageSerializer(obj.get_languages(), many=True).data
+
+    def get_tags(self, obj):
+        return TagSerializer(obj.get_tags(), many=True).data
+
+
+class ThemeAndReportsSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+    languages = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+    reports = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Theme
+        fields = ('id', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags', 'reports')
+
+    def get_languages(self, obj):
+        return ThemeLanguageSerializer(obj.get_languages(), many=True).data
+
+    def get_tags(self, obj):
+        return TagSerializer(obj.get_tags(), many=True).data
+
+    def get_reports(self, obj):
+        return ReportSerializer(obj.get_reports(10), many=True).data
