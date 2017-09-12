@@ -83,6 +83,9 @@ class Report(BaseModel):
         queryset = self.report_tags.all().filter(report=self.id)
         return map(lambda tag: tag.tag, queryset)
 
+    def get_comments(self):
+        return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
+
 
 class ReportLanguage(BaseModel):
 
@@ -133,16 +136,14 @@ class ReportFavoriteBy(BaseModel):
 
 class ReportComments(BaseModel):
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_comments')
 
     body = models.TextField(null=False, blank=False, verbose_name=_('Body'))
 
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
 
     def __str__(self):
-        return '{} - {}'.format(self.project.name, self.report.theme.name)
+        return self.body
 
     class Meta:
         verbose_name = _('Reports Comments')

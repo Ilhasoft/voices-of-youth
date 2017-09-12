@@ -44,10 +44,7 @@ class ReportFavoriteByAdmin(admin.ModelAdmin):
 
 
 class ReportCommentsAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'body', 'user_name')
-
-    def project_name(self, obj):
-        return obj.project.name
+    list_display = ('body', 'user_name')
 
     def user_name(self, obj):
         return obj.created_by.display_name

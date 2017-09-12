@@ -5,7 +5,7 @@ from voicesofyouth.tags.models import Tag
 from voicesofyouth.maps.models import Map
 from voicesofyouth.themes.models import Theme, ThemeLanguage
 from voicesofyouth.users.models import User
-from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage
+from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -121,16 +121,26 @@ class ReportSerializer(serializers.ModelSerializer):
         return None
 
 
+class ReportCommentsSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
+
+    class Meta:
+        model = ReportComments
+        fields = ('id', 'body', 'created_on', 'created_by')
+
+
 class ReportAndMediasSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer(read_only=True)
     images = serializers.SerializerMethodField()
     links = serializers.SerializerMethodField()
     videos = serializers.SerializerMethodField()
     languages = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
+    all_comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
-        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags', 'created_on')
+        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags', 'created_on', 'created_by', 'all_comments')
 
     def get_images(self, obj):
         return ReportMediaSerializer(obj.get_medias(media_type='image'), many=True).data
@@ -146,6 +156,9 @@ class ReportAndMediasSerializer(serializers.ModelSerializer):
 
     def get_tags(self, obj):
         return TagSerializer(obj.get_tags(), many=True).data
+
+    def get_all_comments(self, obj):
+        return ReportCommentsSerializer(obj.get_comments(), many=True).data
 
 
 class ThemeAndReportsSerializer(serializers.ModelSerializer):
