@@ -146,7 +146,9 @@ class ReportAndMediasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags', 'created_on', 'created_by', 'all_comments')
+        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable',
+                  'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags',
+                  'created_on', 'created_by', 'all_comments')
 
     def get_images(self, obj):
         return ReportMediaSerializer(obj.get_medias(media_type='image'), many=True).data
