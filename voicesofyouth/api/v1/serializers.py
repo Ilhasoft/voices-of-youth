@@ -107,7 +107,7 @@ class ReportSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ('id', 'url', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'image')
+        fields = ('id', 'url', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'image', 'created_on')
 
     def get_url(self, obj):
         return reverse('reports-detail', kwargs={'pk': obj.id})
@@ -130,7 +130,7 @@ class ReportAndMediasSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Report
-        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags')
+        fields = ('id', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'images', 'links', 'videos', 'languages', 'tags', 'created_on')
 
     def get_images(self, obj):
         return ReportMediaSerializer(obj.get_medias(media_type='image'), many=True).data
