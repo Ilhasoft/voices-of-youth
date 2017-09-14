@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.projects.models import Project
+from voicesofyouth.projects.models import Project, ProjectUsers
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tags.models import Tag
 
@@ -19,6 +19,8 @@ class Theme(BaseModel):
     visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
 
     cover = models.ImageField(upload_to='cover', null=True, blank=True, verbose_name=_('Cover'))
+
+    mappers = models.ManyToManyField(ProjectUsers)
 
     def __str__(self):
         return self.name
