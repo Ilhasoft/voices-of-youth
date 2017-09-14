@@ -82,8 +82,12 @@ class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class ReportsEndPoint(viewsets.ReadOnlyModelViewSet):
+class ReportsEndPoint(viewsets.ReadOnlyModelViewSet,
+                      mixins.CreateModelMixin):
     """
+    create:
+    Create a new report.
+
     retrieve:
     Return the given report.
 
