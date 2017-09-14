@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, Setting, SettingLanguage, Admin
+from .models import Project, Setting, SettingLanguage, ProjectUsers
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -21,17 +21,17 @@ class SettingLanguageAdmin(admin.ModelAdmin):
         return obj.settings.project.name
 
 
-class AdminsAdmin(admin.ModelAdmin):
+class UsersAdmin(admin.ModelAdmin):
     list_display = ('project_name', 'user_name')
 
     def project_name(self, obj):
         return obj.project.name
 
     def user_name(self, obj):
-        return obj.admin.display_name
+        return obj.user.display_name
 
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Setting, SettingAdmin)
 admin.site.register(SettingLanguage, SettingLanguageAdmin)
-admin.site.register(Admin, AdminsAdmin)
+admin.site.register(ProjectUsers, UsersAdmin)

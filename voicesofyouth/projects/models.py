@@ -5,6 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
 
+USER_ADMIN = 1
+USER_MAPPER = 2
+
+USER_CHOICES = (
+    (USER_ADMIN, _('Local Administrator')),
+    (USER_MAPPER, _('Mapper')),
+)
+
 
 class Project(BaseModel):
 
@@ -53,16 +61,18 @@ class SettingLanguage(BaseModel):
         db_table = 'projects_setting_languages'
 
 
-class Admin(BaseModel):
+class ProjectUsers(BaseModel):
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
 
-    admin = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
 
     def __str__(self):
-        return '{} - {}'.format(self.project.name, self.admin.display_name)
+        return '{} - {}'.format(self.project.name, self.user.display_name)
 
     class Meta:
-        verbose_name = _('Admins')
-        verbose_name_plural = _('Admins')
-        db_table = 'projects_project_admins'
+        verbose_name = _('Projects Users')
+        verbose_name_plural = _('Projects Users')
+        db_table = 'projects_project_users'
