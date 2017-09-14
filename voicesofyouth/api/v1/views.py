@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from voicesofyouth.tags.models import Tag
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
-from voicesofyouth.themes.models import Theme
+from voicesofyouth.themes.models import Theme, ThemeTags
 from voicesofyouth.users.models import User
 from voicesofyouth.reports.models import Report
 
@@ -28,34 +28,17 @@ class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = ProjectSerializer
 
 
-class TagsEndPoint(mixins.CreateModelMixin,
-                   mixins.ListModelMixin,
-                   mixins.RetrieveModelMixin,
-                   viewsets.GenericViewSet):
+class TagsEndPoint(viewsets.ReadOnlyModelViewSet):
     """
-    retrieve:
-    Return the given tag.
-
     list:
-    Return a list of all the existing tags.
-
-    create:
-    Create a new tag instance.
+    Return a list of all the existing tags. Required Theme ID
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
 
     def get_queryset(self):
-        queryset = Tag.objects.all().filter(is_active=True)
-        project = self.request.query_params.get('project', None)
-
-        if project is not None:
-            queryset = queryset.filter(project__id=project)
-
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user, modified_by=self.request.user)
+        queryset = ThemeTags.objects.all().filter(theme__id=self.request.query_params.get('theme', None))
+        return map(lambda tag: tag.tag, queryset)
 
 
 class MapsEndPoint(viewsets.ReadOnlyModelViewSet):

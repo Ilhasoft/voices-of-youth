@@ -31,7 +31,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'system_tag', 'urgency_score', 'is_active')
+        fields = ('id', 'name', 'urgency_score', 'is_active')
 
 
 class MapSerializer(serializers.ModelSerializer):

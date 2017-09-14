@@ -11,8 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
-from voicesofyouth.themes.models import Theme
 from voicesofyouth.tags.models import Tag
+from voicesofyouth.themes.models import Theme
 
 
 STATUS_APPROVED = 1
