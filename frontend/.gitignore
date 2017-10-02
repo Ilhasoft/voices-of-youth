@@ -1,12 +1,3 @@
-*.pyc
-.venv/*
-.env
-.vscode
-static/*
-*.sqlite3
-.coverage
-htmlcov/*
-voicesofyouth/media/*
 .DS_Store
 node_modules/
 dist/
