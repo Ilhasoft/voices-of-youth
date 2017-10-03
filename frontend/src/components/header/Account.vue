@@ -11,3 +11,9 @@ export default {
   name: 'Account',
 };
 </script>
+
+<style lang="scss" scoped>
+li {
+  margin-left: 30px;
+}
+</style>

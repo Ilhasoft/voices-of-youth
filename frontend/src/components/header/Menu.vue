@@ -24,7 +24,7 @@ ul {
 
 li {
   height: 40px;
-  margin-left: 59px;
+  min-width: 15%;
 }
 
 a {

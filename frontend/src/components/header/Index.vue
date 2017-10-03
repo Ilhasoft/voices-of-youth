@@ -3,18 +3,18 @@
     <div class="header">
       <div class="row">
         <div class="col-md-3">
-            <ul class="list-inline">
-              <li class="list-inline-item"><img src="./../../assets/img/logo.png"></li>
-              <li class="list-inline-item"><a href="">Rio de Janeiro</a></li>
-            </ul>
+          <ul class="list-inline">
+            <li class="list-inline-item"><img src="./../../assets/img/logo.png"></li>
+            <li class="list-inline-item"><a href="">Rio de Janeiro</a></li>
+          </ul>
         </div>
 
         <div class="col-md-6">
-            <header-menu />
+          <header-menu />
         </div>
 
         <div class="col-md-3">
-            <right-menu />
+          <right-menu />
         </div>
       </div>
     </div>
