@@ -14,7 +14,7 @@
         </div>
 
         <div class="col-md-3">
-            sadsadsd
+            <right-menu />
         </div>
       </div>
     </div>
@@ -24,15 +24,16 @@
 
 <script>
 import HeaderMenu from './Menu';
+import RightMenu from './RightSide';
 
 export default {
   name: 'Index',
 
-  components: { HeaderMenu },
+  components: { HeaderMenu, RightMenu },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 ul {
   margin-top: 5px;
 }
