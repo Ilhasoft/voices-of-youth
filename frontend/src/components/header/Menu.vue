@@ -2,7 +2,12 @@
   <div class="columns is-mobile">
     <div class="column"><a href="">Thematics maps</a></div>
     <div class="column"><a href="">Gallery</a></div>
-    <div class="column"><a href="">Language</a></div>
+    <div class="column language">
+      <a href="">
+        Language
+        <span class="icon-header-more"></span>
+      </a>
+    </div>
     <div class="column"><a href="">My reports</a></div>
     <div class="column new-report">
       <a class="button btn-report">
@@ -20,6 +25,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.language {
+  span {
+    font-size: 10px;
+  }
+}
 .btn-report {
   border-radius: 100px;
   border: solid 2px #00cbff;
