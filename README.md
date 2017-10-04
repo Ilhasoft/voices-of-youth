@@ -1,38 +1,19 @@
-Criar um novo projeto
----------------------
-Por padrão o nome do ambiente virtual é **.venv**, mas você pode mudar assim:
-```
-./bootstrap.sh my_venv
-```
+Running project
+---------------
 
-Ativar o ambiente virtual
--------------------------
+This project have a shell script that prepare the environment to execute the project.
+
+Open the terminal and type:
 ```
-source VENV_PATH/bin/activate
+./bootstrap.sh && source env/bin/activate
 ```
 
-Configurar banco de dados
--------------------------
-O projeto está configurado para criar o banco **db.sqlite3**, caso deseje alterar esse **nome** altere a constante DATABASE_NAME no arquivo settings.py.
+Database
+--------
 
-A engine de banco de dados pode ser alterada via variável de ambiente conforme exemplo:
+We ship inside the docker directory, all files do you need to create a container with postgis database.
+
+Type this command:
 ```
-export DATABASE_URL="postgres://postgres@localhost/my_db"
+$(cd docker && docker-compose start)
 ```
-
-Para mais opções de configuração do banco de dados consulte a documentação do projeto [dj-database-url](https://github.com/kennethreitz/dj-database-url#url-schema)
-
-
-Servidor de desenvolvimento
-===========================
-```
-python manage.py collectstatic
-```
-
-Referências
-===========
-
-* [django-debug-toolbar](http://django-debug-toolbar.readthedocs.io/en/stable/index.html)
-* [model-mommy](http://model-mommy.readthedocs.io/en/latest/index.html)
-* [django-extensions](https://django-extensions.readthedocs.io/en/latest/)
-* [coverage.py](https://coverage.readthedocs.io/en/coverage-4.3.4/)
