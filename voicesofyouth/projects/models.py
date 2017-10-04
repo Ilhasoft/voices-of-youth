@@ -15,11 +15,8 @@ USER_CHOICES = (
 
 
 class Project(BaseModel):
-
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Name'))
-
     path = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Path'))
-
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
 
     def __str__(self):
@@ -27,9 +24,7 @@ class Project(BaseModel):
 
 
 class Setting(BaseModel):
-
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
     location = gismodels.PolygonField(null=False, blank=False)
 
     def __str__(self):
@@ -41,15 +36,10 @@ class Setting(BaseModel):
 
 
 class SettingLanguage(BaseModel):
-
     settings = models.ForeignKey(Setting)
-
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-
     title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
-
     description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
-
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
 
     def __str__(self):
@@ -62,11 +52,8 @@ class SettingLanguage(BaseModel):
 
 
 class ProjectUsers(BaseModel):
-
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
-
     user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
     user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
 
     def __str__(self):
