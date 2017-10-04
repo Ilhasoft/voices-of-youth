@@ -1,5 +1,5 @@
 #!/bin/bash
-VENV_NAME=${1:-".venv"}
+VENV_NAME=${1:-"env"}
 WORKSPACE=${WORKSPACE:-$PWD}
 VENV_PATH=$WORKSPACE/$VENV_NAME
 PROJECT_NAME=`find . -not -path '*/\.*' -iname settings.py | cut -d \/ -f 2`
@@ -47,10 +47,17 @@ init_git() {
     fi
 }
 
+create_dotenv() {
+    if [ ! -d ".env" ]; then
+        echo DEBUG=True > .env
+    fi
+}
+
 create_venv && {
     validate_venv && {
         bootstrap
         install_deps
         init_git
+        create_dotenv
     }
 }
