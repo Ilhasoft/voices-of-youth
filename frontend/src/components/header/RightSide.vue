@@ -1,9 +1,15 @@
 <template>
-  <ul class="list-inline header-rigth-side">
-    <search />
-    <notification />
-    <account />
-  </ul>  
+  <div class="columns is-mobile">
+    <div class="column has-text-right-desktop">
+      <search/>
+    </div>
+    <div class="column is-2 m-top">
+      <notification/>
+    </div>
+    <div class="column is-2 is-paddingless m-right m-top">
+      <account/>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -19,11 +25,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-ul {
-  float: right;
+.m-right {
+  margin-right: 20px;
+}
 
-  li {
-    margin-left: 30px;
-  }
+.m-top {
+  margin-top: 5px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <li class="list-inline-item">
-    <a href="" @click.prevent="showNotifications" @blur="showNotifications">
-      <img src="./../../assets/img/header-bell.png">
+  <div @mouseover="showNotifications" @mouseout="showNotifications">
+    <a href="">
+      <img class="img" src="./../../assets/img/header-bell.png">
     </a>
 
     <div class="notification-box" v-bind:class="[isVisible ? 'fade-in' : 'fade-out']">
@@ -58,7 +58,7 @@
         </a>
       </div>
     </div>
-  </li>
+  </div>
 </template>
 
 <script>
@@ -80,8 +80,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-li {
-  margin-left: 25px;
+.img {
+  width: 20px;
+  height: 20px;
 }
 
 .notification-box {
@@ -92,7 +93,7 @@ li {
   right: 0;
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
   border-radius: 10px;
-  margin-top: 30px;
+  margin: 20px 10px 0px 0px;
 
   >h4 {
     background: #fff;
@@ -147,17 +148,5 @@ li {
     background-color: #d8d8d8;
     margin-top: 4px;
   }
-}
-
-.fade-in {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.2s linear;
-}
-
-.fade-out {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0s 0.2s, opacity 0.2s linear;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <li class="list-inline-item">
-    <input type="search" v-model="inputQuery" v-show="showInput" ref="search" @blur="hiddenInputSearch" />
-    <img src="./../../assets/img/header-search.png" @click.prevent="showInputSearch">
-  </li>
+  <div>
+    <img class="is-pulled-right img" src="./../../assets/img/header-search.png" @click.prevent="showInputSearch">
+    <input type="text" v-model="inputQuery" v-show="showInput" ref="search" @blur="hiddenInputSearch" />
+  </div>
 </template>
 
 <script>
@@ -34,20 +34,24 @@ export default {
 
 <style lang="scss" scoped>
 input {
-  width: 236px;
+  width: 100%;
   height: 38px;
   border-radius: 100px;
   border: solid 2px #00cbff;
   outline: none;
   padding: 0px 40px 0px 12px;
+  margin-top: -5px;
+
+  position: relative;
 }
 
-li {
-  margin: 0px !important;
-}
+.img {
+  margin-top: 5px;
+  width: 20px;
+  height: 20px;
 
-img {
+  position: absolute;
+  z-index: 1000;
   cursor: pointer;
-  margin-left: -39px;
 }
 </style>
