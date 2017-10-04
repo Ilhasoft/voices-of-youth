@@ -1,0 +1,11 @@
+version: '3.3'
+
+services:
+  voy-database:
+      image: unicef/voy-db-dev:latest
+      build:
+        context: .
+      ports:
+        - 5432:5432
+      environment:
+        - POSTGRES_PASSWORD=development
