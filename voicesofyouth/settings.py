@@ -30,7 +30,6 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'storages',
     'smartmin',
     'sorl.thumbnail',
     'rest_framework',
@@ -96,7 +94,7 @@ WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASE_NAME = 'db.sqlite3'
-DEFAULT_DATABASE = config('DEFAULT_DATABASE', default='sqlite:///{}'.format(os.path.join(BASE_DIR, DATABASE_NAME)))
+DEFAULT_DATABASE = config('DEFAULT_DATABASE', default='postgis://postgres:development@localhost:5432/voydev')
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(default=DEFAULT_DATABASE)
 
@@ -124,14 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-LANGUAGES = (
-    ('en', 'English'),
-    ('fr', 'Francais'),
-    ('sq', 'Shqip'),
-    ('tr', 'Turkce'),
-    ('ar', 'Arabic')
-)
 
 TIME_ZONE = 'UTC'
 
