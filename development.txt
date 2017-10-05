@@ -6,3 +6,4 @@ django-extensions
 coverage
 Werkzeug
 flake8
+pygraphviz
