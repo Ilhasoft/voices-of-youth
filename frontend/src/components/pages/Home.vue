@@ -2,7 +2,7 @@
   <div>
       <header-index />
       {{ msg }}
-      <h4>Links to</h4>
+      <router-link to="/project/rio"><h4>Project RIO</h4></router-link>
       <intro-project/>
   </div>
 </template>

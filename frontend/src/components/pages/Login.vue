@@ -1,9 +1,11 @@
 <template>
   <div>
-    <header-index />
-    PROJECT RIO
-
-    <router-link to="/login"><h4>LOGIN</h4></router-link>
+    <header-index
+      title='Login'
+      isLogged='false'
+      buttonBack='true'
+    />
+    TELA DE LOGIN
   </div>
 </template>
 
@@ -11,7 +13,7 @@
 import HeaderIndex from '../header/Index';
 
 export default {
-  name: 'Project',
+  name: 'Login',
 
   components: { HeaderIndex },
 };

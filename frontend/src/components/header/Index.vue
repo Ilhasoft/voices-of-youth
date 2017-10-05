@@ -2,17 +2,8 @@
   <section>
     <div class="columns">
       <div class="column is-3">
-        <div class="header logo">
-          <div class="columns is-mobile">
-            <div class="column is-3 p-left"><img class="logo-img" src="./../../assets/img/logo.png"></div>
-            <div class="column project">
-              <a href="">
-                Rio de Janeiro
-                <span class="icon-header-more"></span>
-              </a>
-            </div>
-          </div>
-        </div>
+        <projects-menu v-show="showProjects" />
+        <back-menu v-show="showBackButton" />
       </div>
   
       <div class="column">
@@ -22,7 +13,7 @@
       </div>
 
       <div class="column is-3">
-        <div class="header account">
+        <div class="header account" v-show="userIsLogged">
           <right-menu />
         </div>
       </div>
@@ -31,42 +22,31 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
+import ProjectsMenu from './Projects';
+import BackMenu from './Back';
 import HeaderMenu from './Menu';
 import RightMenu from './RightSide';
 
 export default {
-  name: 'Index',
+  name: 'Header',
 
-  components: { HeaderMenu, RightMenu },
+  components: { ProjectsMenu, BackMenu, HeaderMenu, RightMenu },
+
+  computed: {
+    ...mapGetters({
+      userIsLogged: 'userIsLogged',
+      showProjects: 'menuProjectsVisibled',
+      showBackButton: 'menuBackVisibled',
+    }),
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 section {
   border-bottom: 12px solid #00cbff;
-}
-
-.p-left {
-  text-align: left;
-}
-
-.project {
-  margin-top: 1.5em;
-  text-align: left;
-
-  span {
-    font-size: 10px;
-  }
-}
-
-.header.logo {
-  color: #fff;
-  height: 78px;
-
-  .logo-img {
-    margin-left: 1.5em;
-    margin-top: 1em;
-  }
 }
 
 .header.menu {
