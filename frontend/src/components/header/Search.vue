@@ -51,7 +51,6 @@ input {
   height: 20px;
 
   position: absolute;
-  z-index: 1000;
   cursor: pointer;
 }
 </style>
