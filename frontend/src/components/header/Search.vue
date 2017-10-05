@@ -41,7 +41,6 @@ input {
   outline: none;
   padding: 0px 40px 0px 12px;
   margin-top: -5px;
-
   position: relative;
 }
 
@@ -49,7 +48,6 @@ input {
   margin-top: 5px;
   width: 20px;
   height: 20px;
-
   position: absolute;
   cursor: pointer;
 }
