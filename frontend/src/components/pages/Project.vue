@@ -4,6 +4,7 @@
     PROJECT RIO
 
     <router-link to="/login"><h4>LOGIN</h4></router-link>
+    <router-link to="/profile"><h4>PROFILE</h4></router-link>
   </div>
 </template>
 

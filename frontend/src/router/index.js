@@ -3,6 +3,8 @@ import Router from 'vue-router';
 import HomePage from '../components/pages/Home';
 import ProjectPage from '../components/pages/Project';
 import LoginPage from '../components/pages/Login';
+import ProfilePage from '../components/pages/Profile';
+
 import stores from '../stores';
 
 Vue.use(Router);
@@ -39,6 +41,22 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Login',
+          showMenu: false,
+          showProjects: false,
+          showBackButton: true,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: ProfilePage,
+      beforeEnter: (to, from, next) => {
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: 'My Profile',
           showMenu: false,
           showProjects: false,
           showBackButton: true,
