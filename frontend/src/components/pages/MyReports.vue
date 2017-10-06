@@ -1,35 +1,37 @@
 <template>
-  <div class="back-color">
+  <div>
     <header-index/>
-    <div class="container">
-      <div class="columns t-center m-top">
-        <div class="column content-report">
-          
-        <div class="columns">
-          <div class="column is-2">
-            <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('approved', 'Ups! You have not created any report yet')">Approved</button>
+    <div class="back-color">
+      <div class="container">
+        <div class="columns t-center m-top">
+          <div class="column content-report">
+            
+          <div class="columns">
+            <div class="column is-2">
+              <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('approved', 'Ups! You have not created any report yet')">Approved</button>
+            </div>
+            <div class="column is-2">
+              <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('pending', 'Great! All your reports has been approved')">Pending</button>
+            </div>
+            <div class="column is-2">
+              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('rejected', 'Good job! You have no rejected reports')">Rejected</button>
+            </div>
+            <div class="column">
+              <input type="text" class="input" placeholder="Search for report" />
+            </div>
           </div>
-          <div class="column is-2">
-            <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('pending', 'Great! All your reports has been approved')">Pending</button>
-          </div>
-          <div class="column is-2">
-            <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('rejected', 'Good job! You have no rejected reports')">Rejected</button>
-          </div>
-          <div class="column">
-            <input type="text" class="input" placeholder="Search for report" />
-          </div>
-        </div>
 
-        <report-item v-show="status == ''" />
-        <report-item v-show="status == ''" />
+          <report-item v-show="status == ''" />
+          <report-item v-show="status == ''" />
 
-        <empty-list :status="status" :text="textTag" v-show="status" />
+          <empty-list :status="status" :text="textTag" v-show="status" />
 
-        <div class="columns" v-show="status == ''">
-          <div class="column">
-            <p class="more-oldest"><a href="">More oldest</a></p>
+          <div class="columns" v-show="status == ''">
+            <div class="column">
+              <p class="more-oldest"><a href="">More oldest</a></p>
+            </div>
           </div>
-        </div>
+          </div>
         </div>
       </div>
     </div>
@@ -65,6 +67,10 @@ export default {
 <style lang="scss" scoped>
 .back-color {
   background-color: #f6f6f6;
+  width: 100%;
+  height: 100%;
+  margin: auto;
+  position: absolute;
 }
 
 .t-center {

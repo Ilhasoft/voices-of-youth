@@ -1,61 +1,62 @@
 <template>
   <div>
     <header-index/>
+    <div class="main">
+      <div class="container block">
+        <div class="tile is-ancestor">
+          <div class="tile is-parent">
+            <article class="tile is-child">
+              <div class="content">
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <img src="./../../assets/img/login-a.png" alt="">
+                  </div>
+                </div>
 
-    <div class="container block">
-      <div class="tile is-ancestor">
-        <div class="tile is-parent">
-          <article class="tile is-child">
-            <div class="content">
-              <div class="columns">
-                <div class="column has-text-center">
-                  <img src="./../../assets/img/login-a.png" alt="">
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <h1>Hello, Alex</h1>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="text" class="input" name="name" value="" placeholder="Alex Ross"/>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="email" class="input" name="name" value="" placeholder="ross@gmail.com"/>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <h2>Change password</h2>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="password" class="input" name="password" placeholder="Current password"/>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="password" class="input" name="password" placeholder="New password"/>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-right-desktop">
+                    <button type="submit" class="btn button l-submit">Save</button>
+                  </div>
                 </div>
               </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <h1>Hello, Alex</h1>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="Alex Ross"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="email" class="input" name="name" value="" placeholder="ross@gmail.com"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <h2>Change password</h2>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="Current password"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="New password"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-right-desktop">
-                  <button type="submit" class="btn button l-submit">Save</button>
-                </div>
-              </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </div>
     </div>
