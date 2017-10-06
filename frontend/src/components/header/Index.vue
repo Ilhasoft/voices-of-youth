@@ -47,6 +47,7 @@ export default {
 <style lang="scss" scoped>
 section {
   border-bottom: 12px solid #00cbff;
+  background-color: #fff;
 }
 
 .header.menu {

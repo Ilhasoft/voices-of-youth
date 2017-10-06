@@ -4,6 +4,7 @@ import HomePage from '../components/pages/Home';
 import ProjectPage from '../components/pages/Project';
 import LoginPage from '../components/pages/Login';
 import ProfilePage from '../components/pages/Profile';
+import MyReportsPage from '../components/pages/MyReports';
 
 import stores from '../stores';
 
@@ -57,6 +58,22 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'My Profile',
+          showMenu: false,
+          showProjects: false,
+          showBackButton: true,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/my-reports',
+      name: 'MyReports',
+      component: MyReportsPage,
+      beforeEnter: (to, from, next) => {
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: 'My Reports',
           showMenu: false,
           showProjects: false,
           showBackButton: true,
