@@ -28,10 +28,13 @@ class Project(BaseModel):
 
     Args:
         name: Name of project.
+        description: Description of project.
         path: URL path for the project. The default value is slug of name.
         language: Default language. If the user doesn't set the main language we use that language.
+        window_title: Title that appear in browser window.
     '''
     name = models.CharField(max_length=100, verbose_name=_('Name'))
+    description = models.TextField(null=True, blank=True)
     path = models.CharField(max_length=100,
                             null=True,
                             blank=True,
@@ -40,6 +43,7 @@ class Project(BaseModel):
                                 choices=django_settings.LANGUAGES,
                                 default='en',
                                 verbose_name=_('Language'))
+    window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
 
     class Meta:
         verbose_name = _('Project')
