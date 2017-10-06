@@ -12,3 +12,4 @@ sphinxcontrib-napoleon
 sphinx-autodoc-napoleon-typehints
 sphinx-autodoc-typehints
 -e git+https://github.com/sigma-geosistemas/mommy_spatial_generators.git#egg=mommy_spatial_generators
+sphinx_rtd_theme
