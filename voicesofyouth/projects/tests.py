@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from model_mommy import mommy
 
 from .models import Project
+from .models import ProjectSetting
 
 
 class ProjectTestCase(TestCase):
@@ -16,3 +17,12 @@ class ProjectTestCase(TestCase):
 
     def test__str__(self):
         self.assertEqual(str(self.project), self.project_name)
+
+
+class ProjectSettingsTestCase(TestCase):
+    def setUp(self):
+        self.project = mommy.make(Project)
+        self.project_settings = mommy.make(ProjectSetting, project=self.project)
+
+    def test__str__(self):
+        self.assertEqual(str(self.project_settings), self.project.name)

@@ -3,3 +3,5 @@ omit =
         *__init__*
         */env/*
         */migrations/*
+
+source = voicesofyouth.projects
