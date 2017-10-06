@@ -14,6 +14,7 @@ import os
 import dj_database_url
 from decouple import config
 from unipath import Path
+from mommy_spatial_generators import MOMMY_SPATIAL_FIELDS
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).absolute().parent
@@ -57,6 +58,8 @@ INSTALLED_APPS = [
 
 if DEBUG:
     INSTALLED_APPS.append('django_extensions')
+    INSTALLED_APPS.append('model_mommy')
+    INSTALLED_APPS.append('mommy_spatial_generators')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -153,3 +156,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     )
 }
+
+MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
