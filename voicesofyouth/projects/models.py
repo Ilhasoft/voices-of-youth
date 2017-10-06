@@ -53,12 +53,12 @@ class Setting(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     location = gismodels.PolygonField()
 
-    def __str__(self):
-        return self.project.name
-
     class Meta:
         verbose_name = _('Settings')
         verbose_name_plural = _('Settings')
+
+    def __str__(self):
+        return self.project.name
 
 
 class SettingLanguage(BaseModel):
@@ -68,13 +68,13 @@ class SettingLanguage(BaseModel):
     description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         verbose_name = _('Settings Languages')
         verbose_name_plural = _('Settings Languages')
         db_table = 'projects_setting_languages'
+
+    def __str__(self):
+        return self.title
 
 
 class ProjectUsers(BaseModel):
@@ -82,13 +82,13 @@ class ProjectUsers(BaseModel):
     user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
 
-    def __str__(self):
-        return '{} - {}'.format(self.project.name, self.user.display_name)
-
     class Meta:
         verbose_name = _('Projects Users')
         verbose_name_plural = _('Projects Users')
         db_table = 'projects_project_users'
+
+    def __str__(self):
+        return '{} - {}'.format(self.project.name, self.user.display_name)
 
 
 ###############################################################################
