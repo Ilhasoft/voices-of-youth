@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Project, ProjectSetting, SettingLanguage, ProjectUsers
+from .models import Project, ProjectSetting, ProjectSettingLanguage, ProjectUsers
 
 
 class ProjectAdmin(admin.ModelAdmin):
@@ -33,5 +33,5 @@ class UsersAdmin(admin.ModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectSetting, SettingAdmin)
-admin.site.register(SettingLanguage, SettingLanguageAdmin)
+admin.site.register(ProjectSettingLanguage, SettingLanguageAdmin)
 admin.site.register(ProjectUsers, UsersAdmin)
