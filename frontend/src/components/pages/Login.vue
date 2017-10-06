@@ -1,149 +1,147 @@
 <template>
   <div>
     <header-index/>
-    <div class="main">
-      <div class="container block">
-        <div class="tile is-ancestor">
-          <div class="tile is-parent">
-            <article class="tile is-child">
-              <div class="content">
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <img src="./../../assets/img/login-a.png" alt="">
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <h1>Hello, again!</h1>
-                    <small>Login to your account</small>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="text" class="input" name="name" value="" placeholder="Name"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="password" class="input" name="password" placeholder="Password"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <a href="" class="forgot">Forgot password?</a>
-                  </div>
-
-                  <div class="column has-text-center">
-                    <button type="submit" class="btn button l-submit">Login</button>
-                  </div>
+    <div class="container block">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent">
+          <article class="tile is-child">
+            <div class="content">
+              <div class="columns">
+                <div class="column has-text-center">
+                  <img src="./../../assets/img/login-a.png" alt="">
                 </div>
               </div>
-            </article>
-          </div>
 
-          <div class="tile is-parent">
-            <article class="tile is-child">
-              <div class="content">
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <img src="./../../assets/img/login-b.png" alt="">
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <h1>I'm new here</h1>
-                    <small>Create a new account</small>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="text" class="input" name="name" value="" placeholder="Full name"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="text" class="input" name="name" value="" placeholder="E-mail"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="password" class="input" name="name" value="" placeholder="Password"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <input type="password" class="input" name="name" value="" placeholder="Confirm password"/>
-                  </div>
-                </div>
-
-                <div class="columns">
-                  <div class="column has-text-center">
-                    <label class="checkbox">
-                      <input type="checkbox" @change.prevent="openTerms" v-model="isAccepted">
-                      Terms and conditions
-                    </label>
-                  </div>
-
-                  <div class="column has-text-center">
-                    <button type="submit" class="btn button l-register">Register</button>
-                  </div>
+              <div class="columns">
+                <div class="column has-text-center">
+                  <h1>Hello, again!</h1>
+                  <small>Login to your account</small>
                 </div>
               </div>
-            </article>
-          </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="text" class="input" name="name" value="" placeholder="Name"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="password" class="input" name="password" placeholder="Password"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <a href="" class="forgot">Forgot password?</a>
+                </div>
+
+                <div class="column has-text-center">
+                  <button type="submit" class="btn button l-submit">Login</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="tile is-parent">
+          <article class="tile is-child">
+            <div class="content">
+              <div class="columns">
+                <div class="column has-text-center">
+                  <img src="./../../assets/img/login-b.png" alt="">
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <h1>I'm new here</h1>
+                  <small>Create a new account</small>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="text" class="input" name="name" value="" placeholder="Full name"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="text" class="input" name="name" value="" placeholder="E-mail"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="password" class="input" name="name" value="" placeholder="Password"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="password" class="input" name="name" value="" placeholder="Confirm password"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <label class="checkbox">
+                    <input type="checkbox" @change.prevent="openTerms" v-model="isAccepted">
+                    Terms and conditions
+                  </label>
+                </div>
+
+                <div class="column has-text-center">
+                  <button type="submit" class="btn button l-register">Register</button>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
+    </div>
 
-      <div v-show="isOpened">
-        <div class="opacity"></div>
-        <div class="terms">
-          <div class="columns">
-            <div class="column">
-              <img src="./../../assets/img/logo.png" class="logo" alt="">
+    <div v-show="isOpened">
+      <div class="opacity"></div>
+      <div class="terms">
+        <div class="columns">
+          <div class="column">
+            <img src="./../../assets/img/logo.png" class="logo" alt="">
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column is-paddingless">
+            <h1>Terms and Conditions</h1>
+          </div>
+        </div>
+
+        <div class="columns">
+          <div class="column">
+            <div class="terms-text">
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <br/>
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <br/>
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <br/>
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <br/>
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <br/>
+              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             </div>
           </div>
+        </div>
 
-          <div class="columns">
-            <div class="column is-paddingless">
-              <h1>Terms and Conditions</h1>
-            </div>
+        <div class="columns">
+          <div class="column has-text-center">
+            <button class="btn button l-refuse" @click.prevent="closeTerms(false)">Refuse</button>
           </div>
 
-          <div class="columns">
-            <div class="column">
-              <div class="terms-text">
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <br/>
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <br/>
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <br/>
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <br/>
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <br/>
-                <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="columns">
-            <div class="column has-text-center">
-              <button class="btn button l-refuse" @click.prevent="closeTerms(false)">Refuse</button>
-            </div>
-
-            <div class="column has-text-center">
-              <button class="btn button l-accept" @click.prevent="closeTerms(true)">Accept</button>
-            </div>
+          <div class="column has-text-center">
+            <button class="btn button l-accept" @click.prevent="closeTerms(true)">Accept</button>
           </div>
         </div>
       </div>

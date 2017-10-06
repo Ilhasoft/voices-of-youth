@@ -5,6 +5,7 @@ import ProjectPage from '../components/pages/Project';
 import LoginPage from '../components/pages/Login';
 import ProfilePage from '../components/pages/Profile';
 import MyReportsPage from '../components/pages/MyReports';
+import GalleryPage from '../components/pages/Gallery';
 
 import stores from '../stores';
 
@@ -29,6 +30,22 @@ export default new Router({
           showMenu: true,
           showProjects: true,
           showBackButton: false,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/project/:id/gallery',
+      name: 'Gallery',
+      component: GalleryPage,
+      beforeEnter: (to, from, next) => {
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: 'Gallery',
+          showMenu: false,
+          showProjects: false,
+          showBackButton: true,
         }).then(() => {
           next();
         });

@@ -1,7 +1,7 @@
 <template>
   <div>
     <header-index/>
-    <div class="back-color">
+    <div class="internal-page-color">
       <div class="container">
         <div class="columns t-center m-top">
           <div class="column content-report">
@@ -65,14 +65,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.back-color {
-  background-color: #f6f6f6;
-  width: 100%;
-  height: 100%;
-  margin: auto;
-  position: absolute;
-}
-
 .t-center {
   text-align: center;
 }
