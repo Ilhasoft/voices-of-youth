@@ -7,15 +7,15 @@ class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'path', 'language')
 
 
-class SettingAdmin(admin.ModelAdmin):
+class ProjectSettingAdmin(admin.ModelAdmin):
     list_display = ('project_name', 'location')
 
     def project_name(self, obj):
         return obj.project.name
 
 
-class SettingLanguageAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'language', 'title', 'description', 'window_title')
+class ProjectSettingLanguageAdmin(admin.ModelAdmin):
+    list_display = ('project_name', 'language', 'name', 'description', 'window_title')
 
     def project_name(self, obj):
         return obj.settings.project.name
@@ -32,6 +32,6 @@ class UsersAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Project, ProjectAdmin)
-admin.site.register(ProjectSetting, SettingAdmin)
-admin.site.register(ProjectSettingLanguage, SettingLanguageAdmin)
+admin.site.register(ProjectSetting, ProjectSettingAdmin)
+admin.site.register(ProjectSettingLanguage, ProjectSettingLanguageAdmin)
 admin.site.register(ProjectUsers, UsersAdmin)
