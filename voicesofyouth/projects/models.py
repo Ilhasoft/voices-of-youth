@@ -49,7 +49,14 @@ class Project(BaseModel):
         return self.name
 
 
-class Setting(BaseModel):
+class ProjectSetting(BaseModel):
+    '''
+    Basic settings for project.
+    
+    Attributes:
+         project: Project linked.
+         location: Used to limit the geo location where themes can be created.
+    '''
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     location = gismodels.PolygonField()
 
@@ -62,7 +69,7 @@ class Setting(BaseModel):
 
 
 class SettingLanguage(BaseModel):
-    settings = models.ForeignKey(Setting)
+    settings = models.ForeignKey(ProjectSetting)
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
     description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
