@@ -4,7 +4,7 @@ from django.db.utils import IntegrityError
 from model_mommy import mommy
 
 from .models import Project
-from .models import ProjectSetting
+from .models import ProjectRegion
 from .models import ProjectLanguage
 
 
@@ -24,13 +24,17 @@ class ProjectTestCase(TestCase):
             mommy.make(Project, name=self.project_name)
 
 
-class ProjectSettingsTestCase(TestCase):
+class ProjectRegionTestCase(TestCase):
     def setUp(self):
         self.project = mommy.make(Project)
-        self.project_settings = mommy.make(ProjectSetting, project=self.project)
+        self.project_region = mommy.make(ProjectRegion, project=self.project)
 
     def test__str__(self):
-        self.assertEqual(str(self.project_settings), self.project.name)
+        self.assertEqual(str(self.project_region), self.project.name)
+
+    def test_duplicate_project_setting(self):
+        with self.assertRaises(IntegrityError):
+            mommy.make(ProjectRegion, project=self.project)
 
 
 class ProjectLanguageTestCase(TestCase):

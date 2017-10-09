@@ -1,13 +1,16 @@
 from django.contrib import admin
 
-from .models import Project, ProjectSetting, ProjectLanguage, ProjectUsers
+from .models import Project
+from .models import ProjectRegion
+from .models import ProjectLanguage
+from .models import ProjectUsers
 
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'path', 'language')
 
 
-class ProjectSettingAdmin(admin.ModelAdmin):
+class ProjectRegionAdmin(admin.ModelAdmin):
     list_display = ('project_name', 'region')
 
     def project_name(self, obj):
@@ -32,6 +35,6 @@ class UsersAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Project, ProjectAdmin)
-admin.site.register(ProjectSetting, ProjectSettingAdmin)
+admin.site.register(ProjectRegion, ProjectRegionAdmin)
 admin.site.register(ProjectLanguage, ProjectLanguageAdmin)
 admin.site.register(ProjectUsers, UsersAdmin)

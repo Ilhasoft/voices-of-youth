@@ -53,9 +53,9 @@ class Project(BaseModel):
         return self.name
 
 
-class ProjectSetting(BaseModel):
+class ProjectRegion(BaseModel):
     '''
-    Basic settings for project.
+    Define a region where themes can be created.
 
     Attributes:
          project: Project linked.
@@ -65,9 +65,9 @@ class ProjectSetting(BaseModel):
     region = gismodels.PolygonField()
 
     class Meta:
-        verbose_name = _('Settings')
-        verbose_name_plural = _('Settings')
-        db_table = 'projects_setting'
+        verbose_name = _('Region')
+        verbose_name_plural = _('Regions')
+        db_table = 'projects_region'
 
     def __str__(self):
         return self.project.name
