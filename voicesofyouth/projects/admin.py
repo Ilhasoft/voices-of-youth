@@ -8,7 +8,7 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectSettingAdmin(admin.ModelAdmin):
-    list_display = ('project_name', 'location')
+    list_display = ('project_name', 'region')
 
     def project_name(self, obj):
         return obj.project.name

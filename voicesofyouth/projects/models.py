@@ -56,13 +56,13 @@ class Project(BaseModel):
 class ProjectSetting(BaseModel):
     '''
     Basic settings for project.
-    
+
     Attributes:
          project: Project linked.
          location: Used to limit the geo location where themes can be created.
     '''
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
-    location = gismodels.PolygonField()
+    region = gismodels.PolygonField()
 
     class Meta:
         verbose_name = _('Settings')
