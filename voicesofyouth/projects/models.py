@@ -73,27 +73,25 @@ class ProjectSetting(BaseModel):
         return self.project.name
 
 
-class ProjectSettingLanguage(BaseModel):
+class ProjectLanguage(BaseModel):
     '''
-    Trans
+    Translations for some fields in project.
 
     Attributes:
-        settings: Linked settings.
         language: Language
         name: Translation for the Project model field name in the language selected.
         description: Translation for the Project model field description in the language selected.
         window_title: Translation for the Project model field window_title in the language selected.
     '''
-    settings = models.ForeignKey(ProjectSetting)
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
     description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
 
     class Meta:
-        verbose_name = _('Settings Languages')
-        verbose_name_plural = _('Settings Languages')
-        db_table = 'projects_setting_languages'
+        verbose_name = _('Project Languages')
+        verbose_name_plural = _('Projects Languages')
+        db_table = 'projects_languages'
 
     def __str__(self):
         return self.name
