@@ -10,3 +10,4 @@ sorl-thumbnail
 coreapi
 coreapi-cli
 Pillow
+pyyaml

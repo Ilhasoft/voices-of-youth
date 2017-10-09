@@ -1,0 +1,22 @@
+- model: users.user
+  pk: 1
+  fields:
+    password: pbkdf2_sha256$36000$0PlCkp5gtTQF$36GFBmu6Hm/gcUfn9NR+YsRHS4+RDIfQKFYTjSB9l1E=
+    last_login: null
+    is_superuser: true
+    username: admin
+    first_name: ''
+    last_name: ''
+    email: foo@bar.com
+    is_staff: true
+    is_active: true
+    date_joined: 2017-10-09 21:59:29.404524+00:00
+    display_name: null
+    language: en
+    user_image: ''
+    personal_url: null
+    hometown: null
+    can_post_to_social_networks: false
+    location: null
+    groups: []
+    user_permissions: []
