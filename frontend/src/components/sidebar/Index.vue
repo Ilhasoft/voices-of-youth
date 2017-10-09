@@ -25,7 +25,8 @@
     <div class="columns">
       <div class="column p-top">
         
-        <thematic-maps />
+        <!-- <thematic-maps /> -->
+        <theme />
 
       </div>
     </div>
@@ -33,12 +34,13 @@
 </template>
 
 <script>
-import ThematicMaps from './thematic-maps/Index';
+import ThematicMaps from './ThematicMaps';
+import Theme from './Theme';
 
 export default {
   name: 'Sidebar',
 
-  components: { ThematicMaps },
+  components: { ThematicMaps, Theme },
 
   data() {
     return {
@@ -66,8 +68,7 @@ export default {
   .header {
     height: 62px;
     background: #fff;
-    margin-top: 0px;
-    margin-right: 0px;
+    margin: 0px 0px 15px 0px;
   }
 
   .back {
