@@ -33,7 +33,7 @@ class Project(BaseModel):
         language: Default language. If the user doesn't set the main language we use that language.
         window_title: Title that appear in browser window.
     '''
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
+    name = models.CharField(max_length=100, verbose_name=_('Name'), unique=True)
     description = models.TextField(null=True, blank=True)
     path = models.CharField(max_length=100,
                             null=True,
@@ -98,6 +98,9 @@ class ProjectLanguage(BaseModel):
 
 
 class ProjectUsers(BaseModel):
+    '''
+    contrib.auth.models.Group.name.max_length = 80
+    '''
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
     user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)

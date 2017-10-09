@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils.text import slugify
-
+from django.db.utils import IntegrityError
 from model_mommy import mommy
 
 from .models import Project
@@ -18,6 +18,10 @@ class ProjectTestCase(TestCase):
 
     def test__str__(self):
         self.assertEqual(str(self.project), self.project_name)
+
+    def test_duplicate_project_name(self):
+        with self.assertRaises(IntegrityError):
+            mommy.make(Project, name=self.project_name)
 
 
 class ProjectSettingsTestCase(TestCase):
