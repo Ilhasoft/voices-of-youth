@@ -7,15 +7,18 @@
     <router-link to="/profile"><h4>PROFILE</h4></router-link>
     <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
+
+    <side-bar />
   </div>
 </template>
 
 <script>
 import HeaderIndex from '../header/Index';
+import SideBar from '../sidebar/Index';
 
 export default {
   name: 'Project',
 
-  components: { HeaderIndex },
+  components: { HeaderIndex, SideBar },
 };
 </script>
