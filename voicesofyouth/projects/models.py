@@ -21,10 +21,11 @@ class Project(BaseModel):
     '''
     The project can aggregate many types of study themes.
 
-    For example: We can create a project called Brasil issues, and inside of this we can create many themes, like
-    waste issues, health issues.
+    e.g. We can create a project called Brasil issues, and inside of this we can create many themes,
+    like waste issues, health issues and so on.
 
-    Another example is a global climate changes, we create a project called Global Climate Changes with one big theme.
+    Another example is a global climate changes, we create a project called Global Climate
+    changes 2017 with one big theme.
 
     Args:
         name: Name of project.
@@ -43,7 +44,10 @@ class Project(BaseModel):
                                 choices=django_settings.LANGUAGES,
                                 default='en',
                                 verbose_name=_('Language'))
-    window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
+    window_title = models.CharField(max_length=256,
+                                    null=True,
+                                    blank=True,
+                                    verbose_name=_('Window Title'))
 
     class Meta:
         verbose_name = _('Project')
@@ -59,7 +63,7 @@ class ProjectRegion(BaseModel):
 
     Attributes:
          project: Project linked.
-         location: Used to limit the geo location where themes can be created.
+         region: Delimit the geo location where themes can be created.
     '''
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
     region = gismodels.PolygonField()
