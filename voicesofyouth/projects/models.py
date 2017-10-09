@@ -94,7 +94,7 @@ class ProjectLanguage(BaseModel):
         db_table = 'projects_languages'
 
     def __str__(self):
-        return self.name
+        return f'{self.name}({self.language})'
 
 
 class ProjectUsers(BaseModel):

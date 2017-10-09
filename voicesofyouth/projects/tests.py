@@ -5,6 +5,7 @@ from model_mommy import mommy
 
 from .models import Project
 from .models import ProjectSetting
+from .models import ProjectLanguage
 
 
 class ProjectTestCase(TestCase):
@@ -26,3 +27,12 @@ class ProjectSettingsTestCase(TestCase):
 
     def test__str__(self):
         self.assertEqual(str(self.project_settings), self.project.name)
+
+
+class ProjectLanguageTestCase(TestCase):
+    def setUp(self):
+        self.project = mommy.make(Project)
+        self.project_language = mommy.make(ProjectLanguage, name='Test project', language='US')
+
+    def test__str__(self):
+        self.assertEqual('Test project(US)', str(self.project_language))
