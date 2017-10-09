@@ -17,6 +17,9 @@ class BaseManager(models.Manager):
 
 
 class BaseModel(SmartModel):
+    '''
+    Default manager used by all VoY models.
+    '''
     objects = BaseManager()
     default_objects = models.Manager()
 
