@@ -11,6 +11,7 @@ Welcome to Voices of Youth's documentation!
    :caption: Contents:
 
    project
+   core
 
 Indices and tables
 ==================
