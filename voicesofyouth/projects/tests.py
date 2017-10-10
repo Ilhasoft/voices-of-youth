@@ -13,15 +13,27 @@ class ProjectTestCase(TestCase):
         self.project_name = 'Name of project'
         self.project = mommy.make(Project, name=self.project_name)
 
-    def test_set_default_path(self):
+    def test_with_path_none(self):
+        '''
+        When path is None we use slugify version of project.name?
+        '''
         self.assertEqual(self.project.path, slugify(self.project.name))
 
     def test__str__(self):
         self.assertEqual(str(self.project), self.project_name)
 
     def test_duplicate_project_name(self):
+        '''
+        Project name is unique?
+        '''
         with self.assertRaises(IntegrityError):
             mommy.make(Project, name=self.project_name)
+
+    def test_with_window_title_none(self):
+        '''
+        When window_title is None we use project name as default value?
+        '''
+        self.assertEqual(self.project.window_title, self.project.name)
 
 
 class ProjectRegionTestCase(TestCase):

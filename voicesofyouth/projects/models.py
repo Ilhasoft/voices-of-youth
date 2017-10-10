@@ -126,3 +126,8 @@ class ProjectUsers(BaseModel):
 def set_project_path(sender, instance, **kwargs):
     if not instance.path:
         instance.path = slugify(instance.name)
+
+@receiver(pre_save, sender=Project)
+def set_project_window_title(sender, instance, **kwargs):
+    if not instance.window_title:
+        instance.window_title = instance.name
