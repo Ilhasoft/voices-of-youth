@@ -3,12 +3,12 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
+from django.contrib.auth.models import Group
+
+from ..models import PROTECTED_GROUPS
+
 
 def create_protected_groups(apps, schema_editor):
-    from ..models import PROTECTED_GROUPS
-    from django.contrib.auth.models import Group
-
-    # Group = apps.get_model('django.contrib.auth', 'Group')
     groups = [Group(name=group) for group in PROTECTED_GROUPS]
     db_alias = schema_editor.connection.alias
     Group.objects.using(db_alias).bulk_create(groups)
