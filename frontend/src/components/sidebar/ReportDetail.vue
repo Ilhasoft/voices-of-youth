@@ -27,7 +27,7 @@
 
         <div class="columns reports">
           <div class="column">
-            <h1>Helps, but emission </h1>
+            <h1>Helps, but emission</h1>
             <small>Aug 02, 2016</small>
 
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dip.ipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
@@ -55,7 +55,6 @@
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -70,10 +69,6 @@ export default {
 <style lang="scss" scoped>
 .map-box {
   margin: auto;
-
-  .m-left {
-    margin-left: 15px;
-  }
 
   .no-padding {
     padding-right: 0px !important;
@@ -109,19 +104,6 @@ export default {
     }
   }
 
-  .pin {
-    padding-left: 30px;
-    margin: auto;
-  }
-
-  .m-auto {
-    margin: auto;
-  }
-
-  .center {
-    text-align: center;
-  }
-
   ul.images {
     width: 622px;
     margin: 0;
@@ -138,16 +120,6 @@ export default {
     width: 86px;
     height: 86px;
     padding: 5px;
-  }
-
-  .medias {
-    margin-left: 7px;
-
-    img {
-      width: 86px;
-      height: 86px;
-      margin: 0px 5px 5px 5px;
-    }
   }
 
   .reports {
