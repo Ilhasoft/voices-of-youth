@@ -65,6 +65,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-icon-share:before {
+  content: "\e904";
+  color: #9b9fa3;
+}
+
+.icon-icon-comment:before {
+  content: "\e905";
+  color: #9b9fa3;
+}
+
 .icon-pin:before {
   content: "\e902";
   color: #9013fe;

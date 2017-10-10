@@ -26,7 +26,8 @@
       <div class="column p-top">
         
         <!-- <thematic-maps /> -->
-        <theme />
+        <!-- <theme /> -->
+        <report-detail />
 
       </div>
     </div>
@@ -36,11 +37,12 @@
 <script>
 import ThematicMaps from './ThematicMaps';
 import Theme from './Theme';
+import ReportDetail from './ReportDetail';
 
 export default {
   name: 'Sidebar',
 
-  components: { ThematicMaps, Theme },
+  components: { ThematicMaps, Theme, ReportDetail },
 
   data() {
     return {
