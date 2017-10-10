@@ -22,13 +22,14 @@
       </div>
     </div>
 
+    <comments />
+
     <div class="columns">
-      <div class="column p-top">
+      <div class="column">
         
         <!-- <thematic-maps /> -->
         <!-- <theme /> -->
-        <report-detail />
-
+        <!-- <report-detail /> -->
       </div>
     </div>
   </div>
@@ -38,11 +39,12 @@
 import ThematicMaps from './ThematicMaps';
 import Theme from './Theme';
 import ReportDetail from './ReportDetail';
+import Comments from './Comments';
 
 export default {
   name: 'Sidebar',
 
-  components: { ThematicMaps, Theme, ReportDetail },
+  components: { ThematicMaps, Theme, ReportDetail, Comments },
 
   data() {
     return {
@@ -70,7 +72,8 @@ export default {
   .header {
     height: 62px;
     background: #fff;
-    margin: 0px 0px 15px 0px;
+    // margin: 0px 0px 15px 0px;
+    margin: 0px 0px -5px 0px;
   }
 
   .back {
