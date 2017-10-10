@@ -11,6 +11,7 @@ Welcome to Voices of Youth's user documentation!
    :caption: Contents:
 
    terms
+   permissions
 
 
 
