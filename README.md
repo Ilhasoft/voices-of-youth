@@ -1,3 +1,8 @@
+Voices of Youth
+===============
+
+This project is a new version of [UNICEF](www.unicef.org) initiative called [voices of youth](http://www.voicesofyouth.org/).
+
 Running project
 ---------------
 
@@ -21,3 +26,27 @@ Type this command:
 ```
 $(cd docker && docker-compose start)
 ```
+
+Documentation
+-------------
+The documentation is generated use sphinx, and is splited in 2 areas, development and user.
+
+The sections bellow describe how to generate HTML version of documentation.
+
+### Development
+To generate developer's documentation execute the commands bellow:
+
+```
+cd docs/dev && make html
+```
+
+This will generate all documentation inside the directory **docs/dev/build/html** just open the file **index.html** inside this directory.
+
+### User
+To generate user's documentation execute the commands bellow:
+
+```
+cd docs/user && make html
+```
+
+This will generate all documentation inside the directory **docs/user/build/html** just open the file **index.html** inside this directory.
