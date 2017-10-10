@@ -1,6 +1,14 @@
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_save
+from django.contrib.auth.models import Group
+from django.dispatch import receiver
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 from smartmin.models import SmartModel
+
+PROTECTED_GROUPS = ('super admin', 'local admin', 'mapper')
 
 
 class BaseManager(models.Manager):
@@ -30,3 +38,32 @@ class BaseModel(SmartModel):
     def delete(self, **kwargs):
         self.is_active = False
         self.save()
+
+
+####################################################################################################
+# Signals
+####################################################################################################
+
+@receiver(pre_delete, sender=Group)
+def check_delete_protected_group(instance, **kwargs):
+    '''
+    A protected group cannot be deleted.
+    '''
+    if instance.name.lower() in PROTECTED_GROUPS:
+        msg = _('This is a protected group. You cannot delete a protected group')
+        raise ValidationError({'name': msg})
+
+@receiver(pre_save, sender=Group)
+def check_add_or_edit_protected_group(instance, sender, **kwargs):
+    '''
+    A protected group can be added, but cannot be edited.
+
+    Only the name is protected.
+    '''
+    original_instance = None
+    if instance.pk:
+        original_instance = sender.objects.get(id=instance.pk)
+
+    if original_instance and original_instance.name.lower() in PROTECTED_GROUPS:
+        msg = _('This is a protected group. You cannot edit a protected group')
+        raise ValidationError({'name': msg})
