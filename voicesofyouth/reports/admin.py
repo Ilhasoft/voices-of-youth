@@ -1,9 +1,15 @@
 from django.contrib import admin
 
-from .models import Report, ReportLanguage, ReportTags, ReportFavoriteBy, ReportComments, ReportMedias
+from voicesofyouth.core.admin import BaseModelAdmin
+from .models import Report
+from .models import ReportLanguage
+from .models import ReportTags
+from .models import ReportFavoriteBy
+from .models import ReportComments
+from .models import ReportMedias
 
 
-class ReportAdmin(admin.ModelAdmin):
+class ReportAdmin(BaseModelAdmin):
     list_display = ('project_name', 'map_name', 'theme_name', 'location', 'sharing', 'comments', 'editable', 'is_active', 'visibled')
 
     def project_name(self, obj):
@@ -16,14 +22,14 @@ class ReportAdmin(admin.ModelAdmin):
         return obj.theme.name
 
 
-class ReportLanguageAdmin(admin.ModelAdmin):
+class ReportLanguageAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'language', 'title', 'description')
 
     def theme_name(self, obj):
         return obj.report.theme.name
 
 
-class ReportTagsAdmin(admin.ModelAdmin):
+class ReportTagsAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'tag_name')
 
     def theme_name(self, obj):
@@ -33,7 +39,7 @@ class ReportTagsAdmin(admin.ModelAdmin):
         return obj.tag.name
 
 
-class ReportFavoriteByAdmin(admin.ModelAdmin):
+class ReportFavoriteByAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'user_name')
 
     def theme_name(self, obj):
@@ -43,14 +49,14 @@ class ReportFavoriteByAdmin(admin.ModelAdmin):
         return obj.created_by.display_name
 
 
-class ReportCommentsAdmin(admin.ModelAdmin):
+class ReportCommentsAdmin(BaseModelAdmin):
     list_display = ('body', 'user_name')
 
     def user_name(self, obj):
         return obj.created_by.display_name
 
 
-class ReportMediasAdmin(admin.ModelAdmin):
+class ReportMediasAdmin(BaseModelAdmin):
     list_display = ('title', 'description', 'media_type', 'language', 'is_active', 'visibled')
 
 

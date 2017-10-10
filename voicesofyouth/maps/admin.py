@@ -1,9 +1,10 @@
 from django.contrib import admin
 
+from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Map
 
 
-class MapAdmin(admin.ModelAdmin):
+class MapAdmin(BaseModelAdmin):
     list_display = ('name', 'project_name', 'is_active', 'bounds')
 
     def project_name(self, obj):

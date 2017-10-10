@@ -1,9 +1,13 @@
 from django.contrib import admin
 
-from .models import Theme, ThemeLanguage, ThemeTags, ThemeFavoriteBy
+from voicesofyouth.core.admin import BaseModelAdmin
+from .models import Theme
+from .models import ThemeLanguage
+from .models import ThemeTags
+from .models import ThemeFavoriteBy
 
 
-class ThemeAdmin(admin.ModelAdmin):
+class ThemeAdmin(BaseModelAdmin):
     list_display = ('project_name', 'map_name', 'name', 'visibled', 'is_active', 'cover')
 
     def project_name(self, obj):
@@ -13,7 +17,7 @@ class ThemeAdmin(admin.ModelAdmin):
         return obj.map.name
 
 
-class ThemeLanguageAdmin(admin.ModelAdmin):
+class ThemeLanguageAdmin(BaseModelAdmin):
     list_display = ('project_name', 'theme_name', 'language', 'title', 'description')
 
     def project_name(self, obj):
@@ -23,7 +27,7 @@ class ThemeLanguageAdmin(admin.ModelAdmin):
         return obj.theme.name
 
 
-class ThemeTagsAdmin(admin.ModelAdmin):
+class ThemeTagsAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'tag_name')
 
     def theme_name(self, obj):
@@ -33,7 +37,7 @@ class ThemeTagsAdmin(admin.ModelAdmin):
         return obj.tag.name
 
 
-class ThemeFavoriteByAdmin(admin.ModelAdmin):
+class ThemeFavoriteByAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'user_name')
 
     def theme_name(self, obj):

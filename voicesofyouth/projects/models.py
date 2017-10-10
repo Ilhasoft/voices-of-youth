@@ -27,7 +27,7 @@ class Project(BaseModel):
     Another example is a global climate changes, we create a project called Global Climate
     changes 2017 with one big theme.
 
-    Args:
+    Attributes:
         name: Name of project.
         description: Description of project.
         path: URL path for the project. The default value is slug of name.
