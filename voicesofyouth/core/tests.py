@@ -1,21 +1,32 @@
 from django.test import TestCase
 from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from django.db.utils import IntegrityError
-from django.db import transaction
+from django.db import connection
 
 from model_mommy import mommy
 
 from voicesofyouth.core.models import PROTECTED_GROUPS
 
 
-class GroupProtectedTestCase(TestCase):
+class BaseGroupTestCase(TestCase):
+    def tearDown(self):
+        self.clear_group_table()
+
+    def setUp(self):
+        self.clear_group_table()
+
+    def clear_group_table(self):
+        with connection.cursor() as cursor:
+            cursor.execute(f'DELETE FROM {Group._meta.db_table}')
+
+
+class GroupProtectedTestCase(BaseGroupTestCase):
     def test_delete(self):
         '''
         Protected groups cannot be deleted?
         '''
         for protected_group in PROTECTED_GROUPS:
-            with self.assertRaises(ValidationError), transaction.atomic():
+            with self.assertRaises(ValidationError):
                 group = mommy.make(Group, name=protected_group)
                 group.delete()
 
@@ -24,7 +35,7 @@ class GroupProtectedTestCase(TestCase):
         Protected groups cannot be edited?
         '''
         for protected_group in PROTECTED_GROUPS:
-            with self.assertRaises(ValidationError), transaction.atomic():
+            with self.assertRaises(ValidationError):
                 group = mommy.make(Group, name=protected_group)
                 group.name = 'foo'
                 group.save()
@@ -34,12 +45,21 @@ class GroupProtectedTestCase(TestCase):
         Duplicate protected groups raises an exception?
         '''
         for protected_group in PROTECTED_GROUPS:
-            with self.assertRaises(IntegrityError), transaction.atomic():
+            with self.assertRaises(ValidationError):
                 mommy.make(Group, name=protected_group)
                 mommy.make(Group, name=protected_group)
 
+    def test_duplicate_is_case_insensitive(self):
+        '''
+        Duplicate protected groups is case insensitive?
+        '''
+        for protected_group in PROTECTED_GROUPS:
+            with self.assertRaises(ValidationError):
+                mommy.make(Group, name=protected_group.lower())
+                mommy.make(Group, name=protected_group.upper())
 
-class GroupUnprotectedTestCase(TestCase):
+
+class GroupUnprotectedTestCase(BaseGroupTestCase):
     def setUp(self):
         super().setUp()
         self.group = mommy.make(Group, name='Unprotected user')

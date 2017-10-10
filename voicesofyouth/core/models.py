@@ -60,10 +60,13 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
 
     Only the name is protected.
     '''
-    original_instance = None
+    original_instance = instance
     if instance.pk:
         original_instance = sender.objects.get(id=instance.pk)
 
-    if original_instance and original_instance.name.lower() in PROTECTED_GROUPS:
+    delete = any((original_instance.name.lower() in PROTECTED_GROUPS,
+                  sender.objects.filter(name__iexact=instance.name).exists()))
+
+    if original_instance and delete:
         msg = _('This is a protected group. You cannot edit a protected group')
         raise ValidationError({'name': msg})
