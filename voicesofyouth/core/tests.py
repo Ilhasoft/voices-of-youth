@@ -1,11 +1,22 @@
 from django.test import TestCase
 from django.contrib.auth.models import Group
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import connection
 
 from model_mommy import mommy
 
 from voicesofyouth.core.models import PROTECTED_GROUPS
+from voicesofyouth.core.models import SUPER_ADMIN_GROUP
+
+
+__author__ = 'Elton Pereira'
+__email__ = 'eltonplima AT gmail DOT com'
+__credits__ = ['Elton Pereira', 'Eduardo Douglas']
+__status__ = 'Development'
+
+
+User = get_user_model()
 
 
 class BaseGroupTestCase(TestCase):
@@ -80,3 +91,20 @@ class GroupUnprotectedTestCase(BaseGroupTestCase):
         self.group.save()
         self.group.refresh_from_db()
         self.assertEqual(self.group.name, 'foo')
+
+
+class SuperAdminGroupTestCase(TestCase):
+    def test_add_user_in_superadmin_group(self):
+        group = Group.objects.get(name__iexact=SUPER_ADMIN_GROUP)
+        user = mommy.make(User)
+        self.assertFalse(user.is_superuser)
+        user.groups.add(group)
+        self.assertTrue(user.is_superuser)
+
+    def test_remove_user_from_superadmin_group(self):
+        group = Group.objects.get(name__iexact=SUPER_ADMIN_GROUP)
+        user = mommy.make(User)
+        user.groups.add(group)
+        self.assertTrue(user.is_superuser)
+        user.groups.remove(group)
+        self.assertFalse(user.is_superuser)

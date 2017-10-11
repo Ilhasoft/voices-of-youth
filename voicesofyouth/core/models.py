@@ -2,13 +2,18 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from smartmin.models import SmartModel
 
-PROTECTED_GROUPS = ('super admin', 'local admin', 'mapper')
+SUPER_ADMIN_GROUP = 'super admin'
+LOCAL_ADMIN_GROUP = 'local admin'
+MAPPER_GROUP = 'mapper'
+PROTECTED_GROUPS = (SUPER_ADMIN_GROUP, LOCAL_ADMIN_GROUP, MAPPER_GROUP)
 
 
 __author__ = 'Elton Pereira'
@@ -72,3 +77,17 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
     if original_instance and delete:
         msg = _('This is a protected group. You cannot edit a protected group')
         raise ValidationError({'name': msg})
+
+@receiver(m2m_changed, sender=User.groups.through)
+def group_association(instance, action, model, pk_set, **_):
+    '''
+    When user is linked with super admin group, we set the flag is_superuser. When is removed we do
+    the inverse.
+    '''
+    if model.objects.filter(id__in=pk_set).filter(name__iexact=SUPER_ADMIN_GROUP).count():
+        if action == 'post_add':
+            instance.is_superuser = True
+            instance.save()
+        elif action == 'post_remove':
+            instance.is_superuser = False
+            instance.save()
