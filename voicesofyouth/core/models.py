@@ -11,6 +11,12 @@ from smartmin.models import SmartModel
 PROTECTED_GROUPS = ('super admin', 'local admin', 'mapper')
 
 
+__author__ = 'Elton Pereira'
+__email__ = 'eltonplima AT gmail DOT com'
+__credits__ = ['Elton Pereira', 'Eduardo Douglas']
+__status__ = 'Development'
+
+
 class BaseManager(models.Manager):
     '''
     This manager hide records when is_active flag is active.
