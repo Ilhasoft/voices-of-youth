@@ -41,10 +41,6 @@ class BaseModel(SmartModel):
         abstract = True
         default_manager_name = 'default_objects'
 
-    def delete(self, **kwargs):
-        self.is_active = False
-        self.save()
-
 
 ####################################################################################################
 # Signals
