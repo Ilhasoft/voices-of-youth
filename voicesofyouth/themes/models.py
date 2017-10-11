@@ -3,9 +3,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.projects.models import Project, ProjectUsers
+from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tags.models import Tag
+from voicesofyouth.users.models import User
 
 
 class Theme(BaseModel):
@@ -20,7 +21,7 @@ class Theme(BaseModel):
 
     cover = models.ImageField(upload_to='cover', null=True, blank=True, verbose_name=_('Cover'))
 
-    mappers = models.ManyToManyField(ProjectUsers)
+    mappers = models.ManyToManyField(User, limit_choices_to={'groups__name__iexact': 'super admin'})
 
     def __str__(self):
         return self.name

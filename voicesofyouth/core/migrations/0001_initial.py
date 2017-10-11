@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 from django.contrib.auth.models import Group
-from django.contrib.auth.models import User
+from voicesofyouth.users.models import User
 
 from ..models import PROTECTED_GROUPS
 
@@ -30,4 +30,5 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(create_protected_groups),
+        migrations.RunPython(create_super_user)
     ]
