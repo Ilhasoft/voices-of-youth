@@ -9,7 +9,6 @@ from .models import ProjectUsers
 
 class ProjectAdmin(BaseModelAdmin):
     list_display = ('name', 'path', 'language')
-    readonly_fields = ('modified_by', 'created_by')
 
 
 class ProjectRegionAdmin(BaseModelAdmin):
