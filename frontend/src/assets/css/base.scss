@@ -20,6 +20,16 @@ body {
       text-decoration: none;
     }
   }
+
+  .input {
+    border-color: #e9e9e9;
+  }
+
+  .input:focus, .input.is-focused, .input:active, .input.is-active, .textarea:focus, .textarea.is-focused, .textarea:active, .textarea.is-active {
+    border-color: #e9e9e9;
+    -webkit-box-shadow: 0 0 0 0.125em rgb(233, 233, 233);
+    box-shadow: 0 0 0 0.125em rgb(233, 233, 233);
+  }
 }
 
 .internal-page-color {

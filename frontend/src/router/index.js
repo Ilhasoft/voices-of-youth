@@ -6,6 +6,7 @@ import LoginPage from '../components/pages/Login';
 import ProfilePage from '../components/pages/Profile';
 import MyReportsPage from '../components/pages/MyReports';
 import GalleryPage from '../components/pages/Gallery';
+import NewReportPage from '../components/pages/NewReport';
 
 import stores from '../stores';
 
@@ -94,6 +95,22 @@ export default new Router({
           showMenu: false,
           showProjects: false,
           showBackButton: true,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/project/:id/new-report',
+      name: 'NewReport',
+      component: NewReportPage,
+      beforeEnter: (to, from, next) => {
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: '',
+          showMenu: true,
+          showProjects: true,
+          showBackButton: false,
         }).then(() => {
           next();
         });

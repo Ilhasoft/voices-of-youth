@@ -34,7 +34,7 @@
           </div>
 
           <div class="column">
-            <div class="control has-text-right-desktop">
+            <div class="control t-right">
               <label class="radio">
                 Select all &nbsp;&nbsp;<input type="radio" name="answer">
               </label>
@@ -80,6 +80,11 @@ export default {
 
   .filter {
     width: 20% !important;
+  }
+
+  .t-right {
+    text-align: right;
+    margin-right: 12px;
   }
 
   .item {

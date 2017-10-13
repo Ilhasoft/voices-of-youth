@@ -22,16 +22,10 @@
       </div>
     </div>
 
-    <comments />
-
-    <div class="columns">
-      <div class="column">
-        
-        <!-- <thematic-maps /> -->
-        <!-- <theme /> -->
-        <!-- <report-detail /> -->
-      </div>
-    </div>
+    <!-- <comments /> -->
+    <!-- <thematic-maps /> -->
+    <!-- <theme /> -->
+    <!-- <report-detail /> -->
   </div>
 </template>
 
