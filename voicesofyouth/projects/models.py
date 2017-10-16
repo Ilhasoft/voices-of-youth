@@ -21,7 +21,7 @@ class Project(BaseModel):
     '''
     The project can aggregate many types of study themes.
 
-    e.g. We can create a project called Brasil issues, and inside of this we can create many themes,
+    e.g. We can create a project called Brazil issues, and inside of this we can create many themes,
     like waste issues, health issues and so on.
 
     Another example is a global climate changes, we create a project called Global Climate
