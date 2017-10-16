@@ -13,6 +13,8 @@ Open the terminal and type:
 ./bootstrap.sh && source env/bin/activate
 ```
 
+> This project requires python >= 3.6.
+
 Default user
 ------------
 The system automatically create the user **admin** with password **Un1c3f@@**.
