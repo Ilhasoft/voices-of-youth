@@ -16,6 +16,9 @@ __status__ = 'Development'
 
 
 def upload_to(instance, filename):
+    '''
+    Calculate user avatar upload path dynamically.
+    '''
     UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename)
     FILE_EXT = Path(filename).ext
     return f'users/{instance.username}/avatar/{UUID}{FILE_EXT}'
