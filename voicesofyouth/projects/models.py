@@ -8,6 +8,12 @@ from django.utils.text import slugify
 
 from voicesofyouth.core.models import BaseModel
 
+
+__author__ = ['Elton Pereira', 'Eduardo Douglas']
+__email__ = 'eltonplima AT gmail DOT com'
+__status__ = 'Development'
+
+
 USER_ADMIN = 1
 USER_MAPPER = 2
 

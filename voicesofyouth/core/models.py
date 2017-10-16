@@ -16,9 +16,8 @@ MAPPER_GROUP = 'mapper'
 PROTECTED_GROUPS = (SUPER_ADMIN_GROUP, LOCAL_ADMIN_GROUP, MAPPER_GROUP)
 
 
-__author__ = 'Elton Pereira'
+__author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
-__credits__ = ['Elton Pereira', 'Eduardo Douglas']
 __status__ = 'Development'
 
 

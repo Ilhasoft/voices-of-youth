@@ -10,6 +10,11 @@ from sorl.thumbnail.fields import ImageField
 from unipath import Path
 
 
+__author__ = ['Elton Pereira', 'Eduardo Douglas']
+__email__ = 'eltonplima AT gmail DOT com'
+__status__ = 'Development'
+
+
 def upload_to(instance, filename):
     UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename)
     FILE_EXT = Path(filename).ext
@@ -18,7 +23,9 @@ def upload_to(instance, filename):
 
 class VoyUser(AbstractUser):
     '''
-    language
+    Attributes:
+        language: Default language of user.
+        avatar: User avatar.
     '''
     language = models.CharField(max_length=90, choices=settings.LANGUAGES, default='en')
     avatar = ImageField(verbose_name=_('Image'), upload_to=upload_to, null=True, blank=True)
