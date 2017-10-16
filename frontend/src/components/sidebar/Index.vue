@@ -26,6 +26,7 @@
     <!-- <thematic-maps /> -->
     <!-- <theme /> -->
     <!-- <report-detail /> -->
+    <search />
   </div>
 </template>
 
@@ -34,11 +35,12 @@ import ThematicMaps from './ThematicMaps';
 import Theme from './Theme';
 import ReportDetail from './ReportDetail';
 import Comments from './Comments';
+import Search from './Search';
 
 export default {
   name: 'Sidebar',
 
-  components: { ThematicMaps, Theme, ReportDetail, Comments },
+  components: { ThematicMaps, Theme, ReportDetail, Comments, Search },
 
   data() {
     return {
