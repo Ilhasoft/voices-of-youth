@@ -3,8 +3,11 @@ omit =
         *__init__*
         */env/*
         */migrations/*
-	*/admin.py
-	*/apps.py
-	*/tests*
+        */admin.py
+        */apps.py
+        */tests*
+        */urls.py
+        voicesofyouth/wsgi.py
+        voicesofyouth/settings.py
 
 source = voicesofyouth.projects
