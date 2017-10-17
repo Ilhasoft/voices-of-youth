@@ -8,6 +8,8 @@ from model_mommy import mommy
 
 from voicesofyouth.core.models import PROTECTED_GROUPS
 from voicesofyouth.core.models import SUPER_ADMIN_GROUP
+from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
+from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 
 
 __author__ = 'Elton Pereira'
@@ -114,3 +116,19 @@ class SuperAdminGroupTestCase(TestCase):
         self.assertTrue(user.is_superuser)
         user.groups.remove(group)
         self.assertFalse(user.is_superuser)
+
+
+class GroupLocalAdminTemplateTestCase(TestCase):
+    def test_group_exists(self):
+        """
+        Template group local admin exists?
+        """
+        self.assertTrue(Group.objects.filter(name=LOCAL_ADMIN_GROUP_TEMPLATE).exists())
+
+
+class GroupMapperTemplateTestCase(TestCase):
+    def test_group_exists(self):
+        """
+        Template group mapper exists?
+        """
+        self.assertTrue(Group.objects.filter(name=MAPPER_GROUP_TEMPLATE).exists())

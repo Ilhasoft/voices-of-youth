@@ -13,7 +13,15 @@ from smartmin.models import SmartModel
 SUPER_ADMIN_GROUP = 'super admin'
 LOCAL_ADMIN_GROUP = 'local admin'
 MAPPER_GROUP = 'mapper'
-PROTECTED_GROUPS = (SUPER_ADMIN_GROUP, LOCAL_ADMIN_GROUP, MAPPER_GROUP)
+LOCAL_ADMIN_GROUP_TEMPLATE = 'local admin template'
+MAPPER_GROUP_TEMPLATE = 'mapper template'
+PROTECTED_GROUPS = (
+    SUPER_ADMIN_GROUP,
+    LOCAL_ADMIN_GROUP,
+    MAPPER_GROUP,
+    LOCAL_ADMIN_GROUP_TEMPLATE,
+    MAPPER_GROUP_TEMPLATE
+)
 
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
