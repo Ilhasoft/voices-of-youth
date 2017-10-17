@@ -95,17 +95,27 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
     '''
     A protected group can be added, but cannot be edited.
 
-    Only the name is protected.
+    Only the name is protected. The user can modify permissions freely.
     '''
     original_instance = instance
     if instance.pk:
         original_instance = sender.objects.get(id=instance.pk)
 
-    delete = any((original_instance.name.lower() in PROTECTED_GROUPS,
-                  sender.objects.filter(name__iexact=instance.name).exists()))
+    # protected_group = any((original_instance.name.lower() in PROTECTED_GROUPS,
+    #               sender.objects.filter(name__iexact=instance.name).exists()))
+    protected_group = original_instance.name.lower() in PROTECTED_GROUPS
+    name_changed = original_instance.name != instance.name
 
-    if original_instance and delete:
+    if (name_changed and protected_group):
         msg = _('This is a protected group. You cannot edit a protected group')
+        raise ValidationError({'name': msg})
+
+    if sender.objects.filter(name__iexact=instance.name).exists() and name_changed:
+        msg = _('This group already exists!')
+        raise ValidationError({'name': msg})
+
+    if sender.objects.filter(name__iexact=instance.name).exists() and not instance.id:
+        msg = _('This group already exists!')
         raise ValidationError({'name': msg})
 
 @receiver(m2m_changed, sender=User.groups.through)
