@@ -83,19 +83,17 @@ class ProjectRegion(BaseModel):
         return self.project.name
 
 
-class ProjectLanguage(BaseModel):
+class ProjectTranslation(BaseModel):
     '''
     Translations for some fields in project.
 
     Attributes:
         language: Language
         name: Translation for the Project model field name in the language selected.
-        description: Translation for the Project model field description in the language selected.
         window_title: Translation for the Project model field window_title in the language selected.
     '''
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
-    description = models.TextField(null=True, blank=True, verbose_name=_('Project Description'))
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
 
     class Meta:

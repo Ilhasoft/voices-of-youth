@@ -3,7 +3,7 @@ from django.contrib import admin
 from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Project
 from .models import ProjectRegion
-from .models import ProjectLanguage
+from .models import ProjectTranslation
 from .models import ProjectUsers
 
 
@@ -18,8 +18,8 @@ class ProjectRegionAdmin(BaseModelAdmin):
         return obj.project.name
 
 
-class ProjectLanguageAdmin(BaseModelAdmin):
-    list_display = ('project_name', 'language', 'name', 'description', 'window_title')
+class ProjectTranslationAdmin(BaseModelAdmin):
+    list_display = ('project_name', 'language', 'name', 'window_title')
 
     def project_name(self, obj):
         return obj.settings.project.name
@@ -37,5 +37,5 @@ class UsersAdmin(BaseModelAdmin):
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectRegion, ProjectRegionAdmin)
-admin.site.register(ProjectLanguage, ProjectLanguageAdmin)
+admin.site.register(ProjectTranslation, ProjectTranslationAdmin)
 admin.site.register(ProjectUsers, UsersAdmin)
