@@ -5,7 +5,7 @@ from model_mommy import mommy
 
 from .models import Project
 from .models import ProjectRegion
-from .models import ProjectLanguage
+from .models import ProjectTranslation
 
 
 class ProjectTestCase(TestCase):
@@ -49,10 +49,10 @@ class ProjectRegionTestCase(TestCase):
             mommy.make(ProjectRegion, project=self.project)
 
 
-class ProjectLanguageTestCase(TestCase):
+class ProjectTranslationTestCase(TestCase):
     def setUp(self):
         self.project = mommy.make(Project)
-        self.project_language = mommy.make(ProjectLanguage, name='Test project', language='US')
+        self.project_language = mommy.make(ProjectTranslation, name='Test project', language='US')
 
     def test__str__(self):
         self.assertEqual('Test project(US)', str(self.project_language))
