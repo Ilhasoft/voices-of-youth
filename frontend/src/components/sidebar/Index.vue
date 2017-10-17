@@ -23,7 +23,7 @@
     </div>
 
     <!-- <comments /> -->
-    <!-- <thematic-maps /> -->
+    <thematic-maps />
     <!-- <theme /> -->
     <!-- <report-detail /> -->
     <!-- <search /> -->

@@ -36,7 +36,7 @@
           <div class="column">
             <div class="control t-right">
               <label class="radio">
-                Select all &nbsp;&nbsp;<input type="radio" name="answer">
+                Select all &nbsp;&nbsp;<checkbox-item />
               </label>
             </div>
           </div>
@@ -53,7 +53,7 @@
           </div>
 
           <div class="column is-1 m-auto">
-            <input class="form-check-input" type="checkbox" value="">
+            <checkbox-item />
           </div>
         </div>
       </div>
@@ -62,8 +62,12 @@
 </template>
 
 <script>
+import CheckboxItem from '../shared/Checkbox';
+
 export default {
   name: 'ThematicMaps',
+
+  components: { CheckboxItem },
 
   data() {
     return {
