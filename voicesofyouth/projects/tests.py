@@ -2,12 +2,15 @@ from django.test import TestCase
 from django.utils.text import slugify
 from django.db.utils import IntegrityError
 from django.db import transaction
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 
 from model_mommy import mommy
 
 from .models import Project
 from .models import ProjectRegion
 from .models import ProjectTranslation
+from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 
 
 class ProjectTestCase(TestCase):
@@ -93,3 +96,14 @@ class ProjectLocalAdminGroupTestCase(TestCase):
         When we create a new project, your local admin group is created?
         """
         self.assertEqual(self.project.local_admin_group.name, f'Project({self.project.id}) - local admins')
+
+    def test_local_admin_group_get_permissions_from_template_group(self):
+        """
+        When we create a new local admin group, he get the permissions from template group?
+        """
+        template_group = Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE)
+        for perm in Permission.objects.all()[0:10]:
+            template_group.permissions.add(perm)
+        project = mommy.make(Project)
+        self.assertListEqual(list(project.local_admin_group.permissions.all()),
+                             list(template_group.permissions.all()))

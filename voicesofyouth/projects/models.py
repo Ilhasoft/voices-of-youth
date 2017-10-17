@@ -9,6 +9,7 @@ from django.utils.text import slugify
 from django.contrib.auth.models import Group
 
 from voicesofyouth.core.models import BaseModel
+from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
@@ -141,8 +142,12 @@ def set_project_window_title(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Project)
 def create_project_local_admin_group(sender, instance, **kwargs):
-
+    """
+    Creates a group for local administrators and associates it with the project(instance)
+    """
     if not instance.local_admin_group:
         # We cant use instance.name because group name cannot have more than 80 characters.
         instance.local_admin_group = Group.objects.get_or_create(name=f'Project({instance.id}) - local admins')[0]
+        for perm in Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE).permissions.all():
+            instance.local_admin_group.permissions.add(perm)
         instance.save()
