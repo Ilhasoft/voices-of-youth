@@ -4,6 +4,7 @@ from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.utils.text import slugify
 from django.contrib.auth.models import Group
 
@@ -25,7 +26,7 @@ USER_CHOICES = (
 
 
 class Project(BaseModel):
-    '''
+    """
     The project can aggregate many types of study themes.
 
     e.g. We can create a project called Brazil issues, and inside of this we can create many themes,
@@ -40,7 +41,7 @@ class Project(BaseModel):
         language: Default language. If the user doesn't set the main language we use that language.
         window_title: Title that appear in browser window.
         local_admin_group: Vinculate the local admin group for that project. This field is managed by the system.
-    '''
+    """
     name = models.CharField(max_length=100, verbose_name=_('Name'))
     path = models.CharField(max_length=100,
                             null=True,
@@ -66,13 +67,13 @@ class Project(BaseModel):
 
 
 class ProjectRegion(BaseModel):
-    '''
+    """
     Define a region where themes can be created.
 
     Attributes:
          project: Project linked.
          region: Delimit the geo location where themes can be created.
-    '''
+    """
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
     region = gismodels.PolygonField()
 
@@ -86,14 +87,14 @@ class ProjectRegion(BaseModel):
 
 
 class ProjectTranslation(BaseModel):
-    '''
+    """
     Translations for some fields in project.
 
     Attributes:
         language: Language
         name: Translation for the Project model field name in the language selected.
         window_title: Translation for the Project model field window_title in the language selected.
-    '''
+    """
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
@@ -108,9 +109,9 @@ class ProjectTranslation(BaseModel):
 
 
 class ProjectUsers(BaseModel):
-    '''
+    """
     contrib.auth.models.Group.name.max_length = 80
-    '''
+    """
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
     user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
@@ -138,7 +139,10 @@ def set_project_window_title(sender, instance, **kwargs):
     if not instance.window_title:
         instance.window_title = instance.name
 
-# @receiver(pre_save, sender=Project)
-# def create_project_local_admin_group(sender, instance, **kwargs):
-#     if not instance.local_admin_group:
-#         instance.local_admin_group = instance.name
+@receiver(post_save, sender=Project)
+def create_project_local_admin_group(sender, instance, **kwargs):
+
+    if not instance.local_admin_group:
+        # We cant use instance.name because group name cannot have more than 80 characters.
+        instance.local_admin_group = Group.objects.get_or_create(name=f'Project({instance.id}) - local admins')[0]
+        instance.save()

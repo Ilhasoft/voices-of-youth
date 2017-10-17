@@ -87,3 +87,9 @@ class ProjectLocalAdminGroupTestCase(TestCase):
         When we create a new project, your local admin group is created?
         """
         self.assertIsNotNone(self.project.local_admin_group)
+
+    def test_local_admin_group_name(self):
+        """
+        When we create a new project, your local admin group is created?
+        """
+        self.assertEqual(self.project.local_admin_group.name, f'Project({self.project.id}) - local admins')
