@@ -8,9 +8,9 @@ class BaseModelAdmin(admin.ModelAdmin):
         '''
         This method ensures the fields modified_by and created_by are filled correctly.
         '''
-        if hasattr(obj, 'modified_by'):
-            obj.modified_by = request.user
+        if hasattr(obj, 'modified_by_id'):
+            obj.modified_by_id = request.user.id
 
-        if not change and hasattr(obj, 'created_by'):
-            obj.created_by = request.user
+        if not change and hasattr(obj, 'created_by_id'):
+            obj.created_by_id = request.user.id
         super().save_model(request, obj, form, change)
