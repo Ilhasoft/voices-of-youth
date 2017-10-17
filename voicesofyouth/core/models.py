@@ -1,3 +1,26 @@
+"""
+This module stores the core resources for VoY project.
+
+Groups
+======
+
+This module provides 5 default groups, each of then have an specific purpose. Bellow you can see each of these groups,
+the top group can do anything that group bellow can.:
+
+* **super admin** - Anyone added to this group becomes a super user, this implies that he can do anything inside the VoY.
+* **local admin** - Can create themes and mappers, and, can create an association between these themes and the mappers.
+  Local admin cannot create projects.
+* **mapper** - Users in these group, can only create or edit your own reports.
+
+Template groups
+---------------
+
+The template groups are used as an permissions aggregators, any permission added or removed from any of these template
+groups, will be reflected to any group vinculated with then.
+
+* **local admin template** - Permissions for local admins.
+* **mapper template** - Permissions for mappers.
+"""
 from django.db import models
 from django.db.models.signals import pre_delete
 from django.db.models.signals import pre_save
