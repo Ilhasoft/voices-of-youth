@@ -1,10 +1,10 @@
 <template>
-  <div @mouseover="showAccountInfo" @mouseout="showAccountInfo">
+  <div @mouseover="isVisible = true" @mouseout="isVisible = false">
     <a href="">
       <img class="avatar" src="./../../assets/img/header-avatar.png">
     </a>
 
-    <div class="profile-box" v-bind:class="[isVisible ? 'fade-in' : 'fade-out']">
+    <div class="profile-box" :class="[isVisible ? 'fade-in' : 'fade-out']">
       <div class="item">
         <div class="item-left">
           <img src="./../../assets/img/header-avatar.png">
@@ -39,12 +39,6 @@ export default {
     return {
       isVisible: false,
     };
-  },
-
-  methods: {
-    showAccountInfo() {
-      this.isVisible = !this.isVisible;
-    },
   },
 };
 </script>

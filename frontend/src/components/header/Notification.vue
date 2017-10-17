@@ -1,10 +1,10 @@
 <template>
-  <div @mouseover="showNotifications" @mouseout="showNotifications">
+  <div @mouseover="isVisible = true" @mouseout="isVisible = false">
     <a href="">
       <img class="img" src="./../../assets/img/header-bell.png">
     </a>
 
-    <div class="notification-box" v-bind:class="[isVisible ? 'fade-in' : 'fade-out']">
+    <div class="notification-box" :class="[isVisible ? 'fade-in' : 'fade-out']">
       <h4>Notifications</h4>
       <div class="item">
         <a href="">
@@ -70,12 +70,6 @@ export default {
       isVisible: false,
     };
   },
-
-  methods: {
-    showNotifications() {
-      this.isVisible = !this.isVisible;
-    },
-  },
 };
 </script>
 
@@ -95,7 +89,7 @@ export default {
   border-radius: 10px;
   margin: 20px 10px 0px 0px;
 
-  >h4 {
+  h4 {
     background: #fff;
     height: 40px;
     text-align: center;

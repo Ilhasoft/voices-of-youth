@@ -4,10 +4,28 @@
       <div class="column"><a href="">Thematics maps</a></div>
       <div class="column"><a href="">Gallery</a></div>
       <div class="column language">
-        <a href="">
+        <a href="" class="link" @click.prevent="isVisible = true">
           Language
           <span class="icon-header-more"></span>
         </a>
+
+        <div class="language-box" @mouseover="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
+          <div class="item">
+            <a href="">English</a>
+          </div>
+
+          <div class="item">
+            <a href="">Portuguese</a>
+          </div>
+
+          <div class="item">
+            <a href="">Franch</a>
+          </div>
+
+          <div class="item">
+            <a href="">Spanish</a>
+          </div>
+        </div>
       </div>
       
       <div class="column" v-if="userIsLogged"><a href="">My reports</a></div>
@@ -31,6 +49,12 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'Menu',
 
+  data() {
+    return {
+      isVisible: false,
+    };
+  },
+
   computed: {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
@@ -45,6 +69,33 @@ export default {
 .language {
   span {
     font-size: 10px;
+  }
+
+  .language-box {
+    margin: auto;
+    max-width: 150px;
+    border-radius: 11px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
+    padding: 1px 0px 1px 0px;
+
+    .item {
+      height: 38px;
+      padding: 8px;
+      color: #555555;
+      text-align: left;
+      border-bottom: solid 0.5px #dddddd;
+    }
+
+    .item:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .link {
+    display: block;
+    height: 44px;
   }
 }
 

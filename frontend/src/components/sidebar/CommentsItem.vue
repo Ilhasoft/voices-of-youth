@@ -10,7 +10,7 @@
       <p>KOPAJA - Koperasi Angkutan Jakarta, or in English Jakarta Transportation Cooperation is a public transportation service in Jakarta. Many people in Jakarta use this transportation for commuting to the workplace from home, or vice versa. Besides providing benefits, KOPAJA has a bad impact on respiratory health from it's emissions. KOPAJA must be demolished because the average age of KOPAJA armada is above 10 Years, and is using outdated technology.</p>
     </div>
 
-    <div class="column is-1 t-center" @mouseover="showActions" @mouseout="showActions">
+    <div class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more"></span>
       <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
         <p><a>Edit</a></p>
@@ -28,12 +28,6 @@ export default {
     return {
       isVisible: false,
     };
-  },
-
-  methods: {
-    showActions() {
-      this.isVisible = !this.isVisible;
-    },
   },
 };
 </script>

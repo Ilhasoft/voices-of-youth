@@ -26,7 +26,7 @@
     <!-- <thematic-maps /> -->
     <!-- <theme /> -->
     <!-- <report-detail /> -->
-    <search />
+    <!-- <search /> -->
   </div>
 </template>
 

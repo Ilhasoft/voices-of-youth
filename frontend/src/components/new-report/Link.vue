@@ -4,7 +4,7 @@
       <p class="left">sdf</p>
     </div>
 
-    <div class="column right" @mouseover="showActions" @mouseout="showActions">
+    <div class="column right" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more">
         <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
           <p><a>Edit</a></p>
@@ -23,12 +23,6 @@ export default {
     return {
       isVisible: false,
     };
-  },
-
-  methods: {
-    showActions() {
-      this.isVisible = !this.isVisible;
-    },
   },
 };
 </script>
@@ -67,6 +61,7 @@ export default {
     position: absolute;
     margin-top: -38px;
     margin-left: -15px;
+    cursor: pointer;
 
     p {
       margin-left: 15px;

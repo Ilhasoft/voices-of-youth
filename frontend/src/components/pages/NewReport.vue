@@ -45,7 +45,7 @@
               <label for="select-theme">Add photos and videos</label>
               <ul class="images">
                 <li>
-                  <button class="new-file" @mouseover="showWarning" @mouseout="showWarning">
+                  <button class="new-file" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
                       <path fill="#C7C7C7" fill-rule="evenodd" d="M17.126 10.8V4.493a3.602 3.602 0 0 0-7.204 0V10.8h-6.31a3.602 3.602 0 1 0 0 7.205h6.31v6.309a3.602 3.602 0 0 0 7.205 0v-6.31h6.309a3.602 3.602 0 0 0 0-7.204h-6.31z"/>
                     </svg>
@@ -120,12 +120,6 @@ export default {
       options: ['foo', 'bar', 'baz'],
       isWarningVisible: false,
     };
-  },
-
-  methods: {
-    showWarning() {
-      this.isWarningVisible = !this.isWarningVisible;
-    },
   },
 };
 </script>
