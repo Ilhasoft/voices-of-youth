@@ -42,7 +42,7 @@ class Project(BaseModel):
         path: URL path for the project. The default value is slug of name.
         language: Default language. If the user doesn't set the main language we use that language.
         window_title: Title that appear in browser window.
-        local_admin_group: Vinculate the local admin group for that project. This field is managed by the system.
+        local_admin_group: Vinculates the local admin group for that project. This field is managed by the system.
     """
     name = models.CharField(max_length=100, verbose_name=_('Name'))
     path = models.CharField(max_length=100,
