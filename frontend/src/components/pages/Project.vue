@@ -9,7 +9,7 @@
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
     <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link>
 
-    <!-- <side-bar /> -->
+    <side-bar />
   </div>
 </template>
 

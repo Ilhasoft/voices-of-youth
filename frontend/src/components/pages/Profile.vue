@@ -87,7 +87,6 @@ export default {
 
 .block {
   margin: 30px 170px 0px 170px;
-  position: absolute;
 
   .content {
     margin: auto;
