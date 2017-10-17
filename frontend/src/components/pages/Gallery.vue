@@ -103,7 +103,7 @@ export default {
 
   data() {
     return {
-      items: [1],
+      items: [1, 2, 3, 4, 5, 6],
     };
   },
 
@@ -146,6 +146,7 @@ export default {
   .card {
     border-radius: 10px;
     max-width: 256px;
+    box-shadow: none;
   }
 
   .title {
