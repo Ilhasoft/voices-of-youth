@@ -107,3 +107,28 @@ class ProjectLocalAdminGroupTestCase(TestCase):
         project = mommy.make(Project)
         self.assertListEqual(list(project.local_admin_group.permissions.all()),
                              list(template_group.permissions.all()))
+
+    def test_add_permission_in_local_admin_template_group_is_replicated(self):
+        """
+        When add a new permission to local admin template group, this will replicate to local admin groups?
+        """
+        template_group = Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE)
+        for perm in Permission.objects.all()[0:10]:
+            template_group.permissions.add(perm)
+        project = mommy.make(Project)
+        # Add extra permission
+        template_group.permissions.add(Permission.objects.all()[10])
+        self.assertListEqual(list(project.local_admin_group.permissions.all()),
+                             list(template_group.permissions.all()))
+
+    def test_remove_permission_in_local_admin_template_group_is_replicated(self):
+        """
+        When remove a new permission from local admin template group, this will replicate to local admin groups?
+        """
+        template_group = Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE)
+        template_group.permissions.add(*Permission.objects.all()[0:10])
+        project = mommy.make(Project)
+        # remove some permissions
+        template_group.permissions.remove(*Permission.objects.all()[5:10])
+        self.assertListEqual(list(project.local_admin_group.permissions.all()),
+                             list(template_group.permissions.all()))

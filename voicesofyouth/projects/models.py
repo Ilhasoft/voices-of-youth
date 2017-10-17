@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed
 from django.utils.text import slugify
 from django.contrib.auth.models import Group
 
@@ -157,3 +158,14 @@ def create_project_local_admin_group(sender, instance, **kwargs):
         for perm in Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE).permissions.all():
             instance.local_admin_group.permissions.add(perm)
         instance.save()
+
+@receiver(m2m_changed, sender=Group.permissions.through)
+def change_group_permission(instance, action, model, pk_set, **_):
+    """
+    When we change the template local admin group permissions, replicate to all projects.local_admin_group.
+    """
+    for project in Project.objects.filter(local_admin_group__isnull=False):
+        if action == 'post_add' and not project.local_admin_group.permissions.filter(id__in=pk_set).exists():
+            project.local_admin_group.permissions.add(*model.objects.filter(id__in=pk_set))
+        elif action == 'post_remove' and project.local_admin_group.permissions.filter(id__in=pk_set).exists():
+            project.local_admin_group.permissions.remove(*model.objects.filter(id__in=pk_set))
