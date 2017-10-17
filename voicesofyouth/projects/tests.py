@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.utils.text import slugify
 from django.db.utils import IntegrityError
+from django.db import transaction
+
 from model_mommy import mommy
 
 from .models import Project
@@ -26,8 +28,26 @@ class ProjectTestCase(TestCase):
         '''
         Project name is unique?
         '''
-        with self.assertRaises(IntegrityError):
-            mommy.make(Project, name=self.project_name)
+        try:
+            with transaction.atomic():
+                mommy.make(Project, name=self.project_name)
+                self.fail('Duplicate project name is allowed!')
+        except IntegrityError:
+            pass
+
+        try:
+            with transaction.atomic():
+                mommy.make(Project, name=self.project_name.lower())
+                self.fail('Duplicate project name(lower case) is allowed!')
+        except IntegrityError:
+            pass
+
+        try:
+            with transaction.atomic():
+                mommy.make(Project, name=self.project_name.upper())
+                self.fail('Duplicate project name(upper case) is allowed!')
+        except IntegrityError:
+            pass
 
     def test_with_window_title_none(self):
         '''
@@ -56,3 +76,14 @@ class ProjectTranslationTestCase(TestCase):
 
     def test__str__(self):
         self.assertEqual('Test project(US)', str(self.project_language))
+
+
+class ProjectLocalAdminGroupTestCase(TestCase):
+    def setUp(self):
+        self.project = mommy.make(Project)
+
+    def test_create_local_admin_group(self):
+        """
+        When we create a new project, your local admin group is created?
+        """
+        self.assertIsNotNone(self.project.local_admin_group)

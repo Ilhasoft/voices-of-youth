@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
+from django.contrib.auth.models import Group
 
 from voicesofyouth.core.models import BaseModel
 
@@ -38,11 +39,13 @@ class Project(BaseModel):
         path: URL path for the project. The default value is slug of name.
         language: Default language. If the user doesn't set the main language we use that language.
         window_title: Title that appear in browser window.
+        local_admin_group: Vinculate the local admin group for that project. This field is managed by the system.
     '''
-    name = models.CharField(max_length=100, verbose_name=_('Name'), unique=True)
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
     path = models.CharField(max_length=100,
                             null=True,
                             blank=True,
+                            unique=True,
                             verbose_name=_('URL Path'))
     language = models.CharField(max_length=90,
                                 choices=django_settings.LANGUAGES,
@@ -52,6 +55,7 @@ class Project(BaseModel):
                                     null=True,
                                     blank=True,
                                     verbose_name=_('Window Title'))
+    local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
 
     class Meta:
         verbose_name = _('Project')
@@ -133,3 +137,8 @@ def set_project_path(sender, instance, **kwargs):
 def set_project_window_title(sender, instance, **kwargs):
     if not instance.window_title:
         instance.window_title = instance.name
+
+# @receiver(pre_save, sender=Project)
+# def create_project_local_admin_group(sender, instance, **kwargs):
+#     if not instance.local_admin_group:
+#         instance.local_admin_group = instance.name
