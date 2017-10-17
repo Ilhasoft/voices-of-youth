@@ -132,11 +132,17 @@ class ProjectUsers(BaseModel):
 
 @receiver(pre_save, sender=Project)
 def set_project_path(sender, instance, **kwargs):
+    """
+    If user don't set the project path, we use the slugify version of name.
+    """
     if not instance.path:
         instance.path = slugify(instance.name)
 
 @receiver(pre_save, sender=Project)
 def set_project_window_title(sender, instance, **kwargs):
+    """
+    If user don't set the window title, we use the project.name.
+    """
     if not instance.window_title:
         instance.window_title = instance.name
 
