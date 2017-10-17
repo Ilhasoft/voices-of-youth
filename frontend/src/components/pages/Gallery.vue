@@ -145,8 +145,16 @@ export default {
 
   .card {
     border-radius: 10px;
-    max-width: 256px;
     box-shadow: none;
+
+    figure {
+      display: table;
+      margin: auto;
+    }
+  }
+
+  .image img {
+    max-width: 100%;
   }
 
   .title {

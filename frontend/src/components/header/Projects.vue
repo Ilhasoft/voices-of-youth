@@ -1,14 +1,14 @@
 <template>
   <div class="header logo">
     <div class="columns is-mobile h-height">
-      <div class="column is-3 p-left"><img class="logo-img" src="./../../assets/img/logo.png"></div>
+      <div class="column is-3 p-left is-hidden-touch"><img class="logo-img" src="./../../assets/img/logo.png"></div>
       <div class="column project">
-        <a href="" class="link" @click.prevent="isVisible = true">
+        <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           Rio de Janeiro
           <span class="icon-header-more"></span>
         </a>
 
-        <div class="projects-box" @mouseover="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
+        <div class="projects-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
           <div class="item">
             <a href="">Global - Climate change</a>
           </div>

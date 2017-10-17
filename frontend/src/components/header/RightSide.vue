@@ -1,14 +1,8 @@
 <template>
   <div class="columns is-mobile">
-    <div class="column has-text-right-desktop">
-      <search/>
-    </div>
-    <div class="column is-2 m-top">
-      <notification/>
-    </div>
-    <div class="column is-2 is-paddingless m-right m-top">
-      <account/>
-    </div>
+    <search/>
+    <notification/>
+    <account/>
   </div>
 </template>
 

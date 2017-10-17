@@ -4,12 +4,12 @@
       <div class="column"><a href="">Thematics maps</a></div>
       <div class="column"><a href="">Gallery</a></div>
       <div class="column language">
-        <a href="" class="link" @click.prevent="isVisible = true">
+        <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           Language
           <span class="icon-header-more"></span>
         </a>
 
-        <div class="language-box" @mouseover="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
+        <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
           <div class="item">
             <a href="">English</a>
           </div>

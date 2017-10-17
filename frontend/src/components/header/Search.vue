@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="column has-text-right">
     <img class="is-pulled-right img" src="./../../assets/img/header-search.png" @click.prevent="showInputSearch">
-    <input type="text" v-model="inputQuery" v-show="showInput" ref="search" @blur="hiddenInputSearch" />
+    <input type="text" v-model="inputQuery" v-show="showInput" ref="search" @blur="showInput = false" />
   </div>
 </template>
 
@@ -18,12 +18,8 @@ export default {
   },
 
   methods: {
-    hiddenInputSearch() {
-      this.showInput = !this.showInput;
-    },
-
     showInputSearch() {
-      this.showInput = !this.showInput;
+      this.showInput = true;
       this.$nextTick(() => {
         this.$refs.search.focus();
       });
