@@ -95,6 +95,9 @@ class GroupUnprotectedTestCase(BaseGroupTestCase):
 
 class SuperAdminGroupTestCase(TestCase):
     def test_add_user_in_superadmin_group(self):
+        """
+        When add an user to super admin group, the flag is_superuser is set to True?
+        """
         group = Group.objects.get(name__iexact=SUPER_ADMIN_GROUP)
         user = mommy.make(User)
         self.assertFalse(user.is_superuser)
@@ -102,6 +105,9 @@ class SuperAdminGroupTestCase(TestCase):
         self.assertTrue(user.is_superuser)
 
     def test_remove_user_from_superadmin_group(self):
+        """
+        When remove an user from super admin group, the flag is_superuser is set to False?
+        """
         group = Group.objects.get(name__iexact=SUPER_ADMIN_GROUP)
         user = mommy.make(User)
         user.groups.add(group)
