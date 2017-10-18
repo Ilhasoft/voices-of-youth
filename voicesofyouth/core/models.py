@@ -101,19 +101,20 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
     if instance.pk:
         original_instance = sender.objects.get(id=instance.pk)
 
-    # protected_group = any((original_instance.name.lower() in PROTECTED_GROUPS,
-    #               sender.objects.filter(name__iexact=instance.name).exists()))
     protected_group = original_instance.name.lower() in PROTECTED_GROUPS
     name_changed = original_instance.name != instance.name
 
+    # Edit an protected group.
     if (name_changed and protected_group):
         msg = _('This is a protected group. You cannot edit a protected group')
         raise ValidationError({'name': msg})
 
+    # Changing the group name conflicts with an existing group.
     if sender.objects.filter(name__iexact=instance.name).exists() and name_changed:
         msg = _('This group already exists!')
         raise ValidationError({'name': msg})
 
+    # Trying to create an new group with the same name from the group that already exists.
     if sender.objects.filter(name__iexact=instance.name).exists() and not instance.id:
         msg = _('This group already exists!')
         raise ValidationError({'name': msg})
