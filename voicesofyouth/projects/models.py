@@ -1,30 +1,20 @@
 from django.conf import settings as django_settings
-from django.db import models
-from django.contrib.gis.db import models as gismodels
-from django.utils.translation import ugettext_lazy as _
-from django.dispatch import receiver
-from django.db.models.signals import pre_save
-from django.db.models.signals import post_save
-from django.db.models.signals import m2m_changed
-from django.utils.text import slugify
 from django.contrib.auth.models import Group
+from django.contrib.gis.db import models as gismodels
+from django.db import models
+from django.db.models.signals import m2m_changed
+from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 
-
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
-
-
-USER_ADMIN = 1
-USER_MAPPER = 2
-
-USER_CHOICES = (
-    (USER_ADMIN, _('Local Administrator')),
-    (USER_MAPPER, _('Mapper')),
-)
 
 
 class Project(BaseModel):
@@ -108,23 +98,6 @@ class ProjectTranslation(BaseModel):
 
     def __str__(self):
         return f'{self.name}({self.language})'
-
-
-class ProjectUsers(BaseModel):
-    """
-    contrib.auth.models.Group.name.max_length = 80
-    """
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
-    user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
-
-    class Meta:
-        verbose_name = _('Projects Users')
-        verbose_name_plural = _('Projects Users')
-        db_table = 'projects_project_users'
-
-    def __str__(self):
-        return '{} - {}'.format(self.project.name, self.user.display_name)
 
 
 ###############################################################################

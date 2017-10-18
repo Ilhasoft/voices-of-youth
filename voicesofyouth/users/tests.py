@@ -2,13 +2,12 @@ import shutil
 import uuid
 from unittest import mock
 
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.test import TestCase
 from model_mommy import mommy
 
 from voicesofyouth.users.models import VoyUser
-
 
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'

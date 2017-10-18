@@ -1,16 +1,15 @@
-from django.test import TestCase
-from django.utils.text import slugify
-from django.db.utils import IntegrityError
-from django.db import transaction
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
-
+from django.db import transaction
+from django.db.utils import IntegrityError
+from django.test import TestCase
+from django.utils.text import slugify
 from model_mommy import mommy
 
+from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from .models import Project
 from .models import ProjectRegion
 from .models import ProjectTranslation
-from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 
 
 class ProjectTestCase(TestCase):

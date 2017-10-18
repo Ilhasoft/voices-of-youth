@@ -1,18 +1,15 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db.utils import IntegrityError
 from django.db import transaction
-
+from django.test import TestCase
 from model_mommy import mommy
 
-from voicesofyouth.core.models import PROTECTED_GROUPS
-from voicesofyouth.core.models import SUPER_ADMIN_GROUP
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
-
+from voicesofyouth.core.models import PROTECTED_GROUPS
+from voicesofyouth.core.models import SUPER_ADMIN_GROUP
 
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'
@@ -87,13 +84,17 @@ class GroupUnprotectedTestCase(TestCase):
         self.group = mommy.make(Group, name='Unprotected user')
 
     def test_delete(self):
-        """"""
+        """
+        Unprotected group can be deleted?
+        """
         self.assertEqual(Group.objects.all().count(), 6)
         self.group.delete()
         self.assertEqual(Group.objects.all().count(), 5)
 
     def test_edit(self):
-        """"""
+        """
+        Unprotected group can be edited?
+        """
         self.group.name = 'foo'
         self.group.save()
         self.group.refresh_from_db()
