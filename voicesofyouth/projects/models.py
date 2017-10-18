@@ -49,6 +49,7 @@ class Project(BaseModel):
                                     blank=True,
                                     verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
+    thumbnail = models.ImageField()
 
     class Meta:
         verbose_name = _('Project')
