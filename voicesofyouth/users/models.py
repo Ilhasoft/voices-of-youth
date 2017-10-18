@@ -5,7 +5,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from sorl.thumbnail.fields import ImageField
+from django_resized import ResizedImageField
+
 from unipath import Path
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
@@ -29,7 +30,12 @@ class VoyUser(AbstractUser):
         avatar: User avatar.
     '''
     language = models.CharField(max_length=90, choices=settings.LANGUAGES, default='en')
-    avatar = ImageField(verbose_name=_('Image'), upload_to=upload_to, null=True, blank=True)
+    avatar = ResizedImageField(verbose_name=_('Image'),
+                               upload_to=upload_to,
+                               null=True,
+                               blank=True,
+                               size=[50, 50],
+                               crop=['middle', 'center'])
 
 
 # We put this code here to centralize all references to User model.

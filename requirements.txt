@@ -6,8 +6,9 @@ python-decouple
 whitenoise
 unipath
 smartmin
-sorl-thumbnail
 coreapi
 coreapi-cli
 Pillow
 pyyaml
+django-resized
+

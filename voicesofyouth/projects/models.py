@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.gis.db import models as gismodels
@@ -9,12 +11,24 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
+from django_resized import ResizedImageField
+from unipath import Path
+
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
+
+
+def upload_to(instance, filename):
+    '''
+    Calculate user avatar upload path dynamically.
+    '''
+    UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename)
+    FILE_EXT = Path(filename).ext
+    return f'projects/{instance.id}/thumbnail/{UUID}{FILE_EXT}'
 
 
 class Project(BaseModel):
@@ -49,7 +63,7 @@ class Project(BaseModel):
                                     blank=True,
                                     verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
-    thumbnail = models.ImageField()
+    thumbnail = ResizedImageField(size=[139, 139], crop=['middle', 'center'], upload_to=upload_to)
 
     class Meta:
         verbose_name = _('Project')

@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'smartmin',
-    'sorl.thumbnail',
     'rest_framework',
     'rest_framework.authtoken',
     'voicesofyouth.core',
