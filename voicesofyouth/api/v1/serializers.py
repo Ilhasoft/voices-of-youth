@@ -34,7 +34,7 @@ class ProjectSerializer(VoySerializer):
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'path', 'language', 'maps', 'thumbnail')
+        fields = ('id', 'name', 'description', 'path', 'language', 'maps', 'thumbnail')
 
 
 class TagSerializer(serializers.ModelSerializer):

@@ -50,6 +50,7 @@ class Project(BaseModel):
         local_admin_group: Vinculates the local admin group for that project. This field is managed by the system.
     """
     name = models.CharField(max_length=100, verbose_name=_('Name'))
+    description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
     path = models.CharField(max_length=100,
                             null=True,
                             blank=True,
