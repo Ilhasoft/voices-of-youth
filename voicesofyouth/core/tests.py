@@ -3,7 +3,6 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db.utils import IntegrityError
 from django.db import transaction
 
 from model_mommy import mommy
