@@ -87,13 +87,17 @@ class GroupUnprotectedTestCase(TestCase):
         self.group = mommy.make(Group, name='Unprotected user')
 
     def test_delete(self):
-        """"""
+        """
+        Unprotected group can be deleted?
+        """
         self.assertEqual(Group.objects.all().count(), 6)
         self.group.delete()
         self.assertEqual(Group.objects.all().count(), 5)
 
     def test_edit(self):
-        """"""
+        """
+        Unprotected group can be edited?
+        """
         self.group.name = 'foo'
         self.group.save()
         self.group.refresh_from_db()
