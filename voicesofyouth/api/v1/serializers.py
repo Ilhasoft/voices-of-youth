@@ -1,11 +1,21 @@
 from django.shortcuts import reverse
 from rest_framework import serializers
-from voicesofyouth.projects.models import Project
-from voicesofyouth.tags.models import Tag
+
 from voicesofyouth.maps.models import Map
+from voicesofyouth.projects.models import Project
+from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
+from voicesofyouth.tags.models import Tag
 from voicesofyouth.themes.models import Theme, ThemeLanguage
 from voicesofyouth.users.models import User
-from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
+
+
+class VoySerializer(serializers.HyperlinkedModelSerializer):
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        validated_data['created_by'] = user
+        validated_data['modified_by'] = user
+        return super().create(validated_data)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,16 +25,16 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'display_name', 'language', 'user_image', 'personal_url')
 
 
-class ProjectSerializer(serializers.ModelSerializer):
-    maps = serializers.SerializerMethodField()
+class ProjectSerializer(VoySerializer):
+    maps = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='maps-detail'
+    )
 
     class Meta:
         model = Project
-        fields = ('id', 'name', 'path', 'is_active', 'language', 'maps')
-
-    def get_maps(self, obj):
-        request = self.context.get('request')
-        return '{}?project={}'.format(request.build_absolute_uri(reverse('maps-list')), obj.id)
+        fields = ('id', 'name', 'path', 'language', 'maps', 'thumbnail')
 
 
 class TagSerializer(serializers.ModelSerializer):

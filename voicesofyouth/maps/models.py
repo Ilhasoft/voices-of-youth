@@ -7,11 +7,8 @@ from voicesofyouth.projects.models import Project
 
 
 class Map(BaseModel):
-
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='maps')
     name = models.CharField(max_length=100, null=False, blank=False, verbose_name=_('Name'))
-
     bounds = gismodels.PolygonField(null=False, blank=False)
 
     def __str__(self):

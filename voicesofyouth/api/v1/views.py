@@ -14,7 +14,7 @@ from .serializers import ThemeAndReportsSerializer, UserSerializer
 from .serializers import ReportSerializer, ReportAndMediasSerializer, CommentSerializer
 
 
-class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
+class ProjectsViewSet(viewsets.ModelViewSet):
     """
     retrieve:
     Return the given project.
@@ -23,7 +23,7 @@ class ProjectsEndPoint(viewsets.ReadOnlyModelViewSet):
     Return a list of all the existing projects.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    queryset = Project.objects.all().filter(is_active=True)
+    queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
 
