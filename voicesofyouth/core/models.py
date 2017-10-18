@@ -30,6 +30,7 @@ from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Q
 
 from smartmin.models import SmartModel
 
@@ -116,15 +117,22 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
         raise ValidationError({'name': msg})
 
 @receiver(m2m_changed, sender=User.groups.through)
-def group_association(instance, action, model, pk_set, **_):
+def group_association(instance, action, model, pk_set, **__):
     """
-    When user is linked with super admin group, we set the flag is_superuser. When is removed we do
-    the inverse.
+    Take care of some business logic about groups.
+
+    When user is linked with super admin group, we set the flag is_superuser, when is removed we do the inverse.
+    When try to associated an user is to any template group, we raise the appropriated exception.
     """
-    if model.objects.filter(id__in=pk_set).filter(name__iexact=SUPER_ADMIN_GROUP).count():
+    qs = model.objects.filter(id__in=pk_set)
+
+    if qs.filter(name__iexact=SUPER_ADMIN_GROUP).count():
         if action == 'post_add':
             instance.is_superuser = True
             instance.save()
         elif action == 'post_remove':
             instance.is_superuser = False
             instance.save()
+    if qs.filter(Q(name__iexact=MAPPER_GROUP_TEMPLATE) | Q(name__iexact=LOCAL_ADMIN_GROUP_TEMPLATE)).count():
+        if action == 'pre_add':
+            raise ValidationError(_('You cannot add an user to a template group.'))

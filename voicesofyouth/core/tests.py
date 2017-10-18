@@ -138,3 +138,23 @@ class GroupMapperTemplateTestCase(TestCase):
         Template group mapper exists?
         """
         self.assertTrue(Group.objects.filter(name=MAPPER_GROUP_TEMPLATE).exists())
+
+
+class TemplateGroupTestCase(TestCase):
+    def test_add_user_to_mapper_template_group(self):
+        """
+        Users cannot be added to mapper template group?
+        """
+        group = Group.objects.get(name=MAPPER_GROUP_TEMPLATE)
+        user = mommy.make(User)
+        with self.assertRaises(ValidationError):
+            user.groups.add(group)
+
+    def test_add_user_to_local_admin_template_group(self):
+        """
+        Users cannot be added to local admin template group?
+        """
+        group = Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE)
+        user = mommy.make(User)
+        with self.assertRaises(ValidationError):
+            user.groups.add(group)
