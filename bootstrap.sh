@@ -7,7 +7,7 @@ PROJECT_NAME=`find . -not -path '*/\.*' -iname settings.py | cut -d \/ -f 2`
 create_venv() {
     if [ ! -d "${VENV_PATH}" ]; then
         echo "Creating a new virtual environment..."
-        virtualenv -p python3 ${VENV_NAME}
+        virtualenv -p python3.6 ${VENV_NAME}
     fi
     # The virtualenv has been created with success?
     if [ $? != 0 ]; then
@@ -24,12 +24,6 @@ validate_venv() {
         rm ${VENV_PATH} -rf
         return -1
     fi
-}
-
-bootstrap() {
-    source ${VENV_PATH}/bin/activate && {
-        pip install -r development.txt
-    }
 }
 
 install_deps() {
@@ -55,7 +49,6 @@ create_dotenv() {
 
 create_venv && {
     validate_venv && {
-        bootstrap
         install_deps
         init_git
         create_dotenv
