@@ -147,14 +147,40 @@ class TemplateGroupTestCase(TestCase):
         """
         group = Group.objects.get(name=MAPPER_GROUP_TEMPLATE)
         user = mommy.make(User)
-        with self.assertRaises(ValidationError):
-            user.groups.add(group)
+        # Associate user to template group using groups relation.
+        try:
+            with transaction.atomic():
+                with self.assertRaises(ValidationError):
+                    user.groups.add(group)
+        except ValidationError:
+            pass
+
+        # Associate user to template group using users_set reverse relation from group instance.
+        try:
+            with transaction.atomic():
+                with self.assertRaises(ValidationError):
+                    group.user_set.add(user)
+        except ValidationError:
+            pass
 
     def test_add_user_to_local_admin_template_group(self):
         """
         Users cannot be added to local admin template group?
         """
+        # Associate user to template group using groups relation.
         group = Group.objects.get(name=LOCAL_ADMIN_GROUP_TEMPLATE)
         user = mommy.make(User)
-        with self.assertRaises(ValidationError):
-            user.groups.add(group)
+        try:
+            with transaction.atomic():
+                with self.assertRaises(ValidationError):
+                    user.groups.add(group)
+        except ValidationError:
+            pass
+
+        # Associate user to template group using users_set reverse relation from group instance.
+        try:
+            with transaction.atomic():
+                with self.assertRaises(ValidationError):
+                    group.user_set.add(user)
+        except ValidationError:
+            pass

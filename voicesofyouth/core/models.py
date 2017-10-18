@@ -26,6 +26,7 @@ from django.db.models.signals import pre_delete
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.contrib.auth.models import Permission
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
 from django.core.exceptions import ValidationError
@@ -33,6 +34,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 
 from smartmin.models import SmartModel
+
+from voicesofyouth.users.models import VoyUser
 
 SUPER_ADMIN_GROUP = 'super admin'
 LOCAL_ADMIN_GROUP_TEMPLATE = 'local admin template'
@@ -126,13 +129,20 @@ def group_association(instance, action, model, pk_set, **__):
     """
     qs = model.objects.filter(id__in=pk_set)
 
-    if qs.filter(name__iexact=SUPER_ADMIN_GROUP).count():
-        if action == 'post_add':
-            instance.is_superuser = True
-            instance.save()
-        elif action == 'post_remove':
-            instance.is_superuser = False
-            instance.save()
-    if qs.filter(Q(name__iexact=MAPPER_GROUP_TEMPLATE) | Q(name__iexact=LOCAL_ADMIN_GROUP_TEMPLATE)).count():
-        if action == 'pre_add':
-            raise ValidationError(_('You cannot add an user to a template group.'))
+    # This case is fired when we do that: user.groups.add(group) or group.permissions.add(permission)
+    if model in (Group, Permission):
+        if qs.filter(name__iexact=SUPER_ADMIN_GROUP).count():
+            if action == 'post_add':
+                instance.is_superuser = True
+                instance.save()
+            elif action == 'post_remove':
+                instance.is_superuser = False
+                instance.save()
+        if qs.filter(Q(name__iexact=MAPPER_GROUP_TEMPLATE) | Q(name__iexact=LOCAL_ADMIN_GROUP_TEMPLATE)).count():
+            if action == 'pre_add':
+                raise ValidationError(_('You cannot add an user to a template group.'))
+    # This case is fired when we try to do that: group.user_set.add(user)
+    elif model == VoyUser:
+        if instance.name.lower() in (MAPPER_GROUP_TEMPLATE, LOCAL_ADMIN_GROUP_TEMPLATE):
+            if action == 'pre_add':
+                raise ValidationError(_('You cannot add an user to a template group.'))
