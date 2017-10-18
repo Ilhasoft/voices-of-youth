@@ -26,9 +26,10 @@ def upload_to(instance, filename):
     '''
     Calculate user avatar upload path dynamically.
     '''
-    UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename)
+    PROJECT_UUID = uuid.uuid5(uuid.NAMESPACE_OID, instance.name)
+    FILE_UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename)
     FILE_EXT = Path(filename).ext
-    return f'projects/{instance.id}/thumbnail/{UUID}{FILE_EXT}'
+    return f'projects/{PROJECT_UUID}/thumbnail/{FILE_UUID}{FILE_EXT}'
 
 
 class Project(BaseModel):
