@@ -31,24 +31,40 @@ $(cd docker && docker-compose start)
 
 Documentation
 -------------
-The documentation is generated use sphinx, and is splited in 2 areas, development and user.
+This project is shipped with documentation for developers and user. This section describe how to generate each of them.
 
-The sections bellow describe how to generate HTML version of documentation.
+We use [sphinx](http://www.sphinx-doc.org/en/stable/) to generate the documentation.
 
-### Development
-To generate developer's documentation execute the commands bellow:
+The sections bellow describe how to generate HTML versions of this documentations.
+
+> After execute commands to generate the documentation, you just need to open the file **build/html/index.html** inside the respective documentation directory.
+
+#### Development documentation
 
 ```
 cd docs/dev && make html
 ```
 
-This will generate all documentation inside the directory **docs/dev/build/html** just open the file **index.html** inside this directory.
-
 ### User
-To generate user's documentation execute the commands bellow:
 
 ```
 cd docs/user && make html
 ```
 
-This will generate all documentation inside the directory **docs/user/build/html** just open the file **index.html** inside this directory.
+Test
+----
+We use [unittest](https://docs.python.org/3/library/unittest.html) to write project tests.
+
+To the tests you have two options, with coverage and without coverage.
+
+### With coverage
+
+```
+$ coverage run manage.py test && coverage report
+```
+
+### Without coverage
+
+```
+$ python manage.py test
+```
