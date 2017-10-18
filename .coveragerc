@@ -10,4 +10,4 @@ omit =
         voicesofyouth/wsgi.py
         voicesofyouth/settings.py
 
-source = voicesofyouth.projects
+source = voicesofyouth
