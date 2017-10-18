@@ -11,10 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+
 import dj_database_url
 from decouple import config
-from unipath import Path
 from mommy_spatial_generators import MOMMY_SPATIAL_FIELDS
+from unipath import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).absolute().parent

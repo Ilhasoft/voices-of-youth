@@ -1,17 +1,15 @@
-from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import transaction
-
+from django.test import TestCase
 from model_mommy import mommy
 
-from voicesofyouth.core.models import PROTECTED_GROUPS
-from voicesofyouth.core.models import SUPER_ADMIN_GROUP
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
-
+from voicesofyouth.core.models import PROTECTED_GROUPS
+from voicesofyouth.core.models import SUPER_ADMIN_GROUP
 
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'

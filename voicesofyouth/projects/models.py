@@ -1,17 +1,16 @@
 from django.conf import settings as django_settings
-from django.db import models
-from django.contrib.gis.db import models as gismodels
-from django.utils.translation import ugettext_lazy as _
-from django.dispatch import receiver
-from django.db.models.signals import pre_save
-from django.db.models.signals import post_save
-from django.db.models.signals import m2m_changed
-from django.utils.text import slugify
 from django.contrib.auth.models import Group
+from django.contrib.gis.db import models as gismodels
+from django.db import models
+from django.db.models.signals import m2m_changed
+from django.db.models.signals import post_save
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
-
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
