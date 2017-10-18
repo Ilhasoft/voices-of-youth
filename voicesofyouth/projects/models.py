@@ -18,15 +18,6 @@ __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
 
 
-USER_ADMIN = 1
-USER_MAPPER = 2
-
-USER_CHOICES = (
-    (USER_ADMIN, _('Local Administrator')),
-    (USER_MAPPER, _('Mapper')),
-)
-
-
 class Project(BaseModel):
     """
     The project can aggregate many types of study themes.
@@ -108,23 +99,6 @@ class ProjectTranslation(BaseModel):
 
     def __str__(self):
         return f'{self.name}({self.language})'
-
-
-class ProjectUsers(BaseModel):
-    """
-    contrib.auth.models.Group.name.max_length = 80
-    """
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_users')
-    user = models.ForeignKey(django_settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    user_type = models.IntegerField(verbose_name=_('Type'), choices=USER_CHOICES)
-
-    class Meta:
-        verbose_name = _('Projects Users')
-        verbose_name_plural = _('Projects Users')
-        db_table = 'projects_project_users'
-
-    def __str__(self):
-        return '{} - {}'.format(self.project.name, self.user.display_name)
 
 
 ###############################################################################

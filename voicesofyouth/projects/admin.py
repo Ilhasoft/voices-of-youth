@@ -4,7 +4,6 @@ from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Project
 from .models import ProjectRegion
 from .models import ProjectTranslation
-from .models import ProjectUsers
 
 
 class ProjectAdmin(BaseModelAdmin):
@@ -25,17 +24,6 @@ class ProjectTranslationAdmin(BaseModelAdmin):
         return obj.settings.project.name
 
 
-class UsersAdmin(BaseModelAdmin):
-    list_display = ('project_name', 'user_name')
-
-    def project_name(self, obj):
-        return obj.project.name
-
-    def user_name(self, obj):
-        return obj.user.display_name
-
-
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(ProjectRegion, ProjectRegionAdmin)
 admin.site.register(ProjectTranslation, ProjectTranslationAdmin)
-admin.site.register(ProjectUsers, UsersAdmin)
