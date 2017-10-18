@@ -55,6 +55,14 @@ export default {
     };
   },
 
+  beforeCreate: () => {
+    document.body.className = 'grey';
+  },
+
+  beforeDestroy: () => {
+    document.body.className = 'white';
+  },
+
   methods: {
     setStatus(status, text) {
       this.status = status;

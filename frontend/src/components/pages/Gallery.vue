@@ -107,6 +107,14 @@ export default {
     };
   },
 
+  beforeCreate: () => {
+    document.body.className = 'grey';
+  },
+
+  beforeDestroy: () => {
+    document.body.className = 'white';
+  },
+
   methods: {
     getImage() {
       return '../../assets/img/gallery-1.png';

@@ -1,7 +1,11 @@
 $color:#555555;
 $font_family: 'Roboto', sans-serif;
 
-html {
+body.white {
+  background-color: #fff;
+}
+
+body.grey {
   background-color: #f6f6f6;
 }
 

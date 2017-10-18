@@ -40,6 +40,8 @@ export default {
 
 <style lang="scss" scoped>
 .projects-box {
+  position: absolute;
+  z-index: 100000;
   max-width: 200px;
   border-radius: 11px;
   background-color: #fff;
