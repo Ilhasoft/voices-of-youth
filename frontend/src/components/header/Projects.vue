@@ -110,7 +110,7 @@ export default {
   p {
     cursor: pointer;
     display: block;
-    height: 44px;
+    height: 43px;
     color: #555555;
   }
 }

@@ -22,6 +22,7 @@ export default {
 
     [TYPES.SET_CURRENT_PROJECT](state, obj) {
       state.current = obj;
+      document.title = `Voices of Youth - ${obj.name}`;
     },
 
     [TYPES.SET_DISCLAIMER_PROJECT](state, obj) {
