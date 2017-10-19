@@ -55,11 +55,10 @@ class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
     list:
     Return a list of all the existing themes by map.
     """
-    permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
-        return Theme.objects.all().filter(is_active=True).filter(visibled=True).filter(map__id=self.request.query_params.get('map', None))
+        return Theme.objects.all().filter(is_active=True).filter(visible=True).filter(project__id=self.request.query_params.get('project', 0))
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = ThemeAndReportsSerializer

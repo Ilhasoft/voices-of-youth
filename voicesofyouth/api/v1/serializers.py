@@ -4,7 +4,7 @@ from rest_framework import serializers
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
 from voicesofyouth.tags.models import Tag
-from voicesofyouth.themes.models import Theme, ThemeLanguage
+from voicesofyouth.themes.models import Theme, ThemeTranslation
 from voicesofyouth.users.models import User
 
 
@@ -63,14 +63,13 @@ class MapAndThemesSerializer(serializers.ModelSerializer):
         return ThemeSerializer(obj.get_themes(), many=True).data
 
 
-class ThemeLanguageSerializer(serializers.ModelSerializer):
+class ThemeTranslationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ThemeLanguage
+        model = ThemeTranslation
         fields = ('id', 'language', 'title', 'description', 'theme', 'created_on', 'modified_on')
 
 
 class ThemeSerializer(serializers.ModelSerializer):
-    created_by = UserSerializer(read_only=True)
     languages = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
@@ -78,10 +77,10 @@ class ThemeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Theme
-        fields = ('id', 'url', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags', 'reports')
+        fields = ('id', 'url', 'name', 'project', 'visible', 'languages', 'tags', 'reports')
 
     def get_languages(self, obj):
-        return ThemeLanguageSerializer(obj.get_languages(), many=True).data
+        return ThemeTranslationSerializer(obj.get_languages(), many=True).data
 
     def get_tags(self, obj):
         return TagSerializer(obj.get_tags(), many=True).data
@@ -181,10 +180,10 @@ class ThemeAndReportsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Theme
-        fields = ('id', 'name', 'project', 'visibled', 'cover', 'created_by', 'created_on', 'modified_on', 'languages', 'tags', 'reports')
+        fields = ('id', 'name', 'project', 'visible', 'languages', 'tags', 'reports')
 
     def get_languages(self, obj):
-        return ThemeLanguageSerializer(obj.get_languages(), many=True).data
+        return ThemeTranslationSerializer(obj.get_languages(), many=True).data
 
     def get_tags(self, obj):
         return TagSerializer(obj.get_tags(), many=True).data
