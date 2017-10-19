@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="columns is-mobile" v-if="showMenu">
-      <div class="column"><a href="">Thematics maps</a></div>
+      <div class="column"><a href="" @click.prevent="openThematicMaps">Thematics maps</a></div>
       <div class="column"><a href="">Gallery</a></div>
       <div class="column language">
         <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Menu',
@@ -53,6 +53,21 @@ export default {
     return {
       isVisible: false,
     };
+  },
+
+  methods: {
+    ...mapActions([
+      'setSideBarConfigs',
+    ]),
+
+    openThematicMaps() {
+      this.setSideBarConfigs({
+        title: 'Thematic Maps',
+        tabActived: 'ThematicMaps',
+        backButton: false,
+        isActived: true,
+      });
+    },
   },
 
   computed: {

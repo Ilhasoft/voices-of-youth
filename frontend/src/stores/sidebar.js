@@ -2,12 +2,30 @@ import * as TYPES from './types';
 
 export default {
   state: {
+    isActived: false,
     title: '',
-    tabView: '',
-    viewBackButton: true,
+    tabActived: '',
+    backButton: true,
   },
 
-  mutations: {},
+  getters: {
+    getSideBarIsActived: state => state.isActived,
+    getSideBarConfig: state => state,
+  },
 
-  actions: {},
+  /* eslint-disable no-param-reassign */
+  mutations: {
+    [TYPES.SIDEBAR_SET_CONFIGS](state, obj) {
+      state.isActived = obj.isActived;
+      state.title = obj.title;
+      state.tabActived = obj.tabActived;
+      state.backButton = obj.backButton;
+    },
+  },
+
+  actions: {
+    setSideBarConfigs({ commit, state }, obj) {
+      commit(TYPES.SIDEBAR_SET_CONFIGS, obj);
+    },
+  },
 };
