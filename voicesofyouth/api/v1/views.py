@@ -2,29 +2,14 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
+from voicesofyouth.reports.models import Report
 from voicesofyouth.themes.models import Theme, ThemeTags
 from voicesofyouth.users.models import User
-from voicesofyouth.reports.models import Report
-
-from .serializers import TagSerializer, ProjectSerializer
-from .serializers import MapSerializer, MapAndThemesSerializer, ThemeSerializer
-from .serializers import ThemeAndReportsSerializer, UserSerializer
+from .serializers import MapSerializer, ThemeSerializer
 from .serializers import ReportSerializer, ReportAndMediasSerializer, CommentSerializer
-
-
-class ProjectsViewSet(viewsets.ModelViewSet):
-    """
-    retrieve:
-    Return the given project.
-
-    list:
-    Return a list of all the existing projects.
-    """
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+from .serializers import TagSerializer
+from .serializers import ThemeAndReportsSerializer, UserSerializer
 
 
 class TagsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -50,15 +35,16 @@ class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = MapSerializer
+    queryset = Map.objects.all()
 
-    def get_queryset(self):
-        return Map.objects.all().filter(is_active=True).filter(project__id=self.request.query_params.get('project', None))
-
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = MapAndThemesSerializer
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
+    # def get_queryset(self):
+    #     return Map.objects.filter(is_active=True).filter(id=self.kwargs['pk'])
+    #
+    # def retrieve(self, request, *args, **kwargs):
+    #     self.serializer_class = MapAndThemesSerializer
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)
 
 
 class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):

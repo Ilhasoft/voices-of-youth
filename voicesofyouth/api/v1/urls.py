@@ -1,13 +1,21 @@
 from django.conf.urls import url, include
 from rest_framework.authtoken import views as rest_framework_views
-from rest_framework.routers import DefaultRouter
 from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
 
-from .views import ProjectsViewSet, MapsEndPoint, ThemesEndPoint
-from .views import TagsEndPoint, UsersEndPoint, ReportsEndPoint, CommentsEndPoint
+from .project.views import ProjectsRegionViewSet
+from .project.views import ProjectsViewSet
+from .project.views import ProjectsTranslationViewSet
+from .views import CommentsEndPoint
+from .views import MapsEndPoint, ThemesEndPoint
+from .views import ReportsEndPoint
+from .views import TagsEndPoint
+from .views import UsersEndPoint
 
 router = DefaultRouter()
 router.register(r'projects', ProjectsViewSet, base_name='projects')
+router.register(r'projects-regions', ProjectsRegionViewSet, base_name='projects-regions')
+router.register(r'projects-translations', ProjectsTranslationViewSet, base_name='projects-translations')
 router.register(r'maps', MapsEndPoint, base_name='maps')
 router.register(r'themes', ThemesEndPoint, base_name='themes')
 router.register(r'tags', TagsEndPoint, base_name='tags')
