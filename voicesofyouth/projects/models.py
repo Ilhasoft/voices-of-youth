@@ -76,11 +76,11 @@ class Project(BaseModel):
 
 class ProjectRegion(BaseModel):
     """
-    Define a region where themes can be created.
+    Limit the region where themes can be created.
 
     Attributes:
          project: Project linked.
-         region: Delimit the geo location where themes can be created.
+         region: Delimit the geo location area where themes can be created.
     """
     project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='project_region')
     region = gismodels.PolygonField()
@@ -111,7 +111,7 @@ class ProjectTranslation(BaseModel):
     class Meta:
         verbose_name = _('Project translation')
         verbose_name_plural = _('Projects translations')
-        db_table = 'projects_translation'
+        db_table = 'projects_'
 
     def __str__(self):
         return f'{self.name}({self.language})'
