@@ -2,7 +2,6 @@ from django.shortcuts import reverse
 from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
-from voicesofyouth.projects.models import Project
 from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
 from voicesofyouth.tags.models import Tag
 from voicesofyouth.themes.models import Theme, ThemeLanguage
@@ -25,18 +24,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'display_name', 'language', 'user_image', 'personal_url')
 
 
-class ProjectSerializer(VoySerializer):
-    maps = serializers.HyperlinkedRelatedField(
-        many=True,
-        read_only=True,
-        view_name='maps-detail'
-    )
-
-    class Meta:
-        model = Project
-        fields = ('id', 'name', 'description', 'path', 'language', 'maps', 'thumbnail', 'window_title')
-
-
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -45,12 +32,15 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class MapSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer(read_only=True)
-    themes = serializers.SerializerMethodField()
+    project = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        view_name='projects-detail'
+    )
+    # themes = serializers.SerializerMethodField()
 
     class Meta:
         model = Map
-        fields = ('id', 'name', 'bounds', 'is_active', 'project', 'themes')
+        fields = ('id', 'name', 'bounds', 'is_active', 'project')
 
     def get_themes(self, obj):
         request = self.context.get('request')
@@ -58,7 +48,11 @@ class MapSerializer(serializers.ModelSerializer):
 
 
 class MapAndThemesSerializer(serializers.ModelSerializer):
-    project = ProjectSerializer(read_only=True)
+    project = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='projects-detail'
+    )
     themes = serializers.SerializerMethodField()
 
     class Meta:
