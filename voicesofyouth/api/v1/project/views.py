@@ -9,19 +9,16 @@ from .serializers import ProjectSerializer
 from .serializers import ProjectTranslationSerializer
 
 
-class ProjectsViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
 
-class ProjectsRegionViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class ProjectsRegionViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProjectRegion.objects.all()
     serializer_class = ProjectRegionSerializer
 
 
-class ProjectsTranslationViewSet(viewsets.ModelViewSet):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+class ProjectsTranslationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProjectTranslation.objects.all()
     serializer_class = ProjectTranslationSerializer
