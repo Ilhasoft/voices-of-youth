@@ -11,6 +11,8 @@ This project have a shell script that prepare the environment to execute the pro
 Open the terminal and type:
 ```
 ./bootstrap.sh && source env/bin/activate
+python manage.py migrate
+python manage.py runserver
 ```
 
 > This project requires python >= 3.6.
