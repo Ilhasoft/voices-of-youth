@@ -12,6 +12,7 @@ def resize_image(img, size, img_format='PNG', quality=100):
         shutil.copy(img, temp_img)
 
         im = Image.open(temp_img)
-        if im.size != size:
-            im = im.resize(size)
+        im_size = im.size
+        if im_size != size:
+            im.thumbnail(size, Image.ANTIALIAS)
             im.save(img, format=img_format, quality=quality)
