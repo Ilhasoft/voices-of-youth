@@ -3,13 +3,12 @@ from rest_framework import serializers
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.projects.models import Project
 from voicesofyouth.projects.models import ProjectRegion
-from voicesofyouth.projects.models import ProjectTranslation
 
 
 class ProjectSerializer(VoySerializer):
     project_region = serializers.HyperlinkedRelatedField(
         read_only=True,
-        view_name='project-regions-detail'
+        view_name='projects-regions-detail'
     )
 
     class Meta:
