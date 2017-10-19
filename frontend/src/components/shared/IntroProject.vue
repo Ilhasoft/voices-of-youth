@@ -3,15 +3,15 @@
     <div class="opacity"></div>
     <div class="intro">
       <div class="header">
-        <img src="./../../assets/img/intro.png"/>
+        <img src="~@/assets/img/intro.png"/>
       </div>
       <div class="body">
-        <h3>Welcome to UNICEF's Youth Led Digital Mapping in Rio de Janeiro, Brazil</h3>
+        <h3>Welcome to {{ currentProject.name }}!</h3>
 
         <p>This project explores tools to help youth build impactful, communicative digital maps using mobile and web technologies. A phone application allows youth to produce a portrait of their community through geo-located photos and videos, organized in thematic maps.</p>
 
         <div class="join">
-          <a class="button btn-join" @click.prevent="dismissIntro">Let's go!</a>
+          <a class="button btn-join" @click.prevent="dismissDisclaimer">Let's go!</a>
         </div>
       </div>
     </div>
@@ -19,18 +19,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
   name: 'IntroProject',
 
-  data() {
-    return {
-      isVisibled: true,
-    };
+  computed: {
+    ...mapGetters({
+      isVisibled: 'getDisclaimerProject',
+      currentProject: 'getCurrentProject',
+    }),
   },
 
   methods: {
-    dismissIntro() {
-      this.isVisibled = false;
+    ...mapActions([
+      'showDisclaimerProject',
+    ]),
+
+    dismissDisclaimer() {
+      this.showDisclaimerProject(false);
     },
   },
 };
@@ -79,18 +86,18 @@ export default {
       font-size: 32px;
       font-weight: bold;
       letter-spacing: -0.8px;
-      text-align: left;
+      text-align: center;
       color: #7412fe;
     }
 
     p {
+      min-height: 250px;
       margin-top: 36px;
       font-size: 15px;
       line-height: 1.67;
       letter-spacing: -0.4px;
-      text-align: left;
+      text-align: center;
       color: #000000;
-      min-height: 110px;
     }
 
     .join {

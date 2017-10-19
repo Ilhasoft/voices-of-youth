@@ -5,11 +5,13 @@ export default {
   state: {
     all: [],
     current: {},
+    disclaimer: true,
   },
 
   getters: {
     getAllProjects: state => state.all,
     getCurrentProject: state => state.current,
+    getDisclaimerProject: state => state.disclaimer,
   },
 
   /* eslint-disable no-param-reassign */
@@ -20,6 +22,10 @@ export default {
 
     [TYPES.SET_CURRENT_PROJECT](state, obj) {
       state.current = obj;
+    },
+
+    [TYPES.SET_DISCLAIMER_PROJECT](state, obj) {
+      state.disclaimer = obj;
     },
   },
 
@@ -33,7 +39,16 @@ export default {
     },
 
     setCurrentProject({ commit, state }, obj) {
-      commit(TYPES.SET_CURRENT_PROJECT, obj);
+      if (obj) {
+        commit(TYPES.SET_CURRENT_PROJECT, obj);
+        localStorage.setItem('project', JSON.stringify(obj));
+      } else {
+        commit(TYPES.SET_CURRENT_PROJECT, JSON.parse(localStorage.getItem('project')));
+      }
+    },
+
+    showDisclaimerProject({ commit }, obj) {
+      commit(TYPES.SET_DISCLAIMER_PROJECT, obj);
     },
   },
 };

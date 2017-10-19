@@ -23,11 +23,15 @@ export default new Router({
     },
 
     // project selected
+    // TODO: Refactor routes
     {
       path: '/project/:path',
       name: 'project',
       component: ProjectPage,
       beforeEnter: (to, from, next) => {
+        stores.dispatch('setProjects');
+        stores.dispatch('setCurrentProject');
+
         stores.dispatch('updateHeaderConfig', {
           showMenu: true,
           showProjects: true,

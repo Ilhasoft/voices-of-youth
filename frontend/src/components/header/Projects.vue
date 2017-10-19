@@ -1,24 +1,22 @@
 <template>
   <div class="header logo">
     <div class="columns is-mobile h-height">
-      <div class="column is-3 p-left is-hidden-touch"><img class="logo-img" src="./../../assets/img/logo.png"></div>
+      <div class="column is-3 p-left is-hidden-touch">
+        <img class="logo-img" src="~@/assets/img/logo.png">
+      </div>
+      
       <div class="column project">
-        <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
-          Rio de Janeiro
+        <p class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
+          {{ currentProject.name }}
           <span class="icon-header-more"></span>
-        </a>
+        </p>
 
         <div class="projects-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
-          <div class="item">
-            <a href="">Global - Climate change</a>
-          </div>
-
-          <div class="item">
-            <a href="">São Paulo</a>
-          </div>
-
-          <div class="item">
-            <a href="">Global - Religion</a>
+          <div class="item" :key="item.id" v-for="item in projectsList">
+            <router-link
+              :to="{ name: 'project', params: { path: item.path }}"
+              @click.native="openProject(item)">{{ item.name }}
+            </router-link>
           </div>
         </div>
       </div>
@@ -27,6 +25,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'Projects',
 
@@ -34,6 +34,23 @@ export default {
     return {
       isVisible: false,
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      projectsList: 'getAllProjects',
+      currentProject: 'getCurrentProject',
+    }),
+  },
+
+  methods: {
+    ...mapActions([
+      'setCurrentProject',
+    ]),
+
+    openProject(item) {
+      this.setCurrentProject(item);
+    },
   },
 };
 </script>
@@ -88,9 +105,11 @@ export default {
     font-size: 10px;
   }
 
-  .link {
+  p {
+    cursor: pointer;
     display: block;
     height: 44px;
+    color: #555555;
   }
 }
 </style>
