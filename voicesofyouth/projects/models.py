@@ -82,7 +82,7 @@ class ProjectRegion(BaseModel):
          project: Project linked.
          region: Delimit the geo location where themes can be created.
     """
-    project = models.OneToOneField(Project, on_delete=models.CASCADE)
+    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='project_region')
     region = gismodels.PolygonField()
 
     class Meta:
@@ -106,11 +106,12 @@ class ProjectTranslation(BaseModel):
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
     window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
+    description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
 
     class Meta:
-        verbose_name = _('Project Languages')
-        verbose_name_plural = _('Projects Languages')
-        db_table = 'projects_languages'
+        verbose_name = _('Project translation')
+        verbose_name_plural = _('Projects translations')
+        db_table = 'projects_translation'
 
     def __str__(self):
         return f'{self.name}({self.language})'
