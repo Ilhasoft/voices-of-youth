@@ -1,10 +1,13 @@
+from PIL import Image
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
+from django.core.files.images import ImageFile
 from django.db import transaction
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils.text import slugify
 from model_mommy import mommy
+from unipath import Path
 
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from .models import Project
@@ -56,6 +59,17 @@ class ProjectTestCase(TestCase):
         When window_title is None we use project name as default value?
         '''
         self.assertEqual(self.project.window_title, self.project.name)
+
+    def test_thumbnail_resize(self):
+        """
+        The thumbnail file are resized when saving?
+        """
+        test_img = Path(__file__).absolute().ancestor(2).child('test', 'assets', 'python.png')
+        with self.settings(MEDIA_ROOT='/tmp'), open(test_img, 'rb') as image:
+            fake_thumbnail = ImageFile(image)
+            project = mommy.make(Project, thumbnail=fake_thumbnail)
+            resized = Image.open(project.thumbnail.file)
+            self.assertEqual(resized.size, (139, 139))
 
 
 class ProjectRegionTestCase(TestCase):
