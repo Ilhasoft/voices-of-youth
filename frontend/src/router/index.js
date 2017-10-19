@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+
 import HomePage from '../components/pages/Home';
 import ProjectPage from '../components/pages/Project';
 import LoginPage from '../components/pages/Login';
@@ -23,8 +24,8 @@ export default new Router({
 
     // project selected
     {
-      path: '/project/:id',
-      name: 'Project',
+      path: '/project/:path',
+      name: 'project',
       component: ProjectPage,
       beforeEnter: (to, from, next) => {
         stores.dispatch('updateHeaderConfig', {

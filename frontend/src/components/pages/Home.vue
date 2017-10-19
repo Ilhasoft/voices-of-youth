@@ -19,15 +19,18 @@
     <div class="body container">
       <h1>Country Maps</h1>
 
-      <div class="columns is-marginless m-bottom" :key="item" v-for="item in items">
+      <div class="columns is-marginless m-bottom" :key="item.id" v-for="item in projectsList">
         <div class="column is-2 is-paddingless image">
-          <img src="~@/assets/img/map-example.png" alt="">
+          <img :src="item.thumbnail" v-if="item.thumbnail" alt="" />
         </div>
 
         <div class="column is-marginless p-top">
-          <h2>Rio de Janeiro</h2>
-          <small>Youth participants in the neighbourhood of San Miguel in Buenos  Aires identified the environmental and physical issues related to garbage disposal, the poor…</small>
-          <router-link to="/project/rio" class="button">See more</router-link>
+          <h2>{{ item.name }}</h2>
+          <small>{{ item.description }}</small>
+          <router-link
+            :to="{ name: 'project', params: { path: item.path }}"
+            @click.native="openProject(item)"
+            class="button">See more</router-link>
         </div>
       </div>
     </div>
@@ -35,13 +38,30 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'Home',
 
-  data() {
-    return {
-      items: [1, 2, 3],
-    };
+  mounted() {
+    this.setProjects();
+  },
+
+  computed: {
+    ...mapGetters({
+      projectsList: 'getAllProjects',
+    }),
+  },
+
+  methods: {
+    ...mapActions([
+      'setProjects',
+      'setCurrentProject',
+    ]),
+
+    openProject(item) {
+      this.setCurrentProject(item);
+    },
   },
 
   beforeCreate: () => {
