@@ -10,12 +10,11 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
-
-from django_resized import ResizedImageField
 from unipath import Path
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
+from voicesofyouth.core.utils import resize_image
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
@@ -65,7 +64,7 @@ class Project(BaseModel):
                                     blank=True,
                                     verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
-    thumbnail = ResizedImageField(size=[139, 139], crop=['middle', 'center'], upload_to=upload_to)
+    thumbnail = models.ImageField(upload_to=upload_to)
 
     class Meta:
         verbose_name = _('Project')
@@ -159,3 +158,9 @@ def change_group_permission(instance, action, model, pk_set, **_):
             project.local_admin_group.permissions.add(*model.objects.filter(id__in=pk_set))
         elif action == 'post_remove' and project.local_admin_group.permissions.filter(id__in=pk_set).exists():
             project.local_admin_group.permissions.remove(*model.objects.filter(id__in=pk_set))
+
+@receiver(post_save, sender=Project)
+def resize_thumbnail(sender, instance, **kwargs):
+    if instance.thumbnail:
+        size = 139, 139
+        resize_image(instance.thumbnail.file.name, size)
