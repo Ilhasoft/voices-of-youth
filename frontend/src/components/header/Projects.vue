@@ -46,10 +46,12 @@ export default {
   methods: {
     ...mapActions([
       'setCurrentProject',
+      'showDisclaimerProject',
     ]),
 
     openProject(item) {
       this.setCurrentProject(item);
+      this.showDisclaimerProject(true);
     },
   },
 };

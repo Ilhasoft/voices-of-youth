@@ -61,6 +61,7 @@ export default {
 
     openProject(item) {
       this.setCurrentProject(item);
+      this.showDisclaimerProject(true);
     },
   },
 
