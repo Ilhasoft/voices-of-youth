@@ -7,8 +7,8 @@
     <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
     <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link> -->
-    <!-- <side-bar /> -->
     <intro-project/>
+    <side-bar/>
   </div>
 </template>
 
