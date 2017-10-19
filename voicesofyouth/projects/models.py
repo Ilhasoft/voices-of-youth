@@ -111,7 +111,7 @@ class ProjectTranslation(BaseModel):
     class Meta:
         verbose_name = _('Project translation')
         verbose_name_plural = _('Projects translations')
-        db_table = 'projects_'
+        db_table = 'projects_translation'
 
     def __str__(self):
         return f'{self.name}({self.language})'
