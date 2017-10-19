@@ -1,7 +1,11 @@
 import * as TYPES from './types';
 
 export default {
-  state: {},
+  state: {
+    title: '',
+    tabView: '',
+    viewBackButton: true,
+  },
 
   mutations: {},
 
