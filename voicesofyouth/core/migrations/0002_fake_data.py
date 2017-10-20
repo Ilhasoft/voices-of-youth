@@ -21,11 +21,20 @@ def create_dev_data(apps, schema_editor):
 
         test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
         with open(test_img, 'rb') as image:
+            tags = ('trash',
+                    'healthy',
+                    'security',
+                    'harzadous area',
+                    'climate changes',
+                    'star wars',
+                    'crazy',
+                    'anything')
             fake_thumbnail = ImageFile(image)
             for x in range(random.randint(5, 15)):
                 project = mommy.make(Project, name=f'Project {x}', thumbnail=fake_thumbnail)
                 for y in range(random.randint(5, 15)):
-                    mommy.make(Theme, project=project, name=f'Theme {y}')
+                    theme = mommy.make(Theme, project=project, name=f'Theme {y}')
+                    theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
 
 
 class Migration(migrations.Migration):
@@ -34,6 +43,7 @@ class Migration(migrations.Migration):
         ('core', '0001_initial'),
         ('projects', '0002_auto_20171020_1440'),
         ('themes', '0004_auto_20171020_1711'),
+        ('tag', '0003_auto_20171020_1840')
     ]
 
     operations = [
