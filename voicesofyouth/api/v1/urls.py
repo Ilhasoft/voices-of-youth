@@ -6,9 +6,9 @@ from rest_framework.routers import DefaultRouter
 from .project.views import ProjectsRegionViewSet
 from .project.views import ProjectsViewSet
 from .project.views import ProjectsTranslationViewSet
+from .theme.views import ThemesViewSet
 from .views import CommentsEndPoint
 from .views import MapsEndPoint
-from .views import ThemesViewSet
 from .views import ReportsEndPoint
 from .views import TagsViewSet
 from .views import UsersEndPoint
