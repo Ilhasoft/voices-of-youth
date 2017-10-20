@@ -11,4 +11,4 @@ coreapi-cli
 Pillow
 pyyaml
 django-resized
-
+django-taggit
