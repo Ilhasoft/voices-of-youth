@@ -5,7 +5,7 @@ from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Tag
 
 
-class TagAdmin(BaseModelAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'urgency_score')
 
 
