@@ -36,7 +36,7 @@ def create_dev_data(apps, schema_editor):
                 for y in range(random.randint(5, 15)):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}')
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                    theme.translations.add(*mommy.make(ThemeTranslation, random.randint(1, 5)))
+                    theme.translations.add(*mommy.make(ThemeTranslation, random.randint(1, 5), theme=theme))
 
 
 class Migration(migrations.Migration):
