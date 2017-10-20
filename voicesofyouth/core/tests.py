@@ -87,9 +87,9 @@ class GroupUnprotectedTestCase(TestCase):
         """
         Unprotected group can be deleted?
         """
-        self.assertEqual(Group.objects.all().count(), 4)
+        self.assertEqual(Group.objects.all().count(), 5)
         self.group.delete()
-        self.assertEqual(Group.objects.all().count(), 3)
+        self.assertEqual(Group.objects.all().count(), 4)
 
     def test_edit(self):
         """
