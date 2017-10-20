@@ -11,8 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
-from voicesofyouth.tags.models import Tag
-from voicesofyouth.themes.models import Theme
+from voicesofyouth.tag.models import Tag
+from voicesofyouth.theme.models import Theme
 
 
 STATUS_APPROVED = 1
@@ -104,21 +104,6 @@ class ReportLanguage(BaseModel):
         verbose_name = _('Reports Languages')
         verbose_name_plural = _('Reports Languages')
         db_table = 'reports_report_languages'
-
-
-class ReportTags(BaseModel):
-
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_tags')
-
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='report_tags_tag')
-
-    def __str__(self):
-        return self.tag.name
-
-    class Meta:
-        verbose_name = _('Reports Tags')
-        verbose_name_plural = _('Reports Tags')
-        db_table = 'reports_report_tags'
 
 
 class ReportFavoriteBy(BaseModel):

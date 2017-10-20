@@ -1,28 +1,34 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from voicesofyouth.api.v1.serializers import TagSerializer
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report
-from voicesofyouth.themes.models import Theme, ThemeTags
+from voicesofyouth.tag.models import Tag
+from voicesofyouth.theme.models import Theme
 from voicesofyouth.users.models import User
-from .serializers import MapSerializer, ThemeSerializer
-from .serializers import ReportSerializer, ReportAndMediasSerializer, CommentSerializer
-from .serializers import TagSerializer
-from .serializers import ThemeAndReportsSerializer, UserSerializer
+from .serializers import CommentSerializer
+from .serializers import MapSerializer
+from .serializers import ReportAndMediasSerializer
+from .serializers import ReportSerializer
+from .serializers import UserSerializer
 
 
-class TagsEndPoint(viewsets.ReadOnlyModelViewSet):
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    list:
-    Return a list of all the existing tags. Required Theme ID
+    Only list tags related with theme.
+
+    User cannot create tags directly via API because tags cannot exists without related data. e.g. When create new
+    Theme, if user send a list of tags(comma separated) the system will created these tags automatically.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
 
     def get_queryset(self):
-        queryset = ThemeTags.objects.all().filter(theme__id=self.request.query_params.get('theme', None))
-        return map(lambda tag: tag.tag, queryset)
+        theme = get_object_or_404(Theme, pk=self.request.query_params.get('theme', 0))
+        return Tag.objects.filter(object_id=theme.id)
 
 
 class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -45,26 +51,6 @@ class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
     #     instance = self.get_object()
     #     serializer = self.get_serializer(instance)
     #     return Response(serializer.data)
-
-
-class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
-    """
-    retrieve:
-    Return the given theme.
-
-    list:
-    Return a list of all the existing themes by map.
-    """
-    serializer_class = ThemeSerializer
-
-    def get_queryset(self):
-        return Theme.objects.all().filter(is_active=True).filter(visible=True).filter(project__id=self.request.query_params.get('project', 0))
-
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = ThemeAndReportsSerializer
-        instance = Theme.objects.get(pk=kwargs.get('pk'))
-        serializer = self.get_serializer(instance)
-        return Response(serializer.data)
 
 
 class ReportsEndPoint(viewsets.ReadOnlyModelViewSet,

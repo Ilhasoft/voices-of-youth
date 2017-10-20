@@ -6,10 +6,12 @@ from rest_framework.routers import DefaultRouter
 from .project.views import ProjectsRegionViewSet
 from .project.views import ProjectsViewSet
 from .project.views import ProjectsTranslationViewSet
+from .theme.views import ThemesViewSet
+from .theme.views import ThemeTranslationViewSet
 from .views import CommentsEndPoint
-from .views import MapsEndPoint, ThemesEndPoint
+from .views import MapsEndPoint
 from .views import ReportsEndPoint
-from .views import TagsEndPoint
+from .views import TagsViewSet
 from .views import UsersEndPoint
 
 router = DefaultRouter()
@@ -17,8 +19,9 @@ router.register(r'projects', ProjectsViewSet, base_name='projects')
 router.register(r'projects-regions', ProjectsRegionViewSet, base_name='projects-regions')
 router.register(r'projects-translations', ProjectsTranslationViewSet, base_name='projects-translations')
 router.register(r'maps', MapsEndPoint, base_name='maps')
-router.register(r'themes', ThemesEndPoint, base_name='themes')
-router.register(r'tags', TagsEndPoint, base_name='tags')
+router.register(r'themes', ThemesViewSet, base_name='themes')
+router.register(r'theme-translations', ThemeTranslationViewSet, base_name='theme-translations')
+router.register(r'tags', TagsViewSet, base_name='tags')
 router.register(r'users', UsersEndPoint, base_name='users')
 router.register(r'reports', ReportsEndPoint, base_name='reports')
 router.register(r'comments', CommentsEndPoint, base_name='comments')

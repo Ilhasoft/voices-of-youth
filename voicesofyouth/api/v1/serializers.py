@@ -3,8 +3,8 @@ from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
-from voicesofyouth.tags.models import Tag
-from voicesofyouth.themes.models import Theme, ThemeTranslation
+from voicesofyouth.tag.models import Tag
+from voicesofyouth.theme.models import Theme, ThemeTranslation
 from voicesofyouth.users.models import User
 
 
@@ -25,10 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    tag = serializers.StringRelatedField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'urgency_score', 'is_active')
+        fields = ('id', 'tag', 'urgency_score')
 
 
 class MapSerializer(serializers.ModelSerializer):
@@ -67,29 +68,6 @@ class ThemeTranslationSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThemeTranslation
         fields = ('id', 'language', 'title', 'description', 'theme', 'created_on', 'modified_on')
-
-
-class ThemeSerializer(serializers.ModelSerializer):
-    languages = serializers.SerializerMethodField()
-    tags = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
-    reports = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Theme
-        fields = ('id', 'url', 'name', 'project', 'visible', 'languages', 'tags', 'reports')
-
-    def get_languages(self, obj):
-        return ThemeTranslationSerializer(obj.get_languages(), many=True).data
-
-    def get_tags(self, obj):
-        return TagSerializer(obj.get_tags(), many=True).data
-
-    def get_url(self, obj):
-        return reverse('themes-detail', kwargs={'pk': obj.id})
-
-    def get_reports(self, obj):
-        return obj.get_total_reports()
 
 
 class ReportMediaSerializer(serializers.ModelSerializer):
