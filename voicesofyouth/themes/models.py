@@ -1,8 +1,13 @@
+import random
+
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.gis.db import models as gismodels
+from django.core.validators import MinLengthValidator
 from django.db import models
-from django.db.models.signals import post_save, m2m_changed
+from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed
+from django.db.models.signals import pre_save
 from django.dispatch.dispatcher import receiver
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
@@ -24,7 +29,11 @@ class Theme(BaseModel):
                                          blank=True,
                                          limit_choices_to={'name__icontains': '- mappers'})
     description = models.TextField(null=True, blank=True)
-    tags = TaggableManager(through=Tag)
+    tags = TaggableManager(through=Tag, blank=True)
+    color = models.CharField(max_length=6,
+                             validators=[MinLengthValidator(6), ],
+                             null=True,
+                             blank=True)
 
     def __str__(self):
         return self.name
@@ -64,6 +73,11 @@ class ThemeTranslation(BaseModel):
 ###############################################################################
 # Signals handlers
 ###############################################################################
+
+@receiver(pre_save, sender=Theme)
+def generate_color(sender, instance, **kwargs):
+    if not instance.color:
+        instance.color = '%06x' % random.randint(0, 0xFFFFFF)
 
 @receiver(post_save, sender=Theme)
 def create_theme_mapper_group(sender, instance, **kwargs):
