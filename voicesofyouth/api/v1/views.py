@@ -20,7 +20,10 @@ from .serializers import ThemeAndReportsSerializer, UserSerializer
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    User cannot create tags directly via API. To do that he needs to associate a tag with a object, e.g. Theme.
+    Only list tags related with theme.
+
+    User cannot create tags directly via API because tags cannot exists without related data. e.g. When create new
+    Theme, if user send a list of tags(comma separated) the system will created these tags automatically.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
