@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'voicesofyouth.projects',
     'voicesofyouth.tag',
     'voicesofyouth.maps',
-    'voicesofyouth.themes',
+    'voicesofyouth.theme',
     'voicesofyouth.reports',
     'voicesofyouth.api',
 ]

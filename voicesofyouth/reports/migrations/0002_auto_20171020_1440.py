@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('maps', '0002_auto_20171020_1440'),
         ('projects', '0001_initial'),
-        ('themes', '0001_initial'),
+        ('theme', '0001_initial'),
         ('reports', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
@@ -103,6 +103,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='report',
             name='theme',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='theme_reports', to='themes.Theme'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='theme_reports', to='theme.Theme'),
         ),
     ]

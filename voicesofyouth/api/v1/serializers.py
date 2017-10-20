@@ -4,7 +4,7 @@ from rest_framework import serializers
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
 from voicesofyouth.tag.models import Tag
-from voicesofyouth.themes.models import Theme, ThemeTranslation
+from voicesofyouth.theme.models import Theme, ThemeTranslation
 from voicesofyouth.users.models import User
 
 

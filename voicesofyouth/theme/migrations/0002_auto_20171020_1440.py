@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('tag', '0001_initial'),
         ('taggit', '0002_auto_20150616_2121'),
-        ('themes', '0001_initial'),
+        ('theme', '0001_initial'),
         ('auth', '0008_alter_user_username_max_length'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('projects', '0002_auto_20171020_1440'),
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='themetranslation',
             name='theme',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='theme_language', to='themes.Theme'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='theme_language', to='theme.Theme'),
         ),
         migrations.AddField(
             model_name='theme',

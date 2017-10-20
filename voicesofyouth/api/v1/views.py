@@ -7,15 +7,14 @@ from rest_framework.response import Response
 from voicesofyouth.api.v1.serializers import TagSerializer
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report
-from voicesofyouth.themes.models import Theme
-from voicesofyouth.users.models import User
 from voicesofyouth.tag.models import Tag
-from .serializers import MapSerializer
-from .serializers import ThemeSerializer
-from .serializers import ReportSerializer
-from .serializers import ReportAndMediasSerializer
+from voicesofyouth.theme.models import Theme
+from voicesofyouth.users.models import User
 from .serializers import CommentSerializer
-from .serializers import ThemeAndReportsSerializer, UserSerializer
+from .serializers import MapSerializer
+from .serializers import ReportAndMediasSerializer
+from .serializers import ReportSerializer
+from .serializers import UserSerializer
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):

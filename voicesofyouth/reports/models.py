@@ -12,7 +12,7 @@ from voicesofyouth.core.models import BaseModel
 from voicesofyouth.projects.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tag.models import Tag
-from voicesofyouth.themes.models import Theme
+from voicesofyouth.theme.models import Theme
 
 
 STATUS_APPROVED = 1

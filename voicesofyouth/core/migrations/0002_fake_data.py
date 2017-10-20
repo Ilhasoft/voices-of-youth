@@ -17,7 +17,7 @@ def create_dev_data(apps, schema_editor):
         from django.core.files.images import ImageFile
         from model_mommy import mommy
         from voicesofyouth.projects.models import Project
-        from voicesofyouth.themes.models import Theme
+        from voicesofyouth.theme.models import Theme
 
         test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
         with open(test_img, 'rb') as image:
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0001_initial'),
         ('projects', '0002_auto_20171020_1440'),
-        ('themes', '0004_auto_20171020_1711'),
+        ('theme', '0004_auto_20171020_1711'),
         ('tag', '0003_auto_20171020_1840')
     ]
 
