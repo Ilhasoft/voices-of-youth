@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 
 from voicesofyouth.api.v1.theme.serializers import ThemeSerializer
 from voicesofyouth.api.v1.theme.serializers import ThemeTranslationSerializer
@@ -13,6 +13,7 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     list:
     Return a list of all the existing themes by map.
     """
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
@@ -22,6 +23,7 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ThemeTranslationViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ThemeTranslationSerializer
     queryset = ThemeTranslation.objects.all()
     # def get_queryset(self):
