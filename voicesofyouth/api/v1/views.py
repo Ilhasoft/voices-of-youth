@@ -52,7 +52,7 @@ class MapsEndPoint(viewsets.ReadOnlyModelViewSet):
     #     return Response(serializer.data)
 
 
-class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
+class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     """
     retrieve:
     Return the given theme.
@@ -63,7 +63,9 @@ class ThemesEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = ThemeSerializer
 
     def get_queryset(self):
-        return Theme.objects.all().filter(is_active=True).filter(visible=True).filter(project__id=self.request.query_params.get('project', 0))
+        return Theme.objects.filter(is_active=True,
+                                    visible=True,
+                                    project__id=self.request.query_params.get('project', 0))
 
     def retrieve(self, request, *args, **kwargs):
         self.serializer_class = ThemeAndReportsSerializer
