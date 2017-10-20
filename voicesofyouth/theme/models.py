@@ -42,21 +42,18 @@ class Theme(BaseModel):
     def languages(self):
         return self.theme_language.filter(theme=self)
 
-    def get_total_reports(self):
-        return self.theme_reports.filter(theme=self.id).count()
+    @property
+    def reports(self):
+        queryset = self.theme_reports.filter(theme=self, visibled=True).filter(status=1)
+        return queryset
 
     @property
-    def reports(self, limit):
-        queryset = self.theme_reports.filter(theme=self, visibled=True).filter(status=1)
-
-        if limit is not None:
-            return queryset[:limit]
-
-        return queryset
+    def reports_count(self):
+        return self.reports.count()
 
 
 class ThemeTranslation(BaseModel):
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_language')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='translations')
     language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))

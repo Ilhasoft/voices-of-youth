@@ -18,6 +18,7 @@ def create_dev_data(apps, schema_editor):
         from model_mommy import mommy
         from voicesofyouth.projects.models import Project
         from voicesofyouth.theme.models import Theme
+        from voicesofyouth.theme.models import ThemeTranslation
 
         test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
         with open(test_img, 'rb') as image:
@@ -35,6 +36,7 @@ def create_dev_data(apps, schema_editor):
                 for y in range(random.randint(5, 15)):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}')
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
+                    theme.translations.add(*mommy.make(ThemeTranslation, random.randint(1, 5)))
 
 
 class Migration(migrations.Migration):

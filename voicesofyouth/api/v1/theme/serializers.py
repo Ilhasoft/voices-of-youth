@@ -2,17 +2,22 @@ from rest_framework import serializers
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.theme.models import ThemeTranslation
 
 
 class ThemeSerializer(VoySerializer):
-    tags = serializers.HyperlinkedRelatedField(
+    tags = serializers.StringRelatedField(
         read_only=True,
-        many=True,
-        view_name='tags-detail'
+        many=True
     )
     project = serializers.HyperlinkedRelatedField(
         read_only=True,
         view_name='projects-detail'
+    )
+    translations = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        many=True,
+        view_name='theme-translations-detail'
     )
 
     class Meta:
@@ -24,8 +29,26 @@ class ThemeSerializer(VoySerializer):
             'description',
             'tags',
             'color',
+            'translations',
+            'reports_count',
+            'created_on'
         )
 
+
+class ThemeTranslationSerializer(VoySerializer):
+    theme = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        view_name='themes-detail'
+    )
+
+    class Meta:
+        model = ThemeTranslation
+        fields = (
+            'theme',
+            'language',
+            'name',
+            'description',
+        )
 
 # class ThemeSerializer(serializers.ModelSerializer):
 #     languages = serializers.SerializerMethodField()

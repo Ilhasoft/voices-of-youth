@@ -1,7 +1,8 @@
 from rest_framework import viewsets
 
 from voicesofyouth.api.v1.theme.serializers import ThemeSerializer
-from voicesofyouth.theme.models import Theme
+from voicesofyouth.api.v1.theme.serializers import ThemeTranslationSerializer
+from voicesofyouth.theme.models import Theme, ThemeTranslation
 
 
 class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
@@ -19,8 +20,10 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
                                     visible=True,
                                     project__id=self.request.query_params.get('project', 0))
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     self.serializer_class = ThemeAndReportsSerializer
-    #     instance = Theme.objects.get(pk=kwargs.get('pk'))
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data)
+
+class ThemeTranslationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = ThemeTranslationSerializer
+    queryset = ThemeTranslation.objects.all()
+    # def get_queryset(self):
+    #     return ThemeTranslation.objects.filter(is_active=True,
+    #                                            theme__id=self.request.query_params.get('theme', 0))
