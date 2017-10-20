@@ -1,37 +1,44 @@
 from django.conf import settings as django_settings
+from django.contrib.auth.models import Group
+from django.contrib.gis.db import models as gismodels
 from django.db import models
+from django.db.models.signals import post_save, m2m_changed
+from django.dispatch.dispatcher import receiver
 from django.utils.translation import ugettext_lazy as _
+from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.maps.models import Map
+from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.projects.models import Project
-from voicesofyouth.tags.models import Tag
-from voicesofyouth.users.models import User
+from voicesofyouth.tag.models import Tag
 
 
 class Theme(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    map = models.ForeignKey(Map, on_delete=models.CASCADE, related_name='map_themes')
+    bounds = gismodels.PolygonField()
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
-    mappers = models.ManyToManyField(User, limit_choices_to={'groups__name__iexact': 'mappers'})
+    mappers_group = models.OneToOneField(Group,
+                                         related_name='theme_mappers',
+                                         null=True,
+                                         blank=True,
+                                         limit_choices_to={'name__icontains': '- mappers'})
     description = models.TextField(null=True, blank=True)
+    tags = TaggableManager(through=Tag)
 
     def __str__(self):
         return self.name
 
-    def get_languages(self):
-        return self.theme_language.all().filter(theme=self.id)
-
-    def get_tags(self):
-        queryset = self.theme_tags.all().filter(theme=self.id)
-        return map(lambda tag: tag.tag, queryset)
+    @property
+    def languages(self):
+        return self.theme_language.filter(theme=self)
 
     def get_total_reports(self):
-        return self.theme_reports.all().filter(theme=self.id).count()
+        return self.theme_reports.filter(theme=self.id).count()
 
-    def get_reports(self, limit):
-        queryset = self.theme_reports.all().filter(theme=self.id).filter(visibled=True).filter(status=1)
+    @property
+    def reports(self, limit):
+        queryset = self.theme_reports.filter(theme=self, visibled=True).filter(status=1)
 
         if limit is not None:
             return queryset[:limit]
@@ -46,22 +53,37 @@ class ThemeTranslation(BaseModel):
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
 
     def __str__(self):
-        return self.name
+        return self.language
 
     class Meta:
-        verbose_name = _('Themes Translate')
-        verbose_name_plural = _('Themes Translates')
-        db_table = 'themes_theme_translate'
+        verbose_name = _('Themes Translation')
+        verbose_name_plural = _('Themes Translations')
+        db_table = 'themes_theme_translation'
 
 
-class ThemeTags(BaseModel):
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_tags')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+###############################################################################
+# Signals handlers
+###############################################################################
 
-    def __str__(self):
-        return '{} - {}'.format(self.theme.name, self.tag.name)
+@receiver(post_save, sender=Theme)
+def create_theme_mapper_group(sender, instance, **kwargs):
+    """
+    Creates a group for mappers and associates it with the theme(instance)
+    """
+    if not instance.mappers_group:
+        # We cant use instance.name because group name cannot have more than 80 characters.
+        instance.mappers_group = Group.objects.get_or_create(name=f'Theme({instance.id}) - mappers')[0]
+        for perm in Group.objects.get(name=MAPPER_GROUP_TEMPLATE).permissions.all():
+            instance.mappers_group.permissions.add(perm)
+        instance.save()
 
-    class Meta:
-        verbose_name = _('Themes Tags')
-        verbose_name_plural = _('Themes Tags')
-        db_table = 'themes_theme_tags'
+@receiver(m2m_changed, sender=Group.permissions.through)
+def change_group_permission(instance, action, model, pk_set, **_):
+    """
+    When we change the template mappers group permissions, replicate to all themes.mappers_group.
+    """
+    for theme in Theme.objects.filter(mappers_group__isnull=False):
+        if action == 'post_add' and not theme.mappers_group.permissions.filter(id__in=pk_set).exists():
+            theme.mappers_group.permissions.add(*model.objects.filter(id__in=pk_set))
+        elif action == 'post_remove' and theme.mappers_group.permissions.filter(id__in=pk_set).exists():
+            theme.mappers_group.permissions.remove(*model.objects.filter(id__in=pk_set))

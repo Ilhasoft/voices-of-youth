@@ -22,16 +22,5 @@ class ThemeTranslationAdmin(BaseModelAdmin):
         return obj.theme.name
 
 
-class ThemeTagsAdmin(BaseModelAdmin):
-    list_display = ('theme_name', 'tag_name')
-
-    def theme_name(self, obj):
-        return obj.theme.name
-
-    def tag_name(self, obj):
-        return obj.tag.name
-
-
 admin.site.register(Theme, ThemeAdmin)
 admin.site.register(ThemeTranslation, ThemeTranslationAdmin)
-admin.site.register(ThemeTags, ThemeTagsAdmin)
