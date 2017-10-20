@@ -109,18 +109,4 @@ class Migration(migrations.Migration):
                 'db_table': 'reports_report_medias',
             },
         ),
-        migrations.CreateModel(
-            name='ReportTags',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('is_active', models.BooleanField(default=True, help_text='Whether this item is active, use this instead of deleting')),
-                ('created_on', models.DateTimeField(blank=True, default=django.utils.timezone.now, editable=False, help_text='When this item was originally created')),
-                ('modified_on', models.DateTimeField(blank=True, default=django.utils.timezone.now, editable=False, help_text='When this item was last modified')),
-            ],
-            options={
-                'verbose_name': 'Reports Tags',
-                'verbose_name_plural': 'Reports Tags',
-                'db_table': 'reports_report_tags',
-            },
-        ),
     ]

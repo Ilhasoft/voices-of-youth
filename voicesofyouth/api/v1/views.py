@@ -1,28 +1,33 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from voicesofyouth.api.v1.serializers import TagSerializer
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report
-from voicesofyouth.themes.models import Theme, ThemeTags
+from voicesofyouth.themes.models import Theme
 from voicesofyouth.users.models import User
-from .serializers import MapSerializer, ThemeSerializer
-from .serializers import ReportSerializer, ReportAndMediasSerializer, CommentSerializer
-from .serializers import TagSerializer
+from voicesofyouth.tag.models import Tag
+from .serializers import MapSerializer
+from .serializers import ThemeSerializer
+from .serializers import ReportSerializer
+from .serializers import ReportAndMediasSerializer
+from .serializers import CommentSerializer
 from .serializers import ThemeAndReportsSerializer, UserSerializer
 
 
-class TagsEndPoint(viewsets.ReadOnlyModelViewSet):
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    list:
-    Return a list of all the existing tags. Required Theme ID
+    User cannot create tags directly via API. To do that he needs to associate a tag with a object, e.g. Theme.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = TagSerializer
 
     def get_queryset(self):
-        queryset = ThemeTags.objects.all().filter(theme__id=self.request.query_params.get('theme', None))
-        return map(lambda tag: tag.tag, queryset)
+        theme = get_object_or_404(Theme, pk=self.request.query_params.get('theme', 0))
+        return Tag.objects.filter(object_id=theme.id)
 
 
 class MapsEndPoint(viewsets.ReadOnlyModelViewSet):

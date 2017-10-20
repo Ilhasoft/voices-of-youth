@@ -3,7 +3,6 @@ from django.contrib import admin
 from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Report
 from .models import ReportLanguage
-from .models import ReportTags
 from .models import ReportFavoriteBy
 from .models import ReportComments
 from .models import ReportMedias
@@ -29,16 +28,6 @@ class ReportLanguageAdmin(BaseModelAdmin):
         return obj.report.theme.name
 
 
-class ReportTagsAdmin(BaseModelAdmin):
-    list_display = ('theme_name', 'tag_name')
-
-    def theme_name(self, obj):
-        return obj.report.theme.name
-
-    def tag_name(self, obj):
-        return obj.tag.name
-
-
 class ReportFavoriteByAdmin(BaseModelAdmin):
     list_display = ('theme_name', 'user_name')
 
@@ -62,7 +51,6 @@ class ReportMediasAdmin(BaseModelAdmin):
 
 admin.site.register(Report, ReportAdmin)
 admin.site.register(ReportLanguage, ReportLanguageAdmin)
-admin.site.register(ReportTags, ReportTagsAdmin)
 admin.site.register(ReportFavoriteBy, ReportFavoriteByAdmin)
 admin.site.register(ReportComments, ReportCommentsAdmin)
 admin.site.register(ReportMedias, ReportMediasAdmin)

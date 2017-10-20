@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
-from voicesofyouth.tags.models import Tag
+from voicesofyouth.tag.models import Tag
 from voicesofyouth.themes.models import Theme, ThemeTranslation
 from voicesofyouth.users.models import User
 
@@ -25,10 +25,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    tag = serializers.StringRelatedField()
 
     class Meta:
         model = Tag
-        fields = ('id', 'name', 'urgency_score', 'is_active')
+        fields = ('id', 'tag', 'urgency_score')
 
 
 class MapSerializer(serializers.ModelSerializer):
