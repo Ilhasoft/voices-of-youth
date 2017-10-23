@@ -25,19 +25,19 @@ class ProjectTestCase(APITestCase):
             'name': 'Project X',
             'thumbnail': create_fake_image()
         }
-        cls.project = mommy.make(Project)
         cls.url_list = reverse_lazy('projects-list')
-        cls.url_detail = reverse_lazy('projects-detail', args=[cls.project.id, ])
         cls.admin_credentials = {'username': 'admin', 'password': 'Un1c3f@@'}
         cls.user_credentials = {'username': 'user', 'password': 'user'}
         cls.admin = User.objects.get(username='admin')
-        cls.user = User.objects.create_user(**cls.user_credentials, email='a@a.com')
 
     @classmethod
     def tearDownClass(cls):
         pass
 
     def setUp(self):
+        Project.objects.all().delete()
+        self.project = mommy.make(Project)
+        self.url_detail = reverse_lazy('projects-detail', args=[self.project.id, ])
         self.client.login(**self.admin_credentials)
 
     def tearDown(self):
