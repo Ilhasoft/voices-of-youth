@@ -1,6 +1,3 @@
-import tempfile
-
-from PIL import Image
 from model_mommy import mommy
 from rest_framework import status
 from rest_framework.reverse import reverse_lazy
@@ -9,14 +6,7 @@ from rest_framework.test import APITestCase
 from voicesofyouth.projects.models import Project
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.users.models import User
-
-
-def create_fake_image():
-    img = Image.new('RGB', (100, 100), 255)
-    tmp_img = tempfile.NamedTemporaryFile(suffix='.jpg')
-    img.save(tmp_img)
-    tmp_img.seek(0)
-    return tmp_img
+from voicesofyouth.test.utils.image import create_fake_image
 
 
 class ThemeTestCase(APITestCase):
