@@ -90,8 +90,11 @@ export default {
     },
 
     getDescription(descrition) {
-      const trimmedString = descrition.substr(0, 118);
-      return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+      if (descrition) {
+        const trimmedString = descrition.substr(0, 118);
+        return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+      }
+      return '';
     },
   },
 };
@@ -129,6 +132,7 @@ export default {
     overflow-y: scroll;
     margin-top: 62px;
     margin-left: 20px;
+    min-width: 603px;
   }
 
   .m-auto {
