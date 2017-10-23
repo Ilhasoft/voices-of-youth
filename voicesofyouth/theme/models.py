@@ -35,12 +35,12 @@ class Theme(BaseModel):
                              null=True,
                              blank=True)
 
+    class Meta:
+        ordering = ('name', )
+        unique_together = ('project', 'name')
+
     def __str__(self):
         return self.name
-
-    @property
-    def languages(self):
-        return self.theme_language.filter(theme=self)
 
     @property
     def reports(self):
@@ -65,6 +65,8 @@ class ThemeTranslation(BaseModel):
         verbose_name = _('Themes Translation')
         verbose_name_plural = _('Themes Translations')
         db_table = 'themes_theme_translation'
+        ordering = ('language', )
+        unique_together = ('theme', 'language')
 
 
 ###############################################################################
