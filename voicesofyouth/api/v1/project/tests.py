@@ -3,7 +3,7 @@ from rest_framework import status
 from rest_framework.reverse import reverse_lazy
 from rest_framework.test import APITestCase
 
-from voicesofyouth.projects.models import Project
+from voicesofyouth.project.models import Project
 from voicesofyouth.users.models import User
 from voicesofyouth.test.utils.image import create_fake_image
 

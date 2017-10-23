@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'taggit',
     'voicesofyouth.core',
     'voicesofyouth.users',
-    'voicesofyouth.projects',
+    'voicesofyouth.project',
     'voicesofyouth.tag',
     'voicesofyouth.maps',
     'voicesofyouth.theme',

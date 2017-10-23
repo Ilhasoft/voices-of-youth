@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from voicesofyouth.api.v1.serializers import VoySerializer
-from voicesofyouth.projects.models import Project
-from voicesofyouth.projects.models import ProjectRegion
+from voicesofyouth.project.models import Project
+from voicesofyouth.project.models import ProjectRegion
 
 
 class ProjectSerializer(VoySerializer):

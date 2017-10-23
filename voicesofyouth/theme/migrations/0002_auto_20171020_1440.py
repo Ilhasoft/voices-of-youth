@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         ('theme', '0001_initial'),
         ('auth', '0008_alter_user_username_max_length'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('projects', '0002_auto_20171020_1440'),
+        ('project', '0002_auto_20171020_1440'),
     ]
 
     operations = [
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='theme',
             name='project',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='projects.Project'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='project.Project'),
         ),
         migrations.AddField(
             model_name='theme',
