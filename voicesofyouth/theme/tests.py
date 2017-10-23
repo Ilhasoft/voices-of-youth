@@ -1,11 +1,14 @@
 import random
 
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.conf import settings
 
 from model_mommy import mommy
 
+from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.theme.models import ThemeTranslation
@@ -83,3 +86,50 @@ class ThemeTranslationTestCase(TestCase):
         translation = make_theme_translations(theme=self.theme, quantity=10)[0]
         with self.assertRaises(IntegrityError):
             mommy.make(ThemeTranslation, theme=translation.theme, language=translation.language)
+
+
+class ThemeMapperGroupTestCase(TestCase):
+    def setUp(self):
+        self.theme = mommy.make(Theme)
+
+    def test_mapper_group_name(self):
+        """
+        When we create a new theme, your mapper group is created?
+        """
+        self.assertEqual(self.theme.mappers_group.name, f'Theme({self.theme.id}) - mappers')
+
+    def test_mapper_group_get_permissions_from_template_group(self):
+        """
+        When we create a new mapper group, he get the permissions from template group?
+        """
+        template_group = Group.objects.get(name=MAPPER_GROUP_TEMPLATE)
+        for perm in Permission.objects.all()[0:10]:
+            template_group.permissions.add(perm)
+        theme = mommy.make(Theme)
+        self.assertListEqual(list(theme.mappers_group.permissions.all()),
+                             list(template_group.permissions.all()))
+
+    def test_add_permission_in_mapper_template_group_is_replicated(self):
+        """
+        When add a new permission to mapper template group, this will replicate to mapper groups?
+        """
+        template_group = Group.objects.get(name=MAPPER_GROUP_TEMPLATE)
+        for perm in Permission.objects.all()[0:10]:
+            template_group.permissions.add(perm)
+        theme = mommy.make(Theme)
+        # Add extra permission
+        template_group.permissions.add(Permission.objects.all()[10])
+        self.assertListEqual(list(theme.mappers_group.permissions.all()),
+                             list(template_group.permissions.all()))
+
+    def test_remove_permission_in_local_admin_template_group_is_replicated(self):
+        """
+        When remove a permission from mapper template group, this will replicate to mapper groups?
+        """
+        template_group = Group.objects.get(name=MAPPER_GROUP_TEMPLATE)
+        template_group.permissions.add(*Permission.objects.all()[0:10])
+        theme = mommy.make(Theme)
+        # remove some permissions
+        template_group.permissions.remove(*Permission.objects.all()[5:10])
+        self.assertListEqual(list(theme.mappers_group.permissions.all()),
+                             list(template_group.permissions.all()))
