@@ -98,12 +98,6 @@ class ProjectLocalAdminGroupTestCase(TestCase):
     def setUp(self):
         self.project = mommy.make(Project)
 
-    def test_create_local_admin_group(self):
-        """
-        When we create a new project, your local admin group is created?
-        """
-        self.assertIsNotNone(self.project.local_admin_group)
-
     def test_local_admin_group_name(self):
         """
         When we create a new project, your local admin group is created?
