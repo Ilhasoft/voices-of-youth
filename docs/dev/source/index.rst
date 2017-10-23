@@ -12,6 +12,7 @@ Welcome to Voices of Youth's documentation!
 
    project
    core
+   theme
 
 Indices and tables
 ==================

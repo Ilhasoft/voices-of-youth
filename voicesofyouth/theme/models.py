@@ -19,6 +19,20 @@ from voicesofyouth.tag.models import Tag
 
 
 class Theme(BaseModel):
+    """
+    Themes is used to create a study around a theme.
+
+    Theme cannot be created outside of project boundaries.
+
+    Attributes:
+        project: Project related to this theme.
+        bounds: Boundary for this theme.
+        name: Theme name
+        mappers_group: Group of mappers.
+        description: Description of theme.
+        tags: Tags of the theme.
+        color: Color used for this theme in front end.
+    """
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     bounds = gismodels.PolygonField()
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
