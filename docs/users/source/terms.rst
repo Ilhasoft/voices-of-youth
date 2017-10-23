@@ -12,12 +12,18 @@ Each project have a region where one or more :ref:`theme` s can be created.
 
 Theme
 -----
-Theme is which object of study has been maded by :ref:`mapper`.
+A theme is used to create a study around a subject. Each theme have your own boundry region, where the :ref:`mapper`
+can create your :ref:`report`.
 
-Each project can have one or more themes actives at same time, where each one have a boundry region.
+.. note::
+    * Only admins or local admins can create or edit themes and add mappers to these theme;
+    * You can create as many themes as you need;
+    * You can create more than one theme in the same boundary region of others themes. e.g. One study about health risks
+      and another about security issues.
 
 .. warning::
-    The boundry region of each theme must be inside the same region configured inside the :ref:`project`.
+    The border region of each theme must be within the same region configured in the :ref:`project`. This boundary theme
+    region may be smaller than the project boundary, but may never be larger or be outside of the project area.
 
 .. _report:
 
