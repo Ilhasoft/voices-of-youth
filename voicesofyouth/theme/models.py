@@ -14,7 +14,7 @@ from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
-from voicesofyouth.projects.models import Project
+from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
 
 

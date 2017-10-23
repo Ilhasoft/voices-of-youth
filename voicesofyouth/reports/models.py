@@ -9,7 +9,7 @@ from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.projects.models import Project
+from voicesofyouth.project.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme

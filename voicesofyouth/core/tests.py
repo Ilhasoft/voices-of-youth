@@ -81,15 +81,17 @@ class GroupProtectedTestCase(TestCase):
 class GroupUnprotectedTestCase(TestCase):
     def setUp(self):
         super().setUp()
+        # Remove all unprotected groups.
+        Group.objects.exclude(name__in=PROTECTED_GROUPS).delete()
         self.group = mommy.make(Group, name='Unprotected user')
 
     def test_delete(self):
         """
         Unprotected group can be deleted?
         """
-        self.assertEqual(Group.objects.all().count(), 5)
-        self.group.delete()
         self.assertEqual(Group.objects.all().count(), 4)
+        self.group.delete()
+        self.assertEqual(Group.objects.all().count(), 3)
 
     def test_edit(self):
         """

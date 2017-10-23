@@ -1,9 +1,9 @@
 from rest_framework import permissions
 from rest_framework import viewsets
 
-from voicesofyouth.projects.models import Project
-from voicesofyouth.projects.models import ProjectRegion
-from voicesofyouth.projects.models import ProjectTranslation
+from voicesofyouth.project.models import Project
+from voicesofyouth.project.models import ProjectRegion
+from voicesofyouth.project.models import ProjectTranslation
 from .serializers import ProjectRegionSerializer
 from .serializers import ProjectSerializer
 from .serializers import ProjectTranslationSerializer

@@ -16,7 +16,7 @@ def create_dev_data(apps, schema_editor):
         from unipath import Path
         from django.core.files.images import ImageFile
         from model_mommy import mommy
-        from voicesofyouth.projects.models import Project
+        from voicesofyouth.project.models import Project
         from voicesofyouth.theme.models import Theme
         from voicesofyouth.theme.models import ThemeTranslation
 
@@ -36,14 +36,16 @@ def create_dev_data(apps, schema_editor):
                 for y in range(random.randint(5, 15)):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}')
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                    theme.translations.add(*mommy.make(ThemeTranslation, random.randint(1, 5), theme=theme))
+                    for lang_idx in range(1, 5):
+                        trans = mommy.make(ThemeTranslation, theme=theme, language=settings.LANGUAGES[lang_idx][0])
+                        theme.translations.add(trans)
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0001_initial'),
-        ('projects', '0002_auto_20171020_1440'),
+        ('project', '0003_auto_20171023_1317'),
         ('theme', '0004_auto_20171020_1711'),
         ('tag', '0003_auto_20171020_1840')
     ]

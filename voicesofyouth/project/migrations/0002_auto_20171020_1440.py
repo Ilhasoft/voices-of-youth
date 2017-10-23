@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('projects', '0001_initial'),
+        ('project', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('auth', '0008_alter_user_username_max_length'),
     ]
@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='projectregion',
             name='project',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='project_region', to='projects.Project'),
+            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='project_region', to='project.Project'),
         ),
         migrations.AddField(
             model_name='project',

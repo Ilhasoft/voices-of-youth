@@ -69,6 +69,7 @@ class Project(BaseModel):
     class Meta:
         verbose_name = _('Project')
         verbose_name_plural = _('Projects')
+        db_table = 'project_projects'
         ordering = ['name', ]
 
     def __str__(self):
