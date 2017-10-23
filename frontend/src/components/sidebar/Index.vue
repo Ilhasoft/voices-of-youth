@@ -37,7 +37,7 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
-import ThematicMaps from './ThematicMaps';
+import Themes from './Themes';
 import Theme from './Theme';
 import ReportDetail from './ReportDetail';
 import Comments from './Comments';
@@ -46,7 +46,7 @@ import Search from './Search';
 export default {
   name: 'Sidebar',
 
-  components: { ThematicMaps, Theme, ReportDetail, Comments, Search },
+  components: { Themes, Theme, ReportDetail, Comments, Search },
 
   computed: {
     ...mapState({

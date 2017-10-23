@@ -42,14 +42,14 @@
           </div>
         </div>
 
-        <div class="columns is-mobile item" :key="key" v-for="(value, key) in items">
+        <div class="columns is-mobile item" :key="key" v-for="(item, key) in themesList">
           <div class="column is-1 m-auto center">
-            <span class="icon-pin pin"></span>
+            <span class="icon-pin pin" :style="getPinColor(item.color)"></span>
           </div>
 
           <div class="column m-auto">
-            <h1>Trash</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit…See more</p>
+            <h1>{{ item.name }}</h1>
+            <p>{{ getDescription(item.description) }}... <a href="" class="see-more">See more</a></p>
           </div>
 
           <div class="column is-1 m-auto">
@@ -62,17 +62,37 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import CheckboxItem from '../shared/Checkbox';
 
 export default {
-  name: 'ThematicMaps',
+  name: 'Themes',
 
   components: { CheckboxItem },
 
-  data() {
-    return {
-      items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    };
+  mounted() {
+    this.getThemes();
+  },
+
+  computed: {
+    ...mapGetters({
+      themesList: 'getThemes',
+    }),
+  },
+
+  methods: {
+    ...mapActions([
+      'getThemes',
+    ]),
+
+    getPinColor(color) {
+      return `color: #${color}`;
+    },
+
+    getDescription(descrition) {
+      const trimmedString = descrition.substr(0, 118);
+      return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
+    },
   },
 };
 </script>
@@ -138,6 +158,10 @@ export default {
     letter-spacing: -0.4px;
     text-align: left;
     color: #000000;
+  }
+
+  .see-more {
+    color: #00cbff;
   }
 }
 </style>

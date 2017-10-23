@@ -5,6 +5,7 @@ import HeaderStore from './header';
 import UserStore from './user';
 import ProjectStore from './project';
 import SideBarStore from './sidebar';
+import ThemeStore from './theme';
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
     UserStore,
     ProjectStore,
     SideBarStore,
+    ThemeStore,
   },
 });

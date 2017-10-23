@@ -57,6 +57,7 @@ export default {
     ...mapActions([
       'setProjects',
       'setCurrentProject',
+      'showDisclaimerProject',
     ]),
 
     openProject(item) {

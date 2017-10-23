@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="columns is-mobile" v-if="showMenu">
-      <div class="column"><a href="" @click.prevent="openThematicMaps">Thematics maps</a></div>
+      <div class="column"><a href="" @click.prevent="openThemes">Themes</a></div>
       <div class="column"><a href="">Gallery</a></div>
       <div class="column language">
         <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
@@ -60,10 +60,10 @@ export default {
       'setSideBarConfigs',
     ]),
 
-    openThematicMaps() {
+    openThemes() {
       this.setSideBarConfigs({
-        title: 'Thematic Maps',
-        tabActived: 'ThematicMaps',
+        title: 'Themes',
+        tabActived: 'Themes',
         backButton: false,
         isActived: true,
       });

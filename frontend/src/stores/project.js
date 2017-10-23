@@ -1,4 +1,5 @@
 import axios from 'axios';
+// import axios from '../config';
 import * as TYPES from './types';
 
 export default {

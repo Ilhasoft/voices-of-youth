@@ -29,12 +29,8 @@
 </template>
 
 <script>
-import ThematicMaps from './ThematicMaps';
-
 export default {
   name: 'Search',
-
-  components: { ThematicMaps },
 
   data() {
     return {
