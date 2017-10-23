@@ -19,6 +19,20 @@ from voicesofyouth.tag.models import Tag
 
 
 class Theme(BaseModel):
+    """
+    Themes is used to create a study around a theme.
+
+    Theme cannot be created outside of project boundaries.
+
+    Attributes:
+        project: Project related to this theme.
+        bounds: Boundary for this theme.
+        name: Theme name
+        mappers_group: Group of mappers.
+        description: Description of theme.
+        tags: Tags of the theme.
+        color: Color used for this theme in front end.
+    """
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     bounds = gismodels.PolygonField()
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
@@ -35,12 +49,12 @@ class Theme(BaseModel):
                              null=True,
                              blank=True)
 
+    class Meta:
+        ordering = ('name', )
+        unique_together = ('project', 'name')
+
     def __str__(self):
         return self.name
-
-    @property
-    def languages(self):
-        return self.theme_language.filter(theme=self)
 
     @property
     def reports(self):
@@ -65,6 +79,8 @@ class ThemeTranslation(BaseModel):
         verbose_name = _('Themes Translation')
         verbose_name_plural = _('Themes Translations')
         db_table = 'themes_theme_translation'
+        ordering = ('language', )
+        unique_together = ('theme', 'language')
 
 
 ###############################################################################

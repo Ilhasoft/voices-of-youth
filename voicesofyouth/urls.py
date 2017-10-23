@@ -6,5 +6,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^api/v1/', include('voicesofyouth.api.v1.urls')),
+    url(r'^api/', include('voicesofyouth.api.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,5 @@
 Project
 =======
 
-.. automodule:: voicesofyouth.projects.models
+.. automodule:: voicesofyouth.project.models
     :members:

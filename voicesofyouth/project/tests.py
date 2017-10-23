@@ -11,7 +11,6 @@ from unipath import Path
 
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from .models import Project
-from .models import ProjectRegion
 from .models import ProjectTranslation
 
 
@@ -72,19 +71,6 @@ class ProjectTestCase(TestCase):
             self.assertEqual(resized.size, (139, 139))
 
 
-class ProjectRegionTestCase(TestCase):
-    def setUp(self):
-        self.project = mommy.make(Project)
-        self.project_region = mommy.make(ProjectRegion, project=self.project)
-
-    def test__str__(self):
-        self.assertEqual(str(self.project_region), self.project.name)
-
-    def test_duplicate_project_setting(self):
-        with self.assertRaises(IntegrityError):
-            mommy.make(ProjectRegion, project=self.project)
-
-
 class ProjectTranslationTestCase(TestCase):
     def setUp(self):
         self.project = mommy.make(Project)
@@ -97,12 +83,6 @@ class ProjectTranslationTestCase(TestCase):
 class ProjectLocalAdminGroupTestCase(TestCase):
     def setUp(self):
         self.project = mommy.make(Project)
-
-    def test_create_local_admin_group(self):
-        """
-        When we create a new project, your local admin group is created?
-        """
-        self.assertIsNotNone(self.project.local_admin_group)
 
     def test_local_admin_group_name(self):
         """

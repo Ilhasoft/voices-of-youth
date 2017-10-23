@@ -45,9 +45,9 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0001_initial'),
-        ('project', '0003_auto_20171023_1317'),
-        ('theme', '0004_auto_20171020_1711'),
-        ('tag', '0003_auto_20171020_1840')
+        ('project', '0002_auto_20171023_1906'),
+        ('theme', '0002_auto_20171023_1906'),
+        ('tag', '0001_initial')
     ]
 
     operations = [

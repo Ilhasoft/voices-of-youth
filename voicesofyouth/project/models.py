@@ -65,6 +65,7 @@ class Project(BaseModel):
                                     verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_to)
+    boundary = gismodels.PolygonField()
 
     class Meta:
         verbose_name = _('Project')
@@ -74,26 +75,6 @@ class Project(BaseModel):
 
     def __str__(self):
         return self.name
-
-
-class ProjectRegion(BaseModel):
-    """
-    Limit the region where themes can be created.
-
-    Attributes:
-         project: Project linked.
-         region: Delimit the geo location area where themes can be created.
-    """
-    project = models.OneToOneField(Project, on_delete=models.CASCADE, related_name='project_region')
-    region = gismodels.PolygonField()
-
-    class Meta:
-        verbose_name = _('Region')
-        verbose_name_plural = _('Regions')
-        db_table = 'projects_region'
-
-    def __str__(self):
-        return self.project.name
 
 
 class ProjectTranslation(BaseModel):
