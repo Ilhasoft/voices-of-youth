@@ -7,6 +7,7 @@
     <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
     <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link> -->
+    <map-osm />
     <intro-project/>
     <side-bar v-show="sideBarActived" />
   </div>
@@ -14,15 +15,20 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
 import HeaderIndex from '../header/Index';
+import MapOsm from '../shared/Map';
 import SideBar from '../sidebar/Index';
 import IntroProject from '../shared/IntroProject';
 
 export default {
   name: 'Project',
 
-  components: { HeaderIndex, SideBar, IntroProject },
+  components: {
+    HeaderIndex,
+    SideBar,
+    IntroProject,
+    MapOsm,
+  },
 
   computed: {
     ...mapGetters({

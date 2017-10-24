@@ -146,7 +146,7 @@ export default {
     overflow-y: scroll;
     margin-top: 62px;
     margin-left: 20px;
-    min-width: 603px;
+    min-width: 602px;
   }
 
   .m-auto {
