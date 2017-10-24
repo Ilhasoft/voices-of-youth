@@ -75,7 +75,7 @@ class Translation(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        unique_together = ('language', 'field')
+        unique_together = ('language', 'field', 'content_type', 'object_id')
 
     def __str__(self):
         return f'{self.field}({self.language})'
