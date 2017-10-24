@@ -9,6 +9,10 @@ from .serializers import ProjectSerializer
 
 
 class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    retrieve:
+    You can use querystring to translate the project. E.g.: /api/projects/1/?lang=pt-br
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
