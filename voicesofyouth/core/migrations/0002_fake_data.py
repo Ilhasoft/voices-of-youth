@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.db import migrations
 
+from voicesofyouth.translation.models import Translation
+
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
@@ -18,7 +20,6 @@ def create_dev_data(apps, schema_editor):
         from model_mommy import mommy
         from voicesofyouth.project.models import Project
         from voicesofyouth.theme.models import Theme
-        from voicesofyouth.theme.models import ThemeTranslation
 
         test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
         with open(test_img, 'rb') as image:
@@ -37,8 +38,8 @@ def create_dev_data(apps, schema_editor):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}')
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     for lang_idx in range(1, 5):
-                        trans = mommy.make(ThemeTranslation, theme=theme, language=settings.LANGUAGES[lang_idx][0])
-                        theme.translations.add(trans)
+                        mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
+                        mommy.make(Translation, content_object=project, language=settings.LANGUAGES[lang_idx][0])
 
 
 class Migration(migrations.Migration):
@@ -47,7 +48,8 @@ class Migration(migrations.Migration):
         ('core', '0001_initial'),
         ('project', '0002_auto_20171023_1906'),
         ('theme', '0002_auto_20171023_1906'),
-        ('tag', '0001_initial')
+        ('tag', '0001_initial'),
+        ('translation', '0001_initial'),
     ]
 
     operations = [
