@@ -48,9 +48,8 @@ class ThemeTestCase(TestCase):
         make_theme_translations(theme=self.theme, quantity=10)
         self.assertEqual(Translation.objects.count(), 10)
         self.assertEqual(self.theme.translations.count(), 10)
-        theme_ct = ContentType.objects.get_for_model(self.theme)
-        difference = self.theme.translations.order_by('language').difference(
-                Translation.objects.filter(content_type=theme_ct, object_id=self.theme.id).order_by('language'))
+        translations = Translation.objects.get_translations_for_model(self.theme)
+        difference = self.theme.translations.difference(translations)
         self.assertEqual(difference.count(), 0)
 
     def test_uniqueness(self):

@@ -33,6 +33,6 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
         theme = get_object_or_404(self.queryset, pk=pk)
-        Translation.translate_object(theme, lang)
+        Translation.objects.translate_object(theme, lang)
         serializer = self.serializer_class(theme, context={'request': request})
         return Response(serializer.data)

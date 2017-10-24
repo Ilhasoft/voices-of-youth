@@ -54,6 +54,36 @@ class TranslatableField(models.Model):
         return f'{self.model}.{self.verbose_name}'
 
 
+class TranslationManager(models.Manager):
+    def get_translations_for_model(self, model_instance, lang_code=None):
+        qs = self.get_queryset()
+        ct = ContentType.objects.get_for_model(model_instance)
+        filter_clauses = {
+            'content_type': ct,
+            'object_id': model_instance.id
+        }
+        if lang_code is not None:
+            filter_clauses['lang_code'] = lang_code
+        return qs.filter(**filter_clauses)
+
+    def translate_object(self, model_instance, lang_code):
+        """
+        Apply the translation for fields values if exists, otherwise do nothing.
+
+        The translation is applied directly in the model_instance fields.
+
+        Attributes:
+            model_instance: Model instance.
+            lang_code: Language code used to translate.
+        """
+        content_type = ContentType.objects.get_for_model(model_instance._meta.model)
+        translations = self.get_queryset().filter(language=lang_code,
+                                                  content_type=content_type,
+                                                  object_id=model_instance.id)
+        for translation in translations:
+            setattr(model_instance, translation.field.field_name, translation.translation)
+
+
 class Translation(models.Model):
     """
     Stores the translation.
@@ -73,28 +103,14 @@ class Translation(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    objects = TranslationManager()
+
     class Meta:
         unique_together = ('language', 'field', 'content_type', 'object_id')
+        ordering = ('language', )
 
     def __str__(self):
         return f'{self.field}({self.language})'
-
-    @classmethod
-    def translate_object(cls, model_instance, lang_code):
-        """
-        Apply the translation for fields values, if exists, otherwise do nothing.
-
-        Attributes:
-            model_instance: Model instance.
-            lang_code: Language code used to translate.
-        """
-        content_type = ContentType.objects.get_for_model(model_instance._meta.model)
-        translations = cls.objects.filter(language=lang_code,
-                                                 content_type=content_type,
-                                                 object_id=model_instance.id)
-        for translation in translations:
-            setattr(model_instance, translation.field.field_name, translation.translation)
-
 
 
 # Store the fields that need translation.
