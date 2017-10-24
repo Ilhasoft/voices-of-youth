@@ -11,7 +11,6 @@ from unipath import Path
 
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from .models import Project
-from .models import ProjectTranslation
 
 
 class ProjectTestCase(TestCase):
@@ -69,15 +68,6 @@ class ProjectTestCase(TestCase):
             project = mommy.make(Project, thumbnail=fake_thumbnail)
             resized = Image.open(project.thumbnail.file)
             self.assertEqual(resized.size, (139, 139))
-
-
-class ProjectTranslationTestCase(TestCase):
-    def setUp(self):
-        self.project = mommy.make(Project)
-        self.project_language = mommy.make(ProjectTranslation, name='Test project', language='US')
-
-    def test__str__(self):
-        self.assertEqual('Test project(US)', str(self.project_language))
 
 
 class ProjectLocalAdminGroupTestCase(TestCase):

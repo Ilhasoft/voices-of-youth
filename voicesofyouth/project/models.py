@@ -82,29 +82,6 @@ class Project(BaseModel):
         return self.name
 
 
-class ProjectTranslation(BaseModel):
-    """
-    Translations for some fields in project.
-
-    Attributes:
-        language: Language
-        name: Translation for the Project model field name in the language selected.
-        window_title: Translation for the Project model field window_title in the language selected.
-    """
-    language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-    name = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Project Title'))
-    window_title = models.CharField(max_length=256, null=True, blank=True, verbose_name=_('Window Title'))
-    description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
-
-    class Meta:
-        verbose_name = _('Project translation')
-        verbose_name_plural = _('Projects translations')
-        db_table = 'projects_translation'
-
-    def __str__(self):
-        return f'{self.name}({self.language})'
-
-
 ###############################################################################
 # Signals handlers
 ###############################################################################

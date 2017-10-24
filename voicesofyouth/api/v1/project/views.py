@@ -4,10 +4,8 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.project.models import ProjectTranslation
 from voicesofyouth.translation.models import Translation
 from .serializers import ProjectSerializer
-from .serializers import ProjectTranslationSerializer
 
 
 class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
@@ -22,9 +20,3 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
         Translation.translate_object(project, lang)
         serializer = ProjectSerializer(project)
         return Response(serializer.data)
-
-
-class ProjectsTranslationViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    queryset = ProjectTranslation.objects.all()
-    serializer_class = ProjectTranslationSerializer
