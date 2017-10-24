@@ -78,7 +78,7 @@ class Translation(models.Model):
         unique_together = ('language', 'field')
 
     def __str__(self):
-        return f'{field}({self.language})'
+        return f'{self.field}({self.language})'
 
 
 # Store the fields that need translation.
