@@ -45,11 +45,11 @@ class TranslatableField(models.Model):
         verbose_name: Verbose name of the field.
     """
     model = models.ForeignKey(TranslatableModel)
-    field = models.CharField(max_length=128)
+    field_name = models.CharField(max_length=128)
     verbose_name = models.CharField(max_length=128)
 
     class Meta:
-        unique_together = ('model', 'field')
+        unique_together = ('model', 'field_name')
 
     def __str__(self):
         return f'{self.model}.{self.verbose_name}'
@@ -108,7 +108,7 @@ def create_translations(app_config, **_):
                                 'verbose_name_plural': model._meta.verbose_name_plural}
                         model_instance = TranslatableModel.objects.update_or_create(**data, defaults=data)[0]
                     translatable_fields.append({'model': model_instance,
-                                                'field': field.attname,
+                                                'field_name': field.attname,
                                                 'verbose_name': field.verbose_name})
                     print(field.verbose_name)
         try:
@@ -116,7 +116,7 @@ def create_translations(app_config, **_):
             while len(translatable_fields) > 0:
                 field_data = translatable_fields.pop(0)
                 TranslatableField.objects.update_or_create(model=field_data['model'],
-                                                           field=field_data['field'],
+                                                           field_name=field_data['field_name'],
                                                            defaults=field_data)
         except ProgrammingError:
             """
