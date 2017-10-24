@@ -19,8 +19,7 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
-        queryset = Project.objects.all()
-        project = get_object_or_404(queryset, pk=pk)
+        project = get_object_or_404(self.queryset, pk=pk)
         Translation.translate_object(project, lang)
-        serializer = ProjectSerializer(project)
+        serializer = self.serializer_class(project)
         return Response(serializer.data)
