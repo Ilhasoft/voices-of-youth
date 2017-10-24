@@ -4,8 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from voicesofyouth.api.v1.theme.serializers import ThemeSerializer
-from voicesofyouth.api.v1.theme.serializers import ThemeTranslationSerializer
-from voicesofyouth.theme.models import Theme, ThemeTranslation
+from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.models import Translation
 
 
@@ -37,12 +36,3 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
         Translation.translate_object(theme, lang)
         serializer = self.serializer_class(theme, context={'request': request})
         return Response(serializer.data)
-
-
-class ThemeTranslationViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    serializer_class = ThemeTranslationSerializer
-    queryset = ThemeTranslation.objects.all()
-    # def get_queryset(self):
-    #     return ThemeTranslation.objects.filter(is_active=True,
-    #                                            theme__id=self.request.query_params.get('theme', 0))

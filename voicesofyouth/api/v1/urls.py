@@ -4,7 +4,6 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 from .project.views import ProjectsViewSet
-from .theme.views import ThemeTranslationViewSet
 from .theme.views import ThemesViewSet
 from .views import CommentsEndPoint
 from .views import MapsEndPoint
@@ -16,7 +15,6 @@ router = DefaultRouter()
 router.register(r'projects', ProjectsViewSet, base_name='projects')
 router.register(r'maps', MapsEndPoint, base_name='maps')
 router.register(r'themes', ThemesViewSet, base_name='themes')
-router.register(r'theme-translations', ThemeTranslationViewSet, base_name='theme-translations')
 router.register(r'tags', TagsViewSet, base_name='tags')
 router.register(r'users', UsersEndPoint, base_name='users')
 router.register(r'reports', ReportsEndPoint, base_name='reports')

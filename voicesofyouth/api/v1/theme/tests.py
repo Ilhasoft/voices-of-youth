@@ -39,7 +39,7 @@ class ThemeTestCase(APITestCase):
         mommy.make(Theme,
                    project=self.project2,
                    _quantity=9)
-        self.url_list_project = reverse_lazy('themes-list')
+        self.url_list = reverse_lazy('themes-list')
         self.url_detail = reverse_lazy('themes-detail', args=[self.theme.id, ])
         self.client.login(**self.admin_credentials)
 
@@ -69,7 +69,7 @@ class ThemeTestCase(APITestCase):
         """
         We get themes related with a project_id?
         """
-        response = self.client.get(f'{self.url_list_project}?project={self.project2.id}')
+        response = self.client.get(f'{self.url_list}?project={self.project2.id}')
         self.assertEqual(Theme.objects.count(), 10)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 9)

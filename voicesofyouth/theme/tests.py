@@ -1,20 +1,20 @@
 import random
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db.utils import IntegrityError
 from django.test import TestCase
-from django.conf import settings
-
 from model_mommy import mommy
 
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.theme.models import ThemeTranslation
+from voicesofyouth.translation.models import Translation
 
 
-def make_theme_translations(theme=None, quantity=1):
+def make_theme_translations(theme, quantity=1):
     """
     Model mommy has a bug with models with unique_together.
 
@@ -26,10 +26,7 @@ def make_theme_translations(theme=None, quantity=1):
     for idx in range(quantity):
         lang = random.choice(langs)
         langs.pop(langs.index(lang))
-        if theme:
-            translations.append(mommy.make(ThemeTranslation, theme=theme, language=lang))
-        else:
-            translations.append(mommy.make(ThemeTranslation, language=lang))
+        translations.append(mommy.make(Translation, content_object=theme, language=lang[0]))
     return translations
 
 
@@ -48,13 +45,12 @@ class ThemeTestCase(TestCase):
         """
         translations attribute return correct translations?
         """
-        # Unrelated theme translation.
-        make_theme_translations(quantity=10)
         make_theme_translations(theme=self.theme, quantity=10)
-        self.assertEqual(ThemeTranslation.objects.count(), 20)
+        self.assertEqual(Translation.objects.count(), 10)
         self.assertEqual(self.theme.translations.count(), 10)
+        theme_ct = ContentType.objects.get_for_model(self.theme)
         difference = self.theme.translations.order_by('language').difference(
-                ThemeTranslation.objects.filter(theme=self.theme).order_by('language'))
+                Translation.objects.filter(content_type=theme_ct, object_id=self.theme.id).order_by('language'))
         self.assertEqual(difference.count(), 0)
 
     def test_uniqueness(self):
@@ -65,27 +61,6 @@ class ThemeTestCase(TestCase):
         mommy.make(Theme, project=project, name='Theme foo')
         with self.assertRaises(IntegrityError):
             mommy.make(Theme, project=project, name='Theme foo')
-
-
-class ThemeTranslationTestCase(TestCase):
-    def setUp(self):
-        self.theme = mommy.make(Theme)
-        self.theme_translation_language = 'en'
-        self.theme_translation = mommy.make(ThemeTranslation, theme=self.theme, language=self.theme_translation_language)
-
-    def test__str__(self):
-        """
-        String representation of ThemeTranslation is correct?
-        """
-        self.assertEqual(str(self.theme_translation), self.theme_translation_language)
-
-    def test_uniqueness(self):
-        """
-        Uniqueness of theme is using name and project?
-        """
-        translation = make_theme_translations(theme=self.theme, quantity=10)[0]
-        with self.assertRaises(IntegrityError):
-            mommy.make(ThemeTranslation, theme=translation.theme, language=translation.language)
 
 
 class ThemeMapperGroupTestCase(TestCase):
