@@ -12,7 +12,6 @@ from psycopg2 import ProgrammingError
 from .fields import CharFieldTranslatable
 from .fields import TextFieldTranslatable
 
-
 __author__ = ['Elton Pereira', ]
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
@@ -79,6 +78,23 @@ class Translation(models.Model):
 
     def __str__(self):
         return f'{self.field}({self.language})'
+
+    @classmethod
+    def translate_object(cls, model_instance, lang_code):
+        """
+        Apply the translation for fields values, if exists, otherwise do nothing.
+
+        Attributes:
+            model_instance: Model instance.
+            lang_code: Language code used to translate.
+        """
+        content_type = ContentType.objects.get_for_model(model_instance._meta.model)
+        translations = cls.objects.filter(language=lang_code,
+                                                 content_type=content_type,
+                                                 object_id=model_instance.id)
+        for translation in translations:
+            setattr(model_instance, translation.field.field_name, translation.translation)
+
 
 
 # Store the fields that need translation.
