@@ -1,3 +1,6 @@
+"""
+The VoY project need the data have translation for some records, this app will help us in this task.
+"""
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -10,7 +13,20 @@ from .fields import CharFieldTranslatable
 from .fields import TextFieldTranslatable
 
 
+__author__ = ['Elton Pereira', ]
+__email__ = 'eltonplima AT gmail DOT com'
+__status__ = 'Development'
+
+
 class TranslatableModel(models.Model):
+    """
+    Stores which model that have fields that can be translated.
+
+    Attributes:
+        model: Model name.
+        verbose_name: Verbose name from model.
+        verbose_name_plural: Plural version of verbose name.
+    """
     model = models.CharField(max_length=128)
     verbose_name = models.CharField(max_length=128)
     verbose_name_plural = models.CharField(max_length=128)
@@ -20,6 +36,14 @@ class TranslatableModel(models.Model):
 
 
 class TranslatableField(models.Model):
+    """
+    Stores which fields that can be translated.
+
+    Attributes:
+        model: Model TranslatableModel instance.
+        field: Name of the field.
+        verbose_name: Verbose name of the field.
+    """
     model = models.ForeignKey(TranslatableModel)
     field = models.CharField(max_length=128)
     verbose_name = models.CharField(max_length=128)
@@ -32,6 +56,17 @@ class TranslatableField(models.Model):
 
 
 class Translation(models.Model):
+    """
+    Stores the translation.
+
+    Attributes:
+        field: TranslatableField instance.
+        language: What is the language of this translation.
+        translation: Translation itself.
+        content_type: Content type of the original model instance(**you don't need to manipulate this field**).
+        object_id: ID of the original model instance(**you don't need to manipulate this field**).
+        content_object: Object instance itself.
+    """
     field = models.ForeignKey(TranslatableField)
     language = models.CharField(max_length=2, choices=settings.LANGUAGES)
     translation = models.TextField()
@@ -52,6 +87,13 @@ translatable_fields = []
 
 @receiver(post_migrate)
 def create_translations(app_config, **_):
+    """
+    Populates the translation app models with all models that use the fields CharFieldTranslatable or
+    TextFieldTranslatable.
+
+    .. note::
+        This function is called when migrate runs.
+    """
     if settings.PROJECT_NAME in app_config.name:
         for model in app_config.get_models():
             print_title = True
