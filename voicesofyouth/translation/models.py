@@ -103,7 +103,10 @@ def create_translations(app_config, **_):
                         print_title = not print_title
                         print("{:=^80}".format(f' Translatable fields '))
                         print("{:-^80}".format(f' {app_config.name}.{model.__name__} '))
-                        model_instance = TranslatableModel.objects.get_or_create(model=model._meta.model_name)[0]
+                        data = {'model': model._meta.model_name,
+                                'verbose_name': model._meta.verbose_name,
+                                'verbose_name_plural': model._meta.verbose_name_plural}
+                        model_instance = TranslatableModel.objects.update_or_create(**data, defaults=data)[0]
                     translatable_fields.append({'model': model_instance,
                                                 'field': field.attname,
                                                 'verbose_name': field.verbose_name})
@@ -112,7 +115,9 @@ def create_translations(app_config, **_):
             TranslatableModel.objects.all()
             while len(translatable_fields) > 0:
                 field_data = translatable_fields.pop(0)
-                TranslatableField.objects.get_or_create(**field_data)
+                TranslatableField.objects.update_or_create(model=field_data['model'],
+                                                           field=field_data['field'],
+                                                           defaults=field_data)
         except ProgrammingError:
             """
             If this exception occur here, is because the translation app migration has not yet performed.
