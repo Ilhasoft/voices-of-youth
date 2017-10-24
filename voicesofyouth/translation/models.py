@@ -68,7 +68,7 @@ class Translation(models.Model):
         content_object: Object instance itself.
     """
     field = models.ForeignKey(TranslatableField)
-    language = models.CharField(max_length=2, choices=settings.LANGUAGES)
+    language = models.CharField(max_length=8, choices=settings.LANGUAGES)
     translation = models.TextField()
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
