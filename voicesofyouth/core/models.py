@@ -21,7 +21,6 @@ groups, will be reflected to any group vinculated with then.
 * **local admin template** - Permissions for local admins.
 * **mapper template** - Permissions for mappers.
 """
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import User
@@ -29,7 +28,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import m2m_changed
-from django.db.models.signals import post_migrate
 from django.db.models.signals import pre_delete
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -147,14 +145,3 @@ def group_association(instance, action, model, pk_set, **__):
         if instance.name.lower() in (MAPPER_GROUP_TEMPLATE, LOCAL_ADMIN_GROUP_TEMPLATE):
             if action == 'pre_add':
                 raise ValidationError(_('You cannot add an user to a template group.'))
-
-@receiver(post_migrate)
-def create_translations(signal, sender, app_config, **kwargs):
-    # print(list(app_config.get_models()))
-    # print(dir(app_config))
-    if settings.PROJECT_NAME in app_config.name:
-        print(f'label: {app_config.label}')
-        print(f'name: {app_config.name}')
-        for model in app_config.models:
-            # print(f"{:#^model}")
-            print(model)
