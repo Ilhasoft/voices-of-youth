@@ -48,7 +48,7 @@ class ProjectTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 11)
 
-    def test_get_apply_translation(self):
+    def test_get_with_translation(self):
         """
         Project translation is applied correctly?
         """
