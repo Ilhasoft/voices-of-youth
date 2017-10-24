@@ -49,7 +49,7 @@
 
           <div class="column m-auto">
             <h1>{{ item.name }}</h1>
-            <p>{{ getDescription(item.description) }}... <a href="" class="see-more">See more</a></p>
+            <p>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
           </div>
 
           <div class="column is-1 m-auto">
@@ -83,6 +83,8 @@ export default {
   methods: {
     ...mapActions([
       'getThemes',
+      'getTheme',
+      'setSideBarConfigs',
     ]),
 
     getPinColor(color) {
@@ -95,6 +97,18 @@ export default {
         return trimmedString.substr(0, Math.min(trimmedString.length, trimmedString.lastIndexOf(' ')));
       }
       return '';
+    },
+
+    openTheme(item) {
+      this.setSideBarConfigs({
+        title: 'Themes',
+        tabActived: 'Theme',
+        backButton: true,
+        backTo: 'Themes',
+        isActived: true,
+      }).then(() => {
+        this.getTheme(item.id);
+      });
     },
   },
 };

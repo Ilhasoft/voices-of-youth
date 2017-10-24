@@ -2,7 +2,7 @@
   <div class="sidebar">
     <div class="columns header is-mobile">
       <div class="column is-1 m-auto">
-        <svg v-show="backButton" xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" class="back">
+        <svg v-show="backButton" @click.prevent="backToComponent" xmlns="http://www.w3.org/2000/svg" width="26" height="24" viewBox="0 0 26 24" class="back">
             <g fill="none" fill-rule="evenodd" stroke="#9B9FA3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
               <path d="M23.141 11.719H3.725M12.513 21.424l-9.705-9.705 9.705-9.706"/>
             </g>
@@ -14,7 +14,7 @@
       </div>
 
       <div class="column is-1 m-auto">
-        <svg class="close" @click.prevent="closeSideBar" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23">
+        <svg @click.prevent="closeSideBar" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23">
           <g fill="none" fill-rule="evenodd" stroke="#9B9FA3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
             <path d="M20.475 2.46L2.49 20.444M2.49 2.46l17.985 17.985"/>
           </g>
@@ -53,13 +53,21 @@ export default {
       headerTitle: state => state.SideBarStore.title,
       backButton: state => state.SideBarStore.backButton,
       tabActived: state => state.SideBarStore.tabActived,
+      backTo: state => state.SideBarStore.backTo,
     }),
   },
 
   methods: {
     ...mapActions([
       'setSideBarConfigs',
+      'sideBarBackTo',
     ]),
+
+    backToComponent() {
+      if (this.backButton) {
+        this.sideBarBackTo(this.backTo);
+      }
+    },
 
     closeSideBar() {
       this.setSideBarConfigs({
@@ -83,6 +91,10 @@ export default {
   bottom: 0;
   background-color: #fbfbfb;
   z-index: 10000;
+
+  svg {
+    cursor: pointer;
+  }
 
   .header {
     height: 62px;
@@ -110,10 +122,6 @@ export default {
     font-size: 16px;
     letter-spacing: -0.4px;
     color: #9b9fa3;
-  }
-
-  .close {
-    cursor: pointer;
   }
 }
 </style>

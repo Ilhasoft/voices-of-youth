@@ -2,7 +2,7 @@
   <div class="map-box">
     <div class="columns">
       <div class="column no-padding">
-        <div class="columns is-mobile header">
+        <div class="columns is-mobile header" :style="formatColor(item.color)">
           <div class="column is-1 pin">
             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="31" viewBox="0 0 25 31">
                 <g fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" transform="translate(1.283 1.868)">
@@ -13,28 +13,26 @@
           </div>
 
           <div class="column m-auto">
-            <h1>5 Tips To Finding Effective Anti Snore Devices</h1>
+            <h1>{{ item.name }}</h1>
           </div>
         </div>
 
         <div class="columns">
           <div class="column text">
-            <small>Aug 02, 2016</small>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dip.ipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
+            <small :style="formatFontColor(item.color)">{{ formatDate(item.created_on) }}</small>
+            <p>{{ item.description }}</p>
           </div>
         </div>
 
         <div class="columns">
           <div class="column tags">
-            <small>Accessibility</small>
-            <small>Security</small>
-            <small>Community</small>
+            <small :style="formatColor(item.color)" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
           </div>
         </div>
 
         <div class="columns reports">
           <div class="column">
-            <h1>30 Reports</h1>
+            <h1 :style="formatFontColor(item.color)">{{ item.reports_count }} Reports</h1>
           </div>
         </div>
 
@@ -60,8 +58,31 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Theme',
+
+  computed: {
+    ...mapGetters({
+      item: 'getTheme',
+    }),
+  },
+
+  methods: {
+    formatDate(value) {
+      const date = new Date(value);
+      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+    },
+
+    formatColor(color) {
+      return `background-color: #${color} !important;`;
+    },
+
+    formatFontColor(color) {
+      return `color: #${color} !important;`;
+    },
+  },
 };
 </script>
 
@@ -80,7 +101,6 @@ export default {
   .header {
     width: 100%;
     height: 131px;
-    background-color: #9012fe;
   }
 
   .pin {
@@ -123,7 +143,6 @@ export default {
       font-weight: bold;
       letter-spacing: -0.5px;
       text-align: left;
-      color: #9012fe;
     }
   }
 
@@ -139,7 +158,6 @@ export default {
       color: #fff;
       padding: 5px;
       border-radius: 100px;
-      background-color: #9012fe;
     }
   }
 

@@ -47,11 +47,13 @@ export default {
     ...mapActions([
       'setCurrentProject',
       'showDisclaimerProject',
+      'setSideBarConfigs',
     ]),
 
     openProject(item) {
+      this.setSideBarConfigs({ isActived: false });
       this.setCurrentProject(item);
-      this.showDisclaimerProject(true);
+      window.location = `/project/${item.path}`;
     },
   },
 };

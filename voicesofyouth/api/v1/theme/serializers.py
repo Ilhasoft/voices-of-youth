@@ -23,6 +23,7 @@ class ThemeSerializer(VoySerializer):
     class Meta:
         model = Theme
         fields = (
+            'id',
             'project',
             'bounds',
             'name',
