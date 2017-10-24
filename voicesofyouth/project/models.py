@@ -2,6 +2,7 @@ import uuid
 
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.gis.db import models as gismodels
 from django.db import models
 from django.db.models.signals import m2m_changed
@@ -15,6 +16,9 @@ from unipath import Path
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from voicesofyouth.core.utils import resize_image
+from voicesofyouth.translation.fields import CharFieldTranslatable
+from voicesofyouth.translation.fields import TextFieldTranslatable
+from voicesofyouth.translation.models import Translation
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
@@ -48,8 +52,8 @@ class Project(BaseModel):
         window_title: Title that appear in browser window.
         local_admin_group: Vinculates the local admin group for that project. This field is managed by the system.
     """
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
-    description = models.TextField(null=True, blank=True, verbose_name=_('Description'))
+    name = CharFieldTranslatable(max_length=100, verbose_name=_('Name'))
+    description = TextFieldTranslatable(null=True, blank=True, verbose_name=_('Description'))
     path = models.CharField(max_length=100,
                             null=True,
                             blank=True,
@@ -59,13 +63,14 @@ class Project(BaseModel):
                                 choices=django_settings.LANGUAGES,
                                 default='en',
                                 verbose_name=_('Language'))
-    window_title = models.CharField(max_length=256,
-                                    null=True,
-                                    blank=True,
-                                    verbose_name=_('Window Title'))
+    window_title = CharFieldTranslatable(max_length=256,
+                                         null=True,
+                                         blank=True,
+                                         verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_to)
     boundary = gismodels.PolygonField()
+    translations = GenericRelation(Translation)
 
     class Meta:
         verbose_name = _('Project')

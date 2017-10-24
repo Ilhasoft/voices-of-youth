@@ -16,6 +16,8 @@ from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
+from voicesofyouth.translation.fields import CharFieldTranslatable
+from voicesofyouth.translation.fields import TextFieldTranslatable
 
 
 class Theme(BaseModel):
@@ -35,14 +37,14 @@ class Theme(BaseModel):
     """
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     bounds = gismodels.PolygonField()
-    name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
+    name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     mappers_group = models.OneToOneField(Group,
                                          related_name='theme_mappers',
                                          null=True,
                                          blank=True,
                                          limit_choices_to={'name__icontains': '- mappers'})
-    description = models.TextField(null=True, blank=True)
+    description = TextFieldTranslatable(null=True, blank=True)
     tags = TaggableManager(through=Tag, blank=True)
     color = models.CharField(max_length=6,
                              validators=[MinLengthValidator(6), ],
