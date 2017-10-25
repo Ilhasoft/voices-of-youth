@@ -1,5 +1,5 @@
 <template>
-  <v-map :zoom="zoom" :center="center" ref="map" class="map">
+  <v-map :zoom="zoom" :bounds="bounds" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
       <v-marker-cluster>
         <v-marker :key="l.text" v-for="l in locations" :lat-lng="l.latlng" :icon="createIcon()">
@@ -48,7 +48,8 @@ export default {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       locations,
       clusterOptions: {},
-      center: L.latLng(-34.9205, -57.953646),
+      center: undefined,
+      bounds: L.latLngBounds(),
     };
   },
 
@@ -56,18 +57,15 @@ export default {
     this.$refs.map.mapObject.zoomControl.remove();
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
-    setTimeout(() => {
-      this.$nextTick(() => {
-        this.clusterOptions = { disableClusteringAtZoom: 11 };
-      });
-    }, 5000);
+    const bounds = L.latLngBounds(this.locations.map(o => o.latlng));
+    this.bounds = bounds;
   },
 
   methods: {
     createIcon() {
       return L.icon({
         iconUrl: markerPixel,
-        shadowUrl: 'aaa',
+        shadowUrl: 'none',
         iconSize: [30, 30],
         iconAnchor: [22, 94],
         popupAnchor: [-8, -90],
