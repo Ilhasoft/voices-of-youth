@@ -8,6 +8,7 @@ from voicesofyouth.maps.models import Map
 from voicesofyouth.reports.models import Report
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.translation.models import Translation
 from voicesofyouth.users.models import User
 from .serializers import CommentSerializer
 from .serializers import MapSerializer
@@ -67,13 +68,39 @@ class ReportsEndPoint(viewsets.ReadOnlyModelViewSet,
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = ReportSerializer
+    queryset = Report.objects.all()
 
-    def retrieve(self, request, *args, **kwargs):
-        self.serializer_class = ReportAndMediasSerializer
-        instance = Report.objects.get(pk=kwargs.get('pk'))
-        serializer = self.get_serializer(instance)
+    # def retrieve(self, request, *args, **kwargs):
+    #     """
+    #     todos do projeto
+    #     todos por tema
+    #     e o proprio report
+    #     """
+    #     self.serializer_class = ReportAndMediasSerializer
+    #     project_id = kwargs.get('project')
+    #     theme_id = kwargs.get('theme')
+    #     instance = Report.objects.get(pk=kwargs.get('pk'))
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data)
+    def get_queryset(self):
+        filter_clause = {}
+        project_id = self.request.query_params.get('project', 0)
+        theme_id = self.request.query_params.get('theme', 0)
+        if project_id:
+            filter_clause['theme__project__id'] = project_id
+        if theme_id:
+            filter_clause['theme__id'] = theme_id
+
+        return Report.objects.filter(is_active=True,
+                                     visible=True,
+                                     **filter_clause)
+
+    def retrieve(self, request, pk=None):
+        lang = self.request.query_params.get('lang', '').strip()
+        report = get_object_or_404(self.queryset, pk=pk)
+        Translation.objects.translate_object(report, lang)
+        serializer = self.serializer_class(report, context={'request': request})
         return Response(serializer.data)
-
 
 class CommentsEndPoint(mixins.CreateModelMixin,
                        viewsets.GenericViewSet):

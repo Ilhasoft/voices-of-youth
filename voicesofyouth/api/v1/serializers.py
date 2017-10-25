@@ -80,12 +80,14 @@ class ReportLanguageSerializer(serializers.ModelSerializer):
 
 
 class ReportSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
+    tags = serializers.StringRelatedField(
+        read_only=True,
+        many=True
+    )
 
     class Meta:
         model = Report
-        fields = ('id', 'url', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'image', 'created_on')
+        fields = ('id', 'theme', 'location', 'comments', 'editable', 'visible', 'created_on', 'description', 'name', 'tags')
 
     def get_url(self, obj):
         return reverse('reports-detail', kwargs={'pk': obj.id})
