@@ -15,7 +15,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bulma": "^0.5.3",
-    "leaflet": "^1.2.0",
+    "leaflet": "git+https://git@github.com/edudouglas/Leaflet.git#v1.2.0",
     "vue": "^2.4.4",
     "vue-router": "^2.7.0",
     "vue-select": "github:sagalbot/vue-select",

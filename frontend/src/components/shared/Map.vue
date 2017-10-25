@@ -1,11 +1,11 @@
 <template>
   <v-map :zoom="zoom" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
-    <v-marker-cluster :options="clusterOptions">
-      <v-marker :key="l.text" v-for="l in locations" :lat-lng="l.latlng" :icon="icon">
-        <v-popup :content="l.text"></v-popup>
-      </v-marker>
-    </v-marker-cluster>
+      <v-marker-cluster>
+        <v-marker :key="l.text" v-for="l in locations" :lat-lng="l.latlng" :icon="createIcon()">
+          <v-popup :content="l.text"></v-popup>
+        </v-marker>
+      </v-marker-cluster>
   </v-map>
 </template>
 
@@ -42,23 +42,11 @@ export default {
       });
     }
 
-    const icon = L.icon({
-      iconUrl: markerPixel,
-      shadowUrl: 'aaa',
-      iconSize: [30, 30],
-      iconAnchor: [22, 94],
-      popupAnchor: [-8, -90],
-      shadowSize: [0, 0],
-      shadowAnchor: [22, 94],
-      className: 'icon-pin pin',
-    });
-
     return {
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       locations,
-      icon,
       clusterOptions: {},
       center: L.latLng(-34.9205, -57.953646),
     };
@@ -70,9 +58,25 @@ export default {
 
     setTimeout(() => {
       this.$nextTick(() => {
-        // this.clusterOptions = { disableClusteringAtZoom: 11 };
+        this.clusterOptions = { disableClusteringAtZoom: 11 };
       });
     }, 5000);
+  },
+
+  methods: {
+    createIcon() {
+      return L.icon({
+        iconUrl: markerPixel,
+        shadowUrl: 'aaa',
+        iconSize: [30, 30],
+        iconAnchor: [22, 94],
+        popupAnchor: [-8, -90],
+        shadowSize: [0, 0],
+        shadowAnchor: [22, 94],
+        className: 'icon-pin pin',
+        styleColorName: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+      });
+    },
   },
 };
 </script>
@@ -84,7 +88,6 @@ export default {
 
 .pin {
   font-size: 38px;
-  color: #9013fe;
 }
 
 .map {
