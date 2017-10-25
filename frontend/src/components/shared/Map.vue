@@ -2,8 +2,8 @@
   <v-map :zoom="zoom" :bounds="bounds" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
       <v-marker-cluster>
-        <v-marker :key="l.text" v-for="l in locations" :lat-lng="l.latlng" :icon="createIcon()">
-          <v-popup :content="l.text"></v-popup>
+        <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in locations" :lat-lng="item.latlng" :icon="createIcon()">
+          <v-popup :content="item.text"></v-popup>
         </v-marker>
       </v-marker-cluster>
   </v-map>
@@ -74,6 +74,11 @@ export default {
         className: 'icon-pin pin',
         styleColorName: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       });
+    },
+
+    clickMarker(item) {
+      const marker = JSON.parse(JSON.stringify(item));
+      this.$refs.map.mapObject.setView(marker.latlng);
     },
   },
 };
