@@ -12,7 +12,6 @@ from psycopg2 import ProgrammingError
 from .fields import CharFieldTranslatable
 from .fields import TextFieldTranslatable
 
-
 __author__ = ['Elton Pereira', ]
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
@@ -45,14 +44,44 @@ class TranslatableField(models.Model):
         verbose_name: Verbose name of the field.
     """
     model = models.ForeignKey(TranslatableModel)
-    field = models.CharField(max_length=128)
+    field_name = models.CharField(max_length=128)
     verbose_name = models.CharField(max_length=128)
 
     class Meta:
-        unique_together = ('model', 'field')
+        unique_together = ('model', 'field_name')
 
     def __str__(self):
         return f'{self.model}.{self.verbose_name}'
+
+
+class TranslationManager(models.Manager):
+    def get_translations_for_model(self, model_instance, lang_code=None):
+        qs = self.get_queryset()
+        ct = ContentType.objects.get_for_model(model_instance)
+        filter_clauses = {
+            'content_type': ct,
+            'object_id': model_instance.id
+        }
+        if lang_code is not None:
+            filter_clauses['lang_code'] = lang_code
+        return qs.filter(**filter_clauses)
+
+    def translate_object(self, model_instance, lang_code):
+        """
+        Apply the translation for fields values if exists, otherwise do nothing.
+
+        The translation is applied directly in the model_instance fields.
+
+        Attributes:
+            model_instance: Model instance.
+            lang_code: Language code used to translate.
+        """
+        content_type = ContentType.objects.get_for_model(model_instance._meta.model)
+        translations = self.get_queryset().filter(language=lang_code,
+                                                  content_type=content_type,
+                                                  object_id=model_instance.id)
+        for translation in translations:
+            setattr(model_instance, translation.field.field_name, translation.translation)
 
 
 class Translation(models.Model):
@@ -74,8 +103,11 @@ class Translation(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    objects = TranslationManager()
+
     class Meta:
         unique_together = ('language', 'field', 'content_type', 'object_id')
+        ordering = ('language', )
 
     def __str__(self):
         return f'{self.field}({self.language})'
@@ -108,7 +140,7 @@ def create_translations(app_config, **_):
                                 'verbose_name_plural': model._meta.verbose_name_plural}
                         model_instance = TranslatableModel.objects.update_or_create(**data, defaults=data)[0]
                     translatable_fields.append({'model': model_instance,
-                                                'field': field.attname,
+                                                'field_name': field.attname,
                                                 'verbose_name': field.verbose_name})
                     print(field.verbose_name)
         try:
@@ -116,7 +148,7 @@ def create_translations(app_config, **_):
             while len(translatable_fields) > 0:
                 field_data = translatable_fields.pop(0)
                 TranslatableField.objects.update_or_create(model=field_data['model'],
-                                                           field=field_data['field'],
+                                                           field_name=field_data['field_name'],
                                                            defaults=field_data)
         except ProgrammingError:
             """

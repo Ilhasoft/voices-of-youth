@@ -2,9 +2,12 @@ from django.shortcuts import reverse
 from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
-from voicesofyouth.reports.models import Report, ReportMedias, ReportLanguage, ReportComments
+from voicesofyouth.reports.models import Report
+from voicesofyouth.reports.models import ReportComments
+from voicesofyouth.reports.models import ReportLanguage
+from voicesofyouth.reports.models import ReportMedias
 from voicesofyouth.tag.models import Tag
-from voicesofyouth.theme.models import Theme, ThemeTranslation
+from voicesofyouth.theme.models import Theme
 from voicesofyouth.users.models import User
 
 
@@ -62,12 +65,6 @@ class MapAndThemesSerializer(serializers.ModelSerializer):
 
     def get_themes(self, obj):
         return ThemeSerializer(obj.get_themes(), many=True).data
-
-
-class ThemeTranslationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ThemeTranslation
-        fields = ('id', 'language', 'title', 'description', 'theme', 'created_on', 'modified_on')
 
 
 class ReportMediaSerializer(serializers.ModelSerializer):

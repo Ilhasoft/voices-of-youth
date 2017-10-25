@@ -2,6 +2,7 @@ import random
 
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.gis.db import models as gismodels
 from django.core.validators import MinLengthValidator
 from django.db import models
@@ -18,6 +19,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
+from voicesofyouth.translation.models import Translation
 
 
 class Theme(BaseModel):
@@ -50,6 +52,7 @@ class Theme(BaseModel):
                              validators=[MinLengthValidator(6), ],
                              null=True,
                              blank=True)
+    translations = GenericRelation(Translation)
 
     class Meta:
         ordering = ('name', )
@@ -66,23 +69,6 @@ class Theme(BaseModel):
     @property
     def reports_count(self):
         return self.reports.count()
-
-
-class ThemeTranslation(BaseModel):
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='translations')
-    language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-    name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
-    description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-
-    def __str__(self):
-        return self.language
-
-    class Meta:
-        verbose_name = _('Themes Translation')
-        verbose_name_plural = _('Themes Translations')
-        db_table = 'themes_theme_translation'
-        ordering = ('language', )
-        unique_together = ('theme', 'language')
 
 
 ###############################################################################

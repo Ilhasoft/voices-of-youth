@@ -11,7 +11,7 @@ class TranstableModelAdmin(admin.ModelAdmin):
 
 
 class TranslatableFieldAdmin(admin.ModelAdmin):
-    list_display = ('model', 'field', 'verbose_name')
+    list_display = ('model', 'field_name', 'verbose_name')
     readonly_fields = list_display
 
 

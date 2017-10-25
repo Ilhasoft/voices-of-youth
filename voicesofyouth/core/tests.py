@@ -102,6 +102,15 @@ class GroupUnprotectedTestCase(TestCase):
         self.group.refresh_from_db()
         self.assertEqual(self.group.name, 'foo')
 
+    def test_rename_conflict(self):
+        """
+        Use an exists name raise ValidationError?
+        """
+        group = mommy.make(Group, name='foo')
+        with self.assertRaises(ValidationError):
+            group.name = self.group.name
+            group.save()
+
 
 class SuperAdminGroupTestCase(TestCase):
     def test_add_user_in_superadmin_group(self):
