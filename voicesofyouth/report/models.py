@@ -83,25 +83,6 @@ class Report(BaseModel):
     #     return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
 
 
-class ReportLanguage(BaseModel):
-
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_languages')
-
-    language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-
-    title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
-
-    description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-
-    def __str__(self):
-        return '{} - {} - {}'.format(self.language, self.title, self.description)
-
-    class Meta:
-        verbose_name = _('Reports Languages')
-        verbose_name_plural = _('Reports Languages')
-        db_table = 'reports_report_languages'
-
-
 class ReportComments(BaseModel):
 
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_comments')
