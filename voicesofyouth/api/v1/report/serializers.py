@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from voicesofyouth.api.v1.serializers import UserSerializer
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.report.models import Report, ReportComment
 
@@ -38,11 +39,13 @@ class ReportSerializer(VoySerializer):
 
 class ReportCommentsSerializer(VoySerializer):
     report = serializers.HyperlinkedRelatedField(read_only=True, view_name='reports-detail')
+    author = UserSerializer()
 
     class Meta:
         model = ReportComment
         fields = (
             'id',
             'report',
-            'text'
+            'text',
+            'author',
         )
