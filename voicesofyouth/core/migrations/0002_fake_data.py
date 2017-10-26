@@ -10,7 +10,7 @@ from model_mommy.random_gen import gen_string
 from unipath import Path
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.reports.models import Report
+from voicesofyouth.report.models import Report
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.fields import CharFieldTranslatable, TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
@@ -41,7 +41,8 @@ def create_dev_data(apps, schema_editor):
                 for y in range(random.randint(5, 15)):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}')
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                    mommy.make(Report, random.randint(1, 10), theme=theme)
+                    for report in mommy.make(Report, random.randint(1, 10), theme=theme):
+                        report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     for lang_idx in range(1, 5):
                         mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
                         mommy.make(Translation, content_object=project, language=settings.LANGUAGES[lang_idx][0])
@@ -55,7 +56,7 @@ class Migration(migrations.Migration):
         ('theme', '0002_auto_20171023_1906'),
         ('tag', '0001_initial'),
         ('translation', '0001_initial'),
-        ('reports', '0001_initial'),
+        ('report', '0001_initial'),
     ]
 
     operations = [
