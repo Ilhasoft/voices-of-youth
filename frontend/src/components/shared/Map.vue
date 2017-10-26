@@ -1,11 +1,11 @@
 <template>
-  <v-map :zoom="zoom" :bounds="bounds" :center="center" ref="map" class="map">
-    <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
-      <v-marker-cluster>
-        <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon">
-          <v-popup :content="item.text"></v-popup>
-        </v-marker>
-      </v-marker-cluster>
+  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :bounds="bounds" :center="center" ref="map" class="map">
+    <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
+    <v-marker-cluster>
+      <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon">
+        <v-popup :content="item.text"></v-popup>
+      </v-marker>
+    </v-marker-cluster>
   </v-map>
 </template>
 
@@ -35,7 +35,7 @@ export default {
 
   data() {
     return {
-      zoom: 11,
+      options: { noWrap: true },
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       center: null,
