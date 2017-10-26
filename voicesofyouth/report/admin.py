@@ -2,8 +2,8 @@ from django.contrib import admin
 
 from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Report
-from .models import ReportComments
-from .models import ReportMedias
+from .models import ReportComment
+from .models import ReportMedia
 
 
 class ReportAdmin(BaseModelAdmin):
@@ -25,17 +25,17 @@ class ReportAdmin(BaseModelAdmin):
     tags_name.visible_name = 'tags'
 
 
-class ReportCommentsAdmin(BaseModelAdmin):
-    list_display = ('body', 'user_name')
+class ReportCommentAdmin(BaseModelAdmin):
+    list_display = ('text', 'user_name')
 
     def user_name(self, obj):
         return obj.created_by.display_name
 
 
-class ReportMediasAdmin(BaseModelAdmin):
-    list_display = ('title', 'description', 'media_type', 'language', 'is_active', 'visibled')
+class ReportMediaAdmin(BaseModelAdmin):
+    list_display = ('title', 'description', 'media_type', 'is_active', 'visible')
 
 
 admin.site.register(Report, ReportAdmin)
-admin.site.register(ReportComments, ReportCommentsAdmin)
-admin.site.register(ReportMedias, ReportMediasAdmin)
+admin.site.register(ReportComment, ReportCommentAdmin)
+admin.site.register(ReportMedia, ReportMediaAdmin)

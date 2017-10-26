@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'voicesofyouth.users',
     'voicesofyouth.project',
     'voicesofyouth.tag',
-    'voicesofyouth.maps',
     'voicesofyouth.theme',
     'voicesofyouth.report',
     'voicesofyouth.api',
