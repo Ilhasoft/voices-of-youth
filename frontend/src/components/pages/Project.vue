@@ -7,14 +7,16 @@
     <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
     <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link> -->
-    <map-osm />
+    <map-osm
+      :markers="projectReports"
+    />
     <intro-project/>
     <side-bar v-show="sideBarActived" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import HeaderIndex from '../header/Index';
 import MapOsm from '../shared/Map';
 import SideBar from '../sidebar/Index';
@@ -30,10 +32,21 @@ export default {
     MapOsm,
   },
 
+  mounted() {
+    this.getReports();
+  },
+
   computed: {
     ...mapGetters({
       sideBarActived: 'getSideBarIsActived',
+      projectReports: 'getReports',
     }),
+  },
+
+  methods: {
+    ...mapActions([
+      'getReports',
+    ]),
   },
 };
 </script>

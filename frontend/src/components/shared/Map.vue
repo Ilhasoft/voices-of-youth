@@ -32,6 +32,13 @@ export default {
     'v-marker-cluster': Vue2LeafletMarkerCluster,
   },
 
+  props: {
+    markers: {
+      type: Array,
+      required: true,
+    },
+  },
+
   data() {
     const locations = [];
 
