@@ -48,8 +48,8 @@ def get_content_file_path(instance, filename):
 class Report(BaseModel):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='reports')
     location = gismodels.PointField(null=False, blank=False, srid=4326)
-    name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
-    description = TextFieldTranslatable(null=True, blank=True)
+    name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
+    description = models.TextField(null=True, blank=True)
     comments = models.BooleanField(default=True, verbose_name=_('Comments'))
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
