@@ -45,12 +45,14 @@ def create_dev_data(apps, schema_editor):
                 for y in range(random.randint(5, 10)):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}', description=lorem.paragraph())
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
+                    lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
+                    mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
+                    mommy.make(Translation, content_object=project, language=settings.LANGUAGES[lang_idx][0])
+                    mommy.make(Translation, content_object=theme, language='en')
+                    mommy.make(Translation, content_object=project, language='en')
                     for z in range(random.randint(1, 10)):
                         report = mommy.make(Report, name=f'Report {z}', description=lorem.paragraph(), theme=theme)
                         report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                    for lang_idx in range(1, 5):
-                        mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
-                        mommy.make(Translation, content_object=project, language=settings.LANGUAGES[lang_idx][0])
 
 
 class Migration(migrations.Migration):
