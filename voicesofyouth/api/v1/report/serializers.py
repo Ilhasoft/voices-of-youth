@@ -14,17 +14,14 @@ class ReportSerializer(VoySerializer):
         read_only=True,
         many=True
     )
-    theme = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        view_name='themes-detail'
-    )
+    theme_id = serializers.PrimaryKeyRelatedField(read_only=True)
     location = PointField()
     theme_color = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
         fields = ('id',
-                  'theme',
+                  'theme_id',
                   'location',
                   'can_receive_comments',
                   'editable',
