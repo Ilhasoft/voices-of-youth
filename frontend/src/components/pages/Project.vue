@@ -7,9 +7,7 @@
     <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
     <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
     <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link> -->
-    <map-osm
-      :markers="projectReports"
-    />
+    <map-osm/>
     <intro-project/>
     <side-bar v-show="sideBarActived" />
   </div>
@@ -39,7 +37,6 @@ export default {
   computed: {
     ...mapGetters({
       sideBarActived: 'getSideBarIsActived',
-      projectReports: 'getReports',
     }),
   },
 

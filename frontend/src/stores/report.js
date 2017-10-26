@@ -41,13 +41,8 @@ export default {
     [TYPES.REMOVE_REPORTS_LIST](state, obj) {
       const index = state.themes.indexOf(obj.theme);
       if (index !== -1) {
-        console.log('REMOVE');
         state.themes.splice(index, 1);
-        const aa = state.all.filter((cc) => {
-          console.log(cc);
-          return cc;
-        });
-        console.log(aa);
+        state.all = state.all.filter(item => item.theme_id !== obj.theme);
       }
     },
   },
