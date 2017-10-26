@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
 from voicesofyouth.report.models import Report
-from voicesofyouth.report.models import ReportComments
+from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportMedias
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
@@ -74,7 +74,7 @@ class ReportMediaSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ReportComments
+        model = ReportComment
         fields = ('id', 'body', 'report')
 
 
@@ -82,7 +82,7 @@ class ReportCommentsSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
 
     class Meta:
-        model = ReportComments
+        model = ReportComment
         fields = ('id', 'body', 'created_on', 'created_by')
 
 
