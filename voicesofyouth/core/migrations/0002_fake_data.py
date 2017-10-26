@@ -5,6 +5,8 @@ import random
 from django.conf import settings
 from django.core.files.images import ImageFile
 from django.db import migrations
+from django.db import transaction
+from django.db.utils import IntegrityError
 from model_mommy import mommy
 from model_mommy.random_gen import gen_string
 from unipath import Path
@@ -13,19 +15,34 @@ import lorem
 from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.translation.fields import CharFieldTranslatable, TextFieldTranslatable
+from voicesofyouth.translation.fields import TextFieldTranslatable
+from voicesofyouth.translation.fields import CharFieldTranslatable
+from voicesofyouth.translation.models import create_translatable_model
+from voicesofyouth.translation.models import TranslatableField
 from voicesofyouth.translation.models import Translation
+
 
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
 
+
 mommy.generators.add(TextFieldTranslatable, gen_string)
 mommy.generators.add(CharFieldTranslatable, gen_string)
 
 
+def make_translation(obj, lang):
+    for field in TranslatableField.objects.filter(model__model=obj._meta.model_name):
+        try:
+            with transaction.atomic():
+                mommy.make(Translation, field=field, content_object=obj, language=lang)
+        except IntegrityError:
+            pass
+
 def create_dev_data(apps, schema_editor):
     if settings.DEBUG:
+        create_translatable_model(Project)
+        create_translatable_model(Theme)
         test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
         with open(test_img, 'rb') as image:
             tags = ('trash',
@@ -46,10 +63,9 @@ def create_dev_data(apps, schema_editor):
                     theme = mommy.make(Theme, project=project, name=f'Theme {y}', description=lorem.paragraph())
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
-                    mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
-                    mommy.make(Translation, content_object=project, language=settings.LANGUAGES[lang_idx][0])
-                    mommy.make(Translation, content_object=theme, language='en')
-                    mommy.make(Translation, content_object=project, language='en')
+                    lang = settings.LANGUAGES[lang_idx][0]
+                    make_translation(theme, lang)
+                    make_translation(project, lang)
                     for z in range(random.randint(1, 10)):
                         report = mommy.make(Report, name=f'Report {z}', description=lorem.paragraph(), theme=theme)
                         report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
@@ -59,11 +75,11 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('core', '0001_initial'),
-        ('project', '0002_auto_20171023_1906'),
-        ('theme', '0002_auto_20171023_1906'),
-        ('tag', '0001_initial'),
         ('translation', '0001_initial'),
-        ('report', '0001_initial'),
+        ('project', '0002_auto_20171026_1406'),
+        ('theme', '0002_auto_20171026_1406'),
+        ('tag', '0001_initial'),
+        ('report', '0002_auto_20171026_1406'),
     ]
 
     operations = [
