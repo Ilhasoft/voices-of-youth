@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from voicesofyouth.api.v1.serializers import VoySerializer
-from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import Report, ReportComment
 
 
 class PointField(serializers.Field):
@@ -14,19 +14,16 @@ class ReportSerializer(VoySerializer):
         read_only=True,
         many=True
     )
-    theme = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        view_name='themes-detail'
-    )
+    theme_id = serializers.PrimaryKeyRelatedField(read_only=True)
     location = PointField()
     theme_color = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
         fields = ('id',
-                  'theme',
+                  'theme_id',
                   'location',
-                  'comments',
+                  'can_receive_comments',
                   'editable',
                   'visible',
                   'created_on',
@@ -37,3 +34,15 @@ class ReportSerializer(VoySerializer):
 
     def get_theme_color(self, obj):
         return obj.theme.color
+
+
+class ReportCommentsSerializer(VoySerializer):
+    report = serializers.HyperlinkedRelatedField(read_only=True, view_name='reports-detail')
+
+    class Meta:
+        model = ReportComment
+        fields = (
+            'id',
+            'report',
+            'text'
+        )
