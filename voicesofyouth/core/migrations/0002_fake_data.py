@@ -8,6 +8,7 @@ from django.db import migrations
 from model_mommy import mommy
 from model_mommy.random_gen import gen_string
 from unipath import Path
+import lorem
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
@@ -36,12 +37,16 @@ def create_dev_data(apps, schema_editor):
                     'crazy',
                     'anything')
             fake_thumbnail = ImageFile(image)
-            for x in range(random.randint(5, 15)):
-                project = mommy.make(Project, name=f'Project {x}', thumbnail=fake_thumbnail)
-                for y in range(random.randint(5, 15)):
-                    theme = mommy.make(Theme, project=project, name=f'Theme {y}')
+            for x in range(random.randint(5, 10)):
+                project = mommy.make(Project,
+                                     name=f'Project {x}',
+                                     thumbnail=fake_thumbnail,
+                                     description=lorem.paragraph())
+                for y in range(random.randint(5, 10)):
+                    theme = mommy.make(Theme, project=project, name=f'Theme {y}', description=lorem.paragraph())
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                    for report in mommy.make(Report, random.randint(1, 10), theme=theme):
+                    for z in range(random.randint(1, 10)):
+                        report = mommy.make(Report, name=f'Report {z}', description=lorem.paragraph(), theme=theme)
                         report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     for lang_idx in range(1, 5):
                         mommy.make(Translation, content_object=theme, language=settings.LANGUAGES[lang_idx][0])
