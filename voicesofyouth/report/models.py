@@ -48,8 +48,8 @@ def get_content_file_path(instance, filename):
 class Report(BaseModel):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='reports')
     location = gismodels.PointField(null=False, blank=False, srid=4326)
-    name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
-    description = TextFieldTranslatable(null=True, blank=True)
+    name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
+    description = models.TextField(null=True, blank=True)
     comments = models.BooleanField(default=True, verbose_name=_('Comments'))
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
@@ -81,25 +81,6 @@ class Report(BaseModel):
     #
     # def get_comments(self):
     #     return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
-
-
-class ReportLanguage(BaseModel):
-
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_languages')
-
-    language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-
-    title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
-
-    description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-
-    def __str__(self):
-        return '{} - {} - {}'.format(self.language, self.title, self.description)
-
-    class Meta:
-        verbose_name = _('Reports Languages')
-        verbose_name_plural = _('Reports Languages')
-        db_table = 'reports_report_languages'
 
 
 class ReportComments(BaseModel):

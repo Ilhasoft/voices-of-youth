@@ -117,6 +117,38 @@ class Translation(models.Model):
 translatable_fields = []
 
 
+def is_translatable_model(model):
+    translatable = False
+    for field in model._meta.get_fields():
+        if type(field) in (CharFieldTranslatable, TextFieldTranslatable):
+            translatable = True
+            break
+    return translatable
+
+
+def create_translatable_model(model, create_fields=True):
+    if is_translatable_model(model):
+        data = {'model': model._meta.model_name,
+                'verbose_name': model._meta.verbose_name,
+                'verbose_name_plural': model._meta.verbose_name_plural}
+        model_instance = TranslatableModel.objects.update_or_create(**data, defaults=data)[0]
+        for field in model._meta.get_fields():
+            if type(field) in (CharFieldTranslatable, TextFieldTranslatable):
+                translatable_fields.append({'model': model_instance,
+                                            'field_name': field.attname,
+                                            'verbose_name': field.verbose_name})
+        if create_fields:
+            create_translatable_fields()
+
+
+def create_translatable_fields():
+    while len(translatable_fields) > 0:
+        field_data = translatable_fields.pop(0)
+        TranslatableField.objects.update_or_create(model=field_data['model'],
+                                                   field_name=field_data['field_name'],
+                                                   defaults=field_data)
+
+
 @receiver(post_migrate)
 def create_translations(app_config, **_):
     """
@@ -128,28 +160,15 @@ def create_translations(app_config, **_):
     """
     if settings.PROJECT_NAME in app_config.name:
         for model in app_config.get_models():
-            print_title = True
-            for field in model._meta.get_fields():
-                if type(field) in (CharFieldTranslatable, TextFieldTranslatable):
-                    if print_title:
-                        print_title = not print_title
-                        print("{:=^80}".format(f' Translatable fields '))
-                        print("{:-^80}".format(f' {app_config.name}.{model.__name__} '))
-                        data = {'model': model._meta.model_name,
-                                'verbose_name': model._meta.verbose_name,
-                                'verbose_name_plural': model._meta.verbose_name_plural}
-                        model_instance = TranslatableModel.objects.update_or_create(**data, defaults=data)[0]
-                    translatable_fields.append({'model': model_instance,
-                                                'field_name': field.attname,
-                                                'verbose_name': field.verbose_name})
-                    print(field.verbose_name)
+            if is_translatable_model(model):
+                print("{:=^80}".format(f' Translatable fields '))
+                print("{:-^80}".format(f' {app_config.name}.{model.__name__} '))
+                create_translatable_model(model, False)
+                for field in translatable_fields:
+                    print(field['field_name'])
         try:
             TranslatableModel.objects.all()
-            while len(translatable_fields) > 0:
-                field_data = translatable_fields.pop(0)
-                TranslatableField.objects.update_or_create(model=field_data['model'],
-                                                           field_name=field_data['field_name'],
-                                                           defaults=field_data)
+            create_translatable_fields()
         except ProgrammingError:
             """
             If this exception occur here, is because the translation app migration has not yet performed.
