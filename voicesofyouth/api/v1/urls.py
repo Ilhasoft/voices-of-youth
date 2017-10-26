@@ -17,7 +17,7 @@ router.register(r'maps', MapsEndPoint, base_name='maps')
 router.register(r'themes', ThemesViewSet, base_name='themes')
 router.register(r'tags', TagsViewSet, base_name='tags')
 router.register(r'users', UsersEndPoint, base_name='users')
-router.register(r'reports', ReportsEndPoint, base_name='report')
+router.register(r'reports', ReportsEndPoint, base_name='reports')
 router.register(r'comments', CommentsEndPoint, base_name='comments')
 
 urlpatterns = [
