@@ -63,17 +63,6 @@ class Report(BaseModel):
     def project(self):
         return self.theme.project
 
-    # def get_medias(self, *args, **kwargs):
-    #     queryset = self.report_medias.all().filter(report=self.id).filter(visibled=True)
-    #     media_type = kwargs.get('media_type', None)
-    #
-    #     if media_type:
-    #         queryset = queryset.filter(media_type=media_type)
-    #
-    #     return queryset
-    # def get_comments(self):
-    #     return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
-
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
