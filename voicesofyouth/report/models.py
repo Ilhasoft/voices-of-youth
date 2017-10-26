@@ -1,20 +1,15 @@
 import os
 import uuid
-
 from datetime import datetime
 
-from django.conf import settings as django_settings
-from django.db import models
 from django.contrib.gis.db import models as gismodels
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.project.models import Project
-from voicesofyouth.maps.models import Map
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.translation.fields import CharFieldTranslatable, TextFieldTranslatable
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2
@@ -47,7 +42,7 @@ def get_content_file_path(instance, filename):
 
 class Report(BaseModel):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='reports')
-    location = gismodels.PointField(null=False, blank=False, srid=4326)
+    location = gismodels.PointField(null=False, blank=False)
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     description = models.TextField(null=True, blank=True)
     can_receive_comment = models.BooleanField(default=True, verbose_name=_('Can receive comments'))
@@ -78,22 +73,19 @@ class ReportComment(BaseModel):
         db_table = 'report_reports_comments'
 
 
-class ReportMedias(BaseModel):
+class ReportMedia(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_medias')
     title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
     media_type = models.CharField(max_length=5, choices=MEDIA_TYPES, verbose_name=_('Type'))
     url = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('URL'))
     file = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('File'))
-    screenshot = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('Screenshot'))
-    extra = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Extra'))
-    language = models.CharField(max_length=90, choices=django_settings.LANGUAGES, default='en')
-    visible = models.BooleanField(default=True, verbose_name=_('Visibled'))
+    visible = models.BooleanField(default=True, verbose_name=_('Visible'))
 
     def __str__(self):
         return '{} - {} - {}'.format(self.title, self.description, self.media_type)
 
     class Meta:
-        verbose_name = _('Reports Medias')
+        verbose_name = _('Report Media')
         verbose_name_plural = _('Reports Medias')
-        db_table = 'reports_report_medias'
+        db_table = 'report_report_medias'
