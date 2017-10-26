@@ -22,6 +22,14 @@ export default {
     [TYPES.SET_CURRENT_REPORT](state, obj) {
       state.theme = obj;
     },
+
+    [TYPES.ADD_REPORTS_LIST](state, obj) {
+      state.theme = obj;
+    },
+
+    [TYPES.REMOVE_REPORTS_LIST](state, obj) {
+      state.theme = obj;
+    },
   },
 
   actions: {
@@ -40,6 +48,18 @@ export default {
       }).catch((error) => {
         throw new Error(error);
       });
+    },
+
+    getReportsByTheme({ commit }, obj) {
+      if (obj.isChecked) {
+        axios.get(`/api/reports?theme_id=${obj.themeId}`).then((response) => {
+          commit(TYPES.ADD_REPORTS_LIST, response.data);
+        }).catch((error) => {
+          throw new Error(error);
+        });
+      } else {
+        commit(TYPES.REMOVE_REPORTS_LIST, obj.themeId);
+      }
     },
 
     getReport({ commit }, obj) {

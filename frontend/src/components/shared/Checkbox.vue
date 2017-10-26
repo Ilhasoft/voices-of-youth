@@ -13,8 +13,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Checkbox',
+
+  props: {
+    themeId: {
+      type: Number,
+      required: false,
+    },
+  },
 
   data() {
     return {
@@ -23,9 +32,18 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'getReportsByTheme',
+    ]),
+
     setChecked() {
       this.isChecked = !this.isChecked;
       this.$emit('item-checked', this.isChecked);
+
+      this.getReportsByTheme({
+        isChecked: this.isChecked,
+        themeId: this.themeId,
+      });
     },
   },
 };
