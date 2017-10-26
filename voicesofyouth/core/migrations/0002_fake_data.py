@@ -76,10 +76,10 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0001_initial'),
         ('translation', '0001_initial'),
-        ('project', '0002_auto_20171026_1406'),
-        ('theme', '0002_auto_20171026_1406'),
+        ('project', '0002_auto_20171026_1610'),
+        ('theme', '0002_auto_20171026_1610'),
         ('tag', '0001_initial'),
-        ('report', '0002_auto_20171026_1406'),
+        ('report', '0002_auto_20171026_1610'),
     ]
 
     operations = [
