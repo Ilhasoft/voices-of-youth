@@ -74,7 +74,7 @@ class ReportComment(BaseModel):
 
 
 class ReportMedia(BaseModel):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='report_medias')
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='medias')
     title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
     media_type = models.CharField(max_length=5, choices=MEDIA_TYPES, verbose_name=_('Type'))
