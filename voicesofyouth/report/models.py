@@ -7,13 +7,14 @@ from django.conf import settings as django_settings
 from django.db import models
 from django.contrib.gis.db import models as gismodels
 from django.utils.translation import ugettext_lazy as _
+from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.project.models import Project
 from voicesofyouth.maps.models import Map
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
-
+from voicesofyouth.translation.fields import CharFieldTranslatable, TextFieldTranslatable
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2
@@ -45,46 +46,41 @@ def get_content_file_path(instance, filename):
 
 
 class Report(BaseModel):
-
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project_reports')
-
-    map = models.ForeignKey(Map, on_delete=models.CASCADE, related_name='map_reports')
-
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='theme_reports')
-
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='reports')
     location = gismodels.PointField(null=False, blank=False, srid=4326)
-
-    sharing = models.BooleanField(default=True, verbose_name=_('Sharing'))
-
+    name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
+    description = TextFieldTranslatable(null=True, blank=True)
     comments = models.BooleanField(default=True, verbose_name=_('Comments'))
-
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
-
-    visibled = models.BooleanField(default=True, verbose_name=_('Visibled'))
-
+    visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
+    tags = TaggableManager(through=Tag, blank=True)
 
     def __str__(self):
-        return '{} - {} - {}'.format(self.project.name, self.map.name, self.theme.name)
+        return '{} - {}'.format(self.theme.project.name, self.theme.name)
 
-    def get_medias(self, *args, **kwargs):
-        queryset = self.report_medias.all().filter(report=self.id).filter(visibled=True)
-        media_type = kwargs.get('media_type', None)
+    @property
+    def project(self):
+        return self.theme.project
 
-        if media_type:
-            queryset = queryset.filter(media_type=media_type)
-
-        return queryset
-
-    def get_languages(self):
-        return self.report_languages.all().filter(report=self.id)
-
-    def get_tags(self):
-        queryset = self.report_tags.all().filter(report=self.id)
-        return map(lambda tag: tag.tag, queryset)
-
-    def get_comments(self):
-        return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
+    # def get_medias(self, *args, **kwargs):
+    #     queryset = self.report_medias.all().filter(report=self.id).filter(visibled=True)
+    #     media_type = kwargs.get('media_type', None)
+    #
+    #     if media_type:
+    #         queryset = queryset.filter(media_type=media_type)
+    #
+    #     return queryset
+    #
+    # def get_languages(self):
+    #     return self.report_languages.all().filter(report=self.id)
+    #
+    # def get_tags(self):
+    #     queryset = self.report_tags.all().filter(report=self.id)
+    #     return map(lambda tag: tag.tag, queryset)
+    #
+    # def get_comments(self):
+    #     return self.report_comments.all().filter(report=self.id).filter(status=STATUS_APPROVED)
 
 
 class ReportLanguage(BaseModel):
@@ -104,19 +100,6 @@ class ReportLanguage(BaseModel):
         verbose_name = _('Reports Languages')
         verbose_name_plural = _('Reports Languages')
         db_table = 'reports_report_languages'
-
-
-class ReportFavoriteBy(BaseModel):
-
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return '{} - {}'.format(self.report.theme.name, self.created_by.display_name)
-
-    class Meta:
-        verbose_name = _('Reports Favorite By')
-        verbose_name_plural = _('Reports Favorite By')
-        db_table = 'reports_report_favorite_by'
 
 
 class ReportComments(BaseModel):

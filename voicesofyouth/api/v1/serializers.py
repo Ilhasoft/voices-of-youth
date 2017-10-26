@@ -2,10 +2,10 @@ from django.shortcuts import reverse
 from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
-from voicesofyouth.reports.models import Report
-from voicesofyouth.reports.models import ReportComments
-from voicesofyouth.reports.models import ReportLanguage
-from voicesofyouth.reports.models import ReportMedias
+from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import ReportComments
+from voicesofyouth.report.models import ReportLanguage
+from voicesofyouth.report.models import ReportMedias
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.users.models import User

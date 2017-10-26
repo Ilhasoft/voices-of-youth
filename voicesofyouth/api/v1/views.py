@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from voicesofyouth.api.v1.serializers import TagSerializer
 from voicesofyouth.maps.models import Map
-from voicesofyouth.reports.models import Report
+from voicesofyouth.report.models import Report
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.models import Translation
@@ -70,18 +70,6 @@ class ReportsEndPoint(viewsets.ReadOnlyModelViewSet,
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
 
-    # def retrieve(self, request, *args, **kwargs):
-    #     """
-    #     todos do projeto
-    #     todos por tema
-    #     e o proprio report
-    #     """
-    #     self.serializer_class = ReportAndMediasSerializer
-    #     project_id = kwargs.get('project')
-    #     theme_id = kwargs.get('theme')
-    #     instance = Report.objects.get(pk=kwargs.get('pk'))
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data)
     def get_queryset(self):
         filter_clause = {}
         project_id = self.request.query_params.get('project', 0)
