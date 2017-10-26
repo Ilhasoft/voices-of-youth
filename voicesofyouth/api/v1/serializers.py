@@ -72,28 +72,6 @@ class ReportMediaSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'media_type', 'url', 'file', 'screenshot', 'extra', 'language')
 
 
-class ReportSerializer(serializers.ModelSerializer):
-    tags = serializers.StringRelatedField(
-        read_only=True,
-        many=True
-    )
-
-    class Meta:
-        model = Report
-        fields = ('id', 'theme', 'location', 'comments', 'editable', 'visible', 'created_on', 'description', 'name', 'tags')
-
-    def get_url(self, obj):
-        return reverse('reports-detail', kwargs={'pk': obj.id})
-
-    def get_image(self, obj):
-        images = obj.get_medias(media_type='image')
-
-        if len(images) > 0:
-            return ReportMediaSerializer(images[0]).data
-
-        return None
-
-
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportComments
