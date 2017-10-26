@@ -57,7 +57,7 @@ export default {
       });
     },
 
-    getReportsByTheme({ commit }, obj) {
+    getReportsByTheme({ dispatch, commit, state }, obj) {
       if (obj.isChecked) {
         axios.get(`/api/reports?theme=${obj.themeId}`).then((response) => {
           commit(TYPES.ADD_REPORTS_LIST, {
@@ -71,6 +71,10 @@ export default {
         commit(TYPES.REMOVE_REPORTS_LIST, {
           theme: obj.themeId,
         });
+
+        if (state.themes.length === 0) {
+          dispatch('getReports');
+        }
       }
     },
 
