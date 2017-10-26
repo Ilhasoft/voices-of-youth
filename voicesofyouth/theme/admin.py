@@ -5,7 +5,7 @@ from .models import Theme
 
 
 class ThemeAdmin(BaseModelAdmin):
-    list_display = ('project_name', 'name', 'visible', 'is_active')
+    list_display = ('name', 'project_name', 'visible', 'is_active')
 
     def project_name(self, obj):
         return obj.project.name
