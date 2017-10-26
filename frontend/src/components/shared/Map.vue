@@ -2,7 +2,7 @@
   <v-map :zoom="zoom" :bounds="bounds" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution"></v-tilelayer>
       <v-marker-cluster>
-        <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in locations" :lat-lng="item.latlng" :icon="createIcon()">
+        <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon">
           <v-popup :content="item.text"></v-popup>
         </v-marker>
       </v-marker-cluster>
@@ -14,12 +14,6 @@ import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
 import markerPixel from '../../assets/img/pixel.png';
-
-function rand(n) {
-  const max = n + 0.1;
-  const min = n - 0.1;
-  return (Math.random() * (max - min)) + min;
-}
 
 export default {
   name: 'Map',
@@ -40,22 +34,11 @@ export default {
   },
 
   data() {
-    const locations = [];
-
-    for (let i = 0; i < 100; i += 1) {
-      locations.push({
-        latlng: L.latLng(rand(-34.9205), rand(-57.953646)),
-        text: `Hola ${i}`,
-      });
-    }
-
     return {
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      locations,
-      clusterOptions: {},
-      center: undefined,
+      center: null,
       bounds: L.latLngBounds(),
     };
   },
@@ -63,26 +46,38 @@ export default {
   mounted() {
     this.$refs.map.mapObject.zoomControl.remove();
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
+  },
 
-    const bounds = L.latLngBounds(this.locations.map(o => o.latlng));
-    this.bounds = bounds;
+  computed: {
+    getMarkers() {
+      const locations = Object.keys(this.markers).map((key, index) => {
+        const item = {
+          latlng: L.latLng(this.markers[index].location[0], this.markers[index].location[1]),
+          text: this.markers[index].name,
+          icon: L.icon({
+            iconUrl: markerPixel,
+            shadowUrl: 'none',
+            iconSize: [30, 30],
+            iconAnchor: [22, 94],
+            popupAnchor: [-8, -90],
+            shadowSize: [0, 0],
+            shadowAnchor: [22, 94],
+            className: 'icon-pin pin',
+            styleColorName: `#${this.markers[index].theme_color}`,
+          }),
+        };
+        return item;
+      });
+
+      Promise.all(locations).then(() => {
+        this.bounds = L.latLngBounds(locations.map(o => o.latlng));
+      });
+
+      return locations;
+    },
   },
 
   methods: {
-    createIcon() {
-      return L.icon({
-        iconUrl: markerPixel,
-        shadowUrl: 'none',
-        iconSize: [30, 30],
-        iconAnchor: [22, 94],
-        popupAnchor: [-8, -90],
-        shadowSize: [0, 0],
-        shadowAnchor: [22, 94],
-        className: 'icon-pin pin',
-        styleColorName: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-      });
-    },
-
     clickMarker(item) {
       const marker = JSON.parse(JSON.stringify(item));
       this.$refs.map.mapObject.setView(marker.latlng);
