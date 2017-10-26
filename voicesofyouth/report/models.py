@@ -10,6 +10,7 @@ from taggit.managers import TaggableManager
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.users.models import User
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2
@@ -63,6 +64,9 @@ class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(null=False, blank=False, verbose_name=_('Comment'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
+    author = models.ForeignKey(User)
+    creation_timestamp = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return self.text
