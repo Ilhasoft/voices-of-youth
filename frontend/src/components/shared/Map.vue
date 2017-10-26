@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
@@ -24,13 +25,6 @@ export default {
     'v-marker': Vue2Leaflet.Marker,
     'v-popup': Vue2Leaflet.Popup,
     'v-marker-cluster': Vue2LeafletMarkerCluster,
-  },
-
-  props: {
-    markers: {
-      type: Array,
-      required: true,
-    },
   },
 
   data() {
@@ -48,12 +42,13 @@ export default {
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
   },
 
-  computed: {
-    getMarkers() {
-      const locations = Object.keys(this.markers).map((key, index) => {
+  computed: mapState({
+    getMarkers(state) {
+      const reports = state.ReportStore.all;
+      const locations = Object.keys(reports).map((key, index) => {
         const item = {
-          latlng: L.latLng(this.markers[index].location[0], this.markers[index].location[1]),
-          text: this.markers[index].name,
+          latlng: L.latLng(reports[index].location[0], reports[index].location[1]),
+          text: reports[index].name,
           icon: L.icon({
             iconUrl: markerPixel,
             shadowUrl: 'none',
@@ -63,7 +58,7 @@ export default {
             shadowSize: [0, 0],
             shadowAnchor: [22, 94],
             className: 'icon-pin pin',
-            styleColorName: `#${this.markers[index].theme_color}`,
+            styleColorName: `#${reports[index].theme_color}`,
           }),
         };
         return item;
@@ -75,7 +70,7 @@ export default {
 
       return locations;
     },
-  },
+  }),
 
   methods: {
     clickMarker(item) {

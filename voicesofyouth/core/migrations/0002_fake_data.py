@@ -13,7 +13,7 @@ from unipath import Path
 import lorem
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import Report, ReportComment
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.fields import CharFieldTranslatable
@@ -69,6 +69,8 @@ def create_dev_data(apps, schema_editor):
                     for z in range(random.randint(1, 10)):
                         report = mommy.make(Report, name=f'Report {z}', description=lorem.paragraph(), theme=theme)
                         report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
+                        for _ in range(random.randint(1, 10)):
+                            mommy.make(ReportComment, text=lorem.paragraph(), report=report)
 
 
 class Migration(migrations.Migration):
@@ -79,7 +81,7 @@ class Migration(migrations.Migration):
         ('project', '0002_auto_20171026_1610'),
         ('theme', '0002_auto_20171026_1610'),
         ('tag', '0001_initial'),
-        ('report', '0002_auto_20171026_1610'),
+        ('report', '0005_auto_20171026_1857'),
     ]
 
     operations = [

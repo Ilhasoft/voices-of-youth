@@ -53,7 +53,7 @@
           </div>
 
           <div class="column is-1 m-auto">
-            <checkbox-item />
+            <checkbox-item :theme-id="item.id" />
           </div>
         </div>
       </div>
