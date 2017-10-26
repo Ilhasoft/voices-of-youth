@@ -13,10 +13,6 @@ class ThemeSerializer(VoySerializer):
         read_only=True,
         view_name='projects-detail'
     )
-    translations = serializers.StringRelatedField(
-        read_only=True,
-        many=True
-    )
 
     class Meta:
         model = Theme
@@ -28,7 +24,6 @@ class ThemeSerializer(VoySerializer):
             'description',
             'tags',
             'color',
-            'translations',
             'reports_count',
             'created_on'
         )
