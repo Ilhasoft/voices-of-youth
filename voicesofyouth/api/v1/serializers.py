@@ -2,10 +2,9 @@ from django.shortcuts import reverse
 from rest_framework import serializers
 
 from voicesofyouth.maps.models import Map
-from voicesofyouth.reports.models import Report
-from voicesofyouth.reports.models import ReportComments
-from voicesofyouth.reports.models import ReportLanguage
-from voicesofyouth.reports.models import ReportMedias
+from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import ReportComments
+from voicesofyouth.report.models import ReportMedias
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.users.models import User
@@ -73,19 +72,15 @@ class ReportMediaSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'media_type', 'url', 'file', 'screenshot', 'extra', 'language')
 
 
-class ReportLanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReportLanguage
-        fields = ('id', 'language', 'title', 'description', 'created_on', 'modified_on')
-
-
 class ReportSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    url = serializers.SerializerMethodField()
+    tags = serializers.StringRelatedField(
+        read_only=True,
+        many=True
+    )
 
     class Meta:
         model = Report
-        fields = ('id', 'url', 'project', 'map', 'theme', 'location', 'sharing', 'comments', 'editable', 'visibled', 'status', 'image', 'created_on')
+        fields = ('id', 'theme', 'location', 'comments', 'editable', 'visible', 'created_on', 'description', 'name', 'tags')
 
     def get_url(self, obj):
         return reverse('reports-detail', kwargs={'pk': obj.id})
