@@ -81,7 +81,7 @@ class Migration(migrations.Migration):
         ('project', '0002_auto_20171026_1610'),
         ('theme', '0002_auto_20171026_1610'),
         ('tag', '0001_initial'),
-        ('report', '0005_auto_20171026_1857'),
+        ('report', '0007_report_author'),
     ]
 
     operations = [

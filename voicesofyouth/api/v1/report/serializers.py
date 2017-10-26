@@ -18,20 +18,24 @@ class ReportSerializer(VoySerializer):
     theme_id = serializers.PrimaryKeyRelatedField(read_only=True)
     location = PointField()
     theme_color = serializers.SerializerMethodField()
+    author = UserSerializer()
 
     class Meta:
         model = Report
-        fields = ('id',
-                  'theme_id',
-                  'location',
-                  'can_receive_comments',
-                  'editable',
-                  'visible',
-                  'created_on',
-                  'description',
-                  'name',
-                  'tags',
-                  'theme_color')
+        fields = (
+            'id',
+            'theme_id',
+            'location',
+            'can_receive_comments',
+            'editable',
+            'visible',
+            'created_on',
+            'description',
+            'name',
+            'tags',
+            'theme_color',
+            'author'
+        )
 
     def get_theme_color(self, obj):
         return obj.theme.color
