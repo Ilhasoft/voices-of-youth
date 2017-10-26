@@ -45,7 +45,7 @@ class Report(BaseModel):
     location = gismodels.PointField(null=False, blank=False)
     name = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     description = models.TextField(null=True, blank=True)
-    can_receive_comment = models.BooleanField(default=True, verbose_name=_('Can receive comments'))
+    can_receive_comments = models.BooleanField(default=True, verbose_name=_('Can receive comments'))
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
