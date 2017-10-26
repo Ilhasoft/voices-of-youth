@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, mixins
+from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -12,7 +12,6 @@ from voicesofyouth.translation.models import Translation
 from voicesofyouth.users.models import User
 from .serializers import CommentSerializer
 from .serializers import MapSerializer
-from .serializers import ReportAndMediasSerializer
 from .serializers import ReportSerializer
 from .serializers import UserSerializer
 

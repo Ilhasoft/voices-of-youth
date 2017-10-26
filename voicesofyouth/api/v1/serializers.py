@@ -4,7 +4,6 @@ from rest_framework import serializers
 from voicesofyouth.maps.models import Map
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComments
-from voicesofyouth.report.models import ReportLanguage
 from voicesofyouth.report.models import ReportMedias
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
@@ -71,12 +70,6 @@ class ReportMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportMedias
         fields = ('id', 'title', 'description', 'media_type', 'url', 'file', 'screenshot', 'extra', 'language')
-
-
-class ReportLanguageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ReportLanguage
-        fields = ('id', 'language', 'title', 'description', 'created_on', 'modified_on')
 
 
 class ReportSerializer(serializers.ModelSerializer):
