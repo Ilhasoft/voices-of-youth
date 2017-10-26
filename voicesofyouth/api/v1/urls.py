@@ -4,9 +4,9 @@ from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
 from voicesofyouth.api.v1.report.views import ReportsViewSet
+from voicesofyouth.api.v1.tag.views import TagsViewSet
 from .project.views import ProjectsViewSet
 from .theme.views import ThemesViewSet
-from .views import TagsViewSet
 from .views import UsersEndPoint
 
 router = DefaultRouter()
