@@ -51,7 +51,6 @@ class ReportCommentsSerializer(VoySerializer):
         model = ReportComment
         fields = (
             'id',
-            'report',
             'text',
             'author',
         )
