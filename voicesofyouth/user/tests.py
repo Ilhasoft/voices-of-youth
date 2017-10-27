@@ -8,7 +8,7 @@ from django.test import TestCase
 from model_mommy import mommy
 from unipath import Path
 
-from voicesofyouth.users.models import VoyUser
+from voicesofyouth.user.models import VoyUser
 
 __author__ = 'Elton Pereira'
 __email__ = 'eltonplima AT gmail DOT com'

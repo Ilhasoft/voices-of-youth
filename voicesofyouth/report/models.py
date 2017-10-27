@@ -10,7 +10,7 @@ from taggit.managers import TaggableManager
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.users.models import User
+from voicesofyouth.user.models import User
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2

@@ -34,7 +34,7 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from smartmin.models import SmartModel
 
-from voicesofyouth.users.models import VoyUser
+from voicesofyouth.user.models import VoyUser
 
 SUPER_ADMIN_GROUP = 'super admin'
 LOCAL_ADMIN_GROUP_TEMPLATE = 'local admin template'

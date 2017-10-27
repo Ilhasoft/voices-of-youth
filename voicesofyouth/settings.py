@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'taggit',
     'voicesofyouth.core',
-    'voicesofyouth.users',
+    'voicesofyouth.user',
     'voicesofyouth.project',
     'voicesofyouth.tag',
     'voicesofyouth.theme',
@@ -135,7 +135,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-AUTH_USER_MODEL = 'users.VoyUser'
+AUTH_USER_MODEL = 'user.VoyUser'
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from voicesofyouth.users.models import User
+from voicesofyouth.user.models import User
 
 
 class VoySerializer(serializers.HyperlinkedModelSerializer):

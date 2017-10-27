@@ -20,7 +20,7 @@ class CreateTranslationTestCase(TestCase):
         'taggit',
         'voicesofyouth.translation.tests',
         'voicesofyouth.core',
-        'voicesofyouth.users',
+        'voicesofyouth.user',
         'voicesofyouth.project',
         'voicesofyouth.tag',
         'voicesofyouth.theme',

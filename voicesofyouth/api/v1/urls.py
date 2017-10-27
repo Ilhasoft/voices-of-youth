@@ -15,7 +15,7 @@ router = DefaultRouter()
 router.register(r'projects', ProjectsViewSet, base_name='projects')
 router.register(r'themes', ThemesViewSet, base_name='themes')
 router.register(r'tags', TagsViewSet, base_name='tags')
-router.register(r'users', UsersEndPoint, base_name='users')
+router.register(r'user', UsersEndPoint, base_name='user')
 router.register(r'reports', ReportsViewSet, base_name='reports')
 router.register(r'report-comments', ReportCommentsViewSet, base_name='report-comments')
 
