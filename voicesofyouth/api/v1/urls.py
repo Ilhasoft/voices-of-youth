@@ -4,7 +4,8 @@ from rest_framework.authtoken import views as rest_framework_views
 from rest_framework.documentation import include_docs_urls
 from rest_framework.routers import DefaultRouter
 
-from voicesofyouth.api.v1.report.views import ReportCommentsViewSet
+from voicesofyouth.api.v1.report.views import ReportCommentsViewSet, ReportURLsViewSet
+from voicesofyouth.api.v1.report.views import ReportFilesViewSet
 from voicesofyouth.api.v1.report.views import ReportsViewSet
 from voicesofyouth.api.v1.tag.views import TagsViewSet
 from voicesofyouth.api.v1.user.views import UsersEndPoint
@@ -18,6 +19,9 @@ router.register(r'tags', TagsViewSet, base_name='tags')
 router.register(r'user', UsersEndPoint, base_name='user')
 router.register(r'reports', ReportsViewSet, base_name='reports')
 router.register(r'report-comments', ReportCommentsViewSet, base_name='report-comments')
+# router.register(r'report-medias', ReportMediasViewSet, base_name='report-medias')
+router.register(r'report-files', ReportFilesViewSet, base_name='report-files')
+router.register(r'report-urls', ReportURLsViewSet, base_name='report-urls')
 
 urlpatterns = [
     url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),

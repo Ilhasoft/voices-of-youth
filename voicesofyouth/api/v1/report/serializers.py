@@ -2,7 +2,9 @@ from rest_framework import serializers
 
 from voicesofyouth.api.v1.user.serializers import UserSerializer
 from voicesofyouth.api.v1.serializers import VoySerializer
-from voicesofyouth.report.models import Report, ReportComment
+from voicesofyouth.report.models import Report, ReportURL
+from voicesofyouth.report.models import ReportComment
+from voicesofyouth.report.models import ReportFile
 
 
 class PointField(serializers.Field):
@@ -53,3 +55,31 @@ class ReportCommentsSerializer(VoySerializer):
             'text',
             'author',
         )
+
+
+class ReportFilesSerializer(VoySerializer):
+    class Meta:
+        model = ReportFile
+        fields = (
+            'title',
+            'description',
+            'media_type',
+            'file',
+        )
+
+
+class ReportURLsSerializer(VoySerializer):
+    class Meta:
+        model = ReportURL
+        fields = (
+            'url',
+        )
+#
+#
+# class ReportMediasSerializer(VoySerializer):
+#     urls = serializers.StringRelatedField(many=True, read_only=True)
+#     files = ReportFilesSerializer()
+#
+#     class Meta:
+#         model = Report
+#         fields = ('urls', 'files')
