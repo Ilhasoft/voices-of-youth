@@ -72,12 +72,12 @@ class ReportURLsSerializer(VoySerializer):
         fields = (
             'url',
         )
-#
-#
-# class ReportMediasSerializer(VoySerializer):
-#     urls = serializers.StringRelatedField(many=True, read_only=True)
-#     files = ReportFilesSerializer()
-#
-#     class Meta:
-#         model = Report
-#         fields = ('urls', 'files')
+
+
+class ReportMediasSerializer(VoySerializer):
+    urls = ReportURLsSerializer(many=True)
+    files = ReportFilesSerializer(many=True)
+
+    class Meta:
+        model = Report
+        fields = ('urls', 'files')
