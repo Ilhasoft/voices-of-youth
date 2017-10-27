@@ -8,12 +8,16 @@ export default {
     report: {},
     themes: [],
     comments: [],
+    files: [],
+    urls: [],
   },
 
   getters: {
     getReports: state => state.all,
     getReport: state => state.report,
     getComments: state => state.comments,
+    getReportFiles: state => state.files,
+    getReportUrls: state => state.urls,
   },
 
   /* eslint-disable no-param-reassign */
@@ -51,6 +55,11 @@ export default {
     [TYPES.SET_REPORT_COMMENTS](state, obj) {
       state.comments = obj;
     },
+
+    [TYPES.SET_REPORT_MEDIAS](state, obj) {
+      state.files = obj.files;
+      state.urls = obj.urls;
+    },
   },
 
   actions: {
@@ -87,6 +96,10 @@ export default {
     getReport({ commit }, obj) {
       axios.get(`/api/reports/${obj}`).then((response) => {
         commit(TYPES.SET_CURRENT_REPORT, response.data);
+      }).then(() => {
+        axios.get(`/api/report-medias/?report=${obj}`).then((response) => {
+          commit(TYPES.SET_REPORT_MEDIAS, response.data[0]);
+        });
       }).catch((error) => {
         throw new Error(error);
       });

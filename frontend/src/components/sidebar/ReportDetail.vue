@@ -4,23 +4,20 @@
       <div class="column no-padding">
         <div class="columns header">
           <div class="column no-padding">
-            <img src="../../assets/img/report-example-1.png" alt="">
+            <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
+            <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
+              <source :src="filePreview" type="video/mp4">
+            </video>
           </div>
         </div>
 
         <div class="columns">
           <div class="column">
             <ul class="images">
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
+              <li v-for="(file, key) in files" :key="key">
+                <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
+                <img v-if="file.media_type == 'video'" src="../../assets/img/report-example.png" @click.prevent="openFile(file)" alt="">
+              </li>
             </ul>
           </div>
         </div>
@@ -63,9 +60,17 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'ReportDetail',
 
+  data() {
+    return {
+      filePreview: '',
+      filePreviewType: '',
+    };
+  },
+
   computed: {
     ...mapGetters({
       item: 'getReport',
+      files: 'getReportFiles',
     }),
   },
 
@@ -74,6 +79,11 @@ export default {
       'getComments',
       'setSideBarConfigs',
     ]),
+
+    openFile(item) {
+      this.filePreview = item.file;
+      this.filePreviewType = item.media_type;
+    },
 
     formatDate() {
       const date = new Date(this.item.created_on);
@@ -157,6 +167,7 @@ export default {
     width: 86px;
     height: 86px;
     padding: 5px;
+    cursor: pointer;
   }
 
   .reports {
