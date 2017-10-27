@@ -13,7 +13,7 @@ class ReportAdmin(BaseModelAdmin):
         'location',
         'name',
         'description',
-        'comments',
+        'can_receive_comments',
         'editable',
         'visible',
         'status',
