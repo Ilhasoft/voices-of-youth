@@ -44,7 +44,6 @@ class ReportSerializer(VoySerializer):
 
 
 class ReportCommentsSerializer(VoySerializer):
-    report = serializers.HyperlinkedRelatedField(read_only=True, view_name='reports-detail')
     author = UserSerializer()
 
     class Meta:
