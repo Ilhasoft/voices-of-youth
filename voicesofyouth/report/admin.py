@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from voicesofyouth.core.admin import BaseModelAdmin
+from voicesofyouth.report.admin_filter import ThemeListFilter
 from .models import Report
 from .models import ReportComment
 from .models import ReportFile
@@ -27,14 +28,13 @@ class ReportAdmin(BaseModelAdmin):
 
 
 class ReportCommentAdmin(BaseModelAdmin):
-    list_display = ('text', 'user_name')
-
-    def user_name(self, obj):
-        return obj.created_by.display_name
+    list_display = ('text', 'author')
+    list_filter = ('report__theme__project', ThemeListFilter)
 
 
 class ReportURLAdmin(BaseModelAdmin):
     list_display = ('url', 'report')
+    list_filter = ('report__theme__project', ThemeListFilter)
 
 
 class ReportFileAdmin(BaseModelAdmin):
@@ -45,6 +45,7 @@ class ReportFileAdmin(BaseModelAdmin):
         'report',
         'description',
     )
+    list_filter = ('report__theme__project', ThemeListFilter)
 
 
 admin.site.register(Report, ReportAdmin)
