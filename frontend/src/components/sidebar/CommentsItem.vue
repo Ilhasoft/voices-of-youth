@@ -1,13 +1,13 @@
 <template>
   <div class="columns item">
     <div class="column is-1">
-      <img src="../../assets/img/header-avatar.png" alt="">
+      <img v-if="comment.author.avatar" :src="comment.author.avatar" alt=""/>
     </div>
 
     <div class="column text">
-      <h1>Carlos Santos</h1>
+      <h1>{{ comment.author.first_name }}</h1>
       <small>Aug 03, 2017</small>
-      <p>KOPAJA - Koperasi Angkutan Jakarta, or in English Jakarta Transportation Cooperation is a public transportation service in Jakarta. Many people in Jakarta use this transportation for commuting to the workplace from home, or vice versa. Besides providing benefits, KOPAJA has a bad impact on respiratory health from it's emissions. KOPAJA must be demolished because the average age of KOPAJA armada is above 10 Years, and is using outdated technology.</p>
+      <p>{{ comment.text }}</p>
     </div>
 
     <div class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
@@ -24,10 +24,24 @@
 export default {
   name: 'CommentItem',
 
+  props: {
+    comment: {
+      type: Object,
+      required: true,
+    },
+  },
+
   data() {
     return {
       isVisible: false,
     };
+  },
+
+  methods: {
+    formatDate() {
+      const date = new Date(this.comment.created_on);
+      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+    },
   },
 };
 </script>

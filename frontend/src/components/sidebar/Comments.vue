@@ -2,11 +2,7 @@
   <div class="comments-box">
     <div class="comments">
 
-      <comment-item />
-      <comment-item />
-      <comment-item />
-      <comment-item />
-     
+      <comment-item v-for="(data, index) in commentsList" :key="index" :comment="data"/>
     </div>
 
     <div class="form">
@@ -24,6 +20,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import CommentItem from './CommentsItem';
 
 export default {
@@ -31,6 +28,11 @@ export default {
 
   components: { CommentItem },
 
+  computed: {
+    ...mapGetters({
+      commentsList: 'getComments',
+    }),
+  },
 };
 </script>
 

@@ -7,11 +7,13 @@ export default {
     all: [],
     report: {},
     themes: [],
+    comments: [],
   },
 
   getters: {
     getReports: state => state.all,
     getReport: state => state.report,
+    getComments: state => state.comments,
   },
 
   /* eslint-disable no-param-reassign */
@@ -44,6 +46,10 @@ export default {
         state.themes.splice(index, 1);
         state.all = state.all.filter(item => item.theme_id !== obj.theme);
       }
+    },
+
+    [TYPES.SET_REPORT_COMMENTS](state, obj) {
+      state.comments = obj;
     },
   },
 
@@ -81,6 +87,14 @@ export default {
     getReport({ commit }, obj) {
       axios.get(`/api/reports/${obj}`).then((response) => {
         commit(TYPES.SET_CURRENT_REPORT, response.data);
+      }).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    getComments({ commit }, obj) {
+      axios.get(`/api/report-comments/?report=${obj}`).then((response) => {
+        commit(TYPES.SET_REPORT_COMMENTS, response.data);
       }).catch((error) => {
         throw new Error(error);
       });

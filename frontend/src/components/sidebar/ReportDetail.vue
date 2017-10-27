@@ -47,7 +47,7 @@
           </div>
 
           <div class="column">
-            <a class="button share" v-if="item.can_receive_comments">
+            <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
               <span class="icon-icon-comment"></span> Comment
             </a>
           </div>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'ReportDetail',
@@ -70,6 +70,11 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'getComments',
+      'setSideBarConfigs',
+    ]),
+
     formatDate() {
       const date = new Date(this.item.created_on);
       return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
@@ -81,6 +86,18 @@ export default {
 
     formatFontColor() {
       return `color: #${this.item.theme_color} !important;`;
+    },
+
+    openComments() {
+      this.getComments(this.item.id).then(() => {
+        this.setSideBarConfigs({
+          title: 'Comments',
+          tabActived: 'Comments',
+          backButton: true,
+          backTo: 'ReportDetail',
+          isActived: true,
+        });
+      });
     },
   },
 };
