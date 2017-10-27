@@ -42,6 +42,8 @@ export default {
   },
 
   computed: mapState({
+    themesSelected: state => state.ReportStore.themes,
+
     getMarkers(state) {
       const reports = state.ReportStore.all;
       const locations = Object.keys(reports).map((key, index) => {
@@ -83,8 +85,8 @@ export default {
       this.setSideBarConfigs({
         title: item.text,
         tabActived: 'ReportDetail',
-        backButton: false,
-        backTo: '',
+        backButton: (this.themesSelected.length > 0),
+        backTo: (this.themesSelected.length > 0 ? 'Themes' : ''),
         isActived: true,
       }).then(() => {
         const marker = JSON.parse(JSON.stringify(item));
