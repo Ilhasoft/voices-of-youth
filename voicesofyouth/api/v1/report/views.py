@@ -14,7 +14,7 @@ from voicesofyouth.translation.models import Translation
 
 
 class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
 
@@ -40,6 +40,7 @@ class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.all()
 
@@ -58,6 +59,7 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.all()
 
@@ -76,6 +78,7 @@ class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
 
@@ -93,7 +96,8 @@ class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data, status=query_status)
 
 
-class ReportMediasViewSet(viewsets.ViewSet):
+class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportMediasSerializer
     queryset = Report.objects.all()
 
