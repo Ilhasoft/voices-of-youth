@@ -4,9 +4,11 @@ from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer, ReportFilesSerializer, \
-    ReportURLsSerializer, ReportMediasSerializer
+from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
+from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
+from voicesofyouth.api.v1.report.serializers import ReportMediasSerializer
 from voicesofyouth.api.v1.report.serializers import ReportSerializer
+from voicesofyouth.api.v1.report.serializers import ReportURLsSerializer
 from voicesofyouth.report.models import Report, ReportURL
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
