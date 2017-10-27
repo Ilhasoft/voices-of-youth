@@ -7,7 +7,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.test.utils.image import create_fake_image
 from voicesofyouth.translation.models import TranslatableField
 from voicesofyouth.translation.models import Translation
-from voicesofyouth.users.models import User
+from voicesofyouth.user.models import User
 
 
 class ProjectTestCase(APITestCase):

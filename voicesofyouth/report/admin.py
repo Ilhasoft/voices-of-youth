@@ -3,7 +3,8 @@ from django.contrib import admin
 from voicesofyouth.core.admin import BaseModelAdmin
 from .models import Report
 from .models import ReportComment
-from .models import ReportMedia
+from .models import ReportFile
+from .models import ReportURL
 
 
 class ReportAdmin(BaseModelAdmin):
@@ -13,7 +14,7 @@ class ReportAdmin(BaseModelAdmin):
         'location',
         'name',
         'description',
-        'comments',
+        'can_receive_comments',
         'editable',
         'visible',
         'status',
@@ -32,10 +33,21 @@ class ReportCommentAdmin(BaseModelAdmin):
         return obj.created_by.display_name
 
 
-class ReportMediaAdmin(BaseModelAdmin):
-    list_display = ('title', 'description', 'media_type', 'is_active', 'visible')
+class ReportURLAdmin(BaseModelAdmin):
+    list_display = ('url', 'report')
+
+
+class ReportFileAdmin(BaseModelAdmin):
+    list_display = (
+        'title',
+        'media_type',
+        'file',
+        'report',
+        'description',
+    )
 
 
 admin.site.register(Report, ReportAdmin)
 admin.site.register(ReportComment, ReportCommentAdmin)
-admin.site.register(ReportMedia, ReportMediaAdmin)
+admin.site.register(ReportURL, ReportURLAdmin)
+admin.site.register(ReportFile, ReportFileAdmin)

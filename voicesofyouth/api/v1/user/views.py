@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from voicesofyouth.users.models import User
-from .serializers import UserSerializer
+from voicesofyouth.user.models import User
+from voicesofyouth.api.v1.user.serializers import UserSerializer
 
 
 class UsersEndPoint(viewsets.ReadOnlyModelViewSet):

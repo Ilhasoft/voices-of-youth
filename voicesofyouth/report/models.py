@@ -10,7 +10,7 @@ from taggit.managers import TaggableManager
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.users.models import User
+from voicesofyouth.user.models import User
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2
@@ -22,10 +22,11 @@ STATUS_CHOICES = (
     (STATUS_REJECTED, _('Rejected')),
 )
 
-MEDIA_TYPES = (
-    ('link', _('Link')),
-    ('image', _('Image')),
-    ('video', _('Video')),
+FILE_TYPE_IMAGE = 'image'
+FILE_TYPE_VIDEO = 'video'
+FILE_TYPES = (
+    (FILE_TYPE_IMAGE, _('Image')),
+    (FILE_TYPE_VIDEO, _('Video')),
 )
 
 
@@ -60,6 +61,14 @@ class Report(BaseModel):
     def project(self):
         return self.theme.project
 
+    # @property
+    # def report_urls(self):
+    #     return self.urls.all()
+
+    # @property
+    # def report_files(self):
+    #     return self.files.all()
+
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
@@ -78,19 +87,27 @@ class ReportComment(BaseModel):
         db_table = 'report_reports_comments'
 
 
-class ReportMedia(BaseModel):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='medias')
+class ReportFile(BaseModel):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='files')
     title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-    media_type = models.CharField(max_length=5, choices=MEDIA_TYPES, verbose_name=_('Type'))
-    url = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('URL'))
     file = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('File'))
-    visible = models.BooleanField(default=True, verbose_name=_('Visible'))
-
-    def __str__(self):
-        return '{} - {} - {}'.format(self.title, self.description, self.media_type)
+    media_type = models.CharField(max_length=5, choices=FILE_TYPES, verbose_name=_('Type'))
 
     class Meta:
-        verbose_name = _('Report Media')
-        verbose_name_plural = _('Reports Medias')
-        db_table = 'report_report_medias'
+        verbose_name = _('Report file')
+        verbose_name_plural = _('Reports files')
+        db_table = 'report_report_files'
+
+
+class ReportURL(BaseModel):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='urls')
+    url = models.URLField(blank=True, null=True, verbose_name=_('URL'))
+
+    class Meta:
+        verbose_name = _('Report URL')
+        verbose_name_plural = _('Reports URL\'s')
+        db_table = 'report_report_url'
+
+    def __str__(self):
+        return self.url

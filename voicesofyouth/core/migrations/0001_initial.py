@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations
 from django.contrib.auth.models import Group
-from voicesofyouth.users.models import User
+from voicesofyouth.user.models import User
 
 from ..models import PROTECTED_GROUPS
 
