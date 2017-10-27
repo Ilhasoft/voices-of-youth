@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from voicesofyouth.api.v1.serializers import UserSerializer
+from voicesofyouth.api.v1.user.serializers import UserSerializer
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.report.models import Report, ReportComment
 

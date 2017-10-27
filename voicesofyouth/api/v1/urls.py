@@ -7,9 +7,9 @@ from rest_framework.routers import DefaultRouter
 from voicesofyouth.api.v1.report.views import ReportCommentsViewSet
 from voicesofyouth.api.v1.report.views import ReportsViewSet
 from voicesofyouth.api.v1.tag.views import TagsViewSet
+from voicesofyouth.api.v1.user.views import UsersEndPoint
 from .project.views import ProjectsViewSet
 from .theme.views import ThemesViewSet
-from .views import UsersEndPoint
 
 router = DefaultRouter()
 router.register(r'projects', ProjectsViewSet, base_name='projects')
