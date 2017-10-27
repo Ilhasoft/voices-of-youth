@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'voicesofyouth.report',
     'voicesofyouth.api',
     'voicesofyouth.translation',
+    'voicesofyouth.voyadmin',
 ]
 
 if DEBUG:
