@@ -21,6 +21,15 @@ class ReportAdmin(BaseModelAdmin):
         'status',
         'tags_name',
     )
+    list_filter = (
+        'theme__project',
+        ThemeListFilter,
+        'can_receive_comments',
+        'editable',
+        'visible',
+        'status',
+        'tags'
+    )
 
     def tags_name(self, obj):
         return list(obj.tags.names()) or ''
