@@ -27,18 +27,15 @@
 
         <div class="columns reports">
           <div class="column">
-            <h1>Helps, but emission</h1>
-            <small>Aug 02, 2016</small>
-
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dip.ipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit, sed do dipLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do </p>
+            <h1 :style="formatFontColor()">{{ item.name }}</h1>
+            <small :style="formatFontColor()">{{ formatDate() }}</small>
+            <p>{{ item.description }}</p>
           </div>
         </div>
 
         <div class="columns">
           <div class="column tags">
-            <small>Accessibility</small>
-            <small>Security</small>
-            <small>Community</small>
+            <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
           </div>
         </div>
 
@@ -50,7 +47,7 @@
           </div>
 
           <div class="column">
-            <a class="button share">
+            <a class="button share" v-if="item.can_receive_comments">
               <span class="icon-icon-comment"></span> Comment
             </a>
           </div>
@@ -61,8 +58,31 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'ReportDetail',
+
+  computed: {
+    ...mapGetters({
+      item: 'getReport',
+    }),
+  },
+
+  methods: {
+    formatDate() {
+      const date = new Date(this.item.created_on);
+      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+    },
+
+    formatColor() {
+      return `background-color: #${this.item.theme_color} !important;`;
+    },
+
+    formatFontColor() {
+      return `color: #${this.item.theme_color} !important;`;
+    },
+  },
 };
 </script>
 
@@ -124,6 +144,7 @@ export default {
 
   .reports {
     margin-left: 7px;
+    margin-right: 7px;
 
     h1 {
       font-size: 20px;

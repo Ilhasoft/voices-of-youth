@@ -21,7 +21,7 @@ export default {
     },
 
     [TYPES.SET_CURRENT_REPORT](state, obj) {
-      state.theme = obj;
+      state.report = obj;
     },
 
     [TYPES.ADD_REPORTS_LIST](state, obj) {

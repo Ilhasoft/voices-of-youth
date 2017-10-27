@@ -1,16 +1,14 @@
 <template>
-  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :bounds="bounds" :center="center" ref="map" class="map">
+  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :bounds="bounds" :options="optionsMap" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
     <v-marker-cluster>
-      <v-marker @l-click="clickMarker(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon">
-        <v-popup :content="item.text"></v-popup>
-      </v-marker>
+      <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon" />
     </v-marker-cluster>
   </v-map>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
@@ -30,6 +28,7 @@ export default {
   data() {
     return {
       options: { noWrap: true },
+      optionsMap: { maxBounds: [[-90, -160], [90, 160]] },
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       center: null,
@@ -47,8 +46,10 @@ export default {
       const reports = state.ReportStore.all;
       const locations = Object.keys(reports).map((key, index) => {
         const item = {
+          id: reports[index].id,
           latlng: L.latLng(reports[index].location[0], reports[index].location[1]),
           text: reports[index].name,
+          color: reports[index].theme_color,
           icon: L.icon({
             iconUrl: markerPixel,
             shadowUrl: 'none',
@@ -73,9 +74,23 @@ export default {
   }),
 
   methods: {
-    clickMarker(item) {
-      const marker = JSON.parse(JSON.stringify(item));
-      this.$refs.map.mapObject.setView(marker.latlng);
+    ...mapActions([
+      'setSideBarConfigs',
+      'getReport',
+    ]),
+
+    openReport(item) {
+      this.setSideBarConfigs({
+        title: item.text,
+        tabActived: 'ReportDetail',
+        backButton: false,
+        backTo: '',
+        isActived: true,
+      }).then(() => {
+        const marker = JSON.parse(JSON.stringify(item));
+        this.$refs.map.mapObject.setView(marker.latlng);
+        this.getReport(item.id);
+      });
     },
   },
 };

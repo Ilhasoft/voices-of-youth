@@ -19,20 +19,20 @@
 
         <div class="columns">
           <div class="column text">
-            <small :style="formatFontColor(item.color)">{{ formatDate(item.created_on) }}</small>
+            <small :style="formatFontColor()">{{ formatDate(item.created_on) }}</small>
             <p>{{ item.description }}</p>
           </div>
         </div>
 
         <div class="columns">
           <div class="column tags">
-            <small :style="formatColor(item.color)" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+            <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
           </div>
         </div>
 
         <div class="columns reports">
           <div class="column">
-            <h1 :style="formatFontColor(item.color)">{{ item.reports_count }} Reports</h1>
+            <h1 :style="formatFontColor()">{{ item.reports_count }} Reports</h1>
           </div>
         </div>
 
@@ -70,17 +70,17 @@ export default {
   },
 
   methods: {
-    formatDate(value) {
-      const date = new Date(value);
+    formatDate() {
+      const date = new Date(this.item.created_on);
       return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
     },
 
-    formatColor(color) {
-      return `background-color: #${color} !important;`;
+    formatColor() {
+      return `background-color: #${this.item.color} !important;`;
     },
 
-    formatFontColor(color) {
-      return `color: #${color} !important;`;
+    formatFontColor() {
+      return `color: #${this.item.color} !important;`;
     },
   },
 };
