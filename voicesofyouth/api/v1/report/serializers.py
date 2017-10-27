@@ -52,6 +52,8 @@ class ReportCommentsSerializer(VoySerializer):
             'id',
             'text',
             'author',
+            'created_on',
+            'modified_on'
         )
 
 

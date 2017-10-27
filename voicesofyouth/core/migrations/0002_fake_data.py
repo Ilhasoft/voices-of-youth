@@ -72,7 +72,6 @@ def make_report_medias(report):
 def create_dev_data(apps, schema_editor):
     if settings.DEBUG:
         global user
-        user = mommy.make(User, username='faker')
         create_translatable_model(Project)
         create_translatable_model(Theme)
         with open(test_img, 'rb') as image, transaction.atomic():
@@ -85,6 +84,7 @@ def create_dev_data(apps, schema_editor):
                     'crazy',
                     'anything')
             fake_thumbnail = ImageFile(image)
+            user = mommy.make(User, username='faker', avatar=fake_thumbnail, first_name='Fake', last_name='User')
             for x in range(random.randint(5, 10)):
                 project = mommy.make(Project,
                                      name=f'Project {x}',
@@ -116,6 +116,7 @@ def create_dev_data(apps, schema_editor):
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
                                        report=report,
+                                       author=user,
                                        created_by=user,
                                        modified_by=user)
                         for _ in range(random.randint(1, 3)):
