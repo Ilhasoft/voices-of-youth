@@ -10,20 +10,8 @@
         </a>
 
         <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
-          <div class="item">
-            <a href="">English</a>
-          </div>
-
-          <div class="item">
-            <a href="">Portuguese</a>
-          </div>
-
-          <div class="item">
-            <a href="">Franch</a>
-          </div>
-
-          <div class="item">
-            <a href="">Spanish</a>
+          <div class="item" :key="key" v-for="(language, key) in menuLanguages">
+            <a href="">{{ language[1] }}</a>
           </div>
         </div>
       </div>
@@ -75,6 +63,7 @@ export default {
       userIsLogged: 'userIsLogged',
       showMenu: 'menuIsVisibled',
       menuTitle: 'menuTitle',
+      menuLanguages: 'getProjectLanguages',
     }),
   },
 };
@@ -82,6 +71,8 @@ export default {
 
 <style lang="scss" scoped>
 .language {
+  z-index: 10;
+  
   span {
     font-size: 10px;
   }

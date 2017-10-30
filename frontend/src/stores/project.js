@@ -13,6 +13,7 @@ export default {
     getAllProjects: state => state.all,
     getCurrentProject: state => state.current,
     getDisclaimerProject: state => state.disclaimer,
+    getProjectLanguages: state => state.current.languages,
   },
 
   /* eslint-disable no-param-reassign */
