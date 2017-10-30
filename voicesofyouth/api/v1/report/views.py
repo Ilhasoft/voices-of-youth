@@ -4,9 +4,11 @@ from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer, ReportFilesSerializer, \
-    ReportURLsSerializer, ReportMediasSerializer
+from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
+from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
+from voicesofyouth.api.v1.report.serializers import ReportMediasSerializer
 from voicesofyouth.api.v1.report.serializers import ReportSerializer
+from voicesofyouth.api.v1.report.serializers import ReportURLsSerializer
 from voicesofyouth.report.models import Report, ReportURL
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
@@ -14,7 +16,7 @@ from voicesofyouth.translation.models import Translation
 
 
 class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
 
@@ -40,6 +42,7 @@ class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.all()
 
@@ -58,6 +61,7 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.all()
 
@@ -76,6 +80,7 @@ class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
 
@@ -93,7 +98,8 @@ class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data, status=query_status)
 
 
-class ReportMediasViewSet(viewsets.ViewSet):
+class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportMediasSerializer
     queryset = Report.objects.all()
 
