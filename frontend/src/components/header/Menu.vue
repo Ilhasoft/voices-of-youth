@@ -71,8 +71,8 @@ export default {
 
 <style lang="scss" scoped>
 .language {
-  z-index: 10;
-  
+  z-index: 1;
+
   span {
     font-size: 10px;
   }

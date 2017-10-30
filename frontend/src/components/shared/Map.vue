@@ -54,7 +54,7 @@ export default {
           color: reports[index].theme_color,
           icon: L.icon({
             iconUrl: markerPixel,
-            shadowUrl: 'none',
+            shadowUrl: markerPixel,
             iconSize: [30, 30],
             iconAnchor: [22, 94],
             popupAnchor: [-8, -90],
@@ -132,9 +132,18 @@ export default {
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
 }
 
+.leaflet-bar a {
+  width: 45px !important;
+  height: 45px !important;
+  line-height: 45px;
+  color: #9b9fa3;
+  font-size: 26px;
+  font-weight: bolder;
+}
+
 .leaflet-touch .leaflet-bar a {
-  width: 41px;
-  height: 45px;
+  width: 45px !important;
+  height: 45px !important;
   line-height: 45px;
   color: #9b9fa3;
   font-size: 26px;
@@ -143,5 +152,14 @@ export default {
 
 .leaflet-bar a, .leaflet-bar a:hover {
   border-bottom: 1px solid #e4e4e4;
+  color: #9b9fa3;
+  font-size: 26px;
+  font-weight: bolder;
+  line-height: 45px;
+}
+
+.leaflet-bar {
+  box-shadow: none;
+  border-radius: 4px;
 }
 </style>

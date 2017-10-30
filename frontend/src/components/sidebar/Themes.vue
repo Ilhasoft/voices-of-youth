@@ -109,18 +109,8 @@ export default {
     setCheckAll(value) {
       this.isCheckedAll = value;
       bus.$emit('checkAllThemes', value);
-      if (value) {
-        this.clearReports();
-        for (let i = 0; i < this.themesList.length; i += 1) {
-          this.getReportsByTheme({
-            isChecked: true,
-            themeId: this.themesList[i].id,
-          });
-        }
-      } else {
-        this.clearReports();
-        this.getReports();
-      }
+      this.clearReports();
+      this.getReports();
     },
 
     getPinColor(color) {
