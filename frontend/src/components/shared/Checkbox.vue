@@ -14,6 +14,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import bus from '../../helper/bus';
 
 export default {
   name: 'Checkbox',
@@ -31,6 +32,12 @@ export default {
     };
   },
 
+  mounted() {
+    bus.$on('checkAllThemes', (e) => {
+      this.isChecked = e;
+    });
+  },
+
   methods: {
     ...mapActions([
       'getReportsByTheme',
@@ -38,8 +45,10 @@ export default {
 
     setChecked() {
       this.isChecked = !this.isChecked;
-      this.$emit('item-checked', this.isChecked);
+      this.getReport();
+    },
 
+    getReport() {
       this.getReportsByTheme({
         isChecked: this.isChecked,
         themeId: this.themeId,

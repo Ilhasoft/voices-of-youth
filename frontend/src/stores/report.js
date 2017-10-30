@@ -23,6 +23,8 @@ export default {
   /* eslint-disable no-param-reassign */
   mutations: {
     [TYPES.SET_REPORTS](state, obj) {
+      state.all = [];
+      state.themes = [];
       state.all = obj;
     },
 
@@ -34,7 +36,7 @@ export default {
       if (state.themes.length === 0) {
         state.all = [];
         state.all = obj.data;
-      } else {
+      } else if (state.themes.indexOf(obj.theme) === -1) {
         Object.keys(obj.data).map((key, index) => {
           state.all.push(obj.data[index]);
           return true;
@@ -59,6 +61,11 @@ export default {
     [TYPES.SET_REPORT_MEDIAS](state, obj) {
       state.files = obj.files;
       state.urls = obj.urls;
+    },
+
+    [TYPES.CLEAR_REPORTS_LIST](state) {
+      state.all = [];
+      state.themes = [];
     },
   },
 
@@ -111,6 +118,10 @@ export default {
       }).catch((error) => {
         throw new Error(error);
       });
+    },
+
+    clearReports({ commit }) {
+      commit(TYPES.CLEAR_REPORTS_LIST);
     },
   },
 };
