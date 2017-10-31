@@ -1,37 +1,51 @@
 <template>
-  <div class="column is-2 is-paddingless profile-box" @mouseover="isVisible = true" @mouseout="isVisible = false">
-    <a href="">
-      <img class="avatar" src="./../../assets/img/header-avatar.png">
-    </a>
+  <div 
+    class="column is-paddingless profile-box" 
+    @mouseover="isVisible = true" 
+    @mouseout="isVisible = false">
+    
+    <div v-if="userIsLogged">
+      <a href="">
+        <img class="avatar" src="./../../assets/img/header-avatar.png">
+      </a>
 
-    <div class="profile-item" :class="[isVisible ? 'fade-in' : 'fade-out']">
-      <div class="item">
-        <div class="item-left">
-          <img src="./../../assets/img/header-avatar.png">
+      <div class="profile-item" :class="[isVisible ? 'fade-in' : 'fade-out']">
+        <div class="item">
+          <div class="item-left">
+            <img src="./../../assets/img/header-avatar.png">
+          </div>
+
+          <div class="item-right">
+            Betty_16
+            <small>aaaa@dsfds.com</small>
+          </div>
         </div>
 
-        <div class="item-right">
-          Betty_16
-          <small>aaaa@dsfds.com</small>
+        <div class="item">
+          <div class="item-right">
+            My account
+          </div>
+        </div>
+
+        <div class="item logout">
+          <div class="item-right">
+            Logout
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="item">
-        <div class="item-right">
-          My account
-        </div>
-      </div>
-
-      <div class="item logout">
-        <div class="item-right">
-          Logout
-        </div>
-      </div>
+    <div v-else>
+      <a class="button btn-login" href="">
+        <span>Login</span>
+      </a>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Account',
 
@@ -39,6 +53,12 @@ export default {
     return {
       isVisible: false,
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      userIsLogged: 'userIsLogged',
+    }),
   },
 };
 </script>
@@ -51,6 +71,12 @@ export default {
   .avatar {
     width: 43px;
     height: 43px;
+  }
+
+  .btn-login {
+    width: 112px;
+    border-radius: 100px;
+    border: solid 2px #00c9fd;
   }
 
   .profile-item {

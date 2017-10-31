@@ -111,9 +111,9 @@ export default {
   z-index: 0;
   width: 100%;
   position: fixed;
-  top: 78px;
+  /* top: 78px; */
   left: 0;
-  bottom: 0;
+  /* bottom: 0; */
   right: 0;
 }
 

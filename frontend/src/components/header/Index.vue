@@ -13,7 +13,7 @@
       </div>
 
       <div class="column is-3">
-        <div class="header account" v-show="userIsLogged">
+        <div class="header account">
           <right-menu />
         </div>
       </div>

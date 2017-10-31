@@ -36,7 +36,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-
+import bus from '../../helper/bus';
 import Themes from './Themes';
 import Theme from './Theme';
 import ReportDetail from './ReportDetail';
@@ -75,6 +75,8 @@ export default {
         backButton: false,
         title: '',
       });
+
+      bus.$emit('clearFields', {});
     },
   },
 };

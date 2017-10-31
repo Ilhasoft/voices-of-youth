@@ -1,8 +1,14 @@
 <template>
   <div>
     <div class="columns is-mobile" v-if="showMenu">
-      <div class="column"><a href="" @click.prevent="openThemes">Themes</a></div>
-      <div class="column"><a href="">Gallery</a></div>
+      <div class="column">
+        <a href="" @click.prevent="openThemes">Themes</a>
+      </div>
+      
+      <div class="column">
+        <a href="">Gallery</a>
+      </div>
+      
       <div class="column language">
         <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           Language
@@ -16,9 +22,12 @@
         </div>
       </div>
       
-      <div class="column" v-if="userIsLogged"><a href="">My reports</a></div>
-      <div class="column new-report" v-if="userIsLogged">
-        <a class="button btn-report">
+      <div class="column" v-if="userIsLogged">
+        <a href="">My reports</a>
+      </div>
+      
+      <div class="column new-report">
+        <a class="button btn-report" href="">
           <span class="icon-header-plus"></span>
           <span> Add report</span>
         </a>

@@ -56,6 +56,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import bus from '../../helper/bus';
 
 export default {
   name: 'ReportDetail',
@@ -65,6 +66,13 @@ export default {
       filePreview: '',
       filePreviewType: '',
     };
+  },
+
+  mounted() {
+    bus.$on('clearFields', () => {
+      this.filePreview = '';
+      this.filePreviewType = '';
+    });
   },
 
   computed: {

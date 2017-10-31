@@ -1,10 +1,18 @@
 <template>
-  <div class="column is-2 notification-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
+  <div 
+    class="column is-2 notification-box" 
+    @mouseover.prevent="isVisible = true" 
+    @mouseout="isVisible = false"
+    v-if="userIsLogged">
     <a href="">
-      <img class="img" src="./../../assets/img/header-bell.png">
+      <img class="img" src="~@/assets/img/header-bell.png">
     </a>
 
-    <div class="notification-item" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
+    <div 
+      class="notification-item" 
+      @mouseover.prevent="isVisible = true" 
+      @mouseout="isVisible = false" 
+      :class="[isVisible ? 'fade-in' : 'fade-out']">
       <h4>Notifications</h4>
       <div class="item">
         <a href="">
@@ -62,6 +70,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'Notification',
 
@@ -69,6 +79,12 @@ export default {
     return {
       isVisible: false,
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      userIsLogged: 'userIsLogged',
+    }),
   },
 };
 </script>
@@ -82,6 +98,7 @@ export default {
 .notification-box {
   height: 66px;
   margin-top: 5px;
+  z-index: 1;
 
   .notification-item {
     position: absolute;
