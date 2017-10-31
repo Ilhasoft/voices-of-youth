@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'taggit',
+    'compressor',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',
