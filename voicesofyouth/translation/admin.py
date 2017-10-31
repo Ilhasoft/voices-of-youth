@@ -18,6 +18,7 @@ class TranslatableFieldAdmin(admin.ModelAdmin):
 class TranslationAdmin(admin.ModelAdmin):
     list_display = ('field', 'language', 'content_object', 'translation')
     list_editable = ('language', 'translation')
+    list_filter = ('language', 'field')
 
 
 admin.site.register(TranslatableModel, TranstableModelAdmin)

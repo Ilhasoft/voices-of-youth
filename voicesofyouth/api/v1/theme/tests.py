@@ -90,6 +90,22 @@ class ThemeTestCase(APITestCase):
         self.assertEqual(data['name'], 'pt-br name')
         self.assertEqual(data['description'], 'Original description')
 
+    def test_get_many_themes_with_translation(self):
+        """
+        When we request more than one topic, do the records come with the requested translation?
+        """
+        theme = self.theme
+        field = TranslatableField.objects.get(model__model=theme._meta.model_name,
+                                              field_name=theme._meta.model._meta.get_field('name').attname)
+        mommy.make(Translation, field=field, language='pt-br', translation='pt-br name', content_object=theme)
+        response = self.client.get(f'{self.url_list}?project={theme.project.id}&lang=pt-br')
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+        for record in data:
+            self.assertEqual(record['name'], 'pt-br name')
+            self.assertEqual(record['description'], 'Original description')
+
     def test_filter_theme_by_year(self):
         """
         We can filter theme by year?

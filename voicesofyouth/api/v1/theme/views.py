@@ -32,9 +32,7 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
         if year_end:
             filter_clause['created_on__year__lte'] = year_end
 
-        return Theme.objects.filter(is_active=True,
-                                    visible=True,
-                                    **filter_clause)
+        return self.queryset.filter(**filter_clause)
 
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
