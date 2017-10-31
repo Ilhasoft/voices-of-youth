@@ -1,6 +1,5 @@
 import random
 
-from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.gis.db import models as gismodels
