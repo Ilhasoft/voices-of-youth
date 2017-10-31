@@ -12,3 +12,4 @@ Pillow
 pyyaml
 django-resized
 django-taggit
+gdal

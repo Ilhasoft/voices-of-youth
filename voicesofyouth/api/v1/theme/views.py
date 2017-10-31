@@ -23,12 +23,16 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         filter_clause = {}
         project_id = self.request.query_params.get('project', 0)
+        year_start = self.request.query_params.get('year-start')
+        year_end = self.request.query_params.get('year-end')
         if project_id:
             filter_clause['project__id'] = project_id
+        if year_start:
+            filter_clause['created_on__year__gte'] = year_start
+        if year_end:
+            filter_clause['created_on__year__lte'] = year_end
 
-        return Theme.objects.filter(is_active=True,
-                                    visible=True,
-                                    **filter_clause)
+        return self.queryset.filter(**filter_clause)
 
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
