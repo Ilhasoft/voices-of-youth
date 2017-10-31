@@ -1,3 +1,5 @@
+import datetime
+
 from model_mommy import mommy
 from rest_framework import status
 from rest_framework.reverse import reverse_lazy
@@ -87,3 +89,28 @@ class ThemeTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data['name'], 'pt-br name')
         self.assertEqual(data['description'], 'Original description')
+
+    def test_filter_theme_by_year(self):
+        """
+        We can filter theme by year?
+        """
+        mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
+        mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
+        response = self.client.get(f'{self.url_list}?year-start=2100')
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Theme.objects.count(), 14)
+        self.assertEqual(len(data), 4)
+
+    def test_filter_theme_by_year_range(self):
+        """
+        We can filter theme by year range?
+        """
+        mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
+        mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
+        mommy.make(Theme, 2, created_on=datetime.datetime(year=2110, month=1, day=1))
+        response = self.client.get(f'{self.url_list}?year-start=2100&year-end=2105')
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Theme.objects.count(), 16)
+        self.assertEqual(len(data), 4)
