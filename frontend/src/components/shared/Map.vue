@@ -89,10 +89,7 @@ export default {
 
     openReport(item) {
       this.setSideBarConfigs({
-        title: item.text,
         tabActived: 'ReportDetail',
-        backButton: (this.themesSelected.length > 0),
-        backTo: (this.themesSelected.length > 0 ? 'Themes' : ''),
         isActived: true,
       }).then(() => {
         const marker = JSON.parse(JSON.stringify(item));

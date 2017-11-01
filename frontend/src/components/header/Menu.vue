@@ -10,10 +10,10 @@
       </div>
       
       <div class="column language">
-        <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
+        <p class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           Language
           <span class="icon-header-more"></span>
-        </a>
+        </p>
 
         <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
           <div class="item" :key="key" v-for="(language, key) in menuLanguages">
@@ -92,8 +92,8 @@ export default {
   }
 
   .language-box {
-    margin: auto;
-    max-width: 150px;
+    z-index: 100000;
+    position: absolute;
     border-radius: 11px;
     background-color: #fff;
     -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);

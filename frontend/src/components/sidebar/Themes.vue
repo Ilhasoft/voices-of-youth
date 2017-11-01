@@ -1,68 +1,74 @@
 <template>
-  <div class="map-box">
-    <div class="columns">
-      <div class="column scrolling">
-        <div class="columns is-mobile">
-          <div class="column is-2 filter">
-            <div class="field">
-              <div class="control">
-                <div class="select is-info">
-                  <select v-model="yearStart" @change="getThemesByPeriod">
-                    <option value=""></option>
-                    <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
-                  </select>
+  <div>
+    <navigation-bar
+      title="Themes"
+      :closeButton="true" />
+
+    <div class="map-box">
+      <div class="columns">
+        <div class="column scrolling">
+          <div class="columns is-mobile">
+            <div class="column is-2 filter">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-info">
+                    <select v-model="yearStart" @change="getThemesByPeriod">
+                      <option value=""></option>
+                      <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
+                    </select>
+                  </div>
                 </div>
+              </div>
+            </div>
+
+            <div class="column is-1 m-auto">
+              <p>to</p>
+            </div>
+
+            <div class="column is-2 filter">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-info">
+                    <select v-model="yearEnd" @change="getThemesByPeriod">
+                      <option value=""></option>
+                      <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="column">
+              <div class="control t-right">
+                <label class="radio">
+                  Select all &nbsp;&nbsp;
+                  <svg @click.prevent="setCheckAll(false)" v-if="isCheckedAll" xmlns="http://www.w3.org/2000/svg" width="23" height="21" viewBox="0 0 23 21">
+                    <g fill="none" fill-rule="evenodd" stroke="#00D3C2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                      <path d="M7.418 9.404l3.01 3 11.037-11"/>
+                      <path d="M19.458 10.404v7c0 1.105-.898 2-2.007 2H3.405a2.003 2.003 0 0 1-2.006-2v-14c0-1.104.898-2 2.006-2h11.036"/>
+                    </g>
+                  </svg>
+                  <svg @click.prevent="setCheckAll(true)" v-else xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                    <rect width="18" height="18" fill="none" fill-rule="evenodd" stroke="#AFAFAF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="2" transform="translate(1.399 1.602)"/>
+                  </svg>
+                </label>
               </div>
             </div>
           </div>
 
-          <div class="column is-1 m-auto">
-            <p>to</p>
-          </div>
-
-          <div class="column is-2 filter">
-            <div class="field">
-              <div class="control">
-                <div class="select is-info">
-                  <select v-model="yearEnd" @change="getThemesByPeriod">
-                    <option value=""></option>
-                    <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
-                  </select>
-                </div>
-              </div>
+          <div class="columns is-mobile item" :key="key" v-for="(item, key) in themesList">
+            <div class="column is-1 m-auto center">
+              <span class="icon-pin pin" :style="getPinColor(item.color)"></span>
             </div>
-          </div>
 
-          <div class="column">
-            <div class="control t-right">
-              <label class="radio">
-                Select all &nbsp;&nbsp;
-                <svg @click.prevent="setCheckAll(false)" v-if="isCheckedAll" xmlns="http://www.w3.org/2000/svg" width="23" height="21" viewBox="0 0 23 21">
-                  <g fill="none" fill-rule="evenodd" stroke="#00D3C2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                    <path d="M7.418 9.404l3.01 3 11.037-11"/>
-                    <path d="M19.458 10.404v7c0 1.105-.898 2-2.007 2H3.405a2.003 2.003 0 0 1-2.006-2v-14c0-1.104.898-2 2.006-2h11.036"/>
-                  </g>
-                </svg>
-                <svg @click.prevent="setCheckAll(true)" v-else xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-                  <rect width="18" height="18" fill="none" fill-rule="evenodd" stroke="#AFAFAF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="2" transform="translate(1.399 1.602)"/>
-                </svg>
-              </label>
+            <div class="column m-auto">
+              <h1>{{ item.name }}</h1>
+              <p>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
             </div>
-          </div>
-        </div>
 
-        <div class="columns is-mobile item" :key="key" v-for="(item, key) in themesList">
-          <div class="column is-1 m-auto center">
-            <span class="icon-pin pin" :style="getPinColor(item.color)"></span>
-          </div>
-
-          <div class="column m-auto">
-            <h1>{{ item.name }}</h1>
-            <p>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
-          </div>
-
-          <div class="column is-1 m-auto">
-            <checkbox-item :theme-id="item.id" />
+            <div class="column is-1 m-auto">
+              <checkbox-item :theme-id="item.id" />
+            </div>
           </div>
         </div>
       </div>
@@ -73,12 +79,13 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import bus from '../../helper/bus';
+import NavigationBar from './Navigation';
 import CheckboxItem from '../shared/Checkbox';
 
 export default {
   name: 'Themes',
 
-  components: { CheckboxItem },
+  components: { NavigationBar, CheckboxItem },
 
   data() {
     return {

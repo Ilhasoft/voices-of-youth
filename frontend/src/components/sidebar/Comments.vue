@@ -1,18 +1,26 @@
 <template>
-  <div class="comments-box">
-    <div class="comments">
+  <div>
+    <navigation-bar
+      title="Comments"
+      :backButton="true"
+      :closeButton="true"
+      backTo="ReportDetail"
+      @openComponent="openReport" />
 
-      <comment-item v-for="(data, index) in commentsList" :key="index" :comment="data"/>
-    </div>
+    <div class="comments-box">
+      <div class="comments">
+        <comment-item v-for="(data, index) in commentsList" :key="index" :comment="data"/>
+      </div>
 
-    <div class="form">
-      <div class="columns is-marginless fields">
-        <div class="column m-auto">
-          <textarea name="" id="" cols="30" rows="10"></textarea>
-        </div>
+      <div class="form">
+        <div class="columns is-marginless fields">
+          <div class="column m-auto">
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+          </div>
 
-        <div class="column send is-2">
-          <a href="">Send</a>
+          <div class="column send is-2">
+            <a href="">Send</a>
+          </div>
         </div>
       </div>
     </div>
@@ -20,18 +28,32 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import CommentItem from './CommentsItem';
+import NavigationBar from './Navigation';
 
 export default {
   name: 'Comments',
 
-  components: { CommentItem },
+  components: { CommentItem, NavigationBar },
 
   computed: {
     ...mapGetters({
       commentsList: 'getComments',
     }),
+  },
+
+  methods: {
+    ...mapActions([
+      'setSideBarConfigs',
+    ]),
+
+    openReport() {
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      });
+    },
   },
 };
 </script>
@@ -47,7 +69,7 @@ export default {
 
   .comments {
     width: 100%;
-		height: 86.7%;
+		height: 627px;
 		background-color:#cfcfcf;
     margin: 0 auto;
     overflow: auto;

@@ -7,7 +7,7 @@
       </div>
   
       <div class="column">
-        <div class="header menu">
+        <div class="header itemmenu">
           <header-menu />
         </div>
       </div>
@@ -50,7 +50,7 @@ section {
   background-color: #fff;
 }
 
-.header.menu {
+.header.itemmenu {
   height: 66px;
   padding-top: 22px;
 }

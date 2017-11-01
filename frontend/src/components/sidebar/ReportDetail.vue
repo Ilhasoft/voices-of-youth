@@ -1,52 +1,61 @@
 <template>
-  <div class="map-box">
-    <div class="columns">
-      <div class="column no-padding">
-        <div class="columns header">
-          <div class="column no-padding">
-            <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
-            <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
-              <source :src="filePreview" type="video/mp4">
-            </video>
-          </div>
-        </div>
-
-        <div class="columns">
-          <div class="column">
-            <ul class="images">
-              <li v-for="(file, key) in files" :key="key">
-                <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
-                <img v-if="file.media_type == 'video'" src="../../assets/img/report-example.png" @click.prevent="openFile(file)" alt="">
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="columns reports">
-          <div class="column">
-            <h1 :style="formatFontColor()">{{ item.name }}</h1>
-            <small :style="formatFontColor()">{{ formatDate() }}</small>
-            <p>{{ item.description }}</p>
-          </div>
-        </div>
-
-        <div class="columns">
-          <div class="column tags">
-            <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
-          </div>
-        </div>
-
-        <div class="columns buttons">
-          <div class="column">
-            <a class="button share">
-              <span class="icon-icon-share"></span> Share
-            </a>
+  <div>
+    <navigation-bar
+      :title="item.name"
+      :backButton="backButton"
+      :closeButton="true"
+      backTo="Theme"
+      @openComponent="openTheme" />
+  
+    <div class="map-box">
+      <div class="columns">
+        <div class="column no-padding">
+          <div class="columns header">
+            <div class="column no-padding">
+              <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
+              <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
+                <source :src="filePreview" type="video/mp4">
+              </video>
+            </div>
           </div>
 
-          <div class="column">
-            <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
-              <span class="icon-icon-comment"></span> Comment
-            </a>
+          <div class="columns">
+            <div class="column">
+              <ul class="images">
+                <li v-for="(file, key) in files" :key="key">
+                  <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
+                  <img v-if="file.media_type == 'video'" src="../../assets/img/report-example.png" @click.prevent="openFile(file)" alt="">
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="columns reports">
+            <div class="column">
+              <h1 :style="formatFontColor()">{{ item.name }}</h1>
+              <small :style="formatFontColor()">{{ formatDate() }}</small>
+              <p>{{ item.description }}</p>
+            </div>
+          </div>
+
+          <div class="columns">
+            <div class="column tags">
+              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+            </div>
+          </div>
+
+          <div class="columns buttons">
+            <div class="column">
+              <a class="button share">
+                <span class="icon-icon-share"></span> Share
+              </a>
+            </div>
+
+            <div class="column">
+              <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
+                <span class="icon-icon-comment"></span> Comment
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -57,14 +66,18 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import bus from '../../helper/bus';
+import NavigationBar from './Navigation';
 
 export default {
   name: 'ReportDetail',
+
+  components: { NavigationBar },
 
   data() {
     return {
       filePreview: '',
       filePreviewType: '',
+      backButton: true,
     };
   },
 
@@ -85,6 +98,7 @@ export default {
   methods: {
     ...mapActions([
       'getComments',
+      'getTheme',
       'setSideBarConfigs',
     ]),
 
@@ -106,13 +120,19 @@ export default {
       return `color: #${this.item.theme_color} !important;`;
     },
 
+    openTheme() {
+      this.getTheme(this.item.theme_id).then(() => {
+        this.setSideBarConfigs({
+          tabActived: 'Theme',
+          isActived: true,
+        });
+      });
+    },
+
     openComments() {
       this.getComments(this.item.id).then(() => {
         this.setSideBarConfigs({
-          title: 'Comments',
           tabActived: 'Comments',
-          backButton: true,
-          backTo: 'ReportDetail',
           isActived: true,
         });
       });

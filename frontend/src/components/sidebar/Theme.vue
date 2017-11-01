@@ -1,48 +1,57 @@
 <template>
-  <div class="map-box">
-    <div class="columns">
-      <div class="column no-padding">
-        <div class="columns is-mobile header" :style="formatColor(item.color)">
-          <div class="column is-1 pin">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="31" viewBox="0 0 25 31">
-                <g fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" transform="translate(1.283 1.868)">
-                  <path d="M22.371 11.194c0 8.707-11.185 16.17-11.185 16.17S0 19.901 0 11.194C0 5.012 5.008 0 11.186 0 17.363 0 22.37 5.012 22.37 11.194z"/>
-                  <ellipse cx="11.186" cy="11.194" rx="3.729" ry="3.731"/>
-                </g>
-            </svg>
+  <div>
+    <navigation-bar
+      :title="item.name"
+      :backButton="true"
+      :closeButton="true"
+      backTo="Themes"
+      @openComponent="openThemes" />
+  
+    <div class="map-box">
+      <div class="columns">
+        <div class="column no-padding">
+          <div class="columns is-mobile header" :style="formatColor(item.color)">
+            <div class="column is-1 pin">
+              <svg xmlns="http://www.w3.org/2000/svg" width="25" height="31" viewBox="0 0 25 31">
+                  <g fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" transform="translate(1.283 1.868)">
+                    <path d="M22.371 11.194c0 8.707-11.185 16.17-11.185 16.17S0 19.901 0 11.194C0 5.012 5.008 0 11.186 0 17.363 0 22.37 5.012 22.37 11.194z"/>
+                    <ellipse cx="11.186" cy="11.194" rx="3.729" ry="3.731"/>
+                  </g>
+              </svg>
+            </div>
+
+            <div class="column m-auto">
+              <h1>{{ item.name }}</h1>
+            </div>
           </div>
 
-          <div class="column m-auto">
-            <h1>{{ item.name }}</h1>
+          <div class="columns">
+            <div class="column text">
+              <small :style="formatFontColor()">{{ formatDate(item.created_on) }}</small>
+              <p>{{ item.description }}</p>
+            </div>
           </div>
-        </div>
 
-        <div class="columns">
-          <div class="column text">
-            <small :style="formatFontColor()">{{ formatDate(item.created_on) }}</small>
-            <p>{{ item.description }}</p>
+          <div class="columns">
+            <div class="column tags">
+              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+            </div>
           </div>
-        </div>
 
-        <div class="columns">
-          <div class="column tags">
-            <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+          <div class="columns reports">
+            <div class="column">
+              <h1 :style="formatFontColor()">{{ item.reports_count }} Reports</h1>
+            </div>
           </div>
-        </div>
 
-        <div class="columns reports">
-          <div class="column">
-            <h1 :style="formatFontColor()">{{ item.reports_count }} Reports</h1>
-          </div>
-        </div>
-
-        <div class="columns medias">
-          <div class="column">
-            <ul>
-              <li :key="key" v-for="(report, key) in lastReports">
-                <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="">
-              </li>
-            </ul>
+          <div class="columns medias">
+            <div class="column">
+              <ul>
+                <li :key="key" v-for="(report, key) in lastReports">
+                  <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="">
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -53,9 +62,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import bus from '../../helper/bus';
+import NavigationBar from './Navigation';
 
 export default {
   name: 'Theme',
+
+  components: { NavigationBar },
 
   computed: {
     ...mapGetters({
@@ -83,12 +95,16 @@ export default {
       return `color: #${this.item.color} !important;`;
     },
 
+    openThemes() {
+      this.setSideBarConfigs({
+        tabActived: 'Themes',
+        isActived: true,
+      });
+    },
+
     openReport(item) {
       this.setSideBarConfigs({
-        title: item.name,
         tabActived: 'ReportDetail',
-        backButton: true,
-        backTo: 'Theme',
         isActived: true,
       }).then(() => {
         bus.$emit('openReport', item);
