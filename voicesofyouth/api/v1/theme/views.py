@@ -10,11 +10,13 @@ from voicesofyouth.translation.models import Translation
 
 class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    retrieve:
-    Return the given theme.
+    Return a list of themes.
 
-    list:
-    Return a list of all the existing themes by map.
+    You can use the querystring to get the translated version of the theme(s). E.g. to get a theme in portuguese
+    brazilian just use: ?lang=pt-br. If the requested translation does not exists you will receive the default language.
+
+    retrieve:
+    Return a specific theme.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     queryset = Theme.objects.all()

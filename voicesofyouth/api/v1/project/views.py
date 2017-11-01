@@ -9,7 +9,7 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     Return a list of projects.
 
     You can use the querystring to get the translated version of the project. E.g. to get a project in portuguese
-    brazilian just use: ?lang=pt-br
+    brazilian just use: ?lang=pt-br. If the requested translation does not exists you will receive the default language.
 
     retrieve:
     Return a specific project.
