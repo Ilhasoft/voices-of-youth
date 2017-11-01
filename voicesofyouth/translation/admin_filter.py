@@ -27,6 +27,8 @@ class ProjectListFilter(admin.SimpleListFilter):
             filter_by_theme = {'content_type': theme_ct, 'object_id': theme_id}
         except Project.DoesNotExist:
             pass
+        except Theme.DoesNotExist:
+            pass
         return queryset.filter(Q(**filter_by_project) | Q(**filter_by_theme))
 
 
