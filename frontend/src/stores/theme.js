@@ -2,6 +2,9 @@ import axios from 'axios';
 import * as TYPES from './types';
 import helper from '../helper';
 
+const language = helper.getItem('language');
+const query = language ? `&lang=${language}` : '';
+
 export default {
   state: {
     all: [],
@@ -29,7 +32,7 @@ export default {
   actions: {
     getThemes({ commit }) {
       const project = helper.getItem('project');
-      axios.get(`/api/themes?project=${project.id}`).then((response) => {
+      axios.get(`/api/themes?project=${project.id}${query}`).then((response) => {
         commit(TYPES.SET_THEMES, response.data);
       }).catch((error) => {
         throw new Error(error);
@@ -38,7 +41,7 @@ export default {
 
     getTheme({ commit }, obj) {
       const project = helper.getItem('project');
-      axios.get(`/api/themes/${obj}?project=${project.id}`).then((response) => {
+      axios.get(`/api/themes/${obj}?project=${project.id}${query}`).then((response) => {
         commit(TYPES.SET_CURRENT_THEME, response.data);
       }).catch((error) => {
         throw new Error(error);

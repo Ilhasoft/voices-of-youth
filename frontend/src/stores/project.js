@@ -1,11 +1,12 @@
 import axios from 'axios';
-// import axios from '../config';
 import * as TYPES from './types';
+import helper from '../helper';
 
 export default {
   state: {
     all: [],
     current: {},
+    language: '',
     disclaimer: true,
   },
 
@@ -14,6 +15,7 @@ export default {
     getCurrentProject: state => state.current,
     getDisclaimerProject: state => state.disclaimer,
     getProjectLanguages: state => state.current.languages,
+    getCurrentLanguage: state => state.language,
   },
 
   /* eslint-disable no-param-reassign */
@@ -29,6 +31,10 @@ export default {
 
     [TYPES.SET_DISCLAIMER_PROJECT](state, obj) {
       state.disclaimer = obj;
+    },
+
+    [TYPES.SET_CURRENT_LANGUAGE](state, obj) {
+      state.language = obj;
     },
   },
 
@@ -52,6 +58,19 @@ export default {
 
     showDisclaimerProject({ commit }, obj) {
       commit(TYPES.SET_DISCLAIMER_PROJECT, obj);
+    },
+
+    setCurrentLanguage({ commit, state, dispatch }, obj) {
+      if (obj) {
+        const project = helper.getItem('project');
+        axios.get(`/api/projects/${project.id}/?lang=${obj}`).then((response) => {
+          localStorage.setItem('project', JSON.stringify(response.data));
+          localStorage.setItem('language', JSON.stringify(obj));
+          window.location.reload();
+        }).catch((error) => {
+          throw new Error(error);
+        });
+      }
     },
   },
 };

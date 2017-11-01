@@ -8,7 +8,7 @@
       <div class="body">
         <h3>Welcome to {{ currentProject.name }}!</h3>
 
-        <p>This project explores tools to help youth build impactful, communicative digital maps using mobile and web technologies. A phone application allows youth to produce a portrait of their community through geo-located photos and videos, organized in thematic maps.</p>
+        <p>{{ currentProject.description }}</p>
 
         <div class="join">
           <a class="button btn-join" @click.prevent="dismissDisclaimer">Let's go!</a>
@@ -91,7 +91,7 @@ export default {
     }
 
     p {
-      min-height: 250px;
+      max-height: 250px;
       margin-top: 36px;
       font-size: 15px;
       line-height: 1.67;

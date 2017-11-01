@@ -17,7 +17,7 @@
 
         <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
           <div class="item" :key="key" v-for="(language, key) in menuLanguages">
-            <a href="">{{ language[1] }}</a>
+            <a href="" @click.prevent="setLanguage(language[0])">{{ language[1] }}</a>
           </div>
         </div>
       </div>
@@ -55,6 +55,7 @@ export default {
   methods: {
     ...mapActions([
       'setSideBarConfigs',
+      'setCurrentLanguage',
     ]),
 
     openThemes() {
@@ -64,6 +65,10 @@ export default {
         backButton: false,
         isActived: true,
       });
+    },
+
+    setLanguage(language) {
+      this.setCurrentLanguage(language);
     },
   },
 
