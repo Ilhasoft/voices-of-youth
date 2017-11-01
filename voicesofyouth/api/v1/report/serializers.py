@@ -9,9 +9,21 @@ from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
 
 
+
 class PointField(serializers.Field):
     def to_representation(self, value):
         return value.coords
+
+
+class ReportFilesSerializer(VoySerializer):
+    class Meta:
+        model = ReportFile
+        fields = (
+            'title',
+            'description',
+            'media_type',
+            'file',
+        )
 
 
 class ReportSerializer(VoySerializer):
@@ -22,7 +34,7 @@ class ReportSerializer(VoySerializer):
     theme_id = serializers.PrimaryKeyRelatedField(read_only=True)
     location = PointField()
     theme_color = serializers.SerializerMethodField()
-    last_image = serializers.SerializerMethodField()
+    last_image = ReportFilesSerializer()
     author = UserSerializer()
 
     class Meta:
@@ -46,9 +58,6 @@ class ReportSerializer(VoySerializer):
     def get_theme_color(self, obj):
         return obj.theme.color
 
-    def get_last_image(self, obj):
-        return ReportFilesSerializer(obj.files.filter(media_type=FILE_TYPE_IMAGE).last()).data
-
 
 class ReportCommentsSerializer(VoySerializer):
     author = serializers.SerializerMethodField()
@@ -65,17 +74,6 @@ class ReportCommentsSerializer(VoySerializer):
 
     def get_author(self, obj):
         return UserSerializer(obj.created_by).data
-
-
-class ReportFilesSerializer(VoySerializer):
-    class Meta:
-        model = ReportFile
-        fields = (
-            'title',
-            'description',
-            'media_type',
-            'file',
-        )
 
 
 class ReportURLsSerializer(VoySerializer):
