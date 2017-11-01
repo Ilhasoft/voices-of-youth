@@ -1,14 +1,14 @@
 from django.contrib.contenttypes.models import ContentType
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from voicesofyouth.api.v1.core.views import VoYViewSet
 from voicesofyouth.api.v1.tag.serializers import TagSerializer
 from voicesofyouth.tag.models import Tag
 from voicesofyouth.theme.models import Theme
 
 
-class TagsViewSet(VoYViewSet):
+class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Return tags related with the theme or project.
 
