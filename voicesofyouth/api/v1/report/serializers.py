@@ -2,9 +2,11 @@ from rest_framework import serializers
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer
-from voicesofyouth.report.models import Report, ReportURL
+from voicesofyouth.report.models import FILE_TYPE_IMAGE
+from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
+from voicesofyouth.report.models import ReportURL
 
 
 class PointField(serializers.Field):
@@ -20,6 +22,7 @@ class ReportSerializer(VoySerializer):
     theme_id = serializers.PrimaryKeyRelatedField(read_only=True)
     location = PointField()
     theme_color = serializers.SerializerMethodField()
+    last_image = serializers.SerializerMethodField()
     author = UserSerializer()
 
     class Meta:
@@ -36,11 +39,15 @@ class ReportSerializer(VoySerializer):
             'name',
             'tags',
             'theme_color',
-            'author'
+            'author',
+            'last_image'
         )
 
     def get_theme_color(self, obj):
         return obj.theme.color
+
+    def get_last_image(self, obj):
+        return ReportFilesSerializer(obj.files.filter(media_type=FILE_TYPE_IMAGE).last()).data
 
 
 class ReportCommentsSerializer(VoySerializer):
