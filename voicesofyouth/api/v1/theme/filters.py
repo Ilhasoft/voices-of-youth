@@ -4,8 +4,8 @@ from voicesofyouth.theme.models import Theme
 
 
 class ThemeFilter(filters.FilterSet):
-    year_start = filters.NumberFilter('created_on__year', lookup_expr='gte')
-    year_end = filters.NumberFilter('created_on__year', lookup_expr='lte')
+    year_start = filters.NumberFilter('created_on__year', lookup_expr='gte', label='Start year')
+    year_end = filters.NumberFilter('created_on__year', lookup_expr='lte', label='End year')
 
     class Meta:
         model = Theme
