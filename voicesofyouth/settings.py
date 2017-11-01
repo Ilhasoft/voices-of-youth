@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'smartmin',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_filters',
     'taggit',
     'voicesofyouth.core',
     'voicesofyouth.user',
@@ -148,7 +149,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -156,7 +156,8 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'TEST_REQUEST_DEFAULT_FORMAT': 'json'
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
 MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS

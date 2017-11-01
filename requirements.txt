@@ -13,3 +13,4 @@ pyyaml
 django-resized
 django-taggit
 gdal
+django-filter

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from voicesofyouth.api.v1.user.serializers import UserSerializer
 from voicesofyouth.api.v1.serializers import VoySerializer
+from voicesofyouth.api.v1.user.serializers import UserSerializer
 from voicesofyouth.report.models import Report, ReportURL
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
@@ -44,7 +44,7 @@ class ReportSerializer(VoySerializer):
 
 
 class ReportCommentsSerializer(VoySerializer):
-    author = UserSerializer()
+    author = serializers.SerializerMethodField()
 
     class Meta:
         model = ReportComment
@@ -55,6 +55,9 @@ class ReportCommentsSerializer(VoySerializer):
             'created_on',
             'modified_on'
         )
+
+    def get_author(self, obj):
+        return UserSerializer(obj.created_by).data
 
 
 class ReportFilesSerializer(VoySerializer):
