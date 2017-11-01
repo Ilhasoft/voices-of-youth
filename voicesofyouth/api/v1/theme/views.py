@@ -1,14 +1,14 @@
 from rest_framework import permissions
-from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from voicesofyouth.api.v1.core.views import VoYViewSet
 from voicesofyouth.api.v1.theme.serializers import ThemeSerializer
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.models import Translation
 
 
-class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
+class ThemesViewSet(VoYViewSet):
     """
     retrieve:
     Return the given theme.

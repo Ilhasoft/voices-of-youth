@@ -1,9 +1,9 @@
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from voicesofyouth.api.v1.core.views import VoYViewSet
 from voicesofyouth.api.v1.report.filters import ReportFileFilter, ReportFilter
 from voicesofyouth.api.v1.report.paginators import ReportFilesResultsSetPagination
 from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
@@ -17,18 +17,11 @@ from voicesofyouth.report.models import ReportFile
 from voicesofyouth.translation.models import Translation
 
 
-class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportsViewSet(VoYViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
     filter_class = ReportFilter
-
-    def list(self, request, *args, **kwargs):
-        limit = int(request.GET.get('limit', 0))
-        serializer = self.serializer_class(self.queryset, context={'request': request}, many=True)
-        if limit:
-            serializer = self.serializer_class(self.queryset[:limit], context={'request': request}, many=True)
-        return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
@@ -38,7 +31,7 @@ class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportCommentsViewSet(VoYViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.all()
@@ -51,7 +44,7 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
-class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportFilesViewSet(VoYViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.all()
@@ -59,7 +52,7 @@ class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReportFilesResultsSetPagination
 
 
-class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportURLsViewSet(VoYViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
@@ -78,7 +71,7 @@ class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data, status=query_status)
 
 
-class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportMediasViewSet(VoYViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportMediasSerializer
     queryset = Report.objects.all()

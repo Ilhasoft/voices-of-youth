@@ -1,11 +1,11 @@
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
-from voicesofyouth.user.models import User
+from voicesofyouth.api.v1.core.views import VoYViewSet
 from voicesofyouth.api.v1.user.serializers import UserSerializer
+from voicesofyouth.user.models import User
 
 
-class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
+class UsersEndPoint(VoYViewSet):
     """
     retrieve:
     Return the given theme.

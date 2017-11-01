@@ -1,14 +1,14 @@
 from rest_framework import permissions
-from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from voicesofyouth.api.v1.core.views import VoYViewSet
 from voicesofyouth.project.models import Project
 from voicesofyouth.translation.models import Translation
 from .serializers import ProjectSerializer
 
 
-class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
+class ProjectsViewSet(VoYViewSet):
     """
     retrieve:
     You can use querystring to translate the project. E.g.: /api/projects/1/?lang=pt-br
