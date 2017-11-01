@@ -1,7 +1,7 @@
-from rest_framework import permissions
+from rest_framework import permissions, viewsets
 from rest_framework import status
-from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from voicesofyouth.api.v1.report.filters import ReportFileFilter, ReportFilter
@@ -17,18 +17,17 @@ from voicesofyouth.report.models import ReportFile
 from voicesofyouth.translation.models import Translation
 
 
+class ReportsPagination(PageNumberPagination):
+    page_size = None
+    page_size_query_param = 'page_size'
+
+
 class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
     filter_class = ReportFilter
-
-    def list(self, request, *args, **kwargs):
-        limit = int(request.GET.get('limit', 0))
-        serializer = self.serializer_class(self.queryset, context={'request': request}, many=True)
-        if limit:
-            serializer = self.serializer_class(self.queryset[:limit], context={'request': request}, many=True)
-        return Response(serializer.data)
+    pagination_class = ReportsPagination
 
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
