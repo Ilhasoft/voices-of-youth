@@ -17,6 +17,7 @@ export default {
   getters: {
     getThemes: state => state.all,
     getTheme: state => state.theme,
+    getLastReports: state => state.lastReports,
   },
 
   /* eslint-disable no-param-reassign */
@@ -55,8 +56,8 @@ export default {
       axios.get(`/api/themes/${obj}?project=${project.id}${query}`).then((response) => {
         commit(TYPES.SET_CURRENT_THEME, response.data);
       }).then(() => {
-        axios.get(`/api/reports/?project=${project.id}&theme=${obj}&limit=10`).then((response) => {
-          console.log(response.data);
+        axios.get(`/api/reports/?project=${project.id}&theme=${obj}&page_size=10`).then((response) => {
+          commit(TYPES.SET_LAST_REPORTS, response.data.results);
         });
       }).catch((error) => {
         throw new Error(error);

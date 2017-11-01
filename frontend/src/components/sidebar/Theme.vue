@@ -39,16 +39,9 @@
         <div class="columns medias">
           <div class="column">
             <ul>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
-              <li><img src="../../assets/img/report-example.png" alt=""></li>
+              <li :key="key" v-for="(report, key) in lastReports">
+                <img :src="report.last_image.file" alt="">
+              </li>
             </ul>
           </div>
         </div>
@@ -66,6 +59,7 @@ export default {
   computed: {
     ...mapGetters({
       item: 'getTheme',
+      lastReports: 'getLastReports',
     }),
   },
 
