@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
 from voicesofyouth.api.v1.report.filters import ReportFileFilter
 from voicesofyouth.api.v1.report.filters import ReportFilter
+from voicesofyouth.api.v1.report.filters import ReportMediaFilter
+from voicesofyouth.api.v1.report.filters import ReportURLFilter
 from voicesofyouth.api.v1.report.paginators import ReportFilesResultsSetPagination
 from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
 from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
@@ -47,9 +49,10 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 
     def list(self, request, *args, **kwargs):
         url_query = self.request.query_params
+        response = None
         if 'report' not in url_query:
-            return Response({}, status=status.HTTP_204_NO_CONTENT)
-        return super().list(request, *args, **kwargs)
+            response = Response({}, status=status.HTTP_204_NO_CONTENT)
+        return response or super().list(request, *args, **kwargs)
 
 
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
@@ -64,35 +67,25 @@ class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
+    filter_class = ReportURLFilter
 
     def list(self, request, *args, **kwargs):
-        query = {}
         url_query = self.request.query_params
-        query_status = status.HTTP_200_OK
-        if 'report' in url_query:
-            query['report__id'] = url_query.get('report')
-            qs = self.queryset.filter(**query)
-        else:
-            qs = {}
-            query_status = status.HTTP_204_NO_CONTENT
-        serializer = self.serializer_class(qs, many=True, context={'request': request})
-        return Response(serializer.data, status=query_status)
+        response = None
+        if 'report' not in url_query:
+            response = Response({}, status=status.HTTP_204_NO_CONTENT)
+        return response or super().list(request, *args, **kwargs)
 
 
 class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportMediasSerializer
     queryset = Report.objects.all()
+    filter_class = ReportMediaFilter
 
-    def list(self, request):
-        query = {}
+    def list(self, request, *args, **kwargs):
         url_query = self.request.query_params
-        query_status = status.HTTP_200_OK
-        if 'report' in url_query:
-            query['id'] = url_query.get('report')
-            qs = self.queryset.filter(**query)
-        else:
-            qs = {}
-            query_status = status.HTTP_204_NO_CONTENT
-        serializer = self.serializer_class(qs, context={'request': request}, many=True)
-        return Response(serializer.data, status=query_status)
+        response = None
+        if 'report' not in url_query:
+            response = Response({}, status=status.HTTP_204_NO_CONTENT)
+        return response or super().list(request, *args, **kwargs)
