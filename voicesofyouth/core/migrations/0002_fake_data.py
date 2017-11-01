@@ -45,7 +45,8 @@ def make_translation(obj, lang):
                 mommy.make(Translation,
                            field=field,
                            content_object=obj,
-                           language=lang)
+                           language=lang,
+                           translation=f'{lang} - {lorem.paragraph()}')
         except IntegrityError:
             pass
 
