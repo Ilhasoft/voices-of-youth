@@ -22,8 +22,8 @@ class ReportFileFilter(filters.FilterSet):
 
 
 class ReportCommentFilter(filters.FilterSet):
-    theme = filters.NumberFilter(name='report__theme')
+    report = filters.NumberFilter(name='report__id')
 
     class Meta:
         model = ReportComment
-        fields = ('theme', 'report')
+        fields = ('report', )

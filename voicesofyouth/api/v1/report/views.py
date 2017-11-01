@@ -4,7 +4,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from voicesofyouth.api.v1.report.filters import ReportFileFilter, ReportFilter
+from voicesofyouth.api.v1.report.filters import ReportCommentFilter
+from voicesofyouth.api.v1.report.filters import ReportFileFilter
+from voicesofyouth.api.v1.report.filters import ReportFilter
 from voicesofyouth.api.v1.report.paginators import ReportFilesResultsSetPagination
 from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
 from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
@@ -41,13 +43,13 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.all()
+    filter_class = ReportCommentFilter
 
     def list(self, request, *args, **kwargs):
         url_query = self.request.query_params
-        if 'report' not in url_query and 'theme' not in url_query:
+        if 'report' not in url_query:
             return Response({}, status=status.HTTP_204_NO_CONTENT)
-        serializer = self.serializer_class(self.queryset, many=True, context={'request': request})
-        return Response(serializer.data)
+        return super().list(request, *args, **kwargs)
 
 
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
