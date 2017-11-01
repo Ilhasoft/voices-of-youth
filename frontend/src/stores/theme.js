@@ -30,9 +30,15 @@ export default {
   },
 
   actions: {
-    getThemes({ commit }) {
+    getThemes({ commit }, obj) {
       const project = helper.getItem('project');
-      axios.get(`/api/themes?project=${project.id}${query}`).then((response) => {
+      let queryYear = '';
+
+      if (obj && (obj.yearStart && obj.yearEnd)) {
+        queryYear = `&year-start=${obj.yearStart}&year-end=${obj.yearEnd}`;
+      }
+
+      axios.get(`/api/themes?project=${project.id}${query}${queryYear}`).then((response) => {
         commit(TYPES.SET_THEMES, response.data);
       }).catch((error) => {
         throw new Error(error);

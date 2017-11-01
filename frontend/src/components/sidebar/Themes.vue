@@ -7,9 +7,9 @@
             <div class="field">
               <div class="control">
                 <div class="select is-info">
-                  <select>
-                    <option>2017</option>
-                    <option>2016</option>
+                  <select v-model="yearStart" @change="getThemesByPeriod">
+                    <option value=""></option>
+                    <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
                   </select>
                 </div>
               </div>
@@ -24,9 +24,9 @@
             <div class="field">
               <div class="control">
                 <div class="select is-info">
-                  <select>
-                    <option>2017</option>
-                    <option>2016</option>
+                  <select v-model="yearEnd" @change="getThemesByPeriod">
+                    <option value=""></option>
+                    <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
                   </select>
                 </div>
               </div>
@@ -83,6 +83,8 @@ export default {
   data() {
     return {
       isCheckedAll: false,
+      yearStart: '',
+      yearEnd: '',
     };
   },
 
@@ -93,6 +95,7 @@ export default {
   computed: {
     ...mapGetters({
       themesList: 'getThemes',
+      currentProject: 'getCurrentProject',
     }),
   },
 
@@ -135,6 +138,15 @@ export default {
       }).then(() => {
         this.getTheme(item.id);
       });
+    },
+
+    getThemesByPeriod() {
+      if (this.yearStart && this.yearEnd) {
+        this.getThemes({
+          yearStart: this.yearStart,
+          yearEnd: this.yearEnd,
+        });
+      }
     },
   },
 };
