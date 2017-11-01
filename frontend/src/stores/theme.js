@@ -11,6 +11,7 @@ export default {
     dateFrom: '',
     dateTo: '',
     theme: {},
+    lastReports: [],
   },
 
   getters: {
@@ -26,6 +27,10 @@ export default {
 
     [TYPES.SET_CURRENT_THEME](state, obj) {
       state.theme = obj;
+    },
+
+    [TYPES.SET_LAST_REPORTS](state, obj) {
+      state.lastReports = obj;
     },
   },
 
@@ -49,6 +54,10 @@ export default {
       const project = helper.getItem('project');
       axios.get(`/api/themes/${obj}?project=${project.id}${query}`).then((response) => {
         commit(TYPES.SET_CURRENT_THEME, response.data);
+      }).then(() => {
+        axios.get(`/api/reports/?project=${project.id}&theme=${obj}&limit=10`).then((response) => {
+          console.log(response.data);
+        });
       }).catch((error) => {
         throw new Error(error);
       });
