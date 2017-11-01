@@ -1,7 +1,9 @@
 from django.contrib import admin
 
-from voicesofyouth.translation.models import TranslatableModel
+from voicesofyouth.translation.admin_filter import ProjectListFilter
+from voicesofyouth.translation.admin_filter import ThemeListFilter
 from voicesofyouth.translation.models import TranslatableField
+from voicesofyouth.translation.models import TranslatableModel
 from voicesofyouth.translation.models import Translation
 
 
@@ -18,7 +20,7 @@ class TranslatableFieldAdmin(admin.ModelAdmin):
 class TranslationAdmin(admin.ModelAdmin):
     list_display = ('field', 'language', 'content_object', 'translation')
     list_editable = ('language', 'translation')
-    list_filter = ('language', 'field')
+    list_filter = (ProjectListFilter, ThemeListFilter, 'language', 'field')
 
 
 admin.site.register(TranslatableModel, TranstableModelAdmin)

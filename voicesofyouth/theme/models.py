@@ -36,7 +36,7 @@ class Theme(BaseModel):
         tags: Tags of the theme.
         color: Color used for this theme in front end.
     """
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='themes')
     bounds = gismodels.PolygonField()
     name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
