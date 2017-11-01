@@ -6,8 +6,8 @@ from voicesofyouth.project.models import Project
 
 
 class ProjectSerializer(VoySerializer):
-
     languages = serializers.SerializerMethodField()
+    years = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -21,7 +21,11 @@ class ProjectSerializer(VoySerializer):
             'thumbnail',
             'window_title',
             'languages',
+            'years'
         )
 
     def get_languages(self, obj):
         return {next(filter(lambda l: t.language in l, settings.LANGUAGES)) for t in obj.translations.all()}
+
+    def get_years(self, obj):
+        return Project.objects.dates('created_on', 'year')
