@@ -1,8 +1,9 @@
 from django_filters import rest_framework as filters
 
 from voicesofyouth.report.models import Report
-from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportComment
+from voicesofyouth.report.models import ReportFile
+from voicesofyouth.report.models import ReportURL
 
 
 class ReportFilter(filters.FilterSet):
@@ -22,8 +23,20 @@ class ReportFileFilter(filters.FilterSet):
 
 
 class ReportCommentFilter(filters.FilterSet):
-    theme = filters.NumberFilter(name='report__theme')
-
     class Meta:
         model = ReportComment
-        fields = ('theme', 'report')
+        fields = ('report', )
+
+
+class ReportURLFilter(filters.FilterSet):
+    class Meta:
+        model = ReportURL
+        fields = ('report', )
+
+
+class ReportMediaFilter(filters.FilterSet):
+    report = filters.NumberFilter(name='id')
+
+    class Meta:
+        model = Report
+        fields = ('id', )
