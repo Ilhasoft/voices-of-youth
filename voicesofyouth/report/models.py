@@ -61,7 +61,11 @@ class Report(BaseModel):
     def project(self):
         return self.theme.project
 
-    # @property
+    @property
+    def last_image(self):
+        return self.files.filter(media_type=FILE_TYPE_IMAGE).last()
+
+            # @property
     # def report_urls(self):
     #     return self.urls.all()
 
@@ -76,7 +80,6 @@ class ReportComment(BaseModel):
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
     author = models.ForeignKey(User)
     creation_timestamp = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return self.text
