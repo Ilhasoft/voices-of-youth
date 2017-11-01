@@ -23,6 +23,13 @@ class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Report.objects.all()
     filter_class = ReportFilter
 
+    def list(self, request, *args, **kwargs):
+        limit = int(request.GET.get('limit', 0))
+        serializer = self.serializer_class(self.queryset, context={'request': request}, many=True)
+        if limit:
+            serializer = self.serializer_class(self.queryset[:limit], context={'request': request}, many=True)
+        return Response(serializer.data)
+
     def retrieve(self, request, pk=None):
         lang = self.request.query_params.get('lang', '').strip()
         report = get_object_or_404(self.queryset, pk=pk)
