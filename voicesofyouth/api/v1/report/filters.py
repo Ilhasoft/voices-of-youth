@@ -7,11 +7,12 @@ from voicesofyouth.report.models import ReportURL
 
 
 class ReportFilter(filters.FilterSet):
-    project = filters.NumberFilter(name='theme__project__id')
+    project = filters.NumberFilter(name='theme__project__id', help_text='Filter reports by project id.')
+    theme = filters.NumberFilter(name='theme__id', help_text='Filter reports by theme id.')
 
     class Meta:
         model = Report
-        fields = ('theme', )
+        fields = ('theme', 'project')
 
 
 class ReportFileFilter(filters.FilterSet):
