@@ -40,7 +40,7 @@
           <div class="column">
             <ul>
               <li :key="key" v-for="(report, key) in lastReports">
-                <img :src="report.last_image.file" alt="">
+                <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="">
               </li>
             </ul>
           </div>
@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import bus from '../../helper/bus';
 
 export default {
   name: 'Theme',
@@ -64,6 +65,11 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'setSideBarConfigs',
+      'getReport',
+    ]),
+
     formatDate() {
       const date = new Date(this.item.created_on);
       return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
@@ -75,6 +81,18 @@ export default {
 
     formatFontColor() {
       return `color: #${this.item.color} !important;`;
+    },
+
+    openReport(item) {
+      this.setSideBarConfigs({
+        title: item.name,
+        tabActived: 'ReportDetail',
+        backButton: true,
+        backTo: 'Theme',
+        isActived: true,
+      }).then(() => {
+        bus.$emit('openReport', item);
+      });
     },
   },
 };
@@ -126,6 +144,7 @@ export default {
       width: 100px;
       height: 100px;
       margin: 0px 5px 5px 5px;
+      cursor: pointer;
     }
   }
 

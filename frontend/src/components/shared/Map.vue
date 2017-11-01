@@ -13,6 +13,7 @@ import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
 import markerPixel from '../../assets/img/pixel.png';
+import bus from '../../helper/bus';
 
 export default {
   name: 'Map',
@@ -39,6 +40,11 @@ export default {
   mounted() {
     this.$refs.map.mapObject.zoomControl.remove();
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
+
+    bus.$on('openReport', (item) => {
+      this.$refs.map.mapObject.setView(item.location);
+      this.getReport(item.id);
+    });
   },
 
   computed: mapState({

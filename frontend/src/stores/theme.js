@@ -31,7 +31,7 @@ export default {
     },
 
     [TYPES.SET_LAST_REPORTS](state, obj) {
-      state.lastReports = obj;
+      state.lastReports = obj.filter(item => item.last_image !== null);
     },
   },
 
