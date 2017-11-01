@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
+    'crispy_forms',
     'taggit',
     'voicesofyouth.core',
     'voicesofyouth.user',

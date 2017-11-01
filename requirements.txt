@@ -14,3 +14,4 @@ django-resized
 django-taggit
 gdal
 django-filter
+django-crispy-forms
