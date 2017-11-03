@@ -1,15 +1,8 @@
-import uuid
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
-from unipath import Path
-
-from voicesofyouth.core.utils import resize_image
+from django.utils.functional import cached_property
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
@@ -53,7 +46,7 @@ class VoyUser(AbstractUser):
     language = models.CharField(max_length=90, choices=settings.LANGUAGES, default='en')
     avatar = models.IntegerField(choices=AVATARS, default=DEFAULT_AVATAR)
 
-    @property
+    @cached_property
     def is_mapper(self):
         return self.groups.filter(name__contains='- mappers').exists()
 
