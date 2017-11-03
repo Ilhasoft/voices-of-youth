@@ -55,7 +55,8 @@ export default {
       const locations = Object.keys(reports).map((key, index) => {
         const item = {
           id: reports[index].id,
-          latlng: L.latLng(reports[index].location[0], reports[index].location[1]),
+          latlng: L.latLng(reports[index].location.coordinates[0],
+                           reports[index].location.coordinates[1]),
           text: reports[index].name,
           color: reports[index].theme_color,
           icon: L.icon({
