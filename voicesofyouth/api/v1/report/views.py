@@ -33,13 +33,6 @@ class ReportsViewSet(viewsets.ModelViewSet):
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
-    def retrieve(self, request, pk=None):
-        lang = self.request.query_params.get('lang', '').strip()
-        report = get_object_or_404(self.queryset, pk=pk)
-        Translation.objects.translate_object(report, lang)
-        serializer = self.serializer_class(report, context={'request': request})
-        return Response(serializer.data)
-
 
 class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
