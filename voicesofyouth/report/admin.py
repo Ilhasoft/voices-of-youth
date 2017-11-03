@@ -37,7 +37,7 @@ class ReportAdmin(BaseModelAdmin):
 
 
 class ReportCommentAdmin(BaseModelAdmin):
-    list_display = ('text', 'author')
+    list_display = ('text', 'created_by')
     list_filter = ('report__theme__project', ThemeListFilter)
 
 

@@ -26,7 +26,7 @@ class ReportsPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
-class ReportsViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all()
