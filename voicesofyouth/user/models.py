@@ -37,6 +37,10 @@ class VoyUser(AbstractUser):
                                null=True,
                                blank=True)
 
+    @property
+    def is_mapper(self):
+        return self.groups.filter(name__contains='- mappers').exists()
+
 # We put this code here to centralize all references to User model.
 User = get_user_model()
 

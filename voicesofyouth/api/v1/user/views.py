@@ -17,4 +17,6 @@ class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        return User.objects.all().filter(is_active=True)
+        token = self.request.query_params.get('auth_token')
+        if token:
+            return User.objects.filter(auth_token=token)
