@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,400italic);
+@import url(//fonts.googleapis.com/css?family=Roboto:300,400,600,400italic);
 /*!
  *
  * Angle - Bootstrap Admin App + jQuery
@@ -337,7 +337,7 @@ fieldset .form-group {
    Component: typo.less
  ========================================================================== */
 body {
-  font-family: "Source Sans Pro", sans-serif;
+  font-family: "Roboto", sans-serif;;
   color: #656565;
   background-color: #f5f7fa;
 }
