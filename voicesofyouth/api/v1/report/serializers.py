@@ -70,7 +70,7 @@ class ReportCommentsSerializer(VoySerializer):
         )
 
     def get_author(self, obj):
-        return UserSerializer(obj.created_by).data
+        return UserSerializer(obj.created_by, context={'request': self.context.get('request')}).data
 
 
 class ReportURLsSerializer(VoySerializer):
