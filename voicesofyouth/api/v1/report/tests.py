@@ -89,3 +89,14 @@ class ReportTestCase(APITestCase):
         self.assertGreater(len(returned_data.pop('created_on')), 0)
         self.assertGreater(len(returned_data.pop('theme_color')), 0)
         self.assertDictEqual(returned_data, expected_data)
+
+    def test_patch_report(self):
+        """
+        We can patch a report?
+        """
+        self.assertEqual(Report.objects.count(), 1)
+        response = self.client.patch(self.url_detail, data={'name': 'Patched name'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Report.objects.count(), 1)
+        self.report.refresh_from_db()
+        self.assertEqual(self.report.name, 'Patched name')
