@@ -52,7 +52,12 @@ export default {
         commit(TYPES.SET_CURRENT_PROJECT, obj);
         localStorage.setItem('project', JSON.stringify(obj));
       } else {
-        commit(TYPES.SET_CURRENT_PROJECT, JSON.parse(localStorage.getItem('project')));
+        const project = JSON.parse(localStorage.getItem('project'));
+        if (project) {
+          commit(TYPES.SET_CURRENT_PROJECT, JSON.parse(localStorage.getItem('project')));
+        } else {
+          window.location = '/';
+        }
       }
     },
 

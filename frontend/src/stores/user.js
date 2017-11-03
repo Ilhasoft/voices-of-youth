@@ -1,10 +1,11 @@
 import axios from 'axios';
-// import { urlAPI } from '../helper';
+import * as TYPES from './types';
 
 export default {
   state: {
     userData: {},
     isLogged: false,
+    loginError: {},
   },
 
   getters: {
@@ -12,51 +13,54 @@ export default {
     userIsLogged: state => state.isLogged,
   },
 
+  /* eslint-disable no-param-reassign */
+  mutations: {
+    [TYPES.SET_LOGIN_ERROR](state, obj) {
+      state.loginError = obj;
+    },
+
+    [TYPES.SET_USER_DATA](state, obj) {
+      state.userData = obj.userData;
+      state.isLogged = obj.isLogged;
+    },
+  },
+
   actions: {
+    setCurrentUser({ commit }) {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        commit(TYPES.SET_USER_DATA, {
+          userData: userData[0],
+          isLogged: true,
+        });
+      }
+    },
+
     executeLogin({ commit }, obj) {
-      // const data = JSON.stringify({
-      //   username: obj.username,
-      //   password: obj.password,
-      // });
-
-      // const xhr = new XMLHttpRequest();
-      // xhr.withCredentials = true;
-
-      // xhr.addEventListener('readystatechange', () => {
-      //   if (this.readyState === 4) {
-      //     console.log(this.responseText);
-      //   }
-      // });
-
-      // xhr.open('POST', 'http://192.168.0.155:8000/api/get_auth_token/');
-      // xhr.setRequestHeader('content-type', 'application/json');
-      // xhr.send(data);
-
-      axios.post('http://192.168.0.155:8000/api/get_auth_token/', {
+      return axios.post('/api/get_auth_token/', {
         username: obj.username,
         password: obj.password,
       }).then((response) => {
-        console.log(response.data);
+        const token = response.data.token;
+        localStorage.setItem('token', JSON.stringify(token));
+        return token;
+      }).then((token) => {
+        const user = axios.get(`/api/users/?auth_token=${token}`).then((response) => {
+          localStorage.setItem('user', JSON.stringify(response.data));
+          return response.data;
+        });
+        return user;
       }).catch((error) => {
-        throw new Error(error);
+        commit(TYPES.SET_LOGIN_ERROR, error.message);
+        return error.message;
       });
+    },
 
-      // axios.request({
-      //   url: 'http://localhost:8000/api/get_auth_token/',
-      //   method: 'post',
-      //   data: {
-      //     username: obj.username,
-      //     password: obj.password,
-      //   },
-      //   headers: {
-      //     'content-type': 'application/json',
-      //   },
-      // }).then((response) => {
-      //   console.log(response.data);
-      //   // commit(TYPES.SET_THEMES, response.data);
-      // }).catch((error) => {
-      //   throw new Error(error);
-      // });
+    executeLogout({ commit }) {
+      commit(TYPES.SET_USER_DATA, {
+        userData: {},
+        isLogged: false,
+      });
     },
   },
 };

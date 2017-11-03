@@ -150,8 +150,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import HeaderIndex from '../header/Index';
+import router from '../../router/';
 
 export default {
   name: 'Login',
@@ -164,10 +165,16 @@ export default {
       isAccepted: false,
 
       login: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: 'Un1c3f@@',
       },
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      currentProject: 'getCurrentProject',
+    }),
   },
 
   methods: {
@@ -188,6 +195,8 @@ export default {
       this.executeLogin({
         username: this.login.username,
         password: this.login.password,
+      }).then(() => {
+        router.push({ name: 'project', params: { path: this.currentProject.path } });
       });
     },
   },

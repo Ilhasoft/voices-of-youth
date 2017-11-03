@@ -6,18 +6,18 @@
     
     <div v-if="userIsLogged">
       <a href="">
-        <img class="avatar" src="./../../assets/img/header-avatar.png">
+        <img class="avatar" :src="user.avatar">
       </a>
 
       <div class="profile-item" :class="[isVisible ? 'fade-in' : 'fade-out']">
         <div class="item">
           <div class="item-left">
-            <img src="./../../assets/img/header-avatar.png">
+            <img :src="user.avatar">
           </div>
 
           <div class="item-right">
-            Betty_16
-            <small>aaaa@dsfds.com</small>
+            {{ user.first_name }}
+            <small>{{ user.username }}</small>
           </div>
         </div>
 
@@ -29,7 +29,7 @@
 
         <div class="item logout">
           <div class="item-right">
-            Logout
+            <a href="" @click.prevent="logout()">Logout</a>
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Account',
@@ -59,7 +59,18 @@ export default {
   computed: {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
+      user: 'getUserData',
     }),
+  },
+
+  methods: {
+    ...mapActions([
+      'executeLogout',
+    ]),
+
+    logout() {
+      this.executeLogout();
+    },
   },
 };
 </script>
@@ -68,6 +79,7 @@ export default {
 .profile-box {
   height: 66px;
   margin: 5px 30px;
+  z-index: 1;
 
   .avatar {
     width: 43px;

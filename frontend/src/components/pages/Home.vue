@@ -27,10 +27,7 @@
         <div class="column is-marginless p-top">
           <h2>{{ item.name }}</h2>
           <small>{{ item.description }}</small>
-          <router-link
-            :to="{ name: 'project', params: { path: item.path }}"
-            @click.native="openProject(item)"
-            class="button">See more</router-link>
+          <a href="" @click.prevent="openProject(item)" class="button">See more</a>
         </div>
       </div>
     </div>
@@ -39,6 +36,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import router from '../../router/';
 
 export default {
   name: 'Home',
@@ -61,8 +59,10 @@ export default {
     ]),
 
     openProject(item) {
-      this.setCurrentProject(item);
-      this.showDisclaimerProject(true);
+      this.setCurrentProject(item).then(() => {
+        router.push({ name: 'project', params: { path: item.path } });
+        this.showDisclaimerProject(true);
+      });
     },
   },
 

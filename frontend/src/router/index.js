@@ -31,6 +31,7 @@ export default new Router({
       beforeEnter: (to, from, next) => {
         stores.dispatch('setProjects');
         stores.dispatch('setCurrentProject');
+        stores.dispatch('setCurrentUser');
 
         stores.dispatch('updateHeaderConfig', {
           showMenu: true,
