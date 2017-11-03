@@ -100,3 +100,18 @@ class ReportTestCase(APITestCase):
         self.assertEqual(Report.objects.count(), 1)
         self.report.refresh_from_db()
         self.assertEqual(self.report.name, 'Patched name')
+
+    def test_put_report(self):
+        """
+        We can put a report?
+        """
+        self.assertEqual(Report.objects.count(), 1)
+        data = self.client.get(self.url_detail).data
+        data['name'] = 'Patched name'
+        data['description'] = 'Some description'
+        response = self.client.put(self.url_detail, data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Report.objects.count(), 1)
+        self.report.refresh_from_db()
+        self.assertEqual(self.report.name, 'Patched name')
+        self.assertEqual(self.report.description, 'Some description')
