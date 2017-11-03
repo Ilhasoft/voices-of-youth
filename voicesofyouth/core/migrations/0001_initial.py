@@ -32,3 +32,4 @@ class Migration(migrations.Migration):
         migrations.RunPython(create_protected_groups),
         migrations.RunPython(create_super_user)
     ]
+

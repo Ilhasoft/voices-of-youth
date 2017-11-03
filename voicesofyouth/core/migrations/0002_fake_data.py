@@ -85,7 +85,7 @@ def create_dev_data(apps, schema_editor):
                     'crazy',
                     'anything')
             fake_thumbnail = ImageFile(image)
-            user = mommy.make(User, username='faker', avatar=fake_thumbnail, first_name='Fake', last_name='User')
+            user = mommy.make(User, username='faker', avatar=random.randint(0, 22), first_name='Fake', last_name='User')
             for x in range(random.randint(5, 10)):
                 project = mommy.make(Project,
                                      name=f'Project {x}',
@@ -128,13 +128,14 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0001_initial'),
         ('translation', '0001_initial'),
-        ('project', '0002_auto_20171026_1610'),
-        ('theme', '0002_auto_20171026_1610'),
+        ('project', '0002_auto_20171103_1505'),
+        ('theme', '0002_auto_20171103_1505'),
         ('tag', '0001_initial'),
-        ('report', '0010_auto_20171103_1143'),
+        ('report', '0002_auto_20171103_1505'),
         ('user', '0001_initial'),
     ]
 
     operations = [
         migrations.RunPython(create_dev_data)
     ]
+
