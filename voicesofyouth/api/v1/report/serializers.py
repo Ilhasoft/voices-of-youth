@@ -12,6 +12,8 @@ from voicesofyouth.theme.models import Theme
 
 
 class ReportFilesSerializer(VoySerializer):
+    created_by = UserSerializer()
+
     class Meta:
         model = ReportFile
         fields = (
@@ -19,6 +21,7 @@ class ReportFilesSerializer(VoySerializer):
             'description',
             'media_type',
             'file',
+            'created_by',
         )
 
 
