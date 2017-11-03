@@ -115,3 +115,12 @@ class ReportTestCase(APITestCase):
         self.report.refresh_from_db()
         self.assertEqual(self.report.name, 'Patched name')
         self.assertEqual(self.report.description, 'Some description')
+
+    def test_delete_report(self):
+        """
+        We can delete a report?
+        """
+        self.assertEqual(Report.objects.count(), 1)
+        response = self.client.delete(self.url_detail)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Report.objects.count(), 0)
