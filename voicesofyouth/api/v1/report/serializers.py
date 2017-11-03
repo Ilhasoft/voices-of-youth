@@ -28,7 +28,6 @@ class ReportSerializer(VoySerializer):
         many=True
     )
     theme = serializers.PrimaryKeyRelatedField(queryset=Theme.objects.all(), required=True)
-    theme_color = serializers.SerializerMethodField()
     last_image = ReportFilesSerializer(required=False, read_only=True)
     created_by = UserSerializer(read_only=True)
     can_receive_comments = serializers.BooleanField(read_only=True)
@@ -52,9 +51,6 @@ class ReportSerializer(VoySerializer):
             'created_by',
             'last_image'
         )
-
-    def get_theme_color(self, obj):
-        return obj.theme.color
 
 
 class ReportCommentsSerializer(VoySerializer):

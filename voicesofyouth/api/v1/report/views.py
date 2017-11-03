@@ -1,8 +1,12 @@
 from rest_framework import permissions, viewsets
 from rest_framework import status
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+
+from django_filters import rest_framework as filters
+from rest_framework_word_filter.filter import FullWordSearchFilter
 
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
 from voicesofyouth.api.v1.report.filters import ReportFileFilter
@@ -20,7 +24,11 @@ from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.translation.models import Translation
 
-
+# 1725 - first version
+# 1413 - select_related(theme)
+# 1060 - select_related(theme, created_by)
+# 713 - prefetch_related(theme, created_by)
+# 363 - prefetch_related(theme, created_by, files, tags)
 class ReportsPagination(PageNumberPagination):
     page_size = None
     page_size_query_param = 'page_size'
@@ -29,7 +37,7 @@ class ReportsPagination(PageNumberPagination):
 class ReportsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
-    queryset = Report.objects.all()
+    queryset = Report.objects.prefetch_related('theme', 'created_by', 'files', 'tags').all()
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
@@ -51,7 +59,7 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
-    queryset = ReportFile.objects.all()
+    queryset = ReportFile.objects.prefetch_related('report', 'created_by').all()
     filter_class = ReportFileFilter
     pagination_class = ReportFilesResultsSetPagination
 

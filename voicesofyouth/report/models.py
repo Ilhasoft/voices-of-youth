@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.contrib.gis.db import models as gismodels
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 
@@ -56,21 +57,17 @@ class Report(BaseModel):
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)
 
-    @property
+    @cached_property
     def project(self):
         return self.theme.project
 
-    @property
+    @cached_property
     def last_image(self):
         return self.files.filter(media_type=FILE_TYPE_IMAGE).last()
 
-            # @property
-    # def report_urls(self):
-    #     return self.urls.all()
-
-    # @property
-    # def report_files(self):
-    #     return self.files.all()
+    @cached_property
+    def theme_color(self):
+        return self.theme.color
 
 
 class ReportComment(BaseModel):

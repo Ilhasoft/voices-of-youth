@@ -29,8 +29,9 @@ SECRET_KEY = config('SECRET_KEY', default='%3)=j$(#mt8!$t+kps2y8&2v*x63lb%hjjyw6
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG_TOOLBAR = config('DEBUG_TOOLBAR', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.155']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_gis',
     'rest_framework.authtoken',
+    'rest_framework_word_filter',
     'corsheaders',
     'django_filters',
     'crispy_forms',
@@ -65,11 +67,13 @@ if DEBUG:
     INSTALLED_APPS.append('django_extensions')
     INSTALLED_APPS.append('model_mommy')
     INSTALLED_APPS.append('mommy_spatial_generators')
+    INTERNAL_IPS = ('127.0.0.1', 'localhost')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.http.ConditionalGetMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -77,6 +81,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG_TOOLBAR:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:8000',
@@ -116,6 +124,11 @@ DEFAULT_DATABASE = config('DEFAULT_DATABASE', default='postgis://postgres:develo
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(default=DEFAULT_DATABASE)
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
