@@ -56,7 +56,7 @@ class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
 class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
-    queryset = ReportFile.objects.prefetch_related('report', 'created_by').all()
+    queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('id').all()
     filter_class = ReportFileFilter
     pagination_class = ReportFilesResultsSetPagination
 
