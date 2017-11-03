@@ -7,15 +7,19 @@ from voicesofyouth.report.models import ReportURL
 
 
 class ReportFilter(filters.FilterSet):
-    project = filters.NumberFilter(name='theme__project__id')
+    project = filters.NumberFilter(name='theme__project__id', help_text='Filter reports by project id.')
+    theme = filters.NumberFilter(name='theme__id', help_text='Filter reports by theme id.')
 
     class Meta:
         model = Report
-        fields = ('theme', )
+        fields = ('theme', 'project')
 
 
 class ReportFileFilter(filters.FilterSet):
-    theme = filters.NumberFilter(name='report__theme')
+    theme = filters.NumberFilter(name='report__theme',
+                                 help_text='Get all files from the all reports linked with the theme id.')
+    report = filters.NumberFilter(name='id',
+                                  help_text='Get all files from the reports id.')
 
     class Meta:
         model = ReportFile
@@ -23,20 +27,24 @@ class ReportFileFilter(filters.FilterSet):
 
 
 class ReportCommentFilter(filters.FilterSet):
+    report = filters.NumberFilter(name='id', help_text='Get all comments from the report id.')
+
     class Meta:
         model = ReportComment
         fields = ('report', )
 
 
 class ReportURLFilter(filters.FilterSet):
+    report = filters.NumberFilter(name='report', help_text='Get all URL\'s from the report id.')
+
     class Meta:
         model = ReportURL
         fields = ('report', )
 
 
 class ReportMediaFilter(filters.FilterSet):
-    report = filters.NumberFilter(name='id')
+    report = filters.NumberFilter(name='id', help_text='Get all medias(files and URL\'s) from the report id.')
 
     class Meta:
         model = Report
-        fields = ('id', )
+        fields = ('report', )

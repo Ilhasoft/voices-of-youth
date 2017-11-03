@@ -22,7 +22,7 @@ def upload_to(instance, filename):
     '''
     filename = Path(filename)
     UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename.name)
-    return f'user/{instance.username}/avatar/{UUID}{filename.ext}'
+    return f'users/{instance.username}/avatar/{UUID}{filename.ext}'
 
 
 class VoyUser(AbstractUser):
@@ -36,6 +36,10 @@ class VoyUser(AbstractUser):
                                upload_to=upload_to,
                                null=True,
                                blank=True)
+
+    @property
+    def is_mapper(self):
+        return self.groups.filter(name__contains='- mappers').exists()
 
 # We put this code here to centralize all references to User model.
 User = get_user_model()
