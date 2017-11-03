@@ -1,4 +1,5 @@
 voicesofyouth/media/*
+!voicesofyouth/media/users/avatars/
 
 # Created by https://www.gitignore.io/api/git,node,python,django,pycharm
 
@@ -9,7 +10,7 @@ voicesofyouth/media/*
 __pycache__/
 local_settings.py
 db.sqlite3
-media
+media/*
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -260,3 +261,4 @@ venv.bak/
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+dev_watcher.sh
