@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'smartmin',
     'rest_framework',
+    'rest_framework_gis',
     'rest_framework.authtoken',
     'django_filters',
     'crispy_forms',

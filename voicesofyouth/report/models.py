@@ -52,7 +52,6 @@ class Report(BaseModel):
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
     tags = TaggableManager(through=Tag, blank=True)
-    author = models.ForeignKey(User)
 
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)
@@ -78,7 +77,6 @@ class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(null=False, blank=False, verbose_name=_('Comment'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
-    author = models.ForeignKey(User)
     creation_timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
