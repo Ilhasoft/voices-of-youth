@@ -42,13 +42,6 @@ AVATARS = (
     (22, f'{settings.MEDIA_URL}users/avatars/group-22{AVATAR_FILE_EXTENSION}'),
     (23, f'{settings.MEDIA_URL}users/avatars/group-23{AVATAR_FILE_EXTENSION}'),
 )
-def upload_to(instance, filename):
-    '''
-    Calculate user avatar upload path dynamically.
-    '''
-    filename = Path(filename)
-    UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename.name)
-    return f'users/{instance.username}/avatar/{UUID}{filename.ext}'
 
 
 class VoyUser(AbstractUser):
@@ -66,10 +59,3 @@ class VoyUser(AbstractUser):
 
 # We put this code here to centralize all references to User model.
 User = get_user_model()
-
-
-@receiver(post_save, sender=VoyUser)
-def resize_avatar(sender, instance, **kwargs):
-    if instance.avatar:
-        size = 50, 50
-        resize_image(instance.avatar.file.name, size)
