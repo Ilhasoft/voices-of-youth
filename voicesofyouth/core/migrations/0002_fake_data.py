@@ -117,7 +117,6 @@ def create_dev_data(apps, schema_editor):
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
                                        report=report,
-                                       author=user,
                                        created_by=user,
                                        modified_by=user)
                         for _ in range(random.randint(1, 3)):
@@ -132,7 +131,7 @@ class Migration(migrations.Migration):
         ('project', '0002_auto_20171026_1610'),
         ('theme', '0002_auto_20171026_1610'),
         ('tag', '0001_initial'),
-        ('report', '0009_auto_20171027_1440'),
+        ('report', '0010_auto_20171103_1143'),
         ('user', '0001_initial'),
     ]
 
