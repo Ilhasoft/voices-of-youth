@@ -60,7 +60,7 @@ export default new Router({
 
     {
       path: '/login',
-      name: 'Login',
+      name: 'login',
       component: LoginPage,
       beforeEnter: (to, from, next) => {
         stores.dispatch('updateHeaderConfig', {

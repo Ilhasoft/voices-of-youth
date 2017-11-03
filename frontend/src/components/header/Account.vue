@@ -36,9 +36,10 @@
     </div>
 
     <div v-else>
-      <a class="button btn-login" href="">
-        <span>Login</span>
-      </a>
+      <router-link
+        :to="{ name: 'login' }"
+        class="button btn-login">Login
+      </router-link>
     </div>
   </div>
 </template>

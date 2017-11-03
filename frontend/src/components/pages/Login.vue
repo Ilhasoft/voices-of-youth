@@ -21,13 +21,13 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="Name"/>
+                  <input type="text" class="input" name="name" value="" placeholder="Name" v-model="login.username"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="Password"/>
+                  <input type="password" class="input" name="password" placeholder="Password" v-model="login.password"/>
                 </div>
               </div>
 
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="column has-text-center">
-                  <button type="submit" class="btn button l-submit">Login</button>
+                  <button type="submit" @click.prevent="execLogin()" class="btn button l-submit">Login</button>
                 </div>
               </div>
             </div>
@@ -150,6 +150,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import HeaderIndex from '../header/Index';
 
 export default {
@@ -161,10 +162,19 @@ export default {
     return {
       isOpened: false,
       isAccepted: false,
+
+      login: {
+        username: '',
+        password: '',
+      },
     };
   },
 
   methods: {
+    ...mapActions([
+      'executeLogin',
+    ]),
+
     openTerms() {
       this.isOpened = !this.isOpened;
     },
@@ -172,6 +182,13 @@ export default {
     closeTerms(value) {
       this.isOpened = false;
       this.isAccepted = value;
+    },
+
+    execLogin() {
+      this.executeLogin({
+        username: this.login.username,
+        password: this.login.password,
+      });
     },
   },
 };
