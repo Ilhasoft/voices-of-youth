@@ -5,9 +5,6 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from django_filters import rest_framework as filters
-from rest_framework_word_filter.filter import FullWordSearchFilter
-
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
 from voicesofyouth.api.v1.report.filters import ReportFileFilter
 from voicesofyouth.api.v1.report.filters import ReportFilter
