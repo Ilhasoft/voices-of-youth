@@ -22,7 +22,7 @@ def upload_to(instance, filename):
     '''
     filename = Path(filename)
     UUID = uuid.uuid5(uuid.NAMESPACE_OID, filename.name)
-    return f'user/{instance.username}/avatar/{UUID}{filename.ext}'
+    return f'users/{instance.username}/avatar/{UUID}{filename.ext}'
 
 
 class VoyUser(AbstractUser):

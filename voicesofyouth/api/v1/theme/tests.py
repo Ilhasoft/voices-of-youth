@@ -112,7 +112,7 @@ class ThemeTestCase(APITestCase):
         """
         mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
         mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
-        response = self.client.get(f'{self.url_list}?year-start=2100')
+        response = self.client.get(f'{self.url_list}?year_start=2100')
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Theme.objects.count(), 14)
@@ -125,7 +125,7 @@ class ThemeTestCase(APITestCase):
         mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
         mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
         mommy.make(Theme, 2, created_on=datetime.datetime(year=2110, month=1, day=1))
-        response = self.client.get(f'{self.url_list}?year-start=2100&year-end=2105')
+        response = self.client.get(f'{self.url_list}?year_start=2100&year_end=2105')
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Theme.objects.count(), 16)
