@@ -131,7 +131,7 @@ class Migration(migrations.Migration):
         ('project', '0002_auto_20171103_1505'),
         ('theme', '0002_auto_20171103_1505'),
         ('tag', '0001_initial'),
-        ('report', '0002_auto_20171103_1505'),
+        ('report', '0003_remove_reportcomment_creation_timestamp'),
         ('user', '0001_initial'),
     ]
 
