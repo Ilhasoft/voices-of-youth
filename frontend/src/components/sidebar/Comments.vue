@@ -15,11 +15,11 @@
       <div class="form">
         <div class="columns is-marginless fields">
           <div class="column m-auto">
-            <textarea name="" id="" cols="30" rows="10"></textarea>
+            <textarea name="" id="" cols="30" rows="10" v-model="comment"></textarea>
           </div>
 
           <div class="column send is-2">
-            <a href="">Send</a>
+            <a href="" @click.prevent="saveComment()">Send</a>
           </div>
         </div>
       </div>
@@ -37,6 +37,12 @@ export default {
 
   components: { CommentItem, NavigationBar },
 
+  data() {
+    return {
+      comment: '',
+    };
+  },
+
   computed: {
     ...mapGetters({
       commentsList: 'getComments',
@@ -46,12 +52,19 @@ export default {
   methods: {
     ...mapActions([
       'setSideBarConfigs',
+      'saveNewComment',
     ]),
 
     openReport() {
       this.setSideBarConfigs({
         tabActived: 'ReportDetail',
         isActived: true,
+      });
+    },
+
+    saveComment() {
+      this.saveNewComment({
+        text: this.comment,
       });
     },
   },

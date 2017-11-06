@@ -1,11 +1,11 @@
 <template>
   <div class="columns item">
     <div class="column is-1">
-      <img v-if="comment.author.avatar" :src="comment.author.avatar" alt=""/>
+      <img v-if="comment.created_by.avatar" :src="comment.created_by.avatar" alt=""/>
     </div>
 
     <div class="column text">
-      <h1>{{ comment.author.first_name }}</h1>
+      <h1>{{ comment.created_by.first_name }}</h1>
       <small>Aug 03, 2017</small>
       <p>{{ comment.text }}</p>
     </div>
