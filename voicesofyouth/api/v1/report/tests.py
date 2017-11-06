@@ -20,7 +20,6 @@ class ReportTestCase(APITestCase):
     def setUpClass(cls):
         cls.url_list = reverse_lazy('reports-list')
         cls.admin_credentials = {'username': 'admin', 'password': 'Un1c3f@@'}
-        cls.user_credentials = {'username': 'user', 'password': 'user'}
         cls.admin = User.objects.get(username='admin')
 
     @classmethod
@@ -138,6 +137,8 @@ class TestReportComment(APITestCase):
         cls.url_list = reverse_lazy('report-comments-list')
         cls.report = mommy.make(Report)
         cls.url_detail = reverse_lazy('report-comments-detail', args=[cls.report.id, ])
+        cls.user = User.objects.create_user('user', password='MyP4ssw0rd', first_name='Authenticated', last_name='User')
+        cls.user_credentials = {'username': 'user', 'password': 'MyP4ssw0rd'}
 
     @classmethod
     def tearDownClass(cls):
@@ -158,7 +159,6 @@ class TestReportComment(APITestCase):
         returned_data = response.data
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         expected_data = {
-            'id': 1,
             'report': self.report.id,
             'created_by': OrderedDict([('id', 2),
                                        ('first_name', ''),
@@ -170,6 +170,39 @@ class TestReportComment(APITestCase):
                                        ]),
             'text': 'Report commentary.'
         }
+        self.assertGreater(returned_data.pop('id'), 0)
+        self.assertGreater(len(returned_data.pop('created_on')), 0)
+        self.assertGreater(len(returned_data.pop('modified_on')), 0)
+        self.assertDictEqual(returned_data, expected_data)
+
+    def test_create_authenticated_comment(self):
+        """
+        We can create a comment with authenticated user?
+        """
+        self.maxDiff = None
+        self.assertEqual(Report.objects.count(), 1)
+        self.assertEqual(ReportComment.objects.count(), 0)
+        data = {
+            'report': self.report.id,
+            'text': 'Report authenticated commentary.',
+        }
+        self.client.login(**self.user_credentials)
+        response = self.client.post(self.url_list, data=data)
+        returned_data = response.data
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        expected_data = {
+            'report': self.report.id,
+            'created_by': OrderedDict([('id', self.user.id),
+                                       ('first_name', self.user.first_name),
+                                       ('last_name', self.user.last_name),
+                                       ('language', 'en'),
+                                       ('avatar', f'http://testserver{self.user.get_avatar_display()}'),
+                                       ('username', self.user.username),
+                                       ('is_mapper', False)
+                                       ]),
+            'text': 'Report authenticated commentary.'
+        }
+        self.assertGreater(returned_data.pop('id'), 0)
         self.assertGreater(len(returned_data.pop('created_on')), 0)
         self.assertGreater(len(returned_data.pop('modified_on')), 0)
         self.assertDictEqual(returned_data, expected_data)
