@@ -10,7 +10,7 @@
       <p>{{ comment.text }}</p>
     </div>
 
-    <div class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
+    <div v-if="isLogged" class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more"></span>
       <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
         <p><a>Edit</a></p>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'CommentItem',
 
@@ -35,6 +37,13 @@ export default {
     return {
       isVisible: false,
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      currentUser: 'getUserData',
+      isLogged: 'userIsLogged',
+    }),
   },
 
   methods: {

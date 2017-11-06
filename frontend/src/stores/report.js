@@ -125,9 +125,12 @@ export default {
     },
 
     saveNewComment({ commit, dispatch }, obj) {
-      axios.post('/api/report-comments/', {
+      const token = helper.getItem('token');
+      return axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
+      }, {
+        headers: { authorization: `Token ${token}` },
       }).catch((error) => {
         throw new Error(error);
       });
