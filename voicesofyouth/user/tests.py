@@ -31,24 +31,18 @@ class VoyUserTestCase(TestCase):
         user = mommy.make(VoyUser, username='fake_username')
         self.assertEqual(str(user), 'fake_username')
 
-    def test_avatar_path(self):
+    def test_default_avatar(self):
         """
-        The avatar file is saved in correct place?
+        The default avatar is set correctly?
         """
-        test_img = Path(__file__).absolute().ancestor(2).child('test', 'assets', 'python.png')
-        UUID = uuid.uuid5(uuid.NAMESPACE_OID, test_img.name)
-        with self.settings(MEDIA_ROOT='/tmp'), open(test_img, 'rb') as image:
-            fake_avatar = ImageFile(image)
-            user = mommy.make(VoyUser, username='fake_username', avatar=fake_avatar)
-            self.assertEqual(user.avatar.file.name, f'/tmp/users/{user.username}/avatar/{UUID}.png')
+        with self.settings(MEDIA_ROOT='/tmp'):
+            user = mommy.make(VoyUser, username='fake_username')
+            self.assertEqual(user.get_avatar_display(), f'/media/users/avatars/group-1.png')
 
-    def test_avatar_resize(self):
+    def test_custom_avatar(self):
         """
-        The avatar file are resized when saving?
+        User can set a custom avatar?
         """
-        test_img = Path(__file__).absolute().ancestor(2).child('test', 'assets', 'python.png')
-        with self.settings(MEDIA_ROOT='/tmp'), open(test_img, 'rb') as image:
-            fake_avatar = ImageFile(image)
-            user = mommy.make(VoyUser, username='fake_username', avatar=fake_avatar)
-            resized = Image.open(user.avatar.file)
-            self.assertEqual(resized.size, (50, 50))
+        with self.settings(MEDIA_ROOT='/tmp'):
+            user = mommy.make(VoyUser, username='fake_username', avatar=20)
+            self.assertEqual(user.get_avatar_display(), f'/media/users/avatars/group-20.png')

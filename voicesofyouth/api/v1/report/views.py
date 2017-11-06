@@ -39,8 +39,8 @@ class ReportsViewSet(viewsets.ModelViewSet):
     pagination_class = ReportsPagination
 
 
-class ReportCommentsViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+class ReportCommentsViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.AllowAny, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.all()
     filter_class = ReportCommentFilter

@@ -57,16 +57,18 @@ class ReportSerializer(VoySerializer):
 
 
 class ReportCommentsSerializer(VoySerializer):
-    author = serializers.SerializerMethodField()
+    created_by = UserSerializer(read_only=True)
+    report = serializers.PrimaryKeyRelatedField(queryset=Report.objects.all(), required=True)
 
     class Meta:
         model = ReportComment
         fields = (
             'id',
             'text',
-            'author',
+            'created_by',
             'created_on',
-            'modified_on'
+            'modified_on',
+            'report'
         )
 
     def get_author(self, obj):

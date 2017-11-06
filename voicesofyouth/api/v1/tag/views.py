@@ -15,7 +15,7 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     User cannot create tags directly via API. Only super admins or local admins can do that.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    queryset = Tag.objects.all()
+    queryset = Tag.objects.prefetch_related('tag').all()
     serializer_class = TagSerializer
 
     def list(self, request, *args, **kwargs):
