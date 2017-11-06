@@ -9,6 +9,8 @@ from rest_framework_gis.fields import GeoJsonDict
 from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.user.models import AVATARS
+from voicesofyouth.user.models import DEFAULT_AVATAR
 from voicesofyouth.user.models import User
 
 
@@ -55,6 +57,7 @@ class ReportTestCase(APITestCase):
         """
         We can create a new report?
         """
+        self.maxDiff = None
         self.assertEqual(Report.objects.count(), 1)
         data = {
             'theme': self.theme.id,
@@ -78,8 +81,10 @@ class ReportTestCase(APITestCase):
                                        ('first_name', ''),
                                        ('last_name', ''),
                                        ('language', 'en'),
-                                       ('avatar', None),
-                                       ('username', 'admin')]),
+                                       ('avatar', f'http://testserver{AVATARS[DEFAULT_AVATAR - 1][1]}'),
+                                       ('username', 'admin'),
+                                       ('is_mapper', False)
+                                       ]),
             'editable': True,
             'visible': True,
             'description': 'Report description',
