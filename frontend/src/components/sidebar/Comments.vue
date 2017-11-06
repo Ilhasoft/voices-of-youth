@@ -46,6 +46,7 @@ export default {
   computed: {
     ...mapGetters({
       commentsList: 'getComments',
+      currentReport: 'getReport',
     }),
   },
 
@@ -53,6 +54,7 @@ export default {
     ...mapActions([
       'setSideBarConfigs',
       'saveNewComment',
+      'getComments',
     ]),
 
     openReport() {
@@ -63,9 +65,15 @@ export default {
     },
 
     saveComment() {
-      this.saveNewComment({
-        text: this.comment,
-      });
+      if (this.comment) {
+        this.saveNewComment({
+          text: this.comment,
+          report: this.currentReport.id,
+        }).then(() => {
+          this.comment = '';
+          this.getComments(this.currentReport.id);
+        });
+      }
     },
   },
 };

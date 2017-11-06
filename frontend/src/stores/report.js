@@ -124,13 +124,10 @@ export default {
       commit(TYPES.CLEAR_REPORTS_LIST);
     },
 
-    saveNewComment({ commit }, obj) {
+    saveNewComment({ commit, dispatch }, obj) {
       axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
-      }).then((response) => {
-        console.log(response.data);
-        // commit(TYPES.SET_REPORT_COMMENTS, response.data);
       }).catch((error) => {
         throw new Error(error);
       });
