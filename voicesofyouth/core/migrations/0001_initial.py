@@ -24,7 +24,7 @@ def create_super_user(apps, schema_editor):
 
 
 def create_guest_user(apps, schema_editor):
-    User.objects.create_user('guest', is_active=False)
+    User.objects.create_user('guest', first_name='Guest', is_active=False)
 
 
 class Migration(migrations.Migration):
