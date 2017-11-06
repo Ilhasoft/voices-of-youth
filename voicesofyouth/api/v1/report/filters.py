@@ -29,7 +29,7 @@ class ReportFileFilter(filters.FilterSet):
 
 
 class ReportCommentFilter(filters.FilterSet):
-    report = filters.NumberFilter(name='id', help_text='Get all comments from the report id.')
+    report = filters.NumberFilter(name='report__id', help_text='Get all comments from the report id.')
 
     class Meta:
         model = ReportComment
