@@ -23,6 +23,10 @@ def create_super_user(apps, schema_editor):
     User.objects.create_superuser('admin', 'fake@email.com', 'Un1c3f@@')
 
 
+def create_guest_user(apps, schema_editor):
+    User.objects.create_user('guest', is_active=False)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -30,6 +34,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunPython(create_protected_groups),
-        migrations.RunPython(create_super_user)
+        migrations.RunPython(create_super_user),
+        migrations.RunPython(create_guest_user)
     ]
 

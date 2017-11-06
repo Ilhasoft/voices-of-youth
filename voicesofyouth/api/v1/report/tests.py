@@ -8,6 +8,7 @@ from rest_framework_gis.fields import GeoJsonDict
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import ReportComment
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import AVATARS
 from voicesofyouth.user.models import DEFAULT_AVATAR
@@ -129,3 +130,46 @@ class ReportTestCase(APITestCase):
         response = self.client.delete(self.url_detail)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Report.objects.count(), 0)
+
+
+class TestReportComment(APITestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.url_list = reverse_lazy('report-comments-list')
+        cls.report = mommy.make(Report)
+        cls.url_detail = reverse_lazy('report-comments-detail', args=[cls.report.id, ])
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_create_anonymous_comment(self):
+        """
+        We can create an anonymous comment?
+        """
+        self.maxDiff = None
+        self.assertEqual(Report.objects.count(), 1)
+        self.assertEqual(ReportComment.objects.count(), 0)
+        data = {
+            'report': self.report.id,
+            'text': 'Report commentary.',
+        }
+        response = self.client.post(self.url_list, data=data)
+        returned_data = response.data
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        expected_data = {
+            'id': 1,
+            'report': self.report.id,
+            'created_by': OrderedDict([('id', 2),
+                                       ('first_name', ''),
+                                       ('last_name', ''),
+                                       ('language', 'en'),
+                                       ('avatar', f'http://testserver{AVATARS[DEFAULT_AVATAR - 1][1]}'),
+                                       ('username', 'guest'),
+                                       ('is_mapper', False)
+                                       ]),
+            'text': 'Report commentary.'
+        }
+        self.assertGreater(len(returned_data.pop('created_on')), 0)
+        self.assertGreater(len(returned_data.pop('modified_on')), 0)
+        self.assertDictEqual(returned_data, expected_data)
