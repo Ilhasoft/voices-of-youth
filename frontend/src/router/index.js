@@ -44,10 +44,14 @@ export default new Router({
     },
 
     {
-      path: '/project/:id/gallery',
-      name: 'Gallery',
+      path: '/project/:path/gallery',
+      name: 'gallery',
       component: GalleryPage,
       beforeEnter: (to, from, next) => {
+        stores.dispatch('setProjects');
+        stores.dispatch('setCurrentProject');
+        stores.dispatch('setCurrentUser');
+
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Gallery',
           showMenu: false,

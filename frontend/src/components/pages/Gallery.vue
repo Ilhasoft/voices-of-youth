@@ -2,110 +2,65 @@
   <div>
     <header-index/>
     <div class="page-container">
-      <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <ul class="pagination-list">
-          <li>
-            <a class="pagination-link" aria-label="Goto page 1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-                <g fill="none" fill-rule="evenodd" transform="translate(.58 .5)">
-                  <circle cx="10" cy="10" r="10" fill="#00CBFF"/>
-                  <path stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.599 14.18l-4.147-4.146L11.6 5.887"/>
-                </g>
-              </svg>
-            </a>
-          </li>
-          <li><a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">2</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">3</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">4</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">5</a></li>
-          <li><a class="pagination-link" aria-label="Goto page 45">6</a></li>
-          <li>
-            <a class="pagination-link" aria-label="Goto page 86">
-              <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-                <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 20.067 .5)">
-                  <circle cx="10" cy="10" r="10" fill="#00CBFF"/>
-                  <path stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.599 14.18l-4.147-4.146L11.6 5.887"/>
-                </g>
-              </svg>
-            </a>
-          </li>
-        </ul>
-      </nav>
 
-      <div class="columns" :key="key" v-for="(value, key) in items">
-        <div class="column" :key="key" v-for="(value, key) in items">
+      <pagination
+        :pagination="pagination"
+        :currentPage="currentPage"
+        :nextPage="nextPage"
+        :previousPage="previousPage"
+        @goPreviousPage="goPreviousPage"
+        @goNextPage="goNextPage"
+        @loadItens="moreImages"
+      />
+
+      <div class="columns" :key="key" v-for="(value, key) in imagesList">
+        <div class="column" :key="key" v-for="(image, key) in imagesList[key]">
           <div class="card">
             <div class="card-image">
               <figure class="image">
-                <img v-bind:src="getImgUrl(key)" alt="">
+                <img :src="image.file" alt="">
               </figure>
             </div>
             
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  <p class="title">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod…</p>
-                  <p class="subtitle">Avada Lorem ipsum dolor sit amet, conse adipiscing elit, sed do eiusmod…</p>
+                  <p class="title">{{ image.title }}</p>
+                  <p class="subtitle">{{ image.description }}</p>
                 </div>
             </div>
 
             <div class="content">
-              <img src="~@/assets/img/login-a.png" class="avatar" alt="">
-              <small>Bradley Evans</small>
+              <img :src="image.created_by.avatar" class="avatar" alt="">
+              <small>{{ image.created_by.first_name }}</small>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-      <ul class="pagination-list">
-        <li>
-          <a class="pagination-link" aria-label="Goto page 1">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-              <g fill="none" fill-rule="evenodd" transform="translate(.58 .5)">
-                <circle cx="10" cy="10" r="10" fill="#00CBFF"/>
-                <path stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.599 14.18l-4.147-4.146L11.6 5.887"/>
-              </g>
-            </svg>
-          </a>
-        </li>
-        <li><a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 45">2</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 45">3</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 45">4</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 45">5</a></li>
-        <li><a class="pagination-link" aria-label="Goto page 45">6</a></li>
-        <li>
-          <a class="pagination-link" aria-label="Goto page 86">
-            <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
-              <g fill="none" fill-rule="evenodd" transform="matrix(-1 0 0 1 20.067 .5)">
-                <circle cx="10" cy="10" r="10" fill="#00CBFF"/>
-                <path stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.599 14.18l-4.147-4.146L11.6 5.887"/>
-              </g>
-            </svg>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    <pagination
+      :pagination="pagination"
+      :currentPage="currentPage"
+      :nextPage="nextPage"
+      :previousPage="previousPage"
+      @goPreviousPage="goPreviousPage"
+      @goNextPage="goNextPage"
+      @loadItens="moreImages"
+    />
   </div>
 </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import HeaderIndex from '../header/Index';
+import Pagination from '../shared/Pagination';
 
 export default {
   name: 'Gallery',
 
-  components: { HeaderIndex },
-
-  data() {
-    return {
-      items: [1, 2, 3, 4, 5, 6],
-    };
-  },
+  components: { HeaderIndex, Pagination },
 
   beforeCreate: () => {
     document.body.className = 'grey';
@@ -115,14 +70,49 @@ export default {
     document.body.className = 'white';
   },
 
+  mounted() {
+    this.getGalleryImages();
+  },
+
+  computed: {
+    ...mapGetters({
+      imagesList: 'galleryImages',
+      pagination: 'galleryPagination',
+      currentPage: 'galleyCurrentPage',
+      nextPage: 'galleryNextUrl',
+      previousPage: 'galleryPreviousUrl',
+    }),
+
+    // checkCssPrevious() {
+    //   this.cssPreviousPage = (this.previousPage !== null ? '' : 'disabled');
+    //   this.colorPrevious = (this.previousPage !== null ? '#00CBFF' : '#9b9fa3');
+    // },
+
+    // checkCssNext() {
+    //   this.cssNextPage = (this.nextPage !== null ? '' : 'disabled');
+    //   this.colorNext = (this.nextPage !== null ? '#00CBFF' : '#9b9fa3');
+    // },
+  },
+
   methods: {
-    getImage() {
-      return '../../assets/img/gallery-1.png';
+    ...mapActions([
+      'getGalleryImages',
+    ]),
+
+    moreImages(nextPage) {
+      this.getGalleryImages({ page: nextPage });
     },
 
-    getImgUrl(id) {
-      const images = require.context('../../assets/img/', false, /\.png$/);
-      return images(`./gallery-${id}.png`);
+    goPreviousPage() {
+      if (this.previousPage) {
+        this.getGalleryImages({ page: this.currentPage - 1 });
+      }
+    },
+
+    goNextPage() {
+      if (this.nextPage) {
+        this.getGalleryImages({ page: this.currentPage + 1 });
+      }
     },
   },
 };
@@ -132,24 +122,6 @@ export default {
 .page-container {
   margin: auto;
   padding: 20px 67px;
-
-  .pagination {
-    margin-bottom: 15px;
-
-    .pagination-link {
-      border: none;
-      min-width: 10px;
-      font-size: 18px;
-      letter-spacing: -0.4px;
-      text-align: left;
-      color: #9b9fa3;
-
-      &.is-current {
-        background-color: #f6f6f6;
-        color: #000;
-      }
-    }
-  }
 
   .card {
     border-radius: 10px;

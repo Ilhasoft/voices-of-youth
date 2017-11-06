@@ -7,6 +7,7 @@ import ProjectStore from './project';
 import SideBarStore from './sidebar';
 import ThemeStore from './theme';
 import ReportStore from './report';
+import GalleryStore from './gallery';
 
 Vue.use(Vuex);
 
@@ -18,5 +19,6 @@ export default new Vuex.Store({
     SideBarStore,
     ThemeStore,
     ReportStore,
+    GalleryStore,
   },
 });

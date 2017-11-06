@@ -6,7 +6,10 @@
       </div>
       
       <div class="column">
-        <a href="">Gallery</a>
+        <router-link
+          :to="{ name: 'gallery', params: { path: currentProject.path }}">
+          Gallery
+        </router-link>
       </div>
       
       <div class="column language">
@@ -78,6 +81,7 @@ export default {
       showMenu: 'menuIsVisibled',
       menuTitle: 'menuTitle',
       menuLanguages: 'getProjectLanguages',
+      currentProject: 'getCurrentProject',
     }),
   },
 };
