@@ -1,5 +1,6 @@
 import datetime
 
+from django.utils.timezone import make_aware
 from model_mommy import mommy
 from rest_framework import status
 from rest_framework.reverse import reverse_lazy
@@ -110,8 +111,8 @@ class ThemeTestCase(APITestCase):
         """
         We can filter theme by year?
         """
-        mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
-        mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
+        mommy.make(Theme, 2, created_on=make_aware(datetime.datetime(year=2100, month=1, day=1)))
+        mommy.make(Theme, 2, created_on=make_aware(datetime.datetime(year=2105, month=1, day=1)))
         response = self.client.get(f'{self.url_list}?year_start=2100')
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -122,9 +123,9 @@ class ThemeTestCase(APITestCase):
         """
         We can filter theme by year range?
         """
-        mommy.make(Theme, 2, created_on=datetime.datetime(year=2100, month=1, day=1))
-        mommy.make(Theme, 2, created_on=datetime.datetime(year=2105, month=1, day=1))
-        mommy.make(Theme, 2, created_on=datetime.datetime(year=2110, month=1, day=1))
+        mommy.make(Theme, 2, created_on=make_aware(datetime.datetime(year=2100, month=1, day=1)))
+        mommy.make(Theme, 2, created_on=make_aware(datetime.datetime(year=2105, month=1, day=1)))
+        mommy.make(Theme, 2, created_on=make_aware(datetime.datetime(year=2110, month=1, day=1)))
         response = self.client.get(f'{self.url_list}?year_start=2100&year_end=2105')
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
