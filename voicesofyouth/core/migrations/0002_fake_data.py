@@ -85,7 +85,7 @@ def create_dev_data(apps, schema_editor):
                     'crazy',
                     'anything')
             fake_thumbnail = ImageFile(image)
-            user = mommy.make(User, username='faker', avatar=random.randint(0, 22), first_name='Fake', last_name='User')
+            user = mommy.make(User, username='faker', avatar=random.randint(1, 22), first_name='Fake', last_name='User')
             for x in range(random.randint(5, 10)):
                 project = mommy.make(Project,
                                      name=f'Project {x}',
