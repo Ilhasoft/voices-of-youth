@@ -93,6 +93,7 @@ def create_dev_data(apps, schema_editor):
                                      description=lorem.paragraph(),
                                      created_by=user,
                                      modified_by=user)
+                project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 for y in range(random.randint(5, 10)):
                     theme = mommy.make(Theme,
                                        project=project,
@@ -112,7 +113,11 @@ def create_dev_data(apps, schema_editor):
                                             theme=theme,
                                             created_by=user,
                                             modified_by=user)
-                        report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
+                        valid_tags = list(theme.tags.names()) + list(theme.project.tags.names())
+                        report_tags = random.choices(valid_tags,
+                                                     (len(t) for t in valid_tags),
+                                                     k=random.randint(1, len(valid_tags)))
+                        report.tags.add(*report_tags)
                         for _ in range(random.randint(1, 10)):
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
