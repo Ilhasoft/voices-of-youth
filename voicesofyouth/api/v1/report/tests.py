@@ -161,7 +161,7 @@ class TestReportComment(APITestCase):
         expected_data = {
             'report': self.report.id,
             'created_by': OrderedDict([('id', 2),
-                                       ('first_name', ''),
+                                       ('first_name', 'Guest'),
                                        ('last_name', ''),
                                        ('language', 'en'),
                                        ('avatar', f'http://testserver{AVATARS[DEFAULT_AVATAR - 1][1]}'),
