@@ -2,7 +2,10 @@
   <div>
     <div class="columns is-mobile" v-if="showMenu">
       <div class="column">
-        <a href="" @click.prevent="openThemes">Themes</a>
+        <router-link
+          :to="{ name: 'project', params: { path: currentProject.path }}"
+          @click.native="openThemes">Themes
+        </router-link>
       </div>
       
       <div class="column">
@@ -30,10 +33,12 @@
       </div>
       
       <div class="column new-report">
-        <a class="button btn-report" href="">
+        <router-link
+          class="button btn-report"
+          :to="{ name: 'newreport', params: { path: currentProject.path }}">
           <span class="icon-header-plus"></span>
           <span> Add report</span>
-        </a>
+        </router-link>
       </div>
     </div>
 
@@ -55,6 +60,16 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters({
+      userIsLogged: 'userIsLogged',
+      showMenu: 'menuIsVisibled',
+      menuTitle: 'menuTitle',
+      menuLanguages: 'getProjectLanguages',
+      currentProject: 'getCurrentProject',
+    }),
+  },
+
   methods: {
     ...mapActions([
       'setSideBarConfigs',
@@ -73,16 +88,15 @@ export default {
     setLanguage(language) {
       this.setCurrentLanguage(language);
     },
-  },
 
-  computed: {
-    ...mapGetters({
-      userIsLogged: 'userIsLogged',
-      showMenu: 'menuIsVisibled',
-      menuTitle: 'menuTitle',
-      menuLanguages: 'getProjectLanguages',
-      currentProject: 'getCurrentProject',
-    }),
+    openNewReport() {
+      this.setSideBarConfigs({
+        title: 'New Report',
+        tabActived: 'Themes',
+        backButton: false,
+        isActived: true,
+      });
+    },
   },
 };
 </script>

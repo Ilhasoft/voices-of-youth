@@ -13,6 +13,12 @@ import stores from '../stores';
 
 Vue.use(Router);
 
+const dispatchStores = () => {
+  stores.dispatch('setProjects');
+  stores.dispatch('setCurrentProject');
+  stores.dispatch('setCurrentUser');
+};
+
 export default new Router({
   mode: 'history',
   routes: [
@@ -29,10 +35,7 @@ export default new Router({
       name: 'project',
       component: ProjectPage,
       beforeEnter: (to, from, next) => {
-        stores.dispatch('setProjects');
-        stores.dispatch('setCurrentProject');
-        stores.dispatch('setCurrentUser');
-
+        dispatchStores();
         stores.dispatch('updateHeaderConfig', {
           showMenu: true,
           showProjects: true,
@@ -48,15 +51,29 @@ export default new Router({
       name: 'gallery',
       component: GalleryPage,
       beforeEnter: (to, from, next) => {
-        stores.dispatch('setProjects');
-        stores.dispatch('setCurrentProject');
-        stores.dispatch('setCurrentUser');
-
+        dispatchStores();
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Gallery',
           showMenu: false,
           showProjects: false,
           showBackButton: true,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/project/:path/new-report',
+      name: 'newreport',
+      component: NewReportPage,
+      beforeEnter: (to, from, next) => {
+        dispatchStores();
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: '',
+          showMenu: true,
+          showProjects: true,
+          showBackButton: false,
         }).then(() => {
           next();
         });
@@ -105,22 +122,6 @@ export default new Router({
           showMenu: false,
           showProjects: false,
           showBackButton: true,
-        }).then(() => {
-          next();
-        });
-      },
-    },
-
-    {
-      path: '/project/:id/new-report',
-      name: 'NewReport',
-      component: NewReportPage,
-      beforeEnter: (to, from, next) => {
-        stores.dispatch('updateHeaderConfig', {
-          menuTitle: '',
-          showMenu: true,
-          showProjects: true,
-          showBackButton: false,
         }).then(() => {
           next();
         });

@@ -57,6 +57,8 @@ export default {
     },
 
     executeLogout({ commit }) {
+      localStorage.setItem('user', '');
+      localStorage.setItem('token', '');
       commit(TYPES.SET_USER_DATA, {
         userData: {},
         isLogged: false,
