@@ -13,6 +13,7 @@ class ThemeFilter(filters.FilterSet):
                                     label='End year',
                                     help_text='Get all themes that has been created until this year.')
     project = filters.NumberFilter(help_text='Filter themes by project id.')
+    user = filters.NumberFilter('mappers_group__user', help_text='Filter themes that user id is associated.')
 
     class Meta:
         model = Theme
