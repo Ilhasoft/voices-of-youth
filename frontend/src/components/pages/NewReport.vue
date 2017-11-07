@@ -2,6 +2,10 @@
   <div>
     <header-index />
 
+    <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map" class="map">
+      <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
+    </v-map>
+
     <div class="sidebar">
       <div class="header">
         <h1>Add new report</h1>
@@ -14,29 +18,28 @@
           <div class="columns">
             <div class="column">
               <label for="select-theme">Select theme</label>
-              <v-select :value.sync="selected" :options="options"></v-select>
+              <v-select v-model="themeSelected" @input="loadTags" :value.sync="selected" :options="themeOptions"></v-select>
             </div>
           </div>
 
           <div class="columns">
             <div class="column">
               <label for="title">Title</label>
-              <input class="input" type="text" placeholder="Sustainable practices that help in the development of a community">
+              <input class="input" type="text" placeholder="" v-model="name">
             </div>
           </div>
 
           <div class="columns">
             <div class="column">
-              <label for="title">Description</label>
-              <textarea name="" id="" cols="30" rows="10"></textarea>
+              <label for="description">Description</label>
+              <textarea name="" id="" cols="30" rows="10" v-model="description"></textarea>
             </div>
           </div>
 
           <div class="columns">
             <div class="column">
               <label for="select-theme">Tags</label>
-              <v-select multiple :value.sync="selected" :options="options"></v-select>
-
+              <v-select v-model="tagsSelected" multiple :value.sync="selected" :options="tagsOptions"></v-select>
             </div>
           </div>
 
@@ -51,7 +54,6 @@
                     </svg>
                   </button>
                 </li>
-                
                 <file-item />
               </ul>
             </div>
@@ -93,7 +95,7 @@
             </div>
 
             <div class="column">
-              <button class="send">Send report</button>
+              <button class="send" @click.prevent="saveReport()">Send report</button>
             </div>
           </div>
         </div>
@@ -103,7 +105,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import vSelect from 'vue-select';
+
+import L from 'leaflet';
+import Vue2Leaflet from 'vue2-leaflet';
+import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
+import markerPixel from '../../assets/img/pixel.png';
 
 import HeaderIndex from '../header/Index';
 import LinkItem from '../new-report/Link';
@@ -112,19 +120,130 @@ import FileItem from '../new-report/File';
 export default {
   name: 'NewReport',
 
-  components: { HeaderIndex, LinkItem, FileItem, vSelect },
+  components: {
+    HeaderIndex,
+    LinkItem,
+    FileItem,
+    vSelect,
+    'v-map': Vue2Leaflet.Map,
+    'v-tilelayer': Vue2Leaflet.TileLayer,
+    'v-marker': Vue2Leaflet.Marker,
+    'v-popup': Vue2Leaflet.Popup,
+    'v-marker-cluster': Vue2LeafletMarkerCluster,
+  },
 
   data() {
     return {
       selected: null,
-      options: ['foo', 'bar', 'baz'],
       isWarningVisible: false,
+      name: '',
+      description: '',
+      location: {},
+      themeSelected: 0,
+      tagsSelected: [],
+      tagsOptions: [],
+
+      marker: null,
+      options: { noWrap: true },
+      optionsMap: { maxBounds: [[-90, -160], [90, 160]] },
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      center: [39.63953756436671, -10.019531250000002],
+
+      icon: L.icon({
+        iconUrl: markerPixel,
+        shadowUrl: markerPixel,
+        iconSize: [30, 30],
+        iconAnchor: [22, 94],
+        popupAnchor: [-0, -90],
+        shadowSize: [0, 0],
+        shadowAnchor: [22, 94],
+        className: 'icon-pin pin-report',
+        styleColorName: '#d32f49',
+      }),
     };
+  },
+
+  mounted() {
+    this.getUserThemes(this.currentUser.id);
+    this.$refs.map.mapObject.zoomControl.remove();
+    L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
+
+    this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
+      .addTo(this.$refs.map.mapObject);
+
+    this.marker.on('move', (e) => {
+      this.getGeoLocation({
+        latitude: e.latlng.lat,
+        longitude: e.latlng.lng,
+      }).then((address) => {
+        this.location = {
+          type: 'Point',
+          coordinates: [e.latlng.lat, e.latlng.lng],
+        };
+        this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+      });
+    });
+  },
+
+  computed: {
+    ...mapGetters({
+      currentUser: 'getUserData',
+      reportData: 'getReportNewData',
+    }),
+
+    themeOptions() {
+      return this.reportData.themes.map((theme) => {
+        const option = {
+          label: theme.name,
+          value: theme.id,
+        };
+        return option;
+      });
+    },
+  },
+
+  methods: {
+    ...mapActions([
+      'getUserThemes',
+      'saveNewReport',
+      'getGeoLocation',
+    ]),
+
+    loadTags(theme) {
+      this.tagsSelected = [];
+      const tags = this.reportData.themes.filter(item => item.id === theme.value);
+      if (tags.length > 0) {
+        this.tagsOptions = tags[0].tags.map(tag => tag);
+      }
+    },
+
+    saveReport() {
+      if (this.name && this.description && this.themeSelected && this.location) {
+        this.saveNewReport({
+          name: this.name,
+          description: this.description,
+          theme: this.themeSelected.value,
+          tags: this.tagsSelected,
+          location: this.location,
+        }).then(() => {
+          this.name = '';
+          this.description = '';
+          this.themeSelected = '';
+          this.tagsSelected = [];
+          this.tagsOptions = [];
+        });
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+@import "~leaflet/dist/leaflet.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.css";
+@import "~leaflet.markercluster/dist/MarkerCluster.Default.css";
+
 .images li {
   display: inline-block;
   margin-right: 12px;

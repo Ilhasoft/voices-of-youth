@@ -121,7 +121,7 @@ export default {
     },
 
     openTheme() {
-      this.getTheme(this.item.theme_id).then(() => {
+      this.getTheme(this.item.theme).then(() => {
         this.setSideBarConfigs({
           tabActived: 'Theme',
           isActived: true,

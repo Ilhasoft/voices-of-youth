@@ -3,6 +3,7 @@ import * as TYPES from './types';
 import helper from '../helper';
 
 const token = helper.getItem('token');
+const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
 
 export default {
   state: {
@@ -12,6 +13,15 @@ export default {
     comments: [],
     files: [],
     urls: [],
+    newReport: {
+      themes: [],
+      title: '',
+      description: '',
+      tags: [],
+      files: [],
+      urls: [],
+      location: {},
+    },
   },
 
   getters: {
@@ -20,6 +30,7 @@ export default {
     getComments: state => state.comments,
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
+    getReportNewData: state => state.newReport,
   },
 
   /* eslint-disable no-param-reassign */
@@ -72,6 +83,10 @@ export default {
 
     [TYPES.REMOVE_COMMENT](state, obj) {
       state.comments = state.comments.filter(item => item.id !== obj);
+    },
+
+    [TYPES.NEW_REPORT_USER_THEMES](state, obj) {
+      state.newReport.themes = obj;
     },
   },
 
@@ -146,6 +161,40 @@ export default {
         headers: { authorization: `Token ${token}` },
       }).then(() => {
         commit(TYPES.REMOVE_COMMENT, obj);
+      }).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    getUserThemes({ commit }, obj) {
+      axios.get(`/api/themes/?user=${obj}`).then((response) => {
+        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
+      }).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    saveNewReport({ commit }, obj) {
+      return axios.post('/api/reports/', {
+        name: obj.name,
+        description: obj.description,
+        theme: obj.theme,
+        location: obj.location,
+        tags: obj.tags,
+      }, {
+        headers: { authorization: `Token ${token}` },
+      }).then(response => response.data).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    getGeoLocation({ commit }, obj) {
+      const urlApi = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`;
+      return axios.get(urlApi).then((response) => {
+        if (response.data.results[0]) {
+          return response.data.results[0].formatted_address;
+        }
+        return '';
       }).catch((error) => {
         throw new Error(error);
       });
