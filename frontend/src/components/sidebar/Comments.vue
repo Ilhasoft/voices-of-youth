@@ -9,7 +9,10 @@
 
     <div class="comments-box">
       <div class="comments">
-        <comment-item v-for="(data, index) in commentsList" :key="index" :comment="data"/>
+        <comment-item
+          v-for="(data, index) in commentsList" 
+          :key="index" 
+          :comment="data"/>
       </div>
 
       <div class="form">
@@ -55,6 +58,7 @@ export default {
       'setSideBarConfigs',
       'saveNewComment',
       'getComments',
+      'deleteComment',
     ]),
 
     openReport() {

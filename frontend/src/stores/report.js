@@ -2,6 +2,8 @@ import axios from 'axios';
 import * as TYPES from './types';
 import helper from '../helper';
 
+const token = helper.getItem('token');
+
 export default {
   state: {
     all: [],
@@ -67,6 +69,10 @@ export default {
       state.all = [];
       state.themes = [];
     },
+
+    [TYPES.REMOVE_COMMENT](state, obj) {
+      state.comments = state.comments.filter(item => item.id !== obj);
+    },
   },
 
   actions: {
@@ -125,12 +131,21 @@ export default {
     },
 
     saveNewComment({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
       return axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
       }, {
         headers: { authorization: `Token ${token}` },
+      }).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    deleteComment({ commit, dispatch }, obj) {
+      return axios.delete(`/api/report-comments/${obj}/`, {}, {
+        headers: { authorization: `Token ${token}` },
+      }).then(() => {
+        commit(TYPES.REMOVE_COMMENT, obj);
       }).catch((error) => {
         throw new Error(error);
       });

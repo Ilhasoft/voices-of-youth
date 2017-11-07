@@ -10,18 +10,18 @@
       <p>{{ comment.text }}</p>
     </div>
 
-    <div v-if="isLogged" class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
+    <div v-if="isLogged && accessEdit" class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more"></span>
       <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
         <p><a>Edit</a></p>
-        <p><a>Remove</a></p>
+        <p><a @click.prevent="removeComment()">Remove</a></p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'CommentItem',
@@ -44,12 +44,24 @@ export default {
       currentUser: 'getUserData',
       isLogged: 'userIsLogged',
     }),
+
+    accessEdit() {
+      return this.comment.created_by.id === this.currentUser.id;
+    },
   },
 
   methods: {
+    ...mapActions([
+      'deleteComment',
+    ]),
+
     formatDate() {
       const date = new Date(this.comment.created_on);
       return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+    },
+
+    removeComment() {
+      this.deleteComment(this.comment.id);
     },
   },
 };
