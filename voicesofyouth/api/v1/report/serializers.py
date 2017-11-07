@@ -25,10 +25,7 @@ class ReportFilesSerializer(VoySerializer):
 
 
 class ReportSerializer(VoySerializer):
-    tags = serializers.StringRelatedField(
-        read_only=True,
-        many=True
-    )
+    tags = serializers.SerializerMethodField()
     theme = serializers.PrimaryKeyRelatedField(queryset=Theme.objects.all(), required=True)
     last_image = ReportFilesSerializer(required=False, read_only=True)
     created_by = UserSerializer(read_only=True)
@@ -53,6 +50,9 @@ class ReportSerializer(VoySerializer):
             'created_by',
             'last_image'
         )
+
+    def get_tags(self, obj):
+        return obj.tags.names()
 
 
 class ReportCommentsSerializer(VoySerializer):
