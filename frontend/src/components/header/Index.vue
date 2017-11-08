@@ -6,7 +6,7 @@
         <back-menu v-show="showBackButton" />
       </div>
   
-      <div class="column">
+      <div class="column menu">
         <div class="header itemmenu">
           <header-menu />
         </div>
@@ -48,6 +48,10 @@ export default {
 section {
   border-bottom: 12px solid #00cbff;
   background-color: #fff;
+}
+
+.menu {
+  z-index: 100000;
 }
 
 .header.itemmenu {
