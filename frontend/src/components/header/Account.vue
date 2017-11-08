@@ -46,6 +46,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import router from '../../router';
 
 export default {
   name: 'Account',
@@ -60,6 +61,7 @@ export default {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
       user: 'getUserData',
+      currentProject: 'getCurrentProject',
     }),
   },
 
@@ -69,7 +71,9 @@ export default {
     ]),
 
     logout() {
-      this.executeLogout();
+      this.executeLogout().then(() => {
+        router.push({ name: 'project', params: { path: this.currentProject.path } });
+      });
     },
   },
 };

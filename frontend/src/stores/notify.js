@@ -17,6 +17,7 @@ export default {
       state.visible = obj.visible;
 
       if (obj.message) {
+        state.visible = true;
         state.message = obj.message;
       }
 

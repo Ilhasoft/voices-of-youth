@@ -91,11 +91,12 @@ export default {
   },
 
   actions: {
-    getReports({ commit }) {
+    getReports({ commit, dispatch }) {
       const project = helper.getItem('project');
       axios.get(`/api/reports?project=${project.id}`).then((response) => {
         commit(TYPES.SET_REPORTS, response.data);
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
@@ -108,6 +109,7 @@ export default {
             theme: obj.themeId,
           });
         }).catch((error) => {
+          dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
           throw new Error(error);
         });
       } else {
@@ -121,7 +123,7 @@ export default {
       }
     },
 
-    getReport({ commit }, obj) {
+    getReport({ commit, dispatch }, obj) {
       axios.get(`/api/reports/${obj}`).then((response) => {
         commit(TYPES.SET_CURRENT_REPORT, response.data);
       }).then(() => {
@@ -129,14 +131,16 @@ export default {
           commit(TYPES.SET_REPORT_MEDIAS, response.data[0]);
         });
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
 
-    getComments({ commit }, obj) {
+    getComments({ commit, dispatch }, obj) {
       axios.get(`/api/report-comments/?report=${obj}`).then((response) => {
         commit(TYPES.SET_REPORT_COMMENTS, response.data);
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
@@ -154,7 +158,10 @@ export default {
       return axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
-      }, options).catch((error) => {
+      }, options).then(() => {
+        dispatch('notifyOpen', { type: 1, message: 'Comment saved.' });
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
@@ -164,20 +171,23 @@ export default {
         headers: { authorization: `Token ${token}` },
       }).then(() => {
         commit(TYPES.REMOVE_COMMENT, obj);
+        dispatch('notifyOpen', { type: 1, message: 'Comment removed.' });
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
 
-    getUserThemes({ commit }, obj) {
+    getUserThemes({ commit, dispatch }, obj) {
       axios.get(`/api/themes/?user=${obj}`).then((response) => {
         commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
 
-    saveNewReport({ commit }, obj) {
+    saveNewReport({ commit, dispatch }, obj) {
       return axios.post('/api/reports/', {
         name: obj.name,
         description: obj.description,
@@ -186,7 +196,10 @@ export default {
         tags: obj.tags,
       }, {
         headers: { authorization: `Token ${token}` },
-      }).then(response => response.data).catch((error) => {
+      }).then(() => {
+        dispatch('notifyOpen', { type: 1, message: 'Report saved.' });
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error on save report.' });
         throw new Error(error);
       });
     },

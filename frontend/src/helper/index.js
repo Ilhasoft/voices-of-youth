@@ -4,6 +4,10 @@ export default {
   },
 
   getItem(name) {
-    return JSON.parse(window.localStorage.getItem(name));
+    const item = window.localStorage.getItem(name);
+    if (item) {
+      return JSON.parse(item);
+    }
+    return '';
   },
 };
