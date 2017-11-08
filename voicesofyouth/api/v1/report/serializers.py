@@ -41,7 +41,7 @@ class ReportSerializer(VoySerializer):
     can_receive_comments = serializers.BooleanField(read_only=True)
     editable = serializers.BooleanField(read_only=True)
     visible = serializers.BooleanField(read_only=True)
-    urls = serializers.StringRelatedField(many=True)
+    # urls = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Report
@@ -58,8 +58,7 @@ class ReportSerializer(VoySerializer):
             'tags',
             'theme_color',
             'created_by',
-            'last_image',
-            'urls'
+            'last_image'
         )
 
     def get_tags(self, obj):

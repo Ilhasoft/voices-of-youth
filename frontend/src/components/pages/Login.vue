@@ -180,6 +180,7 @@ export default {
   methods: {
     ...mapActions([
       'executeLogin',
+      'notifyOpen',
     ]),
 
     openTerms() {
@@ -195,8 +196,10 @@ export default {
       this.executeLogin({
         username: this.login.username,
         password: this.login.password,
-      }).then(() => {
-        router.push({ name: 'project', params: { path: this.currentProject.path } });
+      }).then((response) => {
+        if (response) {
+          router.push({ name: 'project', params: { path: this.currentProject.path } });
+        }
       });
     },
   },

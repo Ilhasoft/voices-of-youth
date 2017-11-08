@@ -85,6 +85,7 @@ export default new Router({
       name: 'login',
       component: LoginPage,
       beforeEnter: (to, from, next) => {
+        dispatchStores();
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Login',
           showMenu: false,
