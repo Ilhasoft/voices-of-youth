@@ -104,7 +104,7 @@ class AdminUserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs).filter(Q(is_superuser=True) |
                                                           Q(groups__name__contains='- local admin')).distinct()
-        return qs.order_by('is_superuser')
+        return qs.order_by('-is_superuser')
 
 
 class AdminUser(VoyUser):
