@@ -175,15 +175,18 @@ export default {
     },
 
     saveNewReport({ commit }, obj) {
+      const options = {};
+      if (token) {
+        options.headers = { authorization: `Token ${token}` };
+      }
+
       return axios.post('/api/reports/', {
         name: obj.name,
         description: obj.description,
         theme: obj.theme,
         location: obj.location,
         tags: obj.tags,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      }).then(response => response.data).catch((error) => {
+      }, options).then(response => response.data).catch((error) => {
         throw new Error(error);
       });
     },
