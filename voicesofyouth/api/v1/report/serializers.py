@@ -24,6 +24,15 @@ class ReportFilesSerializer(VoySerializer):
         )
 
 
+class ReportURLsSerializer(VoySerializer):
+    class Meta:
+        model = ReportURL
+        fields = (
+            'url',
+            'report',
+        )
+
+
 class ReportSerializer(VoySerializer):
     tags = serializers.SerializerMethodField()
     theme = serializers.PrimaryKeyRelatedField(queryset=Theme.objects.all(), required=True)
@@ -32,6 +41,7 @@ class ReportSerializer(VoySerializer):
     can_receive_comments = serializers.BooleanField(read_only=True)
     editable = serializers.BooleanField(read_only=True)
     visible = serializers.BooleanField(read_only=True)
+    urls = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Report
@@ -48,7 +58,8 @@ class ReportSerializer(VoySerializer):
             'tags',
             'theme_color',
             'created_by',
-            'last_image'
+            'last_image',
+            'urls'
         )
 
     def get_tags(self, obj):
@@ -87,17 +98,6 @@ class ReportCommentsSerializer(VoySerializer):
             validated_data['created_by'] = request.user
             validated_data['modified_by'] = request.user
         return ReportComment.objects.create(**validated_data)
-
-
-class ReportURLsSerializer(VoySerializer):
-    report = serializers.PrimaryKeyRelatedField(queryset=Report.objects.all(), required=True)
-
-    class Meta:
-        model = ReportURL
-        fields = (
-            'url',
-            'report',
-        )
 
 
 class ReportMediasSerializer(VoySerializer):
