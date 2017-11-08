@@ -101,7 +101,7 @@ class ReportCommentsSerializer(VoySerializer):
 
 
 class ReportMediasSerializer(VoySerializer):
-    urls = ReportURLsSerializer(many=True)
+    urls = serializers.StringRelatedField(many=True)
     files = ReportFilesSerializer(many=True)
 
     class Meta:
