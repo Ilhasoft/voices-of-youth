@@ -40,14 +40,14 @@
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Admins' %}">
+                    <a href="{% url 'voy-admin:users:admin' %}" title="{% trans 'Admins' %}">
                         <em class="icon-people"></em>
                         <span>{% trans 'Admins' %}</span>
                     </a>
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Mappers' %}">
+                    <a href="{% url 'voy-admin:users:mapper' %}" title="{% trans 'Mappers' %}">
                         <em class="icon-map"></em>
                         <span>{% trans 'Mappers' %}</span>
                     </a>

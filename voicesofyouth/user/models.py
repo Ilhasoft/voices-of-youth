@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.query_utils import Q
 from django.utils.functional import cached_property
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
@@ -49,6 +50,72 @@ class VoyUser(AbstractUser):
     @cached_property
     def is_mapper(self):
         return self.groups.filter(name__contains='- mappers').exists()
+
+
+class MapperUserManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        return qs.filter(groups__name__contains='- mappers').distinct()
+
+
+class MapperUser(VoyUser):
+    """
+    Represents a mapper user.
+    """
+    objects = MapperUserManager()
+
+    class Meta:
+        proxy = True
+
+
+class LocalAdminUserManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        return qs.filter(groups__name__contains='- local admin').distinct()
+
+
+class LocalUserAdmin(VoyUser):
+    """
+    Represents a local admin user.
+    """
+    objects = LocalAdminUserManager()
+
+    class Meta:
+        proxy = True
+
+
+class GlobalAdminUserManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        return qs.filter(is_superuser=True).distinct()
+
+
+class GlobalUserAdmin(VoyUser):
+    """
+    Represents a global admin user.
+    """
+    objects = GlobalAdminUserManager()
+
+    class Meta:
+        proxy = True
+
+
+class AdminUserManager(models.Manager):
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs).filter(Q(is_superuser=True) |
+                                                          Q(groups__name__contains='- local admin')).distinct()
+        return qs.order_by('is_superuser')
+
+
+class AdminUser(VoyUser):
+    """
+    Represents a admin user(global or local).
+    """
+    objects = AdminUserManager()
+
+    class Meta:
+        proxy = True
+
 
 # We put this code here to centralize all references to User model.
 User = get_user_model()
