@@ -89,11 +89,11 @@ class ReportTestCase(APITestCase):
             'visible': True,
             'description': 'Report description',
             'name': 'Report name',
-            'tags': [],
             'last_image': None}
         self.assertGreater(len(returned_data.pop('created_on')), 0)
         self.assertGreater(len(returned_data.pop('theme_color')), 0)
-        self.assertDictEqual(returned_data, expected_data)
+        self.assertEqual(len(returned_data.pop('tags')), 0)
+        self.assertDictEqual(expected_data, returned_data)
 
     def test_patch_report(self):
         """
