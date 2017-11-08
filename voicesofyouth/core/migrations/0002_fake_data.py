@@ -85,14 +85,22 @@ def create_dev_data(apps, schema_editor):
                     'crazy',
                     'anything')
             fake_thumbnail = ImageFile(image)
-            user = mommy.make(User, username='faker', avatar=random.randint(0, 22), first_name='Fake', last_name='User')
+            users = []
+            for i in range(1, 10):
+                users.append(mommy.make(User,
+                                        username=f'fakeuser{i}',
+                                        avatar=random.randint(1, 22),
+                                        first_name=f'Fake{i}',
+                                        last_name='User'))
             for x in range(random.randint(5, 10)):
+                user = random.choice(users)
                 project = mommy.make(Project,
                                      name=f'Project {x}',
                                      thumbnail=fake_thumbnail,
                                      description=lorem.paragraph(),
                                      created_by=user,
                                      modified_by=user)
+                project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 for y in range(random.randint(5, 10)):
                     theme = mommy.make(Theme,
                                        project=project,
@@ -100,6 +108,7 @@ def create_dev_data(apps, schema_editor):
                                        description=lorem.paragraph(),
                                        created_by=user,
                                        modified_by=user)
+                    theme.mappers_group.user_set.add(user)
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
                     lang = settings.LANGUAGES[lang_idx][0]
@@ -112,7 +121,11 @@ def create_dev_data(apps, schema_editor):
                                             theme=theme,
                                             created_by=user,
                                             modified_by=user)
-                        report.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
+                        valid_tags = list(theme.tags.names()) + list(theme.project.tags.names())
+                        report_tags = random.choices(valid_tags,
+                                                     (len(t) for t in valid_tags),
+                                                     k=random.randint(1, len(valid_tags)))
+                        report.tags.add(*report_tags)
                         for _ in range(random.randint(1, 10)):
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),

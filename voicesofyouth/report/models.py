@@ -10,8 +10,8 @@ from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import Tag
+from voicesofyouth.tag.models import _ReportTaggableManager
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.user.models import User
 
 STATUS_APPROVED = 1
 STATUS_PENDING = 2
@@ -52,7 +52,7 @@ class Report(BaseModel):
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
-    tags = TaggableManager(through=Tag, blank=True)
+    tags = TaggableManager(through=Tag, blank=True, manager=_ReportTaggableManager)
 
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)

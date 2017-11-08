@@ -1,7 +1,5 @@
 from rest_framework import permissions, viewsets
 from rest_framework import status
-from rest_framework.filters import SearchFilter
-from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -19,13 +17,8 @@ from voicesofyouth.api.v1.report.serializers import ReportURLsSerializer
 from voicesofyouth.report.models import Report, ReportURL
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
-from voicesofyouth.translation.models import Translation
 
-# 1725 - first version
-# 1413 - select_related(theme)
-# 1060 - select_related(theme, created_by)
-# 713 - prefetch_related(theme, created_by)
-# 363 - prefetch_related(theme, created_by, files, tags)
+
 class ReportsPagination(PageNumberPagination):
     page_size = None
     page_size_query_param = 'page_size'
