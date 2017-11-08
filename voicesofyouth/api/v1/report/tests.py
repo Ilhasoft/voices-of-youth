@@ -211,15 +211,39 @@ class TestReportComment(APITestCase):
 class TestReportURL(APITestCase):
     @classmethod
     def setUpClass(cls):
-        cls.url_list = reverse_lazy('report-urls-list')
         cls.report = mommy.make(Report)
-        cls.url_detail = reverse_lazy('report-urls-detail', args=[cls.report.id, ])
+        cls.url_list = reverse_lazy('report-urls-list')
         cls.user = User.objects.create_user('user', password='MyP4ssw0rd', first_name='Authenticated', last_name='User')
         cls.user_credentials = {'username': 'user', 'password': 'MyP4ssw0rd'}
 
     @classmethod
     def tearDownClass(cls):
         pass
+
+    def test_get_without_report_in_querystring(self):
+        """
+        GET report urls without report in querystring returns 404?
+        """
+        response = self.client.get(self.url_list)
+        self.assertEqual(ReportURL.objects.count(), 0)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(ReportURL.objects.count(), 0)
+
+    def test_get_with_report_in_querystring(self):
+        """
+        GET report urls with report in querystring returns the related urls?
+        """
+        url = mommy.make(ReportURL, report=self.report, url='http://testserver.com.br')
+        response = self.client.get(self.url_list + f'?report={url.id}')
+        expected_data = {
+            'report': 1,
+            'url': 'http://testserver.com.br'
+        }
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+        self.assertDictEqual(data[0], expected_data)
+        self.assertEqual(ReportURL.objects.count(), 1)
 
     def test_post_url(self):
         """
@@ -237,5 +261,6 @@ class TestReportURL(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         urls = ReportURL.objects.all()
         self.assertEqual(urls.count(), 1)
-        response = self.client.get(self.url_detail)
+        response = self.client.get(reverse_lazy('report-urls-detail', args=[urls[0].id, ]))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertDictEqual(response.data, data)

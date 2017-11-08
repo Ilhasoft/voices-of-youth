@@ -64,7 +64,7 @@ class ReportURLsViewSet(viewsets.ModelViewSet):
         url_query = self.request.query_params
         response = None
         if 'report' not in url_query:
-            response = Response({}, status=status.HTTP_204_NO_CONTENT)
+            response = Response({}, status=status.HTTP_404_NOT_FOUND)
         return response or super().list(request, *args, **kwargs)
 
 
