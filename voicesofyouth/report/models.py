@@ -13,14 +13,14 @@ from voicesofyouth.tag.models import Tag
 from voicesofyouth.tag.models import _ReportTaggableManager
 from voicesofyouth.theme.models import Theme
 
-STATUS_APPROVED = 1
-STATUS_PENDING = 2
-STATUS_REJECTED = 3
+REPORT_STATUS_APPROVED = 1
+REPORT_STATUS_PENDING = 2
+REPORT_STATUS_REJECTED = 3
 
-STATUS_CHOICES = (
-    (STATUS_APPROVED, _('Approved')),
-    (STATUS_PENDING, _('Pending')),
-    (STATUS_REJECTED, _('Rejected')),
+REPORT_STATUS_CHOICES = (
+    (REPORT_STATUS_APPROVED, _('Approved')),
+    (REPORT_STATUS_PENDING, _('Pending')),
+    (REPORT_STATUS_REJECTED, _('Rejected')),
 )
 
 FILE_TYPE_IMAGE = 'image'
@@ -51,7 +51,7 @@ class Report(BaseModel):
     can_receive_comments = models.BooleanField(default=True, verbose_name=_('Can receive comments'))
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
-    status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
+    status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
     tags = TaggableManager(through=Tag, blank=True, manager=_ReportTaggableManager)
 
     def __str__(self):
@@ -73,7 +73,7 @@ class Report(BaseModel):
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(null=False, blank=False, verbose_name=_('Comment'))
-    status = models.IntegerField(verbose_name=_('Status'), choices=STATUS_CHOICES, default=STATUS_PENDING)
+    status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
 
     def __str__(self):
         return self.text

@@ -1,5 +1,6 @@
 from django.views.generic.base import TemplateView
 
+from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import Report
 
 
@@ -21,5 +22,5 @@ class PendingReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reports'] = Report.objects.all()[:15]
+        context['reports'] = Report.objects.filter(status=REPORT_STATUS_PENDING)[:15]
         return context
