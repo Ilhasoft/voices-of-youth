@@ -42,7 +42,10 @@ export default {
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
     bus.$on('openReport', (item) => {
-      this.$refs.map.mapObject.setView(item.location);
+      this.$refs.map.mapObject.setView({
+        lat: item.location.coordinates[0],
+        lng: item.location.coordinates[1],
+      });
       this.getReport(item.id);
     });
   },

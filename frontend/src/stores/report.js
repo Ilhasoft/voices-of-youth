@@ -63,7 +63,7 @@ export default {
       const index = state.themes.indexOf(obj.theme);
       if (index !== -1) {
         state.themes.splice(index, 1);
-        state.all = state.all.filter(item => item.theme_id !== obj.theme);
+        state.all = state.all.filter(item => item.theme !== obj.theme);
       }
     },
 
