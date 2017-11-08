@@ -24,13 +24,13 @@ Built in template
 The VoY system automatically creates two **template groups**:
 
 Local admin template
-    * Can create :ref:`mapper` s and link them with the theme;
-    * Can moderate :ref:`report` and comments;
+    * Can create mappers and link them with the theme;
+    * Can moderate report and comments;
     * Can do anything that mapper template group can.
 
 Mapper template
-    * Can create/edit :ref:`report`;
-    * Can comment on :ref:`report` s of other :ref:`mapper` s.
+    * Can create/edit report;
+    * Can comment on reports of other mappers.
 
 How VoY manage groups
 ---------------------

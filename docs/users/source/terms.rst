@@ -8,6 +8,9 @@ Project
 The project is the grate data aggregator, besides users, groups and profiles, nothing can exists without a project.
 Each project have a region where one or more :ref:`theme` s can be created.
 
+.. note::
+    Only :ref:`admin` can manage projects.
+
 .. _theme:
 
 Theme
@@ -16,7 +19,8 @@ A theme is used to create a study around a subject. Each theme have your own bou
 can create your :ref:`report`.
 
 .. note::
-    * Only admins or local admins can create or edit themes and add mappers to these theme;
+    * Only :ref:`admin` or :ref:`local-admin` can manage themes;
+    * Only :ref:`admin` or :ref:`local-admin` manage mappers;
     * You can create as many themes as you need;
     * You can create more than one theme in the same boundary region of others themes. e.g. One study about health risks
       and another about security issues.
@@ -48,9 +52,9 @@ Mapper is the young people that can create :ref:`report` s.
 
 .. _admin:
 
-Admin
------
-Admin is a jedi master. Only users with this profile can manage the projects.
+Global admin
+------------
+Global admin is a jedi master. Only users with this profile can manage the projects and :ref:`local-admin`.
 
 .. _local-admin:
 
