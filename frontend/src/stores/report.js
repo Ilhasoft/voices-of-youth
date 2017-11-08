@@ -146,12 +146,15 @@ export default {
     },
 
     saveNewComment({ commit, dispatch }, obj) {
+      const options = {};
+      if (token) {
+        options.headers = { authorization: `Token ${token}` };
+      }
+
       return axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      }).catch((error) => {
+      }, options).catch((error) => {
         throw new Error(error);
       });
     },
@@ -175,18 +178,15 @@ export default {
     },
 
     saveNewReport({ commit }, obj) {
-      const options = {};
-      if (token) {
-        options.headers = { authorization: `Token ${token}` };
-      }
-
       return axios.post('/api/reports/', {
         name: obj.name,
         description: obj.description,
         theme: obj.theme,
         location: obj.location,
         tags: obj.tags,
-      }, options).then(response => response.data).catch((error) => {
+      }, {
+        headers: { authorization: `Token ${token}` },
+      }).then(response => response.data).catch((error) => {
         throw new Error(error);
       });
     },
