@@ -4,12 +4,16 @@
 <section>
     <div class="content-wrapper">
         <div class="content-heading">
-            Dashboard
+            My projects
         </div>
 
         <div class="panel panel-default">
             <div class="panel-body">
-                <h1>Test</h1>
+                <ul>
+                    {% for project in projects %}
+                        <li>{{ project }}</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

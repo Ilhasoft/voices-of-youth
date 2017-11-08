@@ -5,21 +5,21 @@
         <nav data-sidebar-anyclick-close="" class="sidebar">
             <ul class="nav">
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Dashboard' %}">
+                    <a href="{% url 'voy-admin:dasboard' %}" title="{% trans 'Dashboard' %}">
                         <em class="icon-speedometer"></em>
                         <span>{% trans 'Dashboard' %}</span>
                     </a>
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'My Projects' %}">
+                    <a href="{% url 'voy-admin:projects:index' %}" title="{% trans 'My Projects' %}">
                         <em class="icon-layers"></em>
                         <span>{% trans 'My Projects' %}</span>
                     </a>
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Create New Project' %}">
+                    <a href="{% url 'voy-admin:projects:new' %}" title="{% trans 'Create New Project' %}">
                         <em class="icon-location-pin"></em>
                         <span>{% trans 'Create New Project' %}</span>
                     </a>

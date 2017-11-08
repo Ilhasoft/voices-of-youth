@@ -1,7 +1,9 @@
+from django.conf.urls import include
 from django.conf.urls import url
 
-from voicesofyouth.voyadmin.views import CoreView
+from voicesofyouth.voyadmin.views import DashboardView
 
 urlpatterns = [
-    url(r'^$', CoreView.as_view()),
+    url(r'^$', DashboardView.as_view(), name='dasboard'),
+    url(r'^projects/', include('voicesofyouth.project.urls', namespace='projects')),
 ]
