@@ -13,6 +13,8 @@ Welcome to Voices of Youth's user documentation!
    terms
    permissions
    project
+   mappers
+   tags
 
 
 
