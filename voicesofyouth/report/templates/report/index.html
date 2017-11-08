@@ -1,0 +1,21 @@
+{% extends "voyadmin/base.html" %}
+
+{% block content %}
+<section>
+    <div class="content-wrapper">
+        <div class="content-heading">
+            Reports
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul>
+                    {% for report in reports %}
+                        <li>{{ report }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

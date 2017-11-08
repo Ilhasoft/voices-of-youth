@@ -26,14 +26,14 @@
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Add New Report' %}">
+                    <a href="{% url 'voy-admin:reports:new' %}" title="{% trans 'Add New Report' %}">
                         <em class="icon-plus"></em>
                         <span>{% trans 'Add New Report' %}</span>
                     </a>
                 </li>
 
                 <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
-                    <a href="" title="{% trans 'Pending Reports' %}">
+                    <a href="{% url 'voy-admin:reports:pending' %}" title="{% trans 'Pending Reports' %}">
                         <em class="icon-doc"></em>
                         <span>{% trans 'Pending Reports' %}</span>
                     </a>
