@@ -46,7 +46,7 @@ export default {
 <style lang="scss" scoped>
 .opacity {
   opacity: 0.33;
-  z-index: 1;
+  z-index: 10000000;
   background-color: #000000;
   width: 100%;
   height: 100%;
@@ -56,7 +56,7 @@ export default {
 }
 
 .intro {
-  z-index: 10;
+  z-index: 100000000;
   position: relative;
   margin: auto;
   width: 553px;
