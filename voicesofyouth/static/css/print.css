@@ -1,0 +1,78 @@
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important;
+        text-shadow: none !important;
+        filter: none !important;
+        -ms-filter: none !important;
+    }
+        
+    body {
+        margin: 0;
+        padding: 0;
+        line-height: 1.4em;
+        font: 12pt Georgia, "Times New Roman", Times, serif;
+        color: #000;
+    }
+
+    nav, footer, video, audio, object, embed { 
+        display: none; 
+    }
+
+    a, a:visited {
+        text-decoration: none;
+    }
+
+    .topnavbar-wrapper {
+        display: none;
+    }
+
+    .aside {
+        display: none;
+    }
+
+    footer {
+        display: none;
+    }
+
+    .content-heading {
+        display: none;
+    }
+
+    .breadcrumb {
+        display: none;
+    }
+
+    fieldset {
+        display: none;
+    }
+
+    a[href]:after {
+        content:"" !important;
+    }
+
+    @page { margin: 0; }
+    body { margin: 1.6cm; border: 0px solid transparent !important; }
+
+    .panel-default {
+        border-color: #fff;
+    }
+
+    .panel {
+        border-top-width: 0px;
+        border: 0px solid #fff;
+    }
+
+    .panel.panel-default {
+        border-top-width: 0px;
+    }
+
+    .panel-body {
+        border: 0px solid #fff;
+    }
+
+    h3 + .breadcrumb, .content-heading + .breadcrumb {
+        border-bottom: 0px solid #fff;
+    }
+}
+

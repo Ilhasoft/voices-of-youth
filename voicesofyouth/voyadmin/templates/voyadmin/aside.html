@@ -1,0 +1,58 @@
+{% load i18n %}
+
+<aside class="aside">
+    <div class="aside-inner">
+        <nav data-sidebar-anyclick-close="" class="sidebar">
+            <ul class="nav">
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Dashboard' %}">
+                        <em class="icon-speedometer"></em>
+                        <span>{% trans 'Dashboard' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'My Projects' %}">
+                        <em class="icon-layers"></em>
+                        <span>{% trans 'My Projects' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Create New Project' %}">
+                        <em class="icon-location-pin"></em>
+                        <span>{% trans 'Create New Project' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Add New Report' %}">
+                        <em class="icon-plus"></em>
+                        <span>{% trans 'Add New Report' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Pending Reports' %}">
+                        <em class="icon-doc"></em>
+                        <span>{% trans 'Pending Reports' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Admins' %}">
+                        <em class="icon-people"></em>
+                        <span>{% trans 'Admins' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="" title="{% trans 'Mappers' %}">
+                        <em class="icon-map"></em>
+                        <span>{% trans 'Mappers' %}</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</aside>

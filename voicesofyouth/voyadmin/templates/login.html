@@ -1,0 +1,102 @@
+{% load compress static i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Dashboard administration">
+    <meta name="keywords" content="">
+    <title>Voices of Youth - Admin</title>
+
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" id="bscss">
+        <link rel="stylesheet" href="{% static 'css/app.css' %}" id="maincss">
+    {% endcompress %}
+
+    <style type="text/css">
+    body {
+        font-family: "Roboto", sans-serif;;
+        background-color: #00cbff;
+    }
+
+    .panel-heading {
+        background-color: #00cbff;
+    }
+
+    .panel {
+        border-radius: 20px;
+    }
+
+    .pv {
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: -0.4px;
+        text-align: center;
+        color: #000000;
+    }
+
+    .text-muted {
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: -0.3px;
+        color: #4a4a4a;
+    }
+
+    .btn {
+        border-radius: 100px;
+        background-color: #00cbff;
+        height: 44px;
+        color: #fff;
+    }
+
+    .btn:hover, .btn:focus, .btn.focus {
+        color: #e4ecee;
+        text-decoration: none;
+    }
+
+    .panel-heading {
+        margin-top: 98px;
+        margin-bottom: 86px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="block-center mt-xl wd-xl">
+            <div class="panel-heading text-center">
+                <a href="#">
+                    <img src="{% static 'img/logo-admin.png' %}" alt="Image" class="block-center img-rounded">
+                </a>
+            </div>
+
+            <div class="panel panel-orange panel-flat">
+                <div class="panel-body">
+                    <p class="text-center pv">{% trans 'Sign to continue' %}</p>
+                    <form role="form" action="" method="post" data-parsley-validate="" novalidate="" class="mb-lg">
+                        <div class="form-group has-feedback">
+                            <input id="exampleInputEmail1" type="email" placeholder="Enter email" autocomplete="off" required="" class="form-control" data-parsley-id="4">
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input id="exampleInputPassword1" type="password" placeholder="Password" required="" class="form-control" data-parsley-id="6">
+                        </div>
+                        <div class="clearfix">
+                            <div class="pull-right">
+                                <a href="" class="text-muted">{% trans 'Forgot your password?' %}</a>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-block mt-lg">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% compress js %}
+        <script src="{% static 'vendor/jquery/dist/jquery.js' %}"></script>
+        <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script>
+    {% endcompress %}
+</body>
+</html>

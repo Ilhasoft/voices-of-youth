@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'taggit',
+    'compressor',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     'voicesofyouth.report',
     'voicesofyouth.api',
     'voicesofyouth.translation',
+    'voicesofyouth.voyadmin',
 ]
 
 if DEBUG:

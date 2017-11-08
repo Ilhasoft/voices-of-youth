@@ -1,0 +1,75 @@
+{% load compress static i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Dashboard administration">
+    <meta name="keywords" content="">
+    <title>
+        {% block site_title %}
+            {{ site_title }}
+        {% endblock %}
+        Voices of Youth - Admin
+    </title>
+
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'vendor/fontawesome/css/font-awesome.min.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/simple-line-icons/css/simple-line-icons.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/animate.css/animate.min.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/datetimepick/css/bootstrap-datetimepicker-standalone.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/datetimepick/css/bootstrap-datetimepicker.min.css' %}">
+        <link rel="stylesheet" href="{% static 'vendor/sweetalert/dist/sweetalert.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" id="bscss">
+        <link rel="stylesheet" href="{% static 'css/app.css' %}" id="maincss">
+        <link rel="stylesheet" href="{% static 'css/print.css' %}" media="print" id="printcss">
+    {% endcompress %}
+
+    {% block extracss %}{% endblock %}
+</head>
+
+<body>
+
+<div class="wrapper">
+    {% include "voyadmin/topnavbar.html" %}
+
+    {% include "voyadmin/aside.html" %}
+
+    {% block content %}{% endblock %}
+</div>
+
+{% block extrahtml %}{% endblock %}
+
+{% compress js %}
+    <script src="{% static 'vendor/jquery/dist/jquery.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/dist/js/bootstrap.js' %}"></script>
+    <script src="{% static 'vendor/jquery.inputmask/dist/jquery.mask.js' %}"></script>
+    <script src="{% static 'vendor/jQuery-Storage-API/jquery.storageapi.js' %}"></script>
+    <script src="{% static 'vendor/animo.js/animo.js' %}"></script>
+    <script src="{% static 'vendor/slimScroll/jquery.slimscroll.min.js' %}"></script>
+    <script src="{% static 'vendor/moment/min/moment-with-locales.min.js' %}"></script>
+    <script src="{% static 'vendor/datetimepick/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'vendor/sweetalert/dist/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/app.js' %}"></script>
+{% endcompress %}
+
+{% if messages %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            {% for message in messages %}
+                $.notify({
+                    message: '{{ message }}',
+                    timeout: 5000,
+                    status: '{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %}',
+                    pos: 'top-center'
+                });
+            {% endfor %}
+        });
+    </script>
+{% endif %}
+
+{% block extrajs %}{% endblock %}
+
+</body>
+</html>
