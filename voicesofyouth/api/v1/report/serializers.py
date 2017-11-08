@@ -90,10 +90,13 @@ class ReportCommentsSerializer(VoySerializer):
 
 
 class ReportURLsSerializer(VoySerializer):
+    report = serializers.PrimaryKeyRelatedField(queryset=Report.objects.all(), required=True)
+
     class Meta:
         model = ReportURL
         fields = (
             'url',
+            'report',
         )
 
 

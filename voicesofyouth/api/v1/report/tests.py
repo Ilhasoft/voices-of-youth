@@ -7,7 +7,7 @@ from rest_framework.test import APITestCase
 from rest_framework_gis.fields import GeoJsonDict
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import Report, ReportURL
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import AVATARS
@@ -206,3 +206,36 @@ class TestReportComment(APITestCase):
         self.assertGreater(len(returned_data.pop('created_on')), 0)
         self.assertGreater(len(returned_data.pop('modified_on')), 0)
         self.assertDictEqual(returned_data, expected_data)
+
+
+class TestReportURL(APITestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.url_list = reverse_lazy('report-urls-list')
+        cls.report = mommy.make(Report)
+        cls.url_detail = reverse_lazy('report-urls-detail', args=[cls.report.id, ])
+        cls.user = User.objects.create_user('user', password='MyP4ssw0rd', first_name='Authenticated', last_name='User')
+        cls.user_credentials = {'username': 'user', 'password': 'MyP4ssw0rd'}
+
+    @classmethod
+    def tearDownClass(cls):
+        pass
+
+    def test_post_url(self):
+        """
+        We can create a url to report?
+        """
+        self.maxDiff = None
+        self.assertEqual(Report.objects.count(), 1)
+        self.assertEqual(ReportURL.objects.count(), 0)
+        self.client.login(**self.user_credentials)
+        data = {
+            'report': self.report.id,
+            'url': 'http://testserver.com.br',
+        }
+        response = self.client.post(self.url_list, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        urls = ReportURL.objects.all()
+        self.assertEqual(urls.count(), 1)
+        response = self.client.get(self.url_detail)
+        self.assertDictEqual(response.data, data)

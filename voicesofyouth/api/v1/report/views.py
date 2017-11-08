@@ -54,7 +54,7 @@ class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = ReportFilesResultsSetPagination
 
 
-class ReportURLsViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportURLsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
