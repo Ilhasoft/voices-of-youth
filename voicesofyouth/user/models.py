@@ -5,6 +5,7 @@ from django.db import models
 from django.db.models.query_utils import Q
 from django.utils.functional import cached_property
 
+
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
 __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
@@ -67,6 +68,20 @@ class MapperUser(VoyUser):
     class Meta:
         proxy = True
 
+    @property
+    def reports(self):
+        return self.report_report_creations.all()
+
+    @property
+    def themes(self):
+        from voicesofyouth.theme.models import Theme
+        return Theme.objects.filter(mappers_group__user=self)
+
+    @property
+    def projects(self):
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(themes__in=self.themes).distinct()
+
 
 class LocalAdminUserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -104,7 +119,7 @@ class AdminUserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs).filter(Q(is_superuser=True) |
                                                           Q(groups__name__contains='- local admin')).distinct()
-        return qs.order_by('is_superuser')
+        return qs.order_by('-is_superuser')
 
 
 class AdminUser(VoyUser):

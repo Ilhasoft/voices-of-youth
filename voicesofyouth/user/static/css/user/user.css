@@ -1,0 +1,27 @@
+.media {
+    position: relative;
+}
+
+.vertical-div {
+    position: absolute;
+    top: 50%;
+}
+
+.media-body {
+    left: 50px;
+    position: relative;
+}
+
+.container {
+    display: flex;
+    align-content: flex-start;
+}
+
+.item {
+    margin: auto;
+    align-self: center;
+}
+
+.btn-default {
+    background-color: #E9E9E9;
+}
