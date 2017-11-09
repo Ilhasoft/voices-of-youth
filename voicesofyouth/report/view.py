@@ -9,6 +9,9 @@ class ReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context['theme'] = get_object_or_404(Project, pk=project_id)
+
         context['reports'] = Report.objects.all()[:15]
         return context
 
