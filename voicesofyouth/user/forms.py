@@ -5,8 +5,14 @@ from voicesofyouth.theme.models import Theme
 
 
 class MapperFilterForm(forms.Form):
-    project = forms.ModelChoiceField(queryset=None, required=False)
-    theme = forms.ModelChoiceField(queryset=None, required=False)
+    project = forms.ModelChoiceField(queryset=None,
+                                     required=False,
+                                     empty_label='Project',
+                                     widget=forms.Select(attrs={'class': 'form-control'}))
+    theme = forms.ModelChoiceField(queryset=None,
+                                   required=False,
+                                   empty_label='Theme',
+                                   widget=forms.Select(attrs={'class': 'form-control'}))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
