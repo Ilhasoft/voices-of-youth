@@ -1,0 +1,20 @@
+#theme .box .header {
+    color: #fff;
+}
+
+#theme .box span {
+    padding-left: 10px;
+    padding-right: 10px; 
+}
+
+#theme .box .buttons .btn.btn-default {
+    border-color: #00CBFF;
+}
+
+#theme .box .buttons {
+    padding: 28px 0px 28px;
+}
+
+#theme .box .buttons a {
+    min-width: 100px;
+}

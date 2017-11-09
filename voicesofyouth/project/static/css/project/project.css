@@ -20,6 +20,6 @@
     border-color: #00CBFF;
 }
 
-#project .box .buttons button {
+#project .box .buttons a {
     min-width: 100px;
 }
