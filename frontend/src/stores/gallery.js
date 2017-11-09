@@ -51,7 +51,7 @@ export default {
   },
 
   actions: {
-    getGalleryImages({ commit }, obj) {
+    getGalleryImages({ commit, dispatch }, obj) {
       let queryString = '';
       let currentPage = 1;
 
@@ -65,6 +65,7 @@ export default {
         commit(TYPES.SET_GALLERY_IMAGES, response.data);
         commit(TYPES.SET_GALLERY_PAGE, currentPage);
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },

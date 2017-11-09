@@ -112,6 +112,7 @@ import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
 import markerPixel from '../../assets/img/pixel.png';
+import router from '../../router/';
 
 import HeaderIndex from '../header/Index';
 import LinkItem from '../new-report/Link';
@@ -165,30 +166,35 @@ export default {
   },
 
   mounted() {
-    this.getUserThemes(this.currentUser.id);
-    this.$refs.map.mapObject.zoomControl.remove();
-    L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
+    if (!this.userIsLogged) {
+      router.push({ name: 'login' });
+    } else {
+      this.getUserThemes(this.currentUser.id);
+      this.$refs.map.mapObject.zoomControl.remove();
+      L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
-    this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
-      .addTo(this.$refs.map.mapObject);
+      this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
+        .addTo(this.$refs.map.mapObject);
 
-    this.marker.on('move', (e) => {
-      this.getGeoLocation({
-        latitude: e.latlng.lat,
-        longitude: e.latlng.lng,
-      }).then((address) => {
-        this.location = {
-          type: 'Point',
-          coordinates: [e.latlng.lat, e.latlng.lng],
-        };
-        this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+      this.marker.on('move', (e) => {
+        this.getGeoLocation({
+          latitude: e.latlng.lat,
+          longitude: e.latlng.lng,
+        }).then((address) => {
+          this.location = {
+            type: 'Point',
+            coordinates: [e.latlng.lat, e.latlng.lng],
+          };
+          this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+        });
       });
-    });
+    }
   },
 
   computed: {
     ...mapGetters({
       currentUser: 'getUserData',
+      userIsLogged: 'userIsLogged',
       reportData: 'getReportNewData',
     }),
 

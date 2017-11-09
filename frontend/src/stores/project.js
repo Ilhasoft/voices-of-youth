@@ -39,10 +39,11 @@ export default {
   },
 
   actions: {
-    setProjects({ commit }) {
+    setProjects({ commit, dispatch }) {
       axios.get('/api/projects').then((response) => {
         commit(TYPES.SET_PROJECTS_LIST, response.data);
       }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
@@ -73,6 +74,7 @@ export default {
           localStorage.setItem('language', JSON.stringify(obj));
           window.location.reload();
         }).catch((error) => {
+          dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
           throw new Error(error);
         });
       }

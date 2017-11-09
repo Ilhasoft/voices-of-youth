@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as TYPES from './types';
+import helper from '../helper';
 
 export default {
   state: {
@@ -27,7 +28,7 @@ export default {
 
   actions: {
     setCurrentUser({ commit }) {
-      const userData = JSON.parse(localStorage.getItem('user'));
+      const userData = helper.getItem('user');
       if (userData) {
         commit(TYPES.SET_USER_DATA, {
           userData: userData[0],
@@ -36,30 +37,29 @@ export default {
       }
     },
 
-    executeLogin({ commit }, obj) {
+    executeLogin({ commit, dispatch }, obj) {
       return axios.post('/api/get_auth_token/', {
         username: obj.username,
         password: obj.password,
       }).then((response) => {
         const token = response.data.token;
-        localStorage.setItem('token', JSON.stringify(token));
+        helper.setItem('token', token);
         return token;
       }).then((token) => {
         const user = axios.get(`/api/users/?auth_token=${token}`).then((response) => {
-          localStorage.setItem('user', JSON.stringify(response.data));
+          helper.setItem('user', response.data);
           return response.data;
         });
         return user;
       }).catch((error) => {
-        commit(TYPES.SET_LOGIN_ERROR, error.message);
-        return error.message;
+        dispatch('notifyOpen', { type: 0, message: error.response.data.non_field_errors[0] });
       });
     },
 
     executeLogout({ commit }) {
-      localStorage.setItem('user', '');
-      localStorage.setItem('token', '');
-      commit(TYPES.SET_USER_DATA, {
+      helper.setItem('user', '');
+      helper.setItem('token', '');
+      return commit(TYPES.SET_USER_DATA, {
         userData: {},
         isLogged: false,
       });
