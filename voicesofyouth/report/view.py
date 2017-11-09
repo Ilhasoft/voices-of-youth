@@ -1,7 +1,10 @@
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView
 
+from voicesofyouth.theme.models import Theme
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import Report
+from voicesofyouth.report.forms import ReportFilterForm
 
 
 class ReportView(TemplateView):
@@ -9,10 +12,11 @@ class ReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        theme_id = kwargs['theme']
 
-        context['theme'] = get_object_or_404(Project, pk=project_id)
-
-        context['reports'] = Report.objects.all()[:15]
+        context['theme'] = get_object_or_404(Theme, pk=theme_id)
+        context['reports'] = Report.objects.filter(theme=context['theme'])
+        context['filter_form'] = ReportFilterForm(self, project=context['theme'].project)
         return context
 
 

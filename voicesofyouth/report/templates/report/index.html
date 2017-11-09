@@ -1,10 +1,68 @@
 {% extends "voyadmin/base.html" %}
 
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+{% endblock %}
+
 {% block content %}
 <section>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="report">
         <div class="content-heading">
-            Reports
+            {{ theme.name }}
+        </div>
+
+        <ol class="breadcrumb">
+            <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
+            <li><a href="{% url 'voy-admin:themes:index' theme.project.pk %}">{{ theme.project.name }}</a></li>
+            <li>{{ theme.name }}</li>
+            <li>{% trans 'Reports' %}</li>
+        </ol>
+
+        <div class="content-heading">
+            <div class="row">
+                <form action="{% url 'voy-admin:projects:index' %}" method="GET">
+                    <div class="col-lg-1 col-md-1">
+                        <p class="filter">{% trans 'Filter by:' %}</p>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <select name="account" class="form-control m-b">
+                            <option>{% trans 'Theme' %}</option>
+                            {% for theme in reports %}
+                            <option>{{ theme.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3">
+                        <select name="account" class="form-control m-b">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                            <option>Option 4</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 col-md-2">
+                        <select name="account" class="form-control m-b">
+                            option
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                            <option>Option 4</option>
+                        </select>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 pull-right">
+                        <div class="input-group m-b">
+                            <input type="text" class="form-control" name="query" placeholder="{% trans 'Search for project' %}">
+                            <span class="input-group-addon fa fa-search"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div class="panel panel-default">
