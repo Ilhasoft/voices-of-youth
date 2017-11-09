@@ -1,5 +1,11 @@
 {% extends "voyadmin/base.html" %}
 
+{% load static i18n %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/project/project.css' %}">
+{% endblock %}
+
 {% block content %}
 <section>
     <div class="content-wrapper">
@@ -7,14 +13,50 @@
             My projects
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <ul>
-                    {% for project in projects %}
-                        <li>{{ project }}</li>
-                    {% endfor %}
-                </ul>
+        <div class="content-heading">
+            <div class="row">
+                <form action="{% url 'voy-admin:projects:index' %}" method="GET">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="input-group m-b">
+                            <input type="text" class="form-control" name="query" placeholder="Search for project">
+                            <span class="input-group-addon fa fa-search"></span>
+                        </div>
+                    </div>
+                </form>
             </div>
+        </div>
+
+        <div class="row" id="project">
+            {% for project in projects %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel panel-primary box">
+                        <div class="panel-heading header">
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <div class="text-md">{{ project }}</div>
+                                    <p class="m0">{{ project.created_on|date:"d M Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="panel-footer clearfix btn-block">
+                            <span class="pull-left">Themes</span>
+                            <span class="pull-right">{{ project.themes.count }}</span>
+                        </a>
+                        <a href="#" class="panel-footer clearfix btn-block">
+                            <span class="pull-left">Admins</span>
+                            <span class="pull-right">{{ project.local_admin_group.user_set.count }}</span>
+                        </a>
+                        <div class="row buttons">
+                            <div class="col-xs-6 text-center">
+                                <button type="button" class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</button>
+                            </div>
+                            <div class="col-xs-6 text-center">
+                                <button type="button" class="btn btn-oval btn-lg btn-default">{% trans 'View' %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </section>
