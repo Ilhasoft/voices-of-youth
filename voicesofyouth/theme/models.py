@@ -58,7 +58,7 @@ class Theme(BaseModel):
         unique_together = ('project', 'name')
 
     def __str__(self):
-        return self.name
+        return f'{self.name}({self.project})'
 
     @property
     def reports(self):
