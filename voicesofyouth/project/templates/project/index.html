@@ -1,9 +1,9 @@
 {% extends "voyadmin/base.html" %}
 
-{% load static i18n %}
+{% load static i18n sass_tags %}
 
 {% block extracss %}
-    <link rel="stylesheet" href="{% static 'css/project/project.css' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
 {% endblock %}
 
 {% block content %}
