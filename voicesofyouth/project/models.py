@@ -3,8 +3,10 @@ import uuid
 from django.conf import settings as django_settings
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.db import models as gismodels
 from django.db import models
+from django.db.models.query_utils import Q
 from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save
 from django.db.models.signals import pre_save
@@ -83,6 +85,13 @@ class Project(BaseModel):
 
     def __str__(self):
         return self.name
+
+    @property
+    def all_tags(self):
+        ct_project = ContentType.objects.get_for_model(self._meta.model)
+        ct_theme = ContentType.objects.get_for_model(self.themes.model)
+        return Tag.objects.filter(Q(content_type=ct_theme, object_id__in=[i[0] for i in self.themes.values_list('id')]) |
+                                  Q(content_type=ct_project, object_id=self.id)).distinct()
 
 
 ###############################################################################
