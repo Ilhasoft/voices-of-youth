@@ -1,14 +1,5 @@
-.media {
-    position: relative;
-}
-
-.vertical-div {
-    position: absolute;
-    top: 50%;
-}
-
 .media-body {
-    left: 50px;
+    left: 2em;
     position: relative;
 }
 
