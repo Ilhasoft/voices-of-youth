@@ -21,18 +21,14 @@ class MapperView(TemplateView):
     template_name = 'user/mapper.html'
     form_class = MapperFilterForm
 
-    def _delete(self, id_list):
-        MapperUser.objects.filter(id__in=id_list).delete()
-
     def post(self, request):
         form = self.form_class(request.POST)
         context = {'filter_form': form}
         delete = request.POST.get('deleteMappers')
 
         if delete:
-            delete = [int(i) for i in delete.split(',')]
             try:
-                self._delete(delete)
+                MapperUser.objects.filter(id__in=delete.split(',')).delete()
             except Exception:
                 return HttpResponse(status=500)
             return HttpResponse("Users deleted!")
@@ -46,6 +42,7 @@ class MapperView(TemplateView):
                 context['mappers'] = []
             elif theme:
                 context['mappers'] = theme.mappers_group.user_set.all()
+                print(theme.mappers_group.user_set.all().first().themes)
             elif project:
                 groups_ids = project.themes.values_list('mappers_group__id')
                 context['mappers'] = MapperUser.objects.filter(groups__id__in=groups_ids)
