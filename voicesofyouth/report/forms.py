@@ -1,31 +1,40 @@
 from django import forms
-from django.contrib.contenttypes.models import ContentType
-from django.db.models.query_utils import Q
+from django.utils.translation import ugettext as _
 
-from voicesofyouth.theme.models import Theme
-from voicesofyouth.tag.models import Tag
+
+class MyModelChoiceField(forms.ModelChoiceField):
+
+    def label_from_instance(self, obj):
+        return obj.name
 
 
 class ReportFilterForm(forms.Form):
-    theme = forms.ModelChoiceField(queryset=None,
-                                   required=False,
-                                   empty_label='Theme',
-                                   widget=forms.Select(attrs={'class': 'form-control m-b'}))
+    theme = MyModelChoiceField(queryset=None,
+                               required=False,
+                               empty_label='Theme',
+                               widget=forms.Select(attrs={'class': 'form-control m-b'}))
 
-    tag = forms.ModelChoiceField(queryset=None,
-                                 required=False,
-                                 empty_label='Tag',
-                                 widget=forms.Select(attrs={'class': 'form-control m-b'}))
+    tag = MyModelChoiceField(queryset=None,
+                             required=False,
+                             empty_label='Tag',
+                             widget=forms.Select(attrs={'class': 'form-control m-b'}))
+
+    search = forms.CharField(
+        label=_('Search'),
+        required=False,
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Search for report'),
+                'required': False,
+                'class': 'form-control ',
+            }
+        )
+    )
 
     def __init__(self, *args, **kwargs):
-        project_qs = kwargs.pop('project')
+        theme = kwargs.pop('theme')
         super(ReportFilterForm, self).__init__(*args, **kwargs)
 
-        ct_project = ContentType.objects.get_for_model(project_qs)
-
-        themes_qs = Theme.objects.filter(project=project_qs).distinct()
-        tags_qs = Tag.objects.filter(Q(content_type=ct_project, object_id=project_qs.id)).distinct()
-        # tag_qs = Tag.objects.filter(project=project_qs).distinct()
-
-        self.fields['theme'].queryset = themes_qs
-        self.fields['tag'].queryset = tags_qs
+        self.fields['theme'].queryset = theme.project.themes.all()
+        self.fields['tag'].queryset = theme.all_tags

@@ -2,4 +2,81 @@
     .filter {
         font-size: 15px;
     }
+
+    .b-bottom {
+        border-bottom: 1px solid #efefef;
+    }
+
+    .b-left {
+        border-left: 1px solid #efefef;
+        min-height: 230px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    @media screen and (max-width: 767px) {
+        .b-left {
+            min-height: 0px;
+        }
+    }
+
+    .block {
+        display: block;
+    }
+
+    button {
+        width: 150px;
+        margin: 15px;
+        height: 39px;
+    }
+
+    .panel-body {
+        padding: 0px 15px 0px 15px;
+
+        .m-top {
+            margin-top: 10px;
+        }
+
+        .comments {
+            color: red;
+        }
+        
+        .badge-theme {
+            padding: 10px;
+            border-radius: 50px;
+        }
+
+        .badge-tags {
+            padding: 8px;
+            border-radius: 50px;
+            background-color: #c5c5c5;
+        }
+
+        .badge-image {
+            position:relative;
+            padding-top:20px;
+            display:inline-block;
+
+            .text {
+                position: absolute;
+                right: 28px;
+                min-width: 28px;
+                min-height: 28px;
+                background-color: #00CBFF;
+                text-align: center;
+                border-radius: 50px;
+                color: white;
+                font-size: 20px;
+                bottom: 30px;
+            }
+        }
+    }
+
+    .view {
+        border-color: #00CBFF;
+    }
+
+    .approve {
+        border-color: #B7E683;
+    }
 }

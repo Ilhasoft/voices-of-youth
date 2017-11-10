@@ -69,6 +69,14 @@ class Report(BaseModel):
     def theme_color(self):
         return self.theme.color
 
+    @property
+    def images(self):
+        return self.files.filter(media_type=FILE_TYPE_IMAGE)
+
+    @property
+    def videos(self):
+        return self.files.filter(media_type=FILE_TYPE_VIDEO)
+
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
