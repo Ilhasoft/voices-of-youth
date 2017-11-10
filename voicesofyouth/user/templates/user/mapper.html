@@ -28,7 +28,7 @@
                                     <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox"
                                          data-original-title="" title="">
                                         <label>
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="mapper_check_all">
                                             <span class="fa fa-check"></span>
                                         </label>
                                     </div>
@@ -148,12 +148,20 @@
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
     <script type="text/javascript">
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+        disable_remove_button = (state) => {
+            $("input[id^='remove_mappers']").prop("disabled", state);
+        };
+
         $("[id^='mapper_check']").change((event) => {
             if (event.target.checked) {
-                $("input[id^='remove_mappers']").prop("disabled", false);
+                disable_remove_button(false);
             } else {
+                if (event.target.id === 'mapper_check_all' && !event.target.checked) {
+                    disable_remove_button(true);
+                }
                 if ($("[id^='mapper_check']input:checked").length <= 0) {
-                    $("input[id^='remove_mappers']").prop("disabled", true);
+                    disable_remove_button(true);
                 }
             }
         });
