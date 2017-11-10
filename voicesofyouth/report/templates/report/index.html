@@ -16,13 +16,13 @@
         <ol class="breadcrumb">
             <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
             <li><a href="{% url 'voy-admin:themes:index' theme.project.pk %}">{{ theme.project.name }}</a></li>
-            <li>{{ theme.name }}</li>
+            <li><a href="{% url 'voy-admin:reports:index' theme.pk %}">{{ theme.name }}</a></li>
             <li>{% trans 'Reports' %}</li>
         </ol>
 
         <div class="content-heading">
             <div class="row">
-                <form action="{% url 'voy-admin:reports:index' theme.pk %}" method="GET" id="form_search">
+                <form action="" method="GET" id="form_search">
                     <div class="col-lg-1 col-md-1">
                         <p class="filter">{% trans 'Filter by:' %}</p>
                     </div>
@@ -122,12 +122,22 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-$('#id_theme').change(function() {
-    $('#form_search').submit();
+var form_action = '{% url 'voy-admin:reports:filter' %}';
+var theme = $('#id_theme option:selected').val();
+var tag = $('#id_tag option:selected').val();
+
+$('#id_theme').change(function(e) {
+    e.preventDefault();
+    var theme = e.target.value;
+    if (theme) {
+        window.location = form_action + theme + (tag ? '?tag=' + tag : '');
+    }
 });
 
-$('#id_tag').change(function() {
-    $('#form_search').submit();
+$('#id_tag').change(function(e) {
+    e.preventDefault();
+    var tag = e.target.value;
+    window.location = form_action + theme + (tag ? '?tag=' + tag : '');
 });
 </script>
 {% endblock extrajs %}

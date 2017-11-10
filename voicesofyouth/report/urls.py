@@ -6,6 +6,7 @@ from voicesofyouth.report.view import ReportView
 
 urlpatterns = [
     url(r'^(?P<theme>[0-9])/$', ReportView.as_view(), name='index'),
+    url(r'^$', ReportView.as_view(), name='filter'),
     url(r'^new/', AddReportView.as_view(), name='new'),
     url(r'^pending/', PendingReportView.as_view(), name='pending'),
 ]
