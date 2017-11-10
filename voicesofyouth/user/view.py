@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
@@ -23,6 +24,14 @@ class MapperView(TemplateView):
     def post(self, request):
         form = self.form_class(request.POST)
         context = {'filter_form': form}
+        delete = request.POST.get('deleteMappers')
+
+        if delete:
+            try:
+                MapperUser.objects.filter(id__in=delete.split(',')).delete()
+            except Exception:
+                return HttpResponse(status=500)
+            return HttpResponse("Users deleted!")
 
         if form.is_valid():
             cleaned_data = form.cleaned_data
@@ -33,6 +42,7 @@ class MapperView(TemplateView):
                 context['mappers'] = []
             elif theme:
                 context['mappers'] = theme.mappers_group.user_set.all()
+                print(theme.mappers_group.user_set.all().first().themes)
             elif project:
                 groups_ids = project.themes.values_list('mappers_group__id')
                 context['mappers'] = MapperUser.objects.filter(groups__id__in=groups_ids)

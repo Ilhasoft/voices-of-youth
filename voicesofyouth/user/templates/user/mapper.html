@@ -28,16 +28,19 @@
                                     <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox"
                                          data-original-title="" title="">
                                         <label>
-                                            <input type="checkbox">
+                                            <input type="checkbox" id="mapper_check_all">
                                             <span class="fa fa-check"></span>
                                         </label>
                                     </div>
                                 </th>
                                 <th>
                                     <div class="col-xs-1">
-                                        <form action="" method="post">
-                                            <button class="btn btn-default btn-lg">{% trans "Remove" %}</button>
-                                        </form>
+                                        <input type="button"
+                                               class="btn btn-default btn-lg"
+                                               id="remove_mappers"
+                                               value="Remove"
+                                               disabled
+                                        >
                                     </div>
                                     <div class="col-xs-11">
                                         <form action={% url "voy-admin:users:mapper" %} method="post" role="form">
@@ -69,7 +72,8 @@
                                     <td>
                                         <div class="checkbox c-checkbox">
                                             <label>
-                                                <input type="checkbox">
+                                                <input type="checkbox" value="{{ mapper.id }}"
+                                                       id="mapper_check_{{ mapper.id }}">
                                                 <span class="fa fa-check"></span>
                                             </label>
                                         </div>
@@ -138,3 +142,70 @@
         </div>
     </section>
 {% endblock content %}
+
+{% block extrajs %}
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+    <script type="text/javascript">
+        axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+        disable_remove_button = (state) => {
+            $("input[id^='remove_mappers']").prop("disabled", state);
+        };
+
+        $("[id^='mapper_check']").change((event) => {
+            if (event.target.checked) {
+                disable_remove_button(false);
+            } else {
+                if (event.target.id === 'mapper_check_all' && !event.target.checked) {
+                    disable_remove_button(true);
+                }
+                if ($("[id^='mapper_check']input:checked").length <= 0) {
+                    disable_remove_button(true);
+                }
+            }
+        });
+        $('#remove_mappers').click(function () {
+            swal({
+                title: "{% trans "Are you sure?" %}",
+                text: "{% trans "We will delete the selected mapper(s)." %}",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then(willDelete => {
+                if (willDelete) {
+                    event.preventDefault();
+                    let usersToDelete = new Promise((resolve, reject) => {
+                        let mappers = new Array();
+                        let params = new URLSearchParams();
+                        mappers.push(_.map($("[id^='mapper_check']input:checked"),
+                            mapper => {
+                                return mapper.value
+                            }));
+                        params.append('deleteMappers', mappers);
+                        console.log(params);
+                        resolve(params);
+                    });
+                    usersToDelete.then(
+                        users => {
+                            axios.post("{% url 'voy-admin:users:mapper' %}", users)
+                                .then(() => {
+                                    swal("Success", "Users deleted!", "success").then(value => {
+                                        window.location.href = "{% url "voy-admin:users:mapper" %}"
+                                    })
+                                })
+                                .catch(() => {
+                                    swal("Ops!", "Somethings wrong happen!", "error")
+                                        .then(value => {
+                                            window.location.href = "{% url "voy-admin:users:mapper" %}"
+                                        })
+                                });
+
+                        }
+                    );
+
+                }
+            });
+        })
+    </script>
+{% endblock %}
