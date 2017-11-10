@@ -11,10 +11,13 @@
             <div class="content-heading">
                 Mappers
                 <div class="input-group margin-bottom-sm col-xs-2 pull-right">
-                    <form action="">
-                        <input class="form-control" type="text" placeholder="Search for mappers">
+                    <form action="{% url "voy-admin:users:mapper" %}" id="mapper_search" method="post">
+                        {% csrf_token %}
+                        {{ filter_form.search }}
                     </form>
-                    <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+                    <span id="post_mapper_search" class="input-group-addon" style="cursor:pointer;">
+                        <i class="fa fa-search fa-fw"></i>
+                    </span>
                 </div>
             </div>
 
@@ -48,10 +51,15 @@
                                                 {{ form.non_field_errors }}
                                                 {% csrf_token %}
                                                 <p>Filter by:</p>
+                                                {% for field in filter_form.hidden_fields %}
+                                                    {{ field }}
+                                                {% endfor %}
                                                 {% for field in filter_form.visible_fields %}
+                                                    {% if field != filter_form.search %}
                                                     <div class="col-xs-3">
                                                         {{ field }}
                                                     </div>
+                                                    {% endif %}
                                                 {% endfor %}
                                                 <div>
                                                     <input
@@ -146,6 +154,12 @@
 {% block extrajs %}
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.4/lodash.min.js"></script>
+    <script type="text/javascript">
+        $("#post_mapper_search").click(() => {
+            form = $("#mapper_search");
+            form.submit();
+        });
+    </script>
     <script type="text/javascript">
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 

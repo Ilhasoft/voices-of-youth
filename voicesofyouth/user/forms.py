@@ -13,6 +13,9 @@ class MapperFilterForm(forms.Form):
                                    required=False,
                                    empty_label='Theme',
                                    widget=forms.Select(attrs={'class': 'form-control'}))
+    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Search for mappers',
+                                                           'class': 'form-control'}),
+                             required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
