@@ -90,8 +90,10 @@ class Project(BaseModel):
     def all_tags(self):
         ct_project = ContentType.objects.get_for_model(self._meta.model)
         ct_theme = ContentType.objects.get_for_model(self.themes.model)
-        return Tag.objects.filter(Q(content_type=ct_theme, object_id__in=[i[0] for i in self.themes.values_list('id')]) |
-                                  Q(content_type=ct_project, object_id=self.id)).distinct()
+        return Tag.objects.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                    taggit_taggeditem_items__object_id__in=self.themes.values_list('id')) |
+                                  Q(taggit_taggeditem_items__content_type=ct_project,
+                                    taggit_taggeditem_items__object_id=self.id)).distinct()
 
 
 ###############################################################################

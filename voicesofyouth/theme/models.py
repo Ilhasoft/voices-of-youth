@@ -66,8 +66,10 @@ class Theme(BaseModel):
     def all_tags(self):
         ct_project = ContentType.objects.get_for_model(self.project._meta.model)
         ct_theme = ContentType.objects.get_for_model(self._meta.model)
-        return Tag.objects.filter(Q(content_type=ct_theme, object_id=self.id) |
-                                  Q(content_type=ct_project, object_id=self.project.id)).distinct()
+        return Tag.objects.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                    taggit_taggeditem_items__object_id=self.id) |
+                                  Q(taggit_taggeditem_items__content_type=ct_project,
+                                    taggit_taggeditem_items__object_id=self.project.id)).distinct()
 
     @property
     def reports(self):
