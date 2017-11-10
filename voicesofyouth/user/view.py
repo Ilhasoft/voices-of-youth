@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
@@ -20,9 +21,21 @@ class MapperView(TemplateView):
     template_name = 'user/mapper.html'
     form_class = MapperFilterForm
 
+    def _delete(self, id_list):
+        MapperUser.objects.filter(id__in=id_list).delete()
+
     def post(self, request):
         form = self.form_class(request.POST)
         context = {'filter_form': form}
+        delete = request.POST.get('deleteMappers')
+
+        if delete:
+            delete = [int(i) for i in delete.split(',')]
+            try:
+                self._delete(delete)
+            except Exception:
+                return HttpResponse(status=500)
+            return HttpResponse("Users deleted!")
 
         if form.is_valid():
             cleaned_data = form.cleaned_data
