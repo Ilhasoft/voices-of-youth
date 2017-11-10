@@ -15,9 +15,11 @@ class _ReportTaggableManager(_TaggableManager):
         instance = self.instance
         ct_project = ContentType.objects.get_for_model(instance.theme.project._meta.model)
         ct_theme = ContentType.objects.get_for_model(instance.theme._meta.model)
-        qs_tags = Tag.objects.filter(Q(content_type=ct_theme, object_id=instance.theme.id) |
-                                     Q(content_type=ct_project, object_id=instance.theme.project.id))
+        qs_tags = Tag.objects.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                       taggit_taggeditem_items__object_id=instance.theme.id) |
+                                     Q(taggit_taggeditem_items__content_type=ct_project,
+                                       taggit_taggeditem_items__object_id=instance.theme.project.id))
         for tag in tag_objs:
-            if not qs_tags.filter(tag__name=tag).exists():
+            if not qs_tags.filter(taggit_taggeditem_items__tag__name=tag).exists():
                 raise InvalidTag()
         return tag_objs
