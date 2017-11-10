@@ -52,6 +52,20 @@ class VoyUser(AbstractUser):
     def is_mapper(self):
         return self.groups.filter(name__contains='- mappers').exists()
 
+    @property
+    def reports(self):
+        return self.report_report_creations.all()
+
+    @property
+    def themes(self):
+        from voicesofyouth.theme.models import Theme
+        return Theme.objects.filter(mappers_group__user=self)
+
+    @property
+    def projects(self):
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(themes__in=self.themes).distinct()
+
 
 class MapperUserManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -67,20 +81,6 @@ class MapperUser(VoyUser):
 
     class Meta:
         proxy = True
-
-    @property
-    def reports(self):
-        return self.report_report_creations.all()
-
-    @property
-    def themes(self):
-        from voicesofyouth.theme.models import Theme
-        return Theme.objects.filter(mappers_group__user=self)
-
-    @property
-    def projects(self):
-        from voicesofyouth.project.models import Project
-        return Project.objects.filter(themes__in=self.themes).distinct()
 
 
 class LocalAdminUserManager(models.Manager):
