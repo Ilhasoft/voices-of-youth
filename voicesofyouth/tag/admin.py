@@ -6,7 +6,7 @@ from .models import Tag
 
 
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'urgency_score')
+    list_display = ('name',)
 
 
 admin.site.unregister(Taggit)

@@ -52,7 +52,7 @@ class Report(BaseModel):
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
-    tags = TaggableManager(through=Tag, blank=True, manager=_ReportTaggableManager)
+    tags = TaggableManager(blank=True, manager=_ReportTaggableManager)
 
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)

@@ -48,7 +48,7 @@ class Theme(BaseModel):
                                          blank=True,
                                          limit_choices_to={'name__icontains': '- mappers'})
     description = TextFieldTranslatable(null=True, blank=True)
-    tags = TaggableManager(through=Tag, blank=True)
+    tags = TaggableManager(blank=True)
     color = models.CharField(max_length=6,
                              validators=[MinLengthValidator(6), ],
                              null=True,

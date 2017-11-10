@@ -14,12 +14,12 @@ from django.dispatch import receiver
 from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
+from taggit.models import Tag
 from unipath import Path
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from voicesofyouth.core.utils import resize_image
-from voicesofyouth.tag.models import Tag
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
@@ -75,7 +75,7 @@ class Project(BaseModel):
     thumbnail = models.ImageField(upload_to=upload_to)
     boundary = gismodels.PolygonField()
     translations = GenericRelation(Translation)
-    tags = TaggableManager(through=Tag, blank=True)
+    tags = TaggableManager(blank=True)
 
     class Meta:
         verbose_name = _('Project')
