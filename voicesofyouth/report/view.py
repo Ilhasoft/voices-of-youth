@@ -1,10 +1,14 @@
 from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.report.models import REPORT_STATUS_PENDING
+from voicesofyouth.report.models import REPORT_STATUS_PENDING, REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.forms import ReportFilterForm
+from voicesofyouth.voyadmin.utils import get_paginator
 
 
 class ReportListView(TemplateView):
@@ -27,6 +31,7 @@ class ReportListView(TemplateView):
 
         if form.is_valid():
             cleaned_data = form.cleaned_data
+            page = self.request.GET.get('page')
 
             qs_filter = {}
             if cleaned_data['theme'] is not None:
@@ -38,7 +43,7 @@ class ReportListView(TemplateView):
             if cleaned_data['search'] is not None:
                 qs_filter['name__icontains'] = cleaned_data['search']
 
-            context['reports'] = Report.objects.filter(**qs_filter)
+            context['reports'] = get_paginator(Report.objects.filter(**qs_filter), page)
 
         return context
 
@@ -54,6 +59,18 @@ class ReportView(TemplateView):
         context['theme'] = context['report'].theme
 
         return context
+
+
+class ReportApproveView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        report_id = kwargs['report']
+        if report_id:
+            report = get_object_or_404(Report, pk=report_id)
+            report.status = REPORT_STATUS_APPROVED
+            report.save()
+
+            messages.success(request, _('Report approved'))
+        return redirect(request.META.get('HTTP_REFERER'))
 
 
 class AddReportView(TemplateView):

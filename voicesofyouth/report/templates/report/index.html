@@ -109,16 +109,7 @@
             </div>
             <div class="panel-footer">
                 <div class="text-right">
-                    <ul class="pagination pagination-sm ">
-                        <li class="active"><a href="#">1</a>
-                        </li>
-                        <li><a href="#">2</a>
-                        </li>
-                        <li><a href="#">3</a>
-                        </li>
-                        <li><a href="#">»</a>
-                        </li>
-                    </ul>
+                    {% include "voyadmin/paginator.html" with paginator=reports %}
                 </div>
             </div>
         </div>

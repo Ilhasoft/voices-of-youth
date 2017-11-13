@@ -1,6 +1,7 @@
 $color_approve: #B7E683;
 $color_edit: #00CBFF;
 $color_reject: #E46A87;
+$color_delete: #DE486B;
 
 #report {
     .filter {
@@ -89,12 +90,13 @@ $color_reject: #E46A87;
 
 #new-report {
     .buttons {
-        button {
+        a {
             width: 100px;
             margin: 15px 5px;;
             height: 39px;
             border-radius: 50px;
             font-weight: bold;
+            padding-top: 10px;
         }
     }
 
@@ -106,6 +108,11 @@ $color_reject: #E46A87;
     .edit {
         border-color: $color_edit;
         color: $color_edit;
+    }
+
+    .delete {
+        border-color: $color_delete;
+        color: $color_delete;
     }
 
     .reject {
