@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 
 
 class MyModelChoiceField(forms.ModelChoiceField):
@@ -18,6 +19,10 @@ class ReportFilterForm(forms.Form):
                              required=False,
                              empty_label='Tag',
                              widget=forms.Select(attrs={'class': 'form-control m-b'}))
+
+    status = forms.ChoiceField(choices=(('', _('Status')),) + REPORT_STATUS_CHOICES,
+                               required=False,
+                               widget=forms.Select(attrs={'class': 'form-control m-b'}))
 
     search = forms.CharField(
         label=_('Search'),

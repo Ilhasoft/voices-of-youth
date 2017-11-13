@@ -35,15 +35,9 @@
                         {{ filter_form.tag }}
                     </div>
 
-                    <!-- <div class="col-lg-2 col-md-2">
-                        <select name="account" class="form-control m-b">
-                            option
-                            <option>Option 1</option>
-                            <option>Option 2</option>
-                            <option>Option 3</option>
-                            <option>Option 4</option>
-                        </select>
-                    </div> -->
+                    <div class="col-lg-2 col-md-2">
+                        {{ filter_form.status }}
+                    </div>
 
                     <div class="col-lg-3 col-md-3 pull-right">
                         <div class="input-group m-b">
@@ -96,7 +90,7 @@
                             <div class="text-center">
                                 <a href="{% url 'voy-admin:reports:view' report.pk %}" class="btn btn-oval btn-default view">{% trans 'View' %}</a>
                                 {% if report.status == 2 %}
-                                <a class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
+                                <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
                                 {% endif %}
 
                                 {% if report.status == 3 %}
@@ -126,28 +120,36 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-var form_action = '{% url 'voy-admin:reports:filter' %}';
 var theme = $('#id_theme option:selected').val();
 var tag = $('#id_tag option:selected').val();
+var status = $('#id_status option:selected').val();
+var search = $('#id_search').val();
 
 $('#id_theme').change(function(e) {
     e.preventDefault();
     var theme = e.target.value;
     if (theme) {
-        window.location = form_action + theme + (tag ? '?tag=' + tag : '');
+        filterList(theme, tag, status, search);
     }
 });
 
 $('#id_tag').change(function(e) {
     e.preventDefault();
-    var tag = e.target.value;
-    window.location = form_action + theme + (tag ? '?tag=' + tag : '');
+    filterList(theme, e.target.value, status, search);
+});
+
+$('#id_status').change(function(e) {
+    e.preventDefault();
+    filterList(theme, tag, e.target.value, search);
 });
 
 $('#id_search').bind('enterKey', function(e) {
     e.preventDefault();
-    var search = e.target.value;
-    window.location = form_action + theme + (tag ? '?tag=' + tag : '') + '&search=' + search;
+    filterList(theme, tag, status, e.target.value);
 });
+
+function filterList(theme, tag, status, search) {
+    window.location = '{% url 'voy-admin:reports:filter' %}' + theme + '?tag=' + tag + '&status=' + status + '&search=' + search;
+}
 </script>
 {% endblock extrajs %}

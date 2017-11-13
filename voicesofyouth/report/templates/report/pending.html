@@ -1,19 +1,81 @@
 {% extends "voyadmin/base.html" %}
 
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+{% endblock %}
+
 {% block content %}
 <section>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="report">
         <div class="content-heading">
-            Pending reports
+            {% trans 'Pending reports' %}
         </div>
 
         <div class="panel panel-default">
             <div class="panel-body">
-                <ul>
+                {% if reports %}
                     {% for report in reports %}
-                        <li>{{ report }}</li>
+                    <div class="row b-bottom">
+                        <div class="col-lg-2 col-md-2 d-flex align-items-center">
+                            {% if report.images.first %}
+                            <div class="badge-image">
+                                <span class="text">{{ report.files.count }}</span>
+                                <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-lg-8 col-md-8 m-top">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10">
+                                    <h4 class="text-lg-left block">{{ report.name }}</h4>
+                                    <small class="text-lg-left"></small>{{ report.created_by.first_name }}
+                                </div>
+                                <div class="col-lg-2 col-md-2 text-right">{{ report.created_on|date:'d M Y' }}</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="badge badge-theme" style="background-color: #{{ report.theme.color }}">{{ report.theme.name }}</div>
+                                    {% for tag in report.tags.all %}
+                                    <div class="badge badge-tags">{{ tag.name }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    {{ report.description|truncatewords:25 }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 b-left">
+                            <div class="text-center">
+                                <a href="{% url 'voy-admin:reports:view' report.pk %}" class="btn btn-oval btn-default view">{% trans 'View' %}</a>
+                                {% if report.status == 2 %}
+                                <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
+                                {% endif %}
+
+                                {% if report.status == 3 %}
+                                <a class="btn btn-oval btn-default reject" disabled="disabled">{% trans 'Rejected' %}</a>
+                                {% endif %}
+
+                                <p class="comments">{{ report.comments.count }} {% trans 'comments' %}</p>
+                            </div>
+                        </div>
+                    </div>
                     {% endfor %}
-                </ul>
+                {% else %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">
+                    {% include "voyadmin/paginator.html" with paginator=reports %}
+                </div>
             </div>
         </div>
     </div>

@@ -66,9 +66,9 @@
 <div id="modal">
     <div class="opacity"></div>
     <div class="content-modal">
-        <form action="{% url 'voy-admin:reports:view' report.id %}" id="formReject" method="post">
+        <form action="{% url 'voy-admin:reports:view' report.pk %}" id="formReject" method="post">
             <fieldset>
-                <input type="hidden" name="report" value="{{ report.id }}"/>
+                <input type="hidden" name="report" value="{{ report.pk }}"/>
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-12 text-center pt-10">

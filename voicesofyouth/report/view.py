@@ -27,7 +27,8 @@ class ReportListView(TemplateView):
         data = {
             'theme': theme_id,
             'tag': self.request.GET.get('tag'),
-            'search': self.request.GET.get('search')
+            'search': self.request.GET.get('search'),
+            'status': self.request.GET.get('status')
         }
 
         form = ReportFilterForm(data=data, theme=context['theme'])
@@ -43,6 +44,9 @@ class ReportListView(TemplateView):
 
             if cleaned_data['tag'] is not None:
                 qs_filter['tags'] = cleaned_data['tag']
+
+            if cleaned_data['status'] is not '':
+                qs_filter['status'] = int(cleaned_data['status'])
 
             if cleaned_data['search'] is not None:
                 qs_filter['name__icontains'] = cleaned_data['search']
@@ -101,5 +105,7 @@ class PendingReportView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reports'] = Report.objects.filter(status=REPORT_STATUS_PENDING)[:15]
+        page = self.request.GET.get('page')
+        context['reports'] = get_paginator(Report.objects.filter(status=REPORT_STATUS_PENDING), page)
+
         return context
