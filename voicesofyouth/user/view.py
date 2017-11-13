@@ -7,6 +7,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.user.forms import MapperFilterForm
 from voicesofyouth.user.models import AdminUser
 from voicesofyouth.user.models import MapperUser
+from voicesofyouth.voyadmin.utils import get_paginator
 
 
 class AdminView(TemplateView):
@@ -40,6 +41,7 @@ class MapperView(TemplateView):
             project = cleaned_data['project']
             theme = cleaned_data['theme']
             search = cleaned_data['search']
+            page = request.GET.get('page')
 
             if project and theme and project != theme.project:
                 qs = []
@@ -55,7 +57,8 @@ class MapperView(TemplateView):
                 qs = qs.filter(Q(username__icontains=search) |
                                Q(first_name__icontains=search) |
                                Q(last_name__icontains=search))
-            context['mappers'] = qs
+
+            context['mappers'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
 

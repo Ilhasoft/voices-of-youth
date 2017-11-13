@@ -118,31 +118,8 @@
                     <!-- END table-responsive-->
                     <div class="panel-footer">
                         <div class="row">
-                            <div class="col-lg-2">
-                                <div class="input-group pull-right">
-                                    <select class="input-sm form-control">
-                                        <option value="0">Bulk action</option>
-                                        <option value="1">Delete</option>
-                                        <option value="2">Clone</option>
-                                        <option value="3">Export</option>
-                                    </select>
-                                    <span class="input-group-btn">
-                              <button class="btn btn-sm btn-default">Apply</button>
-                           </span>
-                                </div>
-                            </div>
-                            <div class="col-lg-8"></div>
-                            <div class="col-lg-2 text-right">
-                                <ul class="pagination pagination-sm">
-                                    <li class="active"><a href="#">1</a>
-                                    </li>
-                                    <li><a href="#">2</a>
-                                    </li>
-                                    <li><a href="#">3</a>
-                                    </li>
-                                    <li><a href="#">»</a>
-                                    </li>
-                                </ul>
+                            <div class="text-right">
+                                {% include "voyadmin/paginator.html" with paginator=mappers %}
                             </div>
                         </div>
                     </div>
