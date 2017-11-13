@@ -35,7 +35,7 @@
                         {{ filter_form.tag }}
                     </div>
 
-                    <div class="col-lg-2 col-md-2">
+                    <!-- <div class="col-lg-2 col-md-2">
                         <select name="account" class="form-control m-b">
                             option
                             <option>Option 1</option>
@@ -43,12 +43,12 @@
                             <option>Option 3</option>
                             <option>Option 4</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <div class="col-lg-3 col-md-3 pull-right">
                         <div class="input-group m-b">
                             {{ filter_form.search }}
-                            <span class="input-group-addon fa fa-search"></span>
+                            <span class="input-group-addon fa fa-search" onclick="search()"></span>
                         </div>
                     </div>
                 </form>
@@ -57,49 +57,55 @@
 
         <div class="panel panel-default">
             <div class="panel-body">
-                {% for report in reports %}
-                <div class="row b-bottom">
-                    <div class="col-lg-2 col-md-2 d-flex align-items-center">
-                        {% if report.images.first %}
-                        <div class="badge-image">
-                            <span class="text">{{ report.files.count }}</span>
-                            <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col-lg-8 col-md-8 m-top">
-                        <div class="row">
-                            <div class="col-lg-10 col-md-10">
-                                <h4 class="text-lg-left block">{{ report.name }}</h4>
-                                <small class="text-lg-left"></small>{{ report.created_by.first_name }}
+                {% if reports %}
+                    {% for report in reports %}
+                    <div class="row b-bottom">
+                        <div class="col-lg-2 col-md-2 d-flex align-items-center">
+                            {% if report.images.first %}
+                            <div class="badge-image">
+                                <span class="text">{{ report.files.count }}</span>
+                                <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
                             </div>
-                            <div class="col-lg-2 col-md-2 text-right">{{ report.created_on|date:'d M Y' }}</div>
+                            {% endif %}
                         </div>
+                        <div class="col-lg-8 col-md-8 m-top">
+                            <div class="row">
+                                <div class="col-lg-10 col-md-10">
+                                    <h4 class="text-lg-left block">{{ report.name }}</h4>
+                                    <small class="text-lg-left"></small>{{ report.created_by.first_name }}
+                                </div>
+                                <div class="col-lg-2 col-md-2 text-right">{{ report.created_on|date:'d M Y' }}</div>
+                            </div>
 
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                <div class="badge badge-theme" style="background-color: #{{ report.theme.color }}">{{ report.theme.name }}</div>
-                                {% for tag in report.tags.all %}
-                                <div class="badge badge-tags">{{ tag.name }}</div>
-                                {% endfor %}
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="badge badge-theme" style="background-color: #{{ report.theme.color }}">{{ report.theme.name }}</div>
+                                    {% for tag in report.tags.all %}
+                                    <div class="badge badge-tags">{{ tag.name }}</div>
+                                    {% endfor %}
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12">
-                                {{ report.description|truncatewords:25 }}
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12">
+                                    {{ report.description|truncatewords:25 }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 b-left">
+                            <div class="text-center">
+                                <button type="button" class="btn btn-oval btn-default view">View</button>
+                                <button type="button" class="btn btn-oval btn-default approve">Approve</button>
+                                <p class="comments">{{ report.comments.count }} {% trans 'comments' %}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 b-left">
-                        <div class="text-center">
-                            <button type="button" class="btn btn-oval btn-default view">View</button>
-                            <button type="button" class="btn btn-oval btn-default approve">Approve</button>
-                            <p class="comments">{{ report.comments.count }} {% trans 'comments' %}</p>
-                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
                     </div>
-                </div>
-                {% endfor %}
+                {% endif %}
             </div>
             <div class="panel-footer">
                 <div class="text-right">
@@ -138,6 +144,12 @@ $('#id_tag').change(function(e) {
     e.preventDefault();
     var tag = e.target.value;
     window.location = form_action + theme + (tag ? '?tag=' + tag : '');
+});
+
+$('#id_search').bind('enterKey', function(e) {
+    e.preventDefault();
+    var search = e.target.value;
+    window.location = form_action + theme + (tag ? '?tag=' + tag : '') + '&search=' + search;
 });
 </script>
 {% endblock extrajs %}

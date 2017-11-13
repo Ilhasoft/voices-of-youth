@@ -22,8 +22,6 @@ class ReportView(TemplateView):
             'search': self.request.GET.get('search')
         }
 
-        print(data)
-
         form = ReportFilterForm(data=data, theme=context['theme'])
         context['filter_form'] = form
 
