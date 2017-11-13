@@ -11,8 +11,10 @@
             <div class="content-heading">
                 Mappers
                 <div class="input-group margin-bottom-sm col-xs-2 pull-right">
-                    <form action="{% url "voy-admin:users:mapper" %}" id="mapper_search" method="post">
-                        {% csrf_token %}
+                    <form action="{% url "voy-admin:users:mapper" %}" method="get" id="mapper_search">
+                        {% for field in filter_form.hidden_fields %}
+                            {{ field }}
+                        {% endfor %}
                         {{ filter_form.search }}
                     </form>
                     <span id="post_mapper_search" class="input-group-addon" style="cursor:pointer;">
@@ -46,19 +48,18 @@
                                         >
                                     </div>
                                     <div class="col-xs-11">
-                                        <form action={% url "voy-admin:users:mapper" %} method="post" role="form">
+                                        <form action={% url "voy-admin:users:mapper" %} method="get" role="form">
                                             <div class="container">
                                                 {{ form.non_field_errors }}
-                                                {% csrf_token %}
                                                 <p>Filter by:</p>
                                                 {% for field in filter_form.hidden_fields %}
                                                     {{ field }}
                                                 {% endfor %}
                                                 {% for field in filter_form.visible_fields %}
                                                     {% if field != filter_form.search %}
-                                                    <div class="col-xs-3">
-                                                        {{ field }}
-                                                    </div>
+                                                        <div class="col-xs-3">
+                                                            {{ field }}
+                                                        </div>
                                                     {% endif %}
                                                 {% endfor %}
                                                 <div>

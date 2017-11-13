@@ -23,10 +23,7 @@ class MapperView(TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
-        form = self.form_class(request.POST)
-        context = {'filter_form': form}
         delete = request.POST.get('deleteMappers')
-
         if delete:
             try:
                 MapperUser.objects.filter(id__in=delete.split(',')).delete()
@@ -34,8 +31,12 @@ class MapperView(TemplateView):
                 return HttpResponse(status=500)
             return HttpResponse("Users deleted!")
 
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
+    def get(self, request):
+        context = self.get_context_data(request=request)
+        filter_form = context['filter_form']
+
+        if filter_form.is_valid():
+            cleaned_data = filter_form.cleaned_data
             project = cleaned_data['project']
             theme = cleaned_data['theme']
             search = cleaned_data['search']
@@ -58,9 +59,9 @@ class MapperView(TemplateView):
 
         return render(request, self.template_name, context)
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
         context['mappers'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
-        context['filter_form'] = MapperFilterForm()
+        context['filter_form'] = self.form_class(request.GET)
         return context
