@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.gis',
+    'django.contrib.postgres',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'smartmin',
@@ -199,3 +200,6 @@ REST_FRAMEWORK = {
 }
 
 MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
+
+# Default pagination items per page.
+ITEMS_PER_PAGE = 2
