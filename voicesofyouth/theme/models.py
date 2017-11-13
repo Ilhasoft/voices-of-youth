@@ -80,6 +80,9 @@ class Theme(BaseModel):
     def reports_count(self):
         return self.reports.count()
 
+    def get_absolute_url(self):
+        return f'not-implemented/{self.id}'
+
 
 ###############################################################################
 # Signals handlers
