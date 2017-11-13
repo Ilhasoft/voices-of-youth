@@ -94,8 +94,15 @@
                         </div>
                         <div class="col-lg-2 col-md-2 b-left">
                             <div class="text-center">
-                                <a href="{% url 'voy-admin:reports:view' report.pk %}" class="btn btn-oval btn-default view">View</a>
-                                <a class="btn btn-oval btn-default approve">Approve</a>
+                                <a href="{% url 'voy-admin:reports:view' report.pk %}" class="btn btn-oval btn-default view">{% trans 'View' %}</a>
+                                {% if report.status == 2 %}
+                                <a class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
+                                {% endif %}
+
+                                {% if report.status == 3 %}
+                                <a class="btn btn-oval btn-default reject" disabled="disabled">{% trans 'Rejected' %}</a>
+                                {% endif %}
+
                                 <p class="comments">{{ report.comments.count }} {% trans 'comments' %}</p>
                             </div>
                         </div>

@@ -1,14 +1,18 @@
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.http.response import HttpResponse
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.report.models import REPORT_STATUS_PENDING, REPORT_STATUS_APPROVED
-from voicesofyouth.report.models import Report
-from voicesofyouth.report.forms import ReportFilterForm
 from voicesofyouth.voyadmin.utils import get_paginator
+from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import REPORT_STATUS_PENDING
+from voicesofyouth.report.models import REPORT_STATUS_APPROVED
+from voicesofyouth.report.models import REPORT_STATUS_REJECTED
+from voicesofyouth.report.forms import ReportFilterForm
 
 
 class ReportListView(TemplateView):
@@ -50,6 +54,21 @@ class ReportListView(TemplateView):
 
 class ReportView(TemplateView):
     template_name = 'report/view.html'
+
+    def post(self, request, *args, **kwargs):
+        report_id = request.POST.get('report')
+        message = request.POST.get('message')
+
+        if report_id and message:
+            try:
+                report = get_object_or_404(Report, pk=report_id)
+                report.status = REPORT_STATUS_REJECTED
+                report.save()
+
+                messages.success(request, _('Report rejected'))
+                return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
+            except Exception:
+                return HttpResponse(status=500)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

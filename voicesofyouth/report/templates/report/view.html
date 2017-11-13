@@ -6,17 +6,6 @@
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
 {% endblock %}
 
-<!-- REPORT_STATUS_APPROVED = 1
-REPORT_STATUS_PENDING = 2
-REPORT_STATUS_REJECTED = 3
-
-REPORT_STATUS_CHOICES = (
-    (REPORT_STATUS_APPROVED, _('Approved')),
-    (REPORT_STATUS_PENDING, _('Pending')),
-    (REPORT_STATUS_REJECTED, _('Rejected')),
-) -->
-
-
 {% block content %}
 <section>
     <div class="content-wrapper" id="new-report">
@@ -35,13 +24,16 @@ REPORT_STATUS_CHOICES = (
         <div class="panel">
             <div class="panel-body">
                 <div class="pull-right buttons">
+                    {% if report.status != 3 %}
                     <a class="btn btn-default edit">Edit</a>
+                    {% endif %}
+
                     {% if report.status == 1 %}
                     <a class="btn btn-default delete">Delete</a>
                     {% endif %}
 
                     {% if report.status == 2 %}
-                    <a class="btn btn-default reject">Reject</a>
+                    <a href="javascript:;" class="btn btn-default reject" id="openModal">Reject</a>
                     <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-default approve">Approve</a>
                     {% endif %}
                 </div>
@@ -69,4 +61,55 @@ REPORT_STATUS_CHOICES = (
         </div>
     </div>
 </section>
+
+<!-- modal -->
+<div id="modal">
+    <div class="opacity"></div>
+    <div class="content-modal">
+        <form action="{% url 'voy-admin:reports:view' report.id %}" id="formReject" method="post">
+            <fieldset>
+                <input type="hidden" name="report" value="{{ report.id }}"/>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12 text-center pt-10">
+                        <h4>{% trans 'Feedback message' %}</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <textarea name="message" id="message" cols="40" rows="5"></textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 buttons text-right">
+                        <a href="javascript:;" class="btn btn-default cancel" id="closeModal">{% trans 'Cancel' %}</a>
+                        <a href="javascript:;" id="submitReject" class="btn btn-default send">{% trans 'Send' %}</a>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+$('#openModal').click(function(e) {
+    e.preventDefault();
+    $('#modal').show();
+});
+
+$('#closeModal').click(function(e) {
+    e.preventDefault();
+    $('#modal').hide();
+});
+
+$('#submitReject').click(function() {
+    if ($('#message').val()) {
+        $('#formReject').submit();
+    }
+})
+</script>
 {% endblock %}
