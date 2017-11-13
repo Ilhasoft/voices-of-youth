@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.tag.models import Tag
 from voicesofyouth.tag.models import _ReportTaggableManager
 from voicesofyouth.theme.models import Theme
 

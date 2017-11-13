@@ -1,3 +1,7 @@
+$color_approve: #B7E683;
+$color_edit: #00CBFF;
+$color_reject: #E46A87;
+
 #report {
     .filter {
         font-size: 15px;
@@ -25,10 +29,11 @@
         display: block;
     }
 
-    button {
+    a.view, a.approve {
         width: 150px;
         margin: 15px;
         height: 39px;
+        padding-top: 10px;
     }
 
     .panel-body {
@@ -63,7 +68,7 @@
                 right: 28px;
                 min-width: 28px;
                 min-height: 28px;
-                background-color: #00CBFF;
+                background-color: $color_edit;
                 text-align: center;
                 border-radius: 50px;
                 color: white;
@@ -74,10 +79,37 @@
     }
 
     .view {
-        border-color: #00CBFF;
+        border-color: $color_edit;
     }
 
     .approve {
-        border-color: #B7E683;
+        border-color: $color_approve;
+    }
+}
+
+#new-report {
+    .buttons {
+        button {
+            width: 100px;
+            margin: 15px 5px;;
+            height: 39px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+    }
+
+    .approve {
+        border-color: $color_approve;
+        color: $color_approve;
+    }
+
+    .edit {
+        border-color: $color_edit;
+        color: $color_edit;
+    }
+
+    .reject {
+        border-color: $color_reject;
+        color: $color_reject;
     }
 }

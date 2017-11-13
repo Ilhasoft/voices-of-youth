@@ -7,7 +7,7 @@ from voicesofyouth.report.models import Report
 from voicesofyouth.report.forms import ReportFilterForm
 
 
-class ReportView(TemplateView):
+class ReportListView(TemplateView):
     template_name = 'report/index.html'
 
     def get_context_data(self, **kwargs):
@@ -39,6 +39,19 @@ class ReportView(TemplateView):
                 qs_filter['name__icontains'] = cleaned_data['search']
 
             context['reports'] = Report.objects.filter(**qs_filter)
+
+        return context
+
+
+class ReportView(TemplateView):
+    template_name = 'report/view.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        report_id = kwargs['report']
+
+        context['report'] = get_object_or_404(Report, pk=report_id)
+        context['theme'] = context['report'].theme
 
         return context
 
