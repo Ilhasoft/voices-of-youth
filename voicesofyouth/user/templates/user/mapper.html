@@ -11,7 +11,7 @@
             <div class="content-heading">
                 Mappers
                 <div class="input-group margin-bottom-sm col-xs-2 pull-right">
-                    <form action="{% url "voy-admin:users:mapper" %}" method="get" id="mapper_search">
+                    <form action="{% url "voy-admin:users:mappers_list" %}" method="get" id="mapper_search">
                         {% for field in filter_form.hidden_fields %}
                             {{ field }}
                         {% endfor %}
@@ -48,7 +48,7 @@
                                         >
                                     </div>
                                     <div class="col-xs-11">
-                                        <form action={% url "voy-admin:users:mapper" %} method="get" role="form">
+                                        <form action={% url "voy-admin:users:mappers_list" %} method="get" role="form">
                                             <div class="container">
                                                 {{ form.non_field_errors }}
                                                 <p>Filter by:</p>
@@ -180,16 +180,16 @@
                     });
                     usersToDelete.then(
                         users => {
-                            axios.post("{% url 'voy-admin:users:mapper' %}", users)
+                            axios.post("{% url 'voy-admin:users:mappers_list' %}", users)
                                 .then(() => {
                                     swal("Success", "Users deleted!", "success").then(value => {
-                                        window.location.href = "{% url "voy-admin:users:mapper" %}"
+                                        window.location.href = "{% url "voy-admin:users:mappers_list" %}"
                                     })
                                 })
                                 .catch(() => {
                                     swal("Ops!", "Somethings wrong happen!", "error")
                                         .then(value => {
-                                            window.location.href = "{% url "voy-admin:users:mapper" %}"
+                                            window.location.href = "{% url "voy-admin:users:mappers_list" %}"
                                         })
                                 });
 
