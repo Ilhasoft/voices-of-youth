@@ -1,17 +1,80 @@
 {% extends "voyadmin/base.html" %}
 
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+{% endblock %}
+
 {% block content %}
 <section>
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="new-report">
         <div class="content-heading">
-            New report
+            {% trans 'New report' %}
+
+            <a class="pull-right btn btn-default create">{% trans 'Create' %}</a>
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h1>Add report</h1>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div id="map"></div>
             </div>
         </div>
+        
     </div>
 </section>
-{% endblock content %}
+{% endblock %}
+
+{% block extrajs %}
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+
+<script type="text/javascript">
+var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
+
+var map = L.map('map', {
+    maxBounds: [[-90, -160], [90, 160]], 
+}).setView([51.505, -0.09], 13);
+
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    noWrap: true,
+}).addTo(map);
+
+var icon = L.icon({
+    iconUrl: '{% static 'img/pin.png' %}',
+    shadowUrl: '',
+    iconSize:     [36, 54],
+    shadowSize:   [0, 0],
+    iconAnchor:   [22, 94],
+    shadowAnchor: [4, 62],
+    popupAnchor:  [-3, -76]
+});
+
+var marker = L.marker([51.5, -0.09], {
+    icon: icon, 
+    draggable: true,
+}).addTo(map);
+
+marker.on('move', function(e) {
+    var urlApi = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + mapsKey;
+    axios.get(urlApi).then((response) => {
+        if (response.data.results[0]) {
+            console.log(response);
+            var address = response.data.results[0].formatted_address;
+            marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+        }
+    });
+});
+
+// $('#map').css('height', $(window).height() - 220).css('width', $(document).width());
+
+</script>
+{% endblock %}

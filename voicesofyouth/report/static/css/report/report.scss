@@ -92,7 +92,7 @@ $color_delete: #DE486B;
     }
 }
 
-#new-report {
+#view-report {
     .buttons {
         a {
             width: 100px;
@@ -187,5 +187,20 @@ $color_delete: #DE486B;
                 color: $color_edit;
             }
         }
+    }
+}
+
+
+#new-report {
+    .create {
+        border-radius: 50px;
+        color: #fff;
+        background-color: #7ED321;
+        width: 100px;
+    }
+
+    #map {
+        width: 100%;
+        height: 650px;
     }
 }
