@@ -1,4 +1,3 @@
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import render
@@ -52,12 +51,9 @@ class MapperView(TemplateView):
                 qs = MapperUser.objects.all()
 
             if not isinstance(qs, list) and search:
-                # qs = qs.annotate(search=SearchVector('username', 'first_name', 'last_name')).filter(search=search)
-                vector = SearchVector('username', 'first_name', 'last_name')
-                query = SearchQuery(search)
-                qs = qs.annotate(rank=SearchRank(vector, query)).filter(rank__gt=0).order_by('-rank')
-                for q in qs:
-                    print(q.rank)
+                qs = qs.filter(Q(username__icontains=search) |
+                               Q(first_name__icontains=search) |
+                               Q(last_name__icontains=search))
             context['mappers'] = qs
 
         return render(request, self.template_name, context)
