@@ -19,3 +19,4 @@ gdal
 django-filter
 django-crispy-forms
 django-sass-processor
+django-qurl-templatetag

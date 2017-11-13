@@ -1,9 +1,11 @@
+{% load qurl %}
+
 {% if paginator.paginator.num_pages > 1 %}
 <div>
     <ul class="pagination pagination-sm">
         {% if paginator.has_previous %}
             <li>
-                <a href="?page={{ paginator.previous_page_number }}">
+                <a href="{% qurl request.get_full_path page=paginator.previous_page_number %}">
                     <i class="fa fa-angle-double-left" aria-hidden="true"></i>
                 </a>
             </li>
@@ -15,12 +17,12 @@
             {% else %}
                 <li>
             {% endif %}
-            <a href="?page={{ page }}">{{ page }}</a>
+            <a href="{% qurl request.get_full_path page=page %}">{{ page }}</a>
             </li>
         {% endfor %}
         {% if paginator.has_next %}
             <li>
-                <a href="?page={{ paginator.next_page_number }}">
+                <a href="{% qurl request.get_full_path page=paginator.next_page_number %}">
                     <i class="fa fa-angle-double-right" aria-hidden="true"></i>
                 </a>
             </li>

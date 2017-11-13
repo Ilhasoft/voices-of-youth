@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'taggit',
     'compressor',
     'sass_processor',
+    'qurl_templatetag',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',
