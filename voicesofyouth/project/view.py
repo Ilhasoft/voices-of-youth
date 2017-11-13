@@ -8,7 +8,13 @@ class ProjectView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['projects'] = Project.objects.all()
+        query = self.request.GET.get('query')
+
+        if query:
+            context['projects'] = Project.objects.filter(name__icontains=query)
+        else:
+            context['projects'] = Project.objects.all()
+
         return context
 
 

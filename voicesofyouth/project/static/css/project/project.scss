@@ -1,0 +1,27 @@
+#project {
+    .box {
+        border: none;
+
+        .buttons {
+            padding: 28px 0px 28px;
+
+            .btn.btn-default {
+                border-color: #00CBFF;
+            }
+
+            a {
+                min-width: 100px;
+            }
+        }
+
+        .header {
+            background-color: #00CBFF;
+            padding: 30px;
+        }
+
+        .panel-footer {
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+        }
+    }
+}

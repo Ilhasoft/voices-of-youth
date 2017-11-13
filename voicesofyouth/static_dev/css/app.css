@@ -6309,7 +6309,7 @@ body .select2-container--bootstrap .select2-selection--multiple {
  ========================================================================== */
 .uk-notify {
   position: fixed;
-  top: 50px;
+  top: 85px;
   left: 50px;
   z-index: 1040;
   -moz-box-sizing: border-box;

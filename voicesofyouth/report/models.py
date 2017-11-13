@@ -9,7 +9,6 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 
 from voicesofyouth.core.models import BaseModel
-from voicesofyouth.tag.models import Tag
 from voicesofyouth.tag.models import _ReportTaggableManager
 from voicesofyouth.theme.models import Theme
 
@@ -68,6 +67,14 @@ class Report(BaseModel):
     @cached_property
     def theme_color(self):
         return self.theme.color
+
+    @property
+    def images(self):
+        return self.files.filter(media_type=FILE_TYPE_IMAGE)
+
+    @property
+    def videos(self):
+        return self.files.filter(media_type=FILE_TYPE_VIDEO)
 
 
 class ReportComment(BaseModel):

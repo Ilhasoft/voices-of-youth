@@ -1,0 +1,51 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/theme/theme.scss' %}">
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="content-wrapper">
+        <div class="content-heading">
+            {{ project.name }} - {% trans 'Themes' %}
+        </div>
+
+        <ol class="breadcrumb">
+            <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
+            <li>{{ project.name }}</li>
+            <li>{% trans 'Themes' %}</li>
+        </ol>
+
+        <div class="row" id="theme">
+            {% for theme in themes %}
+                <div class="col-lg-3 col-md-6">
+                    <div class="panel box">
+                        <div class="panel-heading header" style="background-color: #{{ theme.color }};">
+                            <div class="row">
+                                <div class="col-xs-12 text-center">
+                                    <h4>{{ theme.name }}</h4>
+                                    <p class="m0">{{ theme.created_on|date:"d M Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-body text-justify">
+                            <p>{{ theme.description|truncatewords:25 }}</p>
+                            <p class="text-muted text-center"><strong>{{ theme.reports.count }}</strong> {% trans 'Reports' %}</p>
+
+                            <div class="row buttons">
+                                <div class="col-xs-12 text-center">
+                                    <a href="{% url 'voy-admin:reports:index' theme.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'See' %}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock content %}
