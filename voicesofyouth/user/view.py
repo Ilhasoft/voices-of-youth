@@ -19,8 +19,8 @@ class AdminView(TemplateView):
         return context
 
 
-class MapperView(TemplateView):
-    template_name = 'user/mapper.html'
+class MappersListView(TemplateView):
+    template_name = 'user/mappers_list.html'
     form_class = MapperFilterForm
 
     def post(self, request):
@@ -57,7 +57,6 @@ class MapperView(TemplateView):
                 qs = qs.filter(Q(username__icontains=search) |
                                Q(first_name__icontains=search) |
                                Q(last_name__icontains=search))
-
             context['mappers'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
@@ -68,3 +67,8 @@ class MapperView(TemplateView):
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
         return context
+
+
+class MapperDetailView(TemplateView):
+    template_name = 'user/mapper_detail.html'
+    form_class = MapperFilterForm
