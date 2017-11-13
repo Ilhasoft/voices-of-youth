@@ -48,6 +48,16 @@ class VoyUser(AbstractUser):
     '''
     language = models.CharField(max_length=90, choices=settings.LANGUAGES, default='en')
     avatar = models.IntegerField(choices=AVATARS, default=DEFAULT_AVATAR)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                   related_name="%(app_label)s_%(class)s_creations",
+                                   null=True,
+                                   blank=True)
+    created_on = models.DateTimeField(auto_now_add=True, editable=False, blank=True)
+    modified_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    related_name="%(app_label)s_%(class)s_modifications",
+                                    null=True,
+                                    blank=True)
+    modified_on = models.DateTimeField(auto_now=True, editable=False, blank=True)
 
     @cached_property
     def is_mapper(self):
