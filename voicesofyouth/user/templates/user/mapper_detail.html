@@ -3,6 +3,7 @@
 
 {% block extracss %}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,7 @@
                 </div>
             </div>
 
-            <div class="panel panel-default col-xs-11 pull-right">
+            <div class="panel panel-default col-xs-11 pull-right" id="report">
                 <div class="panel-heading">
                     <div>
                         <a href="{% url "voy-admin:users:mappers_list" %}">
@@ -71,17 +72,15 @@
                             </div>
                         </div>
                     </div>
+                                        <div class="row">
+                            {% for report in mapper.reports.all %}
+                                {% include "report/report_resume.html" with report=report %}
+                            {% endfor %}
+                        </div>
+
                 </div>
                 <div class="panel-footer">
                     <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-12">
-                                Report 1
-                            </div>
-                            <div class="col-xs-12">
-                                Report N
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
