@@ -41,6 +41,7 @@ class MapperForm(forms.Form):
                              ))
     project = forms.ModelChoiceField(queryset=Project.objects.all(),
                                      label=_('Project'),
+                                     required=False,
                                      widget=forms.Select(
                                          attrs={
                                              'class': 'form-control',
@@ -48,7 +49,7 @@ class MapperForm(forms.Form):
                                      ))
     themes = forms.MultipleChoiceField(choices=Theme.objects.values_list('id', 'name'),
                                        label=_('Themes'),
-                                       widget=forms.Select(
+                                       widget=forms.SelectMultiple(
                                            attrs={
                                                'required': True,
                                                'multiple': True,

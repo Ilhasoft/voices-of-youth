@@ -86,12 +86,13 @@ class MapperDetailView(TemplateView):
         context = self.get_context_data(request=request)
         mapper = get_object_or_404(MapperUser, pk=mapper_id)
         context['mapper'] = mapper
-        context['form_mapper'] = self.form_mapper({
+        context['form_mapper'] = self.form_mapper(initial={
             'name': mapper.get_full_name(),
             'email': mapper.email,
             'project': mapper.projects.last(),
             'themes': mapper.themes.all(),
         })
+        context['selected_themes'] = [i[0] for i in mapper.themes.values_list('id')]
         filter_form = context['filter_form']
 
         if filter_form.is_valid():
@@ -104,7 +105,9 @@ class MapperDetailView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         mapper = get_object_or_404(MapperUser, pk=kwargs.get('mapper_id'))
-        form = self.form_mapper(request.POST)
+        print(request.POST)
+        print(mapper.themes.values_list('id'))
+        form = self.form_mapper(request.POST or None, initial={'themes': mapper.themes.values_list('id')})
         if form.is_valid():
             cleaned_data = form.cleaned_data
             name = cleaned_data.get('name')
@@ -131,6 +134,7 @@ class MapperDetailView(TemplateView):
             mapper.save()
             messages.success(request, 'Mapper saved with success!')
         else:
+            print(form.errors)
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
         return self.get(request, *args, **kwargs)
 

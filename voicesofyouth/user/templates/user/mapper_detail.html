@@ -2,6 +2,7 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
@@ -94,16 +95,27 @@
 {% endblock content %}
 
 {% block extrahtml %}
-    <div id="modalEditMapperProfile" tabindex="-1" role="dialog" aria-labelledby="modalEditMapperProfileLabel"
-         aria-hidden="true" class="modal fade"
+    <div id="modalEditMapperProfile"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modalEditMapperProfileLabel"
+         aria-hidden="true"
+         class="modal fade"
          style="display: none;">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" data-dismiss="modal" aria-label="Close" class="close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                    <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
+                <div class="modal-header text-center">
+                    <div class="container-column">
+                        <div>
+                            <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
+                        </div>
+                        <div style="padding: 5px;">
+                            <img src="{{ mapper.get_avatar_display }}" alt="">
+                        </div>
+                        <div>
+                            <a href="" class="btn btn-lg btn-info">{% trans "Remove mapper" %}</a>
+                        </div>
+                    </div>
                 </div>
                 <form action="{{ request.get_full_path }}" id="editMapperForm" method="post">
                     <div class="modal-body">
@@ -111,9 +123,17 @@
                         {{ form_mapper }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
-                        <button type="submit" class="btn btn-primary"
-                                >{% trans "Save changes" %}</button>
+                        <button
+                                type="button"
+                                data-dismiss="modal"
+                                class="btn btn-default btn-lg">
+                            {% trans "Close" %}
+                        </button>
+                        <button
+                                type="submit"
+                                class="btn btn-info btn-lg">
+                            {% trans "Save changes" %}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -122,6 +142,33 @@
 {% endblock %}
 
 {% block extrajs %}
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#id_themes').chosen();
+        let selected = [];
+
+        /* Select the current values. */
+        {% for selected_theme in selected_themes %}
+            selected.push({{ selected_theme }});
+        {% endfor %}
+        $(".chosen-select").val(selected).trigger('chosen:updated');
+
+        $('#id_project').change(function (e) {
+            e.preventDefault();
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                $('#id_themes').empty();
+                $('#id_themes').trigger('chosen:updated');
+                $('#id_themes').append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    $('#id_themes').append('<option value="' + item.id + '">' + item.name + '</option>');
+                    $('#id_themes').trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
     <script type="text/javascript">
         $("#post_mapper_search").click(() => {
             form = $("#mapper_search");

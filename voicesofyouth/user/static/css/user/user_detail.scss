@@ -16,3 +16,22 @@
 .no-bullets {
     list-style-type: none
 }
+
+.modal-header {
+    background-color: #00CDFC;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+div {
+    a.btn-info {
+        background-color: white;
+        color: black;
+    }
+}
+
+.modal-sm {
+    width: 494px;
+}
