@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import ugettext as _
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
@@ -7,13 +8,11 @@ from voicesofyouth.theme.models import Theme
 class MapperFilterForm(forms.Form):
     project = forms.ModelChoiceField(queryset=None,
                                      required=False,
-                                     empty_label='Project',
                                      widget=forms.Select(attrs={'class': 'form-control'}))
     theme = forms.ModelChoiceField(queryset=None,
                                    required=False,
-                                   empty_label='Theme',
                                    widget=forms.Select(attrs={'class': 'form-control'}))
-    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Search for mappers',
+    search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _('Search for mappers'),
                                                            'class': 'form-control'}),
                              required=False)
 
@@ -26,7 +25,33 @@ class MapperFilterForm(forms.Form):
 
 
 class MapperForm(forms.Form):
-    name = forms.CharField(max_length=255)
-    email = forms.EmailField(required=False)
-    project = forms.ModelChoiceField(queryset=Project.objects.all())
-    themes = forms.MultipleChoiceField(choices=Theme.objects.values_list('id', 'name'))
+    name = forms.CharField(max_length=255,
+                           label=_('Name'),
+                           widget=forms.TextInput(
+                               attrs={
+                                   'class': 'form-control'
+                               },
+                           ))
+    email = forms.EmailField(required=False,
+                             label=_('e-mail'),
+                             widget=forms.EmailInput(
+                                 attrs={
+                                     'class': 'form-control'
+                                 }
+                             ))
+    project = forms.ModelChoiceField(queryset=Project.objects.all(),
+                                     label=_('Project'),
+                                     widget=forms.Select(
+                                         attrs={
+                                             'class': 'form-control',
+                                         }
+                                     ))
+    themes = forms.MultipleChoiceField(choices=Theme.objects.values_list('id', 'name'),
+                                       label=_('Themes'),
+                                       widget=forms.Select(
+                                           attrs={
+                                               'required': True,
+                                               'multiple': True,
+                                               'class': 'chosen-select form-control',
+                                           }
+                                       ))
