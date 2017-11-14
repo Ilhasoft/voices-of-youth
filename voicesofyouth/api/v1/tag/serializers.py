@@ -8,7 +8,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = ('id', 'tag', 'urgency_score')
+        fields = ('id', 'tag')
 
     def get_tag(self, obj):
         return obj.name
