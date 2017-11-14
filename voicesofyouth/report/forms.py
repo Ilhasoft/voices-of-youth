@@ -55,7 +55,30 @@ class ReportFrom(forms.Form):
         widget=forms.Select(
             attrs={
                 'required': True,
+                'multiple': True,
                 'class': 'chosen-select form-control',
+            }
+        )
+    )
+
+    theme = forms.ChoiceField(
+        label=_('Theme'),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    mapper = forms.ChoiceField(
+        label=_('Mapper'),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'required': True,
+                'class': 'form-control',
             }
         )
     )

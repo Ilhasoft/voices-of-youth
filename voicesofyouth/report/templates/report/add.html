@@ -3,8 +3,7 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{% static 'vendor/select2/dist/css/select2.css' %}">
-<link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/dist/select2-bootstrap.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 {% endblock %}
@@ -27,6 +26,16 @@
                                 <div class="form-group">
                                     <label>{% trans 'Project' %}</label>
                                     {{ data_form.project }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{% trans 'Theme' %}</label>
+                                    {{ data_form.theme }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{% trans 'Mapper' %}</label>
+                                    {{ data_form.mapper }}
                                 </div>
 
                                 <div class="form-group">
@@ -59,12 +68,14 @@
 {% endblock %}
 
 {% block extrajs %}
-<script src="{% static 'vendor/select2/dist/js/select2.js' %}"></script>
+<script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 
 <script type="text/javascript">
 var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
 axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+$('#id_tags').chosen();
 
 var map = L.map('map', {
     maxBounds: [[-90, -160], [90, 160]], 
@@ -104,10 +115,32 @@ $('#id_project').change(function (e) {
     var project = e.target.value;
     console.log(project);
 
-    axios.get('/api/').then((tags) => {
-        console.log(tags);
-    })
-    .catch(() => {
+    axios.get('/api/tags/?project=' + project).then((response) => {
+        $('#id_tags').empty();
+        $('#id_tags').trigger('chosen:updated');
+        response.data.map((item) => {
+            $('#id_tags').append('<option value="' + item.id + '">' + item.tag + '</option>');
+            $('#id_tags').trigger('chosen:updated');
+        });
+    }).then(() => {
+        axios.get('/api/themes/?project=' + project).then((response) => {
+            $('#id_theme').empty();
+            $('#id_theme').trigger('chosen:updated');
+            response.data.map((item) => {
+                $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
+                $('#id_theme').trigger('chosen:updated');
+            });
+        }).then(() => {
+            axios.get('/api/themes/?project=' + project).then((response) => {
+                $('#id_theme').empty();
+                $('#id_theme').trigger('chosen:updated');
+                response.data.map((item) => {
+                    $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
+                    $('#id_theme').trigger('chosen:updated');
+                });
+            });
+        });
+    }).catch(() => {
         console.log('AA');
     });
 });
