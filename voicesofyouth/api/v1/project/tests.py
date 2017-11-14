@@ -18,8 +18,8 @@ class ProjectTestCase(APITestCase):
             'thumbnail': create_fake_image()
         }
         cls.project = mommy.make(Project, name='Original name', description='Original description')
-        cls.url_list = reverse_lazy('projects-list')
-        cls.url_detail = reverse_lazy('projects-detail', args=[cls.project.id, ])
+        cls.url_list = reverse_lazy('voy-api:projects-list')
+        cls.url_detail = reverse_lazy('voy-api:projects-detail', args=[cls.project.id, ])
         cls.admin_credentials = {'username': 'admin', 'password': 'Un1c3f@@'}
         cls.user_credentials = {'username': 'user', 'password': 'user'}
         cls.admin = User.objects.get(username='admin')

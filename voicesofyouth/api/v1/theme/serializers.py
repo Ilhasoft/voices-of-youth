@@ -12,7 +12,7 @@ class ThemeSerializer(VoySerializer):
     )
     project = serializers.HyperlinkedRelatedField(
         read_only=True,
-        view_name='projects-detail'
+        view_name='voy-api:projects-detail'
     )
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
