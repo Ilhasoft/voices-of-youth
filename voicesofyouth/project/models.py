@@ -95,6 +95,9 @@ class Project(BaseModel):
                                   Q(taggit_taggeditem_items__content_type=ct_project,
                                     taggit_taggeditem_items__object_id=self.id)).distinct()
 
+    def get_absolute_url(self):
+        return f'not-implemented/{self.id}'
+
 
 ###############################################################################
 # Signals handlers

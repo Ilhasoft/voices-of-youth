@@ -1,5 +1,6 @@
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
@@ -8,6 +9,12 @@ from voicesofyouth.user.forms import MapperFilterForm
 from voicesofyouth.user.models import AdminUser
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
+
+
+def search_user(search_by, qs):
+    return qs.filter(Q(username__icontains=search_by) |
+                     Q(first_name__icontains=search_by) |
+                     Q(last_name__icontains=search_by))
 
 
 class AdminView(TemplateView):
@@ -19,8 +26,8 @@ class AdminView(TemplateView):
         return context
 
 
-class MapperView(TemplateView):
-    template_name = 'user/mapper.html'
+class MappersListView(TemplateView):
+    template_name = 'user/mappers_list.html'
     form_class = MapperFilterForm
 
     def post(self, request):
@@ -54,10 +61,7 @@ class MapperView(TemplateView):
                 qs = MapperUser.objects.all()
 
             if not isinstance(qs, list) and search:
-                qs = qs.filter(Q(username__icontains=search) |
-                               Q(first_name__icontains=search) |
-                               Q(last_name__icontains=search))
-
+                qs = search_user(search, qs)
             context['mappers'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
@@ -66,5 +70,29 @@ class MapperView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['mappers'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
+        context['filter_form'] = self.form_class(request.GET)
+        return context
+
+
+class MapperDetailView(TemplateView):
+    template_name = 'user/mapper_detail.html'
+    form_class = MapperFilterForm
+
+    def get(self, request, *args, **kwargs):
+        mapper_id = kwargs.get('mapper_id', 0)
+        context = self.get_context_data(request=request)
+        context['mapper'] = get_object_or_404(MapperUser, pk=mapper_id)
+        filter_form = context['filter_form']
+
+        if filter_form.is_valid():
+            cleaned_data = filter_form.cleaned_data
+            search = cleaned_data['search']
+            if search:
+                return MappersListView.as_view()(request)
+
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(**kwargs)
         context['filter_form'] = self.form_class(request.GET)
         return context

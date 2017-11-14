@@ -7,149 +7,100 @@
 {% endblock %}
 
 {% block content %}
-<section>
-    <div class="content-wrapper" id="report">
-        <div class="content-heading">
-            {{ theme.name }}
-        </div>
-
-        <ol class="breadcrumb">
-            <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
-            <li><a href="{% url 'voy-admin:themes:index' theme.project.pk %}">{{ theme.project.name }}</a></li>
-            <li><a href="{% url 'voy-admin:reports:index' theme.pk %}">{{ theme.name }}</a></li>
-            <li>{% trans 'Reports' %}</li>
-        </ol>
-
-        <div class="content-heading">
-            <div class="row">
-                <form action="" method="GET" id="form_search">
-                    <div class="col-lg-1 col-md-1">
-                        <p class="filter">{% trans 'Filter by:' %}</p>
-                    </div>
-
-                    <div class="col-lg-3 col-md-3">
-                        {{ filter_form.theme }}
-                    </div>
-
-                    <div class="col-lg-3 col-md-3">
-                        {{ filter_form.tag }}
-                    </div>
-
-                    <div class="col-lg-2 col-md-2">
-                        {{ filter_form.status }}
-                    </div>
-
-                    <div class="col-lg-3 col-md-3 pull-right">
-                        <div class="input-group m-b">
-                            {{ filter_form.search }}
-                            <span class="input-group-addon fa fa-search" onclick="search()"></span>
-                        </div>
-                    </div>
-                </form>
+    <section>
+        <div class="content-wrapper" id="report">
+            <div class="content-heading">
+                {{ theme.name }}
             </div>
-        </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {% if reports %}
+            <ol class="breadcrumb">
+                <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
+                <li><a href="{% url 'voy-admin:themes:index' theme.project.pk %}">{{ theme.project.name }}</a></li>
+                <li><a href="{% url 'voy-admin:reports:index' theme.pk %}">{{ theme.name }}</a></li>
+                <li>{% trans 'Reports' %}</li>
+            </ol>
+
+            <div class="content-heading">
+                <div class="row">
+                    <form action="" method="GET" id="form_search">
+                        <div class="col-lg-1 col-md-1">
+                            <p class="filter">{% trans 'Filter by:' %}</p>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3">
+                            {{ filter_form.theme }}
+                        </div>
+
+                        <div class="col-lg-3 col-md-3">
+                            {{ filter_form.tag }}
+                        </div>
+
+                        <div class="col-lg-2 col-md-2">
+                            {{ filter_form.status }}
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 pull-right">
+                            <div class="input-group m-b">
+                                {{ filter_form.search }}
+                                <span class="input-group-addon fa fa-search" onclick="search()"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
                     {% for report in reports %}
-                    <div class="row b-bottom">
-                        <div class="col-lg-2 col-md-2 d-flex align-items-center">
-                            {% if report.images.first %}
-                            <div class="badge-image">
-                                <span class="text">{{ report.files.count }}</span>
-                                <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
-                            </div>
-                            {% endif %}
+                        {% include "report/report_resume.html" with report=report %}
+                    {% empty %}
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
                         </div>
-                        <div class="col-lg-8 col-md-8 m-top">
-                            <div class="row">
-                                <div class="col-lg-10 col-md-10">
-                                    <h4 class="text-lg-left block">{{ report.name }}</h4>
-                                    <small class="text-lg-left"></small>{{ report.created_by.first_name }}
-                                </div>
-                                <div class="col-lg-2 col-md-2 text-right">{{ report.created_on|date:'d M Y' }}</div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12">
-                                    <div class="badge badge-theme" style="background-color: #{{ report.theme.color }}">{{ report.theme.name }}</div>
-                                    {% for tag in report.tags.all %}
-                                    <div class="badge badge-tags">{{ tag.name }}</div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12">
-                                    {{ report.description|truncatewords:25 }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 b-left">
-                            <div class="text-center">
-                                <a href="{% url 'voy-admin:reports:view' report.pk %}" class="btn btn-oval btn-default view">{% trans 'View' %}</a>
-                                {% if report.status == 2 %}
-                                <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
-                                {% endif %}
-
-                                {% if report.status == 3 %}
-                                <a class="btn btn-oval btn-default reject" disabled="disabled">{% trans 'Rejected' %}</a>
-                                {% endif %}
-
-                                <p class="comments">{{ report.comments.count }} {% trans 'comments' %}</p>
-                            </div>
-                        </div>
-                    </div>
                     {% endfor %}
-                {% else %}
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
+                </div>
+                <div class="panel-footer">
+                    <div class="text-right">
+                        {% include "voyadmin/paginator.html" with paginator=reports %}
                     </div>
-                {% endif %}
-            </div>
-            <div class="panel-footer">
-                <div class="text-right">
-                    {% include "voyadmin/paginator.html" with paginator=reports %}
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock content %}
 
 {% block extrajs %}
-<script type="text/javascript">
-var theme = $('#id_theme option:selected').val();
-var tag = $('#id_tag option:selected').val();
-var status = $('#id_status option:selected').val();
-var search = $('#id_search').val();
+    <script type="text/javascript">
+        var theme = $('#id_theme option:selected').val();
+        var tag = $('#id_tag option:selected').val();
+        var status = $('#id_status option:selected').val();
+        var search = $('#id_search').val();
 
-$('#id_theme').change(function(e) {
-    e.preventDefault();
-    var theme = e.target.value;
-    if (theme) {
-        filterList(theme, tag, status, search);
-    }
-});
+        $('#id_theme').change(function (e) {
+            e.preventDefault();
+            var theme = e.target.value;
+            if (theme) {
+                filterList(theme, tag, status, search);
+            }
+        });
 
-$('#id_tag').change(function(e) {
-    e.preventDefault();
-    filterList(theme, e.target.value, status, search);
-});
+        $('#id_tag').change(function (e) {
+            e.preventDefault();
+            filterList(theme, e.target.value, status, search);
+        });
 
-$('#id_status').change(function(e) {
-    e.preventDefault();
-    filterList(theme, tag, e.target.value, search);
-});
+        $('#id_status').change(function (e) {
+            e.preventDefault();
+            filterList(theme, tag, e.target.value, search);
+        });
 
-$('#id_search').bind('enterKey', function(e) {
-    e.preventDefault();
-    filterList(theme, tag, status, e.target.value);
-});
+        $('#id_search').bind('enterKey', function (e) {
+            e.preventDefault();
+            filterList(theme, tag, status, e.target.value);
+        });
 
-function filterList(theme, tag, status, search) {
-    window.location = '{% url 'voy-admin:reports:filter' %}' + theme + '?tag=' + tag + '&status=' + status + '&search=' + search;
-}
-</script>
+        function filterList(theme, tag, status, search) {
+            window.location = '{% url 'voy-admin:reports:filter' %}' + theme + '?tag=' + tag + '&status=' + status + '&search=' + search;
+        }
+    </script>
 {% endblock extrajs %}

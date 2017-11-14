@@ -1,0 +1,18 @@
+.container-row {
+    display: flex;
+    align-items: baseline
+}
+
+.container-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    margin: auto;
+    //align-self: center;
+}
+
+.no-bullets {
+    list-style-type: none
+}
