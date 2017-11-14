@@ -42,7 +42,7 @@
                             <div class="col-xs-10">
                                 {{ mapper.get_full_name }}
                                 <p>{{ mapper.email }}</p>
-                                <p>{% trans "Creation date" %}: {{ mapper.created_on|date:"d N Y" }}</p>
+                                <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
                             </div>
                             <div>
                                 <a href="#" class="btn btn-info btn-oval btn-lg">{% trans "Edit profile" %}</a>

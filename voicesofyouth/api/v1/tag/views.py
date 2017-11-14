@@ -18,7 +18,7 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     User cannot create tags directly via API. Only super admins or local admins can do that.
     """
     permission_classes = (IsAuthenticatedOrReadOnly,)
-    queryset = Tag.objects.prefetch_related('tag').all()
+    queryset = Tag.objects.prefetch_related('taggit_taggeditem_items__tag').all()
     serializer_class = TagSerializer
 
     def list(self, request, *args, **kwargs):
@@ -44,12 +44,16 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
             except (Project.DoesNotExist, Theme.DoesNotExist):
                 return Response(status=status.HTTP_404_NOT_FOUND)
 
-            qs_tags = self.queryset.filter(Q(content_type=ct_theme, object_id=theme_id) |
-                                           Q(content_type=ct_project, object_id=project_id)).distinct()
+            qs_tags = self.queryset.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                             taggit_taggeditem_items__object_id=theme_id) |
+                                           Q(taggit_taggeditem_items__content_type=ct_project,
+                                             taggit_taggeditem_items__object_id=project_id)).distinct()
         elif theme_id:
-            qs_tags = self.queryset.filter(Q(content_type=ct_theme, object_id=theme_id)).distinct()
+            qs_tags = self.queryset.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                             taggit_taggeditem_items__object_id=theme_id)).distinct()
         elif project_id:
-            qs_tags = self.queryset.filter(Q(content_type=ct_project, object_id=project_id)).distinct()
+            qs_tags = self.queryset.filter(Q(taggit_taggeditem_items__content_type=ct_project,
+                                             taggit_taggeditem_items__object_id=project_id)).distinct()
 
         if len(qs_tags) > 0:
             return Response(self.serializer_class(qs_tags, many=True).data)

@@ -6,13 +6,6 @@ from voicesofyouth.user.models import User
 
 
 class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
-    """
-    retrieve:
-    Return the given theme.
-
-    list:
-    Return a list of all the existing themes by map.
-    """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = UserSerializer
 
