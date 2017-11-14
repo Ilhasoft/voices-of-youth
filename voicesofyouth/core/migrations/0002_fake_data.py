@@ -145,7 +145,7 @@ class Migration(migrations.Migration):
         ('theme', '0002_auto_20171103_1505'),
         ('tag', '0001_initial'),
         ('report', '0003_remove_reportcomment_creation_timestamp'),
-        ('user', '0003_auto_20171113_1939'),
+        ('user', '0004_remove_voyuser_created_on'),
     ]
 
     operations = [
