@@ -23,3 +23,10 @@ class MapperFilterForm(forms.Form):
         theme_qs = Theme.objects.filter(project__in=project_qs).distinct()
         self.fields['project'].queryset = project_qs
         self.fields['theme'].queryset = theme_qs
+
+
+class MapperForm(forms.Form):
+    name = forms.CharField(max_length=255)
+    email = forms.EmailField(required=False)
+    project = forms.ModelChoiceField(queryset=Project.objects.all())
+    themes = forms.MultipleChoiceField(choices=Theme.objects.values_list('id', 'name'))

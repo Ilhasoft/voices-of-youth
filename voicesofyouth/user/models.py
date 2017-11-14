@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import UserManager
 from django.db import models
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
@@ -87,7 +88,7 @@ class VoyUser(AbstractUser):
         return url
 
 
-class MapperUserManager(models.Manager):
+class MapperUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         return qs.filter(groups__name__contains='- mappers').distinct()
@@ -107,7 +108,7 @@ class MapperUser(VoyUser):
         return user in cls.objects.all()
 
 
-class LocalAdminUserManager(models.Manager):
+class LocalAdminUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         return qs.filter(groups__name__contains='- local admin').distinct()
@@ -123,7 +124,7 @@ class LocalUserAdmin(VoyUser):
         proxy = True
 
 
-class GlobalAdminUserManager(models.Manager):
+class GlobalAdminUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         return qs.filter(is_superuser=True).distinct()
