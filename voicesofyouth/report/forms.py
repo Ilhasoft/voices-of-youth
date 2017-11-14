@@ -10,7 +10,7 @@ class MyModelChoiceField(forms.ModelChoiceField):
         return obj.name
 
 
-class ReportFrom(forms.Form):
+class ReportForm(forms.Form):
     project = MyModelChoiceField(
         queryset=Project.objects.all(),
         label=_('Project'),
@@ -81,6 +81,12 @@ class ReportFrom(forms.Form):
                 'class': 'form-control',
             }
         )
+    )
+
+    location = forms.ChoiceField(
+        label=_('Location'),
+        required=True,
+        widget=forms.HiddenInput()
     )
 
 

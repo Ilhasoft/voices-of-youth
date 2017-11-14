@@ -14,18 +14,21 @@
         <div class="content-heading">
             {% trans 'New report' %}
 
-            <a class="pull-right btn btn-default create">{% trans 'Create' %}</a>
+            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">{% trans 'Create' %}</a>
         </div>
 
         <div class="row">
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form action="" role="form">
+                        <form action="{% url 'voy-admin:reports:new' %}" method="post" role="form" id="form-report">
                             <fieldset>
+                                {% csrf_token %}
+                                {{ data_form.location }}
                                 <div class="form-group">
                                     <label>{% trans 'Project' %}</label>
                                     {{ data_form.project }}
+                                    {{ data_form.project.errors }}
                                 </div>
 
                                 <div class="form-group">
@@ -106,15 +109,14 @@ marker.on('move', function(e) {
         if (response.data.results[0]) {
             var address = response.data.results[0].formatted_address;
             marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+            $('#id_location').val(e.latlng.lat + ',' + e.latlng.lng);
         }
     });
 });
 
-$('#id_project').change(function (e) {
+$('#id_project').change(function(e) {
     e.preventDefault();
     var project = e.target.value;
-    console.log(project);
-
     axios.get('/api/tags/?project=' + project).then((response) => {
         $('#id_tags').empty();
         $('#id_tags').trigger('chosen:updated');
@@ -126,23 +128,31 @@ $('#id_project').change(function (e) {
         axios.get('/api/themes/?project=' + project).then((response) => {
             $('#id_theme').empty();
             $('#id_theme').trigger('chosen:updated');
+            $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
             response.data.map((item) => {
                 $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
                 $('#id_theme').trigger('chosen:updated');
-            });
-        }).then(() => {
-            axios.get('/api/themes/?project=' + project).then((response) => {
-                $('#id_theme').empty();
-                $('#id_theme').trigger('chosen:updated');
-                response.data.map((item) => {
-                    $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
-                    $('#id_theme').trigger('chosen:updated');
-                });
             });
         });
     }).catch(() => {
         console.log('AA');
     });
 });
+
+$('#id_theme').change(function(e) {
+    e.preventDefault();
+    axios.get('/api/mappers/?theme=' + e.target.value).then((response) => {
+        $('#id_mapper').empty();
+        $('#id_mapper').trigger('chosen:updated');
+        response.data.map((item) => {
+            $('#id_mapper').append('<option value="' + item.id + '">' + item.full_name + '</option>');
+            $('#id_mapper').trigger('chosen:updated');
+        });
+    });
+});
+
+function submitForm() {
+    $('#form-report').submit();
+}
 </script>
 {% endblock %}

@@ -13,7 +13,7 @@ from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
 from voicesofyouth.report.forms import ReportFilterForm
-from voicesofyouth.report.forms import ReportFrom
+from voicesofyouth.report.forms import ReportForm
 
 
 class ReportListView(TemplateView):
@@ -100,9 +100,20 @@ class ReportApproveView(TemplateView):
 class AddReportView(TemplateView):
     template_name = 'report/add.html'
 
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = ReportForm(data=request.POST)
+
+        if form.is_valid():
+            print('AAA')
+        else:
+            print('BBB')
+
+        return super(AddReportView, self).render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['data_form'] = ReportFrom()
+        context['data_form'] = ReportForm()
         return context
 
 
