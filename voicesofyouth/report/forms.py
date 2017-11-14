@@ -1,12 +1,64 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from voicesofyouth.report.models import REPORT_STATUS_CHOICES
+from voicesofyouth.project.models import Project
 
 
 class MyModelChoiceField(forms.ModelChoiceField):
 
     def label_from_instance(self, obj):
         return obj.name
+
+
+class ReportFrom(forms.Form):
+    project = MyModelChoiceField(
+        queryset=Project.objects.all(),
+        label=_('Project'),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    title = forms.CharField(
+        label=_('Title'),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': _('Title'),
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    description = forms.CharField(
+        label=_('Search'),
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'cols': 40,
+                'rows': 5,
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    tags = forms.MultipleChoiceField(
+        label=_('Tags'),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'required': True,
+                'class': 'chosen-select form-control',
+            }
+        )
+    )
 
 
 class ReportFilterForm(forms.Form):

@@ -3,6 +3,8 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+<link rel="stylesheet" href="{% static 'vendor/select2/dist/css/select2.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/select2-bootstrap-theme/dist/select2-bootstrap.css' %}">
 <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 {% endblock %}
@@ -20,7 +22,29 @@
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        
+                        <form action="" role="form">
+                            <fieldset>
+                                <div class="form-group">
+                                    <label>{% trans 'Project' %}</label>
+                                    {{ data_form.project }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{% trans 'Title' %}</label>
+                                    {{ data_form.title }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{% trans 'Description' %}</label>
+                                    {{ data_form.description }}
+                                </div>
+
+                                <div class="form-group">
+                                    <label>{% trans 'Tags' %}</label>
+                                    {{ data_form.tags }}
+                                </div>
+                            </fieldset>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -35,10 +59,12 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="{% static 'vendor/select2/dist/js/select2.js' %}"></script>
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 
 <script type="text/javascript">
 var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
+axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 
 var map = L.map('map', {
     maxBounds: [[-90, -160], [90, 160]], 
@@ -67,14 +93,23 @@ marker.on('move', function(e) {
     var urlApi = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + mapsKey;
     axios.get(urlApi).then((response) => {
         if (response.data.results[0]) {
-            console.log(response);
             var address = response.data.results[0].formatted_address;
             marker.bindPopup(`<strong>${address}</strong>`).openPopup();
         }
     });
 });
 
-// $('#map').css('height', $(window).height() - 220).css('width', $(document).width());
+$('#id_project').change(function (e) {
+    e.preventDefault();
+    var project = e.target.value;
+    console.log(project);
 
+    axios.get('/api/').then((tags) => {
+        console.log(tags);
+    })
+    .catch(() => {
+        console.log('AA');
+    });
+});
 </script>
 {% endblock %}

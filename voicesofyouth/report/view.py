@@ -13,6 +13,7 @@ from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
 from voicesofyouth.report.forms import ReportFilterForm
+from voicesofyouth.report.forms import ReportFrom
 
 
 class ReportListView(TemplateView):
@@ -98,6 +99,11 @@ class ReportApproveView(TemplateView):
 
 class AddReportView(TemplateView):
     template_name = 'report/add.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['data_form'] = ReportFrom()
+        return context
 
 
 class PendingReportView(TemplateView):
