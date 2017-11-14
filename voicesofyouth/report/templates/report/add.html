@@ -25,35 +25,40 @@
                             <fieldset>
                                 {% csrf_token %}
                                 {{ data_form.location }}
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.project.errors %}has-error{% endif %}">
                                     <label>{% trans 'Project' %}</label>
                                     {{ data_form.project }}
                                     {{ data_form.project.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.theme.errors %}has-error{% endif %}">
                                     <label>{% trans 'Theme' %}</label>
-                                    {{ data_form.theme }}
+                                    <select name="theme" required="" class="form-control" id="id_theme"></select>
+                                    {{ data_form.theme.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.mapper.errors %}has-error{% endif %}">
                                     <label>{% trans 'Mapper' %}</label>
-                                    {{ data_form.mapper }}
+                                    <select name="mapper" required="" class="form-control" id="id_mapper"></select>
+                                    {{ data_form.mapper.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.title.errors %}has-error{% endif %}">
                                     <label>{% trans 'Title' %}</label>
                                     {{ data_form.title }}
+                                    {{ data_form.title.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
                                     <label>{% trans 'Description' %}</label>
                                     {{ data_form.description }}
+                                    {{ data_form.description.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
                                     <label>{% trans 'Tags' %}</label>
                                     {{ data_form.tags }}
+                                    {{ data_form.tags.errors }}
                                 </div>
                             </fieldset>
                         </form>
@@ -116,43 +121,78 @@ marker.on('move', function(e) {
 
 $('#id_project').change(function(e) {
     e.preventDefault();
-    var project = e.target.value;
+    loadThemes(e.target.value);
+});
+
+$('#id_theme').change(function(e) {
+    e.preventDefault();
+    loadMappers(e.target.value);
+});
+
+function submitForm() {
+    console.log($('#id_tags').val());
+    $('#form-report').submit();
+}
+
+function loadThemes(project, selected = null) {
     axios.get('/api/tags/?project=' + project).then((response) => {
         $('#id_tags').empty();
         $('#id_tags').trigger('chosen:updated');
+
+        $('#id_theme').empty();
+        $('#id_theme').trigger('chosen:updated');
+        $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
+
+        $('#id_mapper').empty();
+        $('#id_mapper').trigger('chosen:updated');
+
         response.data.map((item) => {
             $('#id_tags').append('<option value="' + item.id + '">' + item.tag + '</option>');
             $('#id_tags').trigger('chosen:updated');
         });
     }).then(() => {
         axios.get('/api/themes/?project=' + project).then((response) => {
-            $('#id_theme').empty();
-            $('#id_theme').trigger('chosen:updated');
-            $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
             response.data.map((item) => {
                 $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
                 $('#id_theme').trigger('chosen:updated');
             });
+        }).then(() => {
+            if (selected) {
+                $('#id_theme').val(selected);
+                loadMappers(selected, {{ data_form.mapper.value }});
+            }
         });
+    }).then(() => {
+        {% if selected_tags %}
+            var tags = [];
+            {% for tag in selected_tags %}
+                tags.push({{ tag }});
+            {% endfor %}
+            $('#id_tags').val(tags);
+            $('#id_tags').trigger('chosen:updated');
+        {% endif %}
     }).catch(() => {
         console.log('AA');
     });
-});
+}
 
-$('#id_theme').change(function(e) {
-    e.preventDefault();
-    axios.get('/api/mappers/?theme=' + e.target.value).then((response) => {
+function loadMappers(theme, selected = null) {
+    axios.get('/api/mappers/?theme=' + theme).then((response) => {
         $('#id_mapper').empty();
         $('#id_mapper').trigger('chosen:updated');
         response.data.map((item) => {
             $('#id_mapper').append('<option value="' + item.id + '">' + item.full_name + '</option>');
             $('#id_mapper').trigger('chosen:updated');
         });
+    }).then(() => {
+        if (selected) {
+            $('#id_mapper').val(selected);
+        }
     });
-});
-
-function submitForm() {
-    $('#form-report').submit();
 }
+
+{% if data_form.theme.value %}
+loadThemes($('#id_project option:selected').val(), {{ data_form.theme.value }});
+{% endif %}
 </script>
 {% endblock %}

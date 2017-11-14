@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 from voicesofyouth.project.models import Project
+from voicesofyouth.tag.models import Tag
 
 
 class MyModelChoiceField(forms.ModelChoiceField):
@@ -38,7 +39,7 @@ class ReportForm(forms.Form):
 
     description = forms.CharField(
         label=_('Search'),
-        required=False,
+        required=True,
         widget=forms.Textarea(
             attrs={
                 'cols': 40,
@@ -50,9 +51,10 @@ class ReportForm(forms.Form):
     )
 
     tags = forms.MultipleChoiceField(
+        choices=Tag.objects.all().values_list('id', 'name'),
         label=_('Tags'),
         required=True,
-        widget=forms.Select(
+        widget=forms.SelectMultiple(
             attrs={
                 'required': True,
                 'multiple': True,
@@ -61,10 +63,10 @@ class ReportForm(forms.Form):
         )
     )
 
-    theme = forms.ChoiceField(
+    theme = forms.CharField(
         label=_('Theme'),
         required=True,
-        widget=forms.Select(
+        widget=forms.TextInput(
             attrs={
                 'required': True,
                 'class': 'form-control',
@@ -72,10 +74,10 @@ class ReportForm(forms.Form):
         )
     )
 
-    mapper = forms.ChoiceField(
+    mapper = forms.CharField(
         label=_('Mapper'),
         required=True,
-        widget=forms.Select(
+        widget=forms.TextInput(
             attrs={
                 'required': True,
                 'class': 'form-control',
@@ -83,11 +85,14 @@ class ReportForm(forms.Form):
         )
     )
 
-    location = forms.ChoiceField(
+    location = forms.CharField(
         label=_('Location'),
         required=True,
         widget=forms.HiddenInput()
     )
+
+    def __init__(self, *args, **kwargs):
+        super(ReportForm, self).__init__(*args, **kwargs)
 
 
 class ReportFilterForm(forms.Form):

@@ -104,16 +104,28 @@ class AddReportView(TemplateView):
         context = self.get_context_data()
         form = ReportForm(data=request.POST)
 
+        print(form.data)
+        print(request.POST.getlist('tags'))
+        print(request.POST.get('location'))
+        print(form.errors)
+
+        context['selected_tags'] = request.POST.getlist('tags')
+
+        if request.POST.get('location') == '':
+            messages.error(request, _('Set a location'))
+
         if form.is_valid():
+            print(form.cleaned_data.get('title'))
             print('AAA')
         else:
             print('BBB')
+            messages.error(request, form.non_field_errors())
 
         return super(AddReportView, self).render_to_response(context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['data_form'] = ReportForm()
+        context['data_form'] = ReportForm(data=self.request.POST) if self.request.method == 'POST' else ReportForm()
         return context
 
 
