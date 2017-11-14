@@ -191,7 +191,7 @@ function loadMappers(theme, selected = null) {
     });
 }
 
-{% if data_form.theme.value %}
+{% if data_form.project.value %}
 loadThemes($('#id_project option:selected').val(), {{ data_form.theme.value }});
 {% endif %}
 </script>
