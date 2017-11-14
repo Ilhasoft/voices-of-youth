@@ -65,7 +65,6 @@
                 <div id="map"></div>
             </div>
         </div>
-        
     </div>
 </section>
 {% endblock %}
@@ -81,7 +80,7 @@ axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 $('#id_tags').chosen();
 
 var map = L.map('map', {
-    maxBounds: [[-90, -160], [90, 160]], 
+    maxBounds: [[-90, -160], [90, 160]],
 }).setView([51.505, -0.09], 13);
 
 L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -99,7 +98,7 @@ var icon = L.icon({
 });
 
 var marker = L.marker([51.5, -0.09], {
-    icon: icon, 
+    icon: icon,
     draggable: true,
 }).addTo(map);
 
@@ -117,7 +116,7 @@ marker.on('move', function(e) {
 $('#id_project').change(function(e) {
     e.preventDefault();
     var project = e.target.value;
-    axios.get('/api/tags/?project=' + project).then((response) => {
+    axios.get('{% url "voy-api:tags-list" %}?project=' + project).then((response) => {
         $('#id_tags').empty();
         $('#id_tags').trigger('chosen:updated');
         response.data.map((item) => {
@@ -125,7 +124,7 @@ $('#id_project').change(function(e) {
             $('#id_tags').trigger('chosen:updated');
         });
     }).then(() => {
-        axios.get('/api/themes/?project=' + project).then((response) => {
+        axios.get('{% url "voy-api:themes-list" %}?project=' + project).then((response) => {
             $('#id_theme').empty();
             $('#id_theme').trigger('chosen:updated');
             $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
