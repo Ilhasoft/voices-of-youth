@@ -56,28 +56,27 @@
                         </div>
                         <div class="container-row">
                             <div class="col-xs-1"></div>
-                            <div class="col-xs-4">
-                                <div class="well">
-                                    <h4>Projects</h4>
-                                    <ul class="no-bullets">
-                                        {% for project in mapper.projects.all %}
-                                            <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                            <div class="col-xs-2">
+                                <h4>Projects</h4>
+                                <ul class="no-bullets">
+                                    {% for project in mapper.projects.all %}
+                                        <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
+                                    {% endfor %}
+                                </ul>
                             </div>
-                            <div class="col-xs-4">
-                                <div class="well">
-                                    <h4>Themes</h4>
-                                    <ul class="no-bullets">
-                                        {% for theme in mapper.themes.all %}
-                                            <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                            <div class="col-xs-2">
+                                <h4>Themes</h4>
+                                <ul class="no-bullets">
+                                    {% for theme in mapper.themes.all %}
+                                        <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
                     </div>
+                    <hr>
+                    <h4>{{ mapper.reports.count }} reports by {{ mapper.first_name }}</h4>
+                    <hr>
                     <div class="row">
                         {% for report in mapper.reports.all %}
                             {% include "report/report_resume.html" with report=report %}
