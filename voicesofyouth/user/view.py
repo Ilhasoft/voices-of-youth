@@ -83,67 +83,57 @@ class MapperDetailView(TemplateView):
     form_filter_class = MapperFilterForm
     form_mapper = MapperForm
 
-    def get(self, request, *args, **kwargs):
-        mapper_id = kwargs.get('mapper_id', 0)
-        context = self.get_context_data(request=request)
-        mapper = get_object_or_404(MapperUser, pk=mapper_id)
-        context['mapper'] = mapper
-        context['form_mapper'] = self.form_mapper(initial={
-            'name': mapper.get_full_name(),
-            'email': mapper.email,
-            'project': mapper.projects.last(),
-            'themes': mapper.themes.all(),
-        })
-        context['selected_themes'] = [i[0] for i in mapper.themes.values_list('id')]
-        filter_form = context['filter_form']
-
+    def _search_mapper(self, filter_form):
         if filter_form.is_valid():
             cleaned_data = filter_form.cleaned_data
-            search = cleaned_data['search']
-            if search:
+            if cleaned_data['search']:
                 return MappersListView.as_view()(request)
+
+    def _delete(self, request, mapper):
+        mapper.delete()
+        messages.success(request, _('Mapper deleted with success!'))
+        return HttpResponse(status=200)
+
+    def get(self, request, *args, **kwargs):
+        mapper_id = kwargs.get('mapper_id', 0)
+        context = self.get_context_data(request=request, mapper_id=mapper_id)
+        filter_form = context['filter_form']
+
+        search = self._search_mapper(filter_form)
+        if search:
+            return search
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         mapper = get_object_or_404(MapperUser, pk=kwargs.get('mapper_id'))
-        delete = request.POST.get('deleteMapper')
-        if delete:
-            mapper.delete()
-            messages.success(request, _('Mapper deleted with success!'))
-            return HttpResponse(status=200)
-        form = self.form_mapper(request.POST or None, initial={'themes': mapper.themes.values_list('id')})
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            name = cleaned_data.get('name')
-            email = cleaned_data.get('email')
-            themes = cleaned_data.get('themes')
 
-            # set name
-            if len(name.split()) > 1:
-                mapper.first_name, mapper.last_name = name.split(maxsplit=1)
-            else:
-                mapper.first_name = name
+        if request.POST.get('deleteMapper'):
+            return self._delete(request, mapper)
 
-            # set email
-            mapper.email = email
+        form = self.form_mapper(request.POST)
 
-            # set mappers group
-            # Admin remove mapper from a group.
-            for group in mapper.groups.exclude(theme_mappers__id__in=themes):
-                group.user_set.remove(mapper)
-            # Admin add mapper to a group
-            for theme in Theme.objects.filter(id__in=themes):
-                theme.mappers_group.user_set.add(mapper)
-
-            mapper.save()
+        if form.save(mapper):
             messages.success(request, 'Mapper saved with success!')
         else:
-            print(form.errors)
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
+            return HttpResponse(status=500)
+
         return self.get(request, *args, **kwargs)
 
-    def get_context_data(self, request, **kwargs):
+    def get_context_data(self, request, mapper_id, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        mapper = get_object_or_404(MapperUser, pk=mapper_id)
+        data = {
+            'name': mapper.get_full_name(),
+            'email': mapper.email,
+            'project': mapper.projects.last(),
+            'themes': mapper.themes.all(),
+        }
         context['filter_form'] = self.form_filter_class(request.GET)
+        context['mapper'] = mapper
+        context['form_mapper'] = self.form_mapper(initial=data)
+        context['selected_themes'] = mapper.themes.values_list('id', flat=True)
+
         return context

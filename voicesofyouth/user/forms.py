@@ -47,7 +47,7 @@ class MapperForm(forms.Form):
                                              'class': 'form-control',
                                          }
                                      ))
-    themes = forms.MultipleChoiceField(choices=[],
+    themes = forms.ModelMultipleChoiceField(queryset=None,
                                        label=_('Themes'),
                                        widget=forms.SelectMultiple(
                                            attrs={
@@ -60,4 +60,34 @@ class MapperForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['project'].queryset = Project.objects.all()
-        self.fields['themes'].choices = Theme.objects.values_list('id', 'name')
+        self.fields['themes'].queryset = Theme.objects.all()
+
+    def save(self, mapper):
+        if self.is_valid():
+            cleaned_data = self.cleaned_data
+            name = cleaned_data.get('name')
+            email = cleaned_data.get('email')
+            themes = cleaned_data.get('themes')
+
+            # set name
+            if len(name.split()) > 1:
+                mapper.first_name, mapper.last_name = name.split(maxsplit=1)
+            else:
+                mapper.first_name = name
+
+            # set email
+            mapper.email = email
+
+            # set mappers group
+            # Admin user remove mapper from a group.
+            for group in mapper.groups.exclude(theme_mappers__id__in=themes):
+                group.user_set.remove(mapper)
+            # Admin user add mapper to a group
+            for theme in Theme.objects.filter(id__in=themes):
+                theme.mappers_group.user_set.add(mapper)
+
+            mapper.save()
+            return True
+        else:
+            return False
+
