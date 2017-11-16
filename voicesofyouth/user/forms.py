@@ -39,7 +39,7 @@ class MapperForm(forms.Form):
                                      'class': 'form-control'
                                  }
                              ))
-    project = forms.ModelChoiceField(queryset=Project.objects.all(),
+    project = forms.ModelChoiceField(queryset=None,
                                      label=_('Project'),
                                      required=False,
                                      widget=forms.Select(
@@ -47,7 +47,7 @@ class MapperForm(forms.Form):
                                              'class': 'form-control',
                                          }
                                      ))
-    themes = forms.MultipleChoiceField(choices=Theme.objects.values_list('id', 'name'),
+    themes = forms.MultipleChoiceField(choices=[],
                                        label=_('Themes'),
                                        widget=forms.SelectMultiple(
                                            attrs={
@@ -56,3 +56,8 @@ class MapperForm(forms.Form):
                                                'class': 'chosen-select form-control',
                                            }
                                        ))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['project'].queryset = Project.objects.all()
+        self.fields['themes'].choices = Theme.objects.values_list('id', 'name')
