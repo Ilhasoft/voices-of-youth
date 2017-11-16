@@ -2,6 +2,7 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
@@ -40,43 +41,47 @@
                                 <img src="{{ mapper.get_avatar_display }}" alt="">
                             </div>
                             <div class="col-xs-10">
-                                {{ mapper.get_full_name }}
+                                <h4>{{ mapper.get_full_name }}</h4>
                                 <p>{{ mapper.email }}</p>
                                 <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
                             </div>
                             <div>
-                                <a href="#" class="btn btn-info btn-oval btn-lg">{% trans "Edit profile" %}</a>
+                                <button
+                                        type="button"
+                                        data-toggle="modal"
+                                        data-target="#modalEditMapperProfile"
+                                        class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                                </button>
                             </div>
                         </div>
                         <div class="container-row">
                             <div class="col-xs-1"></div>
-                            <div class="col-xs-4">
-                                <div class="well">
-                                    <h4>Projects</h4>
-                                    <ul class="no-bullets">
-                                        {% for project in mapper.projects.all %}
-                                            <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                            <div class="col-xs-2">
+                                <h4>Projects</h4>
+                                <ul class="no-bullets">
+                                    {% for project in mapper.projects.all %}
+                                        <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
+                                    {% endfor %}
+                                </ul>
                             </div>
-                            <div class="col-xs-4">
-                                <div class="well">
-                                    <h4>Themes</h4>
-                                    <ul class="no-bullets">
-                                        {% for theme in mapper.themes.all %}
-                                            <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
+                            <div class="col-xs-2">
+                                <h4>Themes</h4>
+                                <ul class="no-bullets">
+                                    {% for theme in mapper.themes.all %}
+                                        <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
                             </div>
                         </div>
                     </div>
-                                        <div class="row">
-                            {% for report in mapper.reports.all %}
-                                {% include "report/report_resume.html" with report=report %}
-                            {% endfor %}
-                        </div>
+                    <hr>
+                    <h4>{{ mapper.reports.count }} reports by {{ mapper.first_name }}</h4>
+                    <hr>
+                    <div class="row">
+                        {% for report in mapper.reports.all %}
+                            {% include "report/report_resume.html" with report=report %}
+                        {% endfor %}
+                    </div>
 
                 </div>
                 <div class="panel-footer">
@@ -88,7 +93,81 @@
     </section>
 {% endblock content %}
 
+{% block extrahtml %}
+    <div id="modalEditMapperProfile"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modalEditMapperProfileLabel"
+         aria-hidden="true"
+         class="modal fade"
+         style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="container-column">
+                        <div>
+                            <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
+                        </div>
+                        <div style="padding: 5px;">
+                            <img src="{{ mapper.get_avatar_display }}" alt="">
+                        </div>
+                        <div>
+                            <a href="" class="btn btn-lg btn-info">{% trans "Remove mapper" %}</a>
+                        </div>
+                    </div>
+                </div>
+                <form action="{{ request.get_full_path }}" id="editMapperForm" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form_mapper }}
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                data-dismiss="modal"
+                                class="btn btn-default btn-lg">
+                            {% trans "Close" %}
+                        </button>
+                        <button
+                                type="submit"
+                                class="btn btn-info btn-lg">
+                            {% trans "Save changes" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block extrajs %}
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#id_themes').chosen();
+        let selected = [];
+
+        /* Select the current values. */
+        {% for selected_theme in selected_themes %}
+            selected.push({{ selected_theme }});
+        {% endfor %}
+        $(".chosen-select").val(selected).trigger('chosen:updated');
+
+        $('#id_project').change(function (e) {
+            e.preventDefault();
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                $('#id_themes').empty();
+                $('#id_themes').trigger('chosen:updated');
+                $('#id_themes').append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    $('#id_themes').append('<option value="' + item.id + '">' + item.name + '</option>');
+                    $('#id_themes').trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
     <script type="text/javascript">
         $("#post_mapper_search").click(() => {
             form = $("#mapper_search");

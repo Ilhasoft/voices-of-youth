@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -5,7 +6,8 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.user.forms import MapperFilterForm
+from voicesofyouth.theme.models import Theme
+from voicesofyouth.user.forms import MapperFilterForm, MapperForm
 from voicesofyouth.user.models import AdminUser
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
@@ -76,12 +78,21 @@ class MappersListView(TemplateView):
 
 class MapperDetailView(TemplateView):
     template_name = 'user/mapper_detail.html'
-    form_class = MapperFilterForm
+    form_filter_class = MapperFilterForm
+    form_mapper = MapperForm
 
     def get(self, request, *args, **kwargs):
         mapper_id = kwargs.get('mapper_id', 0)
         context = self.get_context_data(request=request)
-        context['mapper'] = get_object_or_404(MapperUser, pk=mapper_id)
+        mapper = get_object_or_404(MapperUser, pk=mapper_id)
+        context['mapper'] = mapper
+        context['form_mapper'] = self.form_mapper(initial={
+            'name': mapper.get_full_name(),
+            'email': mapper.email,
+            'project': mapper.projects.last(),
+            'themes': mapper.themes.all(),
+        })
+        context['selected_themes'] = [i[0] for i in mapper.themes.values_list('id')]
         filter_form = context['filter_form']
 
         if filter_form.is_valid():
@@ -92,7 +103,42 @@ class MapperDetailView(TemplateView):
 
         return render(request, self.template_name, context)
 
+    def post(self, request, *args, **kwargs):
+        mapper = get_object_or_404(MapperUser, pk=kwargs.get('mapper_id'))
+        print(request.POST)
+        print(mapper.themes.values_list('id'))
+        form = self.form_mapper(request.POST or None, initial={'themes': mapper.themes.values_list('id')})
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            name = cleaned_data.get('name')
+            email = cleaned_data.get('email')
+            themes = cleaned_data.get('themes')
+
+            # set name
+            if len(name.split()) > 1:
+                mapper.first_name, mapper.last_name = name.split(maxsplit=1)
+            else:
+                mapper.first_name = name
+
+            # set email
+            mapper.email = email
+
+            # set mappers group
+            # Admin remove mapper from a group.
+            for group in mapper.groups.exclude(theme_mappers__id__in=themes):
+                group.user_set.remove(mapper)
+            # Admin add mapper to a group
+            for theme in Theme.objects.filter(id__in=themes):
+                theme.mappers_group.user_set.add(mapper)
+
+            mapper.save()
+            messages.success(request, 'Mapper saved with success!')
+        else:
+            print(form.errors)
+            messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
+        return self.get(request, *args, **kwargs)
+
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['filter_form'] = self.form_class(request.GET)
+        context['filter_form'] = self.form_filter_class(request.GET)
         return context
