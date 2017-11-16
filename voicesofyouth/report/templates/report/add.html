@@ -103,7 +103,14 @@ var icon = L.icon({
     popupAnchor:  [-3, -76]
 });
 
-var marker = L.marker([51.5, -0.09], {
+var coordinates = [51.5, -0.09];
+
+{% if data_form.location.value %}
+var temp_coordinates = '{{ data_form.location.value }}'.split(',');
+coordinates = [temp_coordinates[0], temp_coordinates[1]];
+{% endif %}
+
+var marker = L.marker(coordinates, {
     icon: icon, 
     draggable: true,
 }).addTo(map);
@@ -130,7 +137,6 @@ $('#id_theme').change(function(e) {
 });
 
 function submitForm() {
-    console.log($('#id_tags').val());
     $('#form-report').submit();
 }
 
@@ -147,7 +153,7 @@ function loadThemes(project, selected = null) {
         $('#id_mapper').trigger('chosen:updated');
 
         response.data.map((item) => {
-            $('#id_tags').append('<option value="' + item.id + '">' + item.tag + '</option>');
+            $('#id_tags').append('<option value="' + item.tag + '">' + item.tag + '</option>');
             $('#id_tags').trigger('chosen:updated');
         });
     }).then(() => {
@@ -166,7 +172,7 @@ function loadThemes(project, selected = null) {
         {% if selected_tags %}
             var tags = [];
             {% for tag in selected_tags %}
-                tags.push({{ tag }});
+                tags.push('{{ tag }}');
             {% endfor %}
             $('#id_tags').val(tags);
             $('#id_tags').trigger('chosen:updated');

@@ -5,8 +5,10 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.http.response import HttpResponse
 from django.views.generic.base import TemplateView
+from django.contrib.gis.geos import GEOSGeometry
 
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.user.models import VoyUser
 from voicesofyouth.voyadmin.utils import get_paginator
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
@@ -103,22 +105,28 @@ class AddReportView(TemplateView):
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
         form = ReportForm(data=request.POST)
-
-        print(form.data)
-        print(request.POST.getlist('tags'))
-        print(request.POST.get('location'))
-        print(form.errors)
-
         context['selected_tags'] = request.POST.getlist('tags')
 
         if request.POST.get('location') == '':
             messages.error(request, _('Set a location'))
 
         if form.is_valid():
-            print(form.cleaned_data.get('title'))
-            print('AAA')
+            mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
+            location = form.cleaned_data.get('location').split(',')
+
+            report = Report(
+                theme=Theme.objects.get(id=form.cleaned_data.get('theme')),
+                name=form.cleaned_data.get('title'),
+                description=form.cleaned_data.get('description'),
+                created_by=mapper,
+                modified_by=mapper,
+                location=GEOSGeometry('POINT({0} {1})'.format(location[0], location[1]), srid=4326)
+            )
+            report.save()
+            report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+            messages.success(request, _('Report created'))
+            return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
         else:
-            print('BBB')
             messages.error(request, form.non_field_errors())
 
         return super(AddReportView, self).render_to_response(context)

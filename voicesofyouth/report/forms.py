@@ -13,7 +13,7 @@ class MyModelChoiceField(forms.ModelChoiceField):
 
 class ReportForm(forms.Form):
     project = MyModelChoiceField(
-        queryset=Project.objects.all(),
+        queryset=None,
         label=_('Project'),
         required=True,
         widget=forms.Select(
@@ -51,7 +51,7 @@ class ReportForm(forms.Form):
     )
 
     tags = forms.MultipleChoiceField(
-        choices=Tag.objects.all().values_list('id', 'name'),
+        choices=[],
         label=_('Tags'),
         required=True,
         widget=forms.SelectMultiple(
@@ -93,6 +93,8 @@ class ReportForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
+        self.fields['project'].queryset = Project.objects.all()
+        self.fields['tags'].choices = Tag.objects.all().values_list('name', 'name')
 
 
 class ReportFilterForm(forms.Form):
