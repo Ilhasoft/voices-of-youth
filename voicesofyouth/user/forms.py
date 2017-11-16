@@ -33,7 +33,7 @@ class MapperForm(forms.Form):
                                },
                            ))
     email = forms.EmailField(required=False,
-                             label=_('e-mail'),
+                             label=_('E-mail'),
                              widget=forms.EmailInput(
                                  attrs={
                                      'class': 'form-control'
