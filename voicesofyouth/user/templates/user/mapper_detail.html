@@ -112,7 +112,7 @@
                             <img src="{{ mapper.get_avatar_display }}" alt="">
                         </div>
                         <div>
-                            <button class="btn btn-lg btn-info" id="delete_mapper">{% trans "Remove mapper" %}</button>
+                            <button class="btn btn-lg btn-info" id="remove_mapper">{% trans "Remove mapper" %}</button>
                         </div>
                     </div>
                 </div>
@@ -149,7 +149,7 @@
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
-        $("#delete_mapper").click(() => {
+        $("#remove_mapper").click(() => {
             swal({
                 title: '{% trans "You really want to delete this mapper?" %}',
                 text: '{% trans "This operation is irreversible!" %}',
