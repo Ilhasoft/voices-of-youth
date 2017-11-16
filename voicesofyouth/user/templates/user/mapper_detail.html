@@ -112,7 +112,7 @@
                             <img src="{{ mapper.get_avatar_display }}" alt="">
                         </div>
                         <div>
-                            <a href="" class="btn btn-lg btn-info">{% trans "Remove mapper" %}</a>
+                            <button class="btn btn-lg btn-info" id="delete_mapper">{% trans "Remove mapper" %}</button>
                         </div>
                     </div>
                 </div>
@@ -142,6 +142,27 @@
 
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        $("#delete_mapper").click(() => {
+            swal({
+                title: '{% trans "You really want to delete this mapper?" %}',
+                text: '{% trans "This operation is irreversible!" %}',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((answer) => {
+                if (answer === true) {
+                    let params = new URLSearchParams();
+                    params.append('deleteMapper', true);
+                    axios.post('{% url "voy-admin:users:mapper_detail" mapper.id %}', params).then(() => {
+                        window.location = '{% url "voy-admin:users:mappers_list" %}'
+                    });
+                }
+            }).catch(error => {
+                swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
+            })
+        });
+    </script>
     <script type="text/javascript">
         $('#id_themes').chosen();
         let selected = [];

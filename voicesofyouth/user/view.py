@@ -3,6 +3,7 @@ from django.db.models.query_utils import Q
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
@@ -63,6 +64,7 @@ class MappersListView(TemplateView):
                 qs = MapperUser.objects.all()
 
             if not isinstance(qs, list) and search:
+                qs = qs.order_by('first_name')
                 qs = search_user(search, qs)
             context['mappers'] = get_paginator(qs, page)
 
@@ -105,8 +107,11 @@ class MapperDetailView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         mapper = get_object_or_404(MapperUser, pk=kwargs.get('mapper_id'))
-        print(request.POST)
-        print(mapper.themes.values_list('id'))
+        delete = request.POST.get('deleteMapper')
+        if delete:
+            mapper.delete()
+            messages.success(request, _('Mapper deleted with success!'))
+            return HttpResponse(status=200)
         form = self.form_mapper(request.POST or None, initial={'themes': mapper.themes.values_list('id')})
         if form.is_valid():
             cleaned_data = form.cleaned_data
