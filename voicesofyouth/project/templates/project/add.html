@@ -1,17 +1,144 @@
 {% extends "voyadmin/base.html" %}
 
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
+<link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css" />
+{% endblock %}
+
 {% block content %}
 <section>
     <div class="content-wrapper">
         <div class="content-heading">
-            New project
+            {% trans 'New project' %}
         </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <h1>Add project</h1>
+        <form action="" method="post" role="form" id="form-project">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h3>{% trans 'New Project' %}</h3>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Name' %}</label>
+                                        {{ data_form.name }}
+                                        {{ data_form.name.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.path.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Edit URL' %}</label>
+                                        <div class="row">
+                                            <label class="col-lg-5 control-label">voiceofyouth.com/</label>
+                                            <div class="col-lg-7">
+                                                {{ data_form.path }}
+                                                {{ data_form.path.errors }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Description' %}</label>
+                                        {{ data_form.description }}
+                                        {{ data_form.description.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.window_title.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Window Title' %}</label>
+                                        {{ data_form.window_title }}
+                                        {{ data_form.window_title.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.language.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Language' %}</label>
+                                        {{ data_form.language }}
+                                        {{ data_form.language.errors }}
+                                    </div>
+                                    
+                                    <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Tags' %}</label>
+                                        {{ data_form.tags }}
+                                        {{ data_form.tags.errors }}
+                                    </div>
+
+                                    <div class="form-group text-center buttons">
+                                        <button type="submit" class="btn btn-oval btn-lg btn-default">{% trans 'Started' %}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div id="map"></div>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </section>
 {% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
+
+<script type="text/javascript">
+axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+$('#id_tags').chosen();
+
+var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    osm = L.tileLayer(osmUrl, {
+        maxZoom: 18, attribution: osmAttrib
+    }),
+    map = new L.Map('map', {
+        center: new L.LatLng(51.505, -0.04), 
+        zoom: 13 
+    }),
+    drawnItems = L.featureGroup().addTo(map);
+
+L.control.layers({
+    'osm': osm.addTo(map)
+}, { 
+    'drawlayer': drawnItems 
+}, { 
+    position: 'topright',
+    collapsed: false,
+}).addTo(map);
+
+map.addControl(new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems,
+    },
+    draw: {
+        polygon: false,
+        marker: false,
+        circle: false,
+        rectangle: false,
+        circlemarker: false,
+        polyline: {
+            repeatMode: false,
+            allowIntersection: false,
+        },
+    },
+}));
+
+map.on(L.Draw.Event.CREATED, function (event) {
+    var layer = event.layer;
+
+    drawnItems.addLayer(layer);
+});
+</script>
+{% endblock %}
