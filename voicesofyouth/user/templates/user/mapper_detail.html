@@ -149,6 +149,11 @@
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
+        $("#reset_password").click(() => {
+            swal("Warning", "Behavior not implemented yet!", "warning");
+        })
+    </script>
+    <script type="text/javascript">
         $("#remove_mapper").click(() => {
             swal({
                 title: '{% trans "You really want to delete this mapper?" %}',
