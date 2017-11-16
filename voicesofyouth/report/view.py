@@ -100,7 +100,7 @@ class ReportApproveView(TemplateView):
 
 
 class AddReportView(TemplateView):
-    template_name = 'report/add.html'
+    template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -134,6 +134,65 @@ class AddReportView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data_form'] = ReportForm(data=self.request.POST) if self.request.method == 'POST' else ReportForm()
+        return context
+
+
+class EditReportView(TemplateView):
+    template_name = 'report/form.html'
+
+    def post(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        form = ReportForm(data=request.POST)
+        context['data_form'] = form
+        context['selected_tags'] = request.POST.getlist('tags')
+
+        if request.POST.get('location') == '':
+            messages.error(request, _('Set a location'))
+
+        if form.is_valid():
+            try:
+                report_id = kwargs['report']
+                report = get_object_or_404(Report, pk=report_id)
+                mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
+                location = form.cleaned_data.get('location').split(',')
+
+                report.name = form.cleaned_data.get('title')
+                report.theme = Theme.objects.get(id=form.cleaned_data.get('theme'))
+                report.name = form.cleaned_data.get('title')
+                report.description = form.cleaned_data.get('description')
+                report.created_by = mapper
+                report.modified_by = mapper
+                report.location = GEOSGeometry('POINT({0} {1})'.format(location[0], location[1]), srid=4326)
+                report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+                report.save()
+
+                messages.success(request, _('Report edited'))
+                return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
+            except Exception:
+                return HttpResponse(status=500)
+        else:
+            messages.error(request, form.non_field_errors())
+
+        return super().render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        report_id = self.kwargs['report']
+        report = get_object_or_404(Report, pk=report_id)
+
+        data = {
+            'title': report.name,
+            'description': report.description,
+            'project': report.theme.project.id,
+            'theme': report.theme.id,
+            'mapper': report.created_by.id,
+            'location': '{0},{1}'.format(report.location[0], report.location[1]),
+            'tags': report.tags.names(),
+        }
+
+        context['editing'] = True
+        context['selected_tags'] = report.tags.names()
+        context['data_form'] = ReportForm(initial=self.request.POST) if self.request.method == 'POST' else ReportForm(initial=data)
         return context
 
 

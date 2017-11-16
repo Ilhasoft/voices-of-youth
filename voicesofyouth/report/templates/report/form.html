@@ -12,16 +12,17 @@
 <section>
     <div class="content-wrapper" id="new-report">
         <div class="content-heading">
-            {% trans 'New report' %}
-
-            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">{% trans 'Create' %}</a>
+            {% if editing %} {% trans 'Edit report' %} {% else %} {% trans 'New report' %} {% endif %}
+            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">
+                {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+            </a>
         </div>
 
         <div class="row">
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form action="{% url 'voy-admin:reports:new' %}" method="post" role="form" id="form-report">
+                        <form action="" method="post" role="form" id="form-report">
                             <fieldset>
                                 {% csrf_token %}
                                 {{ data_form.location }}
