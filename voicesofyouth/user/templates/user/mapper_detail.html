@@ -3,7 +3,6 @@
 
 {% block extracss %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
@@ -69,6 +68,7 @@
 {% endblock %}
 
 {% block extrahtml %}
+    {{ block.super }}
     <div id="modalEditMapperProfile"
          tabindex="-1"
          role="dialog"
@@ -83,8 +83,15 @@
                         <div>
                             <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
                         </div>
+                        <div style="display: none" id="avatars">
+                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
+                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
+                            {% endfor %}
+                        </div>
                         <div style="padding: 5px;">
-                            <img src="{{ mapper.get_avatar_display }}" alt="">
+                            <div>
+                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt="">
+                            </div>
                         </div>
                         <div>
                             <button class="btn btn-lg btn-info" id="remove_mapper">{% trans "Remove mapper" %}</button>
@@ -94,7 +101,7 @@
                 <form action="{{ request.get_full_path }}" id="editMapperForm" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ form_mapper }}
+                        {{ form_edit_mapper }}
                     </div>
                     <div class="modal-footer">
                         <button
@@ -122,7 +129,7 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    {{ block.super }}
     <script type="text/javascript">
         $("#reset_password").click(() => {
             swal("Warning", "Behavior not implemented yet!", "warning");
@@ -147,38 +154,6 @@
             }).catch(error => {
                 swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
             })
-        });
-    </script>
-    <script type="text/javascript">
-        $('#id_themes').chosen();
-        let selected = [];
-
-        /* Select the current values. */
-        {% for selected_theme in selected_themes %}
-            selected.push({{ selected_theme }});
-        {% endfor %}
-        $(".chosen-select").val(selected).trigger('chosen:updated');
-
-        $('#id_project').change(function (e) {
-            e.preventDefault();
-            var project = e.target.value;
-            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                $('#id_themes').empty();
-                $('#id_themes').trigger('chosen:updated');
-                $('#id_themes').append('<option value="">{% trans 'Theme' %}</option>');
-                response.data.map((item) => {
-                    $('#id_themes').append('<option value="' + item.id + '">' + item.name + '</option>');
-                    $('#id_themes').trigger('chosen:updated');
-                });
-            }).catch(error => {
-                console.log(error);
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $("#post_mapper_search").click(() => {
-            form = $("#mapper_search");
-            form.submit();
         });
     </script>
     <script type="text/javascript">

@@ -114,12 +114,7 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script type="text/javascript">
-        $("#post_mapper_search").click(() => {
-            form = $("#mapper_search");
-            form.submit();
-        });
-    </script>
+    {{ block.super }}
     <script type="text/javascript">
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 

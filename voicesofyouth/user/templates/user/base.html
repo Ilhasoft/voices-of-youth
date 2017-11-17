@@ -2,7 +2,9 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,7 +25,10 @@
                     </span>
                     </div>
                     <div class="input-group margin-bottom-sm" style="order: -1; margin-left: 47px;">
-                        <button class="btn btn-default ">
+                        <button
+                                class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#modalAddMapper">
                             <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> Add new mapper
                         </button>
                     </div>
@@ -50,3 +55,104 @@
         </div>
     </section>
 {% endblock content %}
+
+{% block extrahtml %}
+    <div id="modalAddMapper"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modalAddMapperLabel"
+         aria-hidden="true"
+         class="modal fade"
+         style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="container-column">
+                        <div>
+                            <h4 id="modalAddMapperLabel" class="modal-title">{% trans "Add mapper" %}</h4>
+                        </div>
+                        <div style="display: none" id="avatars">
+                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
+                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
+                            {% endfor %}
+                        </div>
+                        <div style="padding: 5px;">
+                            {% if mapper %}
+                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt=""
+                                     style="cursor: pointer">
+                            {% else %}
+                                <img id="current_avatar" src="{{ default_avatar }}" alt="" style="cursor: pointer">
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <form action="{% url "voy-admin:users:mappers_list" %}" id="addMapperForm" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form_add_mapper }}
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                                type="button"
+                                data-dismiss="modal"
+                                class="btn btn-default btn-lg">
+                            {% trans "Cancel" %}
+                        </button>
+                        <button
+                                type="submit"
+                                class="btn btn-info btn-lg">
+                            {% trans "Create" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        $("#post_mapper_search").click(() => {
+            form = $("#mapper_search");
+            form.submit();
+        });
+    </script>
+    <script type="text/javascript">
+        $("img[id='current_avatar']").click((evt) => {
+            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
+            console.log($(evt.target).parents('div').find('#avatars'));
+        });
+        $("img[id^='avatar_']").click((evt) => {
+            const selected_avatar = $(evt.target).attr('src');
+            const avatars = $(evt.target).parents('div').find('#avatars');
+            const current_avatar = $(evt.target).parents('div').find('#current_avatar');
+            $(current_avatar).attr('src', selected_avatar);
+            avatars.val(selected_avatar);
+            avatars.slideUp("slow");
+        });
+    </script>
+    <script type="text/javascript">
+        $("select[id='id_themes']").chosen();
+        $("select[id='id_project']").chosen();
+
+        $("select[id='id_project']").change(function (e) {
+            e.preventDefault();
+            const currentFormId = $(e.target.closest("form")).attr('id');
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
+                themesSelect.empty();
+                themesSelect.trigger('chosen:updated');
+                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    themesSelect.trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
+{% endblock %}

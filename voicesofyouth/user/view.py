@@ -7,9 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.forms import MapperFilterForm, MapperForm
-from voicesofyouth.user.models import AdminUser
+from voicesofyouth.user.models import AdminUser, AVATARS, DEFAULT_AVATAR
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
 
@@ -34,6 +33,7 @@ class MappersListView(TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
+        print(request.POST)
         delete = request.POST.get('deleteMappers')
         if delete:
             try:
@@ -75,13 +75,14 @@ class MappersListView(TemplateView):
         context['mappers'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
+        context['form_add_mapper'] = MapperForm()
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         return context
 
 
 class MapperDetailView(TemplateView):
     template_name = 'user/mapper_detail.html'
     form_filter_class = MapperFilterForm
-    form_mapper = MapperForm
 
     def _search_mapper(self, filter_form):
         if filter_form.is_valid():
@@ -111,7 +112,7 @@ class MapperDetailView(TemplateView):
         if request.POST.get('deleteMapper'):
             return self._delete(request, mapper)
 
-        form = self.form_mapper(request.POST)
+        form = MapperForm(request.POST)
 
         if form.save(mapper):
             messages.success(request, 'Mapper saved with success!')
@@ -133,7 +134,8 @@ class MapperDetailView(TemplateView):
         }
         context['filter_form'] = self.form_filter_class(request.GET)
         context['mapper'] = mapper
-        context['form_mapper'] = self.form_mapper(initial=data)
+        context['form_edit_mapper'] = MapperForm(initial=data)
+        context['form_add_mapper'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
 
         return context

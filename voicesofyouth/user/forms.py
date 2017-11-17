@@ -3,6 +3,7 @@ from django.utils.translation import ugettext as _
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.user.models import AVATARS
 
 
 class MapperFilterForm(forms.Form):
@@ -56,6 +57,8 @@ class MapperForm(forms.Form):
                                                'class': 'chosen-select form-control',
                                            }
                                        ))
+    avatars = forms.ChoiceField(choices=AVATARS,
+                                widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
