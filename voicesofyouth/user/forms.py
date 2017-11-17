@@ -81,6 +81,9 @@ class MapperForm(forms.Form):
             # set email
             mapper.email = email
 
+            if not mapper.id:
+                mapper.save()
+
             # set mappers group
             # Admin user remove mapper from a group.
             for group in mapper.groups.exclude(theme_mappers__id__in=themes):

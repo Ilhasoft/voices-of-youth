@@ -33,7 +33,6 @@ class MappersListView(TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
-        print(request.POST)
         delete = request.POST.get('deleteMappers')
         if delete:
             try:
@@ -41,6 +40,17 @@ class MappersListView(TemplateView):
             except Exception:
                 return HttpResponse(status=500)
             return HttpResponse("Users deleted!")
+        else:
+            form = MapperForm(request.POST)
+            if form.is_valid():
+                mapper = MapperUser()
+                form.save(mapper)
+                print('-' * 80)
+                print(mapper.id)
+            else:
+                print('=' * 80)
+                print('invalid')
+                print(form.errors)
         return self.get(request)
 
     def get(self, request):
