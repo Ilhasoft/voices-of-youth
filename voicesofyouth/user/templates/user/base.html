@@ -1,6 +1,10 @@
 {% extends "voyadmin/base.html" %}
 {% load static i18n sass_tags %}
 
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
+{% endblock %}
+
 {% block content %}
     <section>
         <div class="content-wrapper">

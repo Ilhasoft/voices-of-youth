@@ -2,6 +2,7 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">

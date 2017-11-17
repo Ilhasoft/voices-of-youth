@@ -2,6 +2,7 @@
 {% load static i18n sass_tags %}
 
 {% block extracss %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/users_list.scss' %}" type="text/css">
 {% endblock %}
 
