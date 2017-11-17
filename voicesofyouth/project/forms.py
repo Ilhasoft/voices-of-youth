@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings as django_settings
 from django.utils.translation import ugettext as _
 
+from voicesofyouth.user.models import VoyUser
+
 
 class ProjectForm(forms.Form):
     name = forms.CharField(
@@ -54,35 +56,47 @@ class ProjectForm(forms.Form):
         )
     )
 
-    window_title = forms.CharField(
-        label=_('Window Title'),
+    boundary = forms.CharField(
+        label=_('Boundary'),
         required=True,
-        max_length=255,
+        widget=forms.HiddenInput()
+    )
+
+    tags = forms.CharField(
+        label=_('Tags'),
+        required=True,
         widget=forms.TextInput(
             attrs={
-                'placeholder': _('Window Title'),
                 'required': True,
                 'class': 'form-control',
             }
         )
     )
 
-    boundary = forms.HiddenInput()
-
-    tags = forms.MultipleChoiceField(
-        choices=[],
-        label=_('Tags'),
+    local_admin = forms.ModelMultipleChoiceField(
+        queryset=None,
+        label=_('Local Admin'),
         required=True,
         widget=forms.SelectMultiple(
             attrs={
                 'required': True,
                 'multiple': True,
-                'class': 'chosen-select form-control',
+                'class': 'form-control',
+            }
+        )
+    )
+
+    thumbnail = forms.FileField(
+        label=_('Thumbnail'),
+        required=True,
+        widget=forms.ClearableFileInput(
+            attrs={
+                'required': True,
+                'class': 'form-control',
             }
         )
     )
 
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
-        # self.fields['project'].queryset = Project.objects.all()
-        # self.fields['tags'].choices = Tag.objects.all().values_list('name', 'name')
+        self.fields['local_admin'].queryset = VoyUser.objects.all()

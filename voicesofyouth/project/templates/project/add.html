@@ -5,6 +5,7 @@
 {% block extracss %}
 <link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
 <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css" />
 {% endblock %}
@@ -16,8 +17,9 @@
             {% trans 'New project' %}
         </div>
 
-        <form action="" method="post" role="form" id="form-project">
+        <form action="" enctype="multipart/form-data" method="post" role="form" id="form-project">
             {% csrf_token %}
+            {{ data_form.boundary }}
             <div class="row">
                 <div class="col-lg-4">
                     <div class="panel">
@@ -53,10 +55,10 @@
                                         {{ data_form.description.errors }}
                                     </div>
 
-                                    <div class="form-group {% if data_form.window_title.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Window Title' %}</label>
-                                        {{ data_form.window_title }}
-                                        {{ data_form.window_title.errors }}
+                                    <div class="form-group {% if data_form.thumbnail.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Thumbnail' %}</label>
+                                        {{ data_form.thumbnail }}
+                                        {{ data_form.thumbnail.errors }}
                                     </div>
 
                                     <div class="form-group {% if data_form.language.errors %}has-error{% endif %}">
@@ -71,8 +73,14 @@
                                         {{ data_form.tags.errors }}
                                     </div>
 
+                                    <div class="form-group {% if data_form.local_admin.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Local Admin' %}</label>
+                                        {{ data_form.local_admin }}
+                                        {{ data_form.local_admin.errors }}
+                                    </div>
+
                                     <div class="form-group text-center buttons">
-                                        <button type="submit" class="btn btn-oval btn-lg btn-default">{% trans 'Started' %}</button>
+                                        <button type="submit" onclick="submitForm()" class="btn btn-oval btn-lg btn-default">{% trans 'Started' %}</button>
                                     </div>
                                 </div>
                             </div>
@@ -91,12 +99,14 @@
 
 {% block extrajs %}
 <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.js' %}"></script>
 <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
 
 <script type="text/javascript">
 axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
-$('#id_tags').chosen();
+$('#id_local_admin').chosen();
+$('#id_tags').tagsinput();
 
 var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -106,7 +116,7 @@ var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     map = new L.Map('map', {
         center: new L.LatLng(51.505, -0.04), 
         zoom: 13 
-    }),
+    })
     drawnItems = L.featureGroup().addTo(map);
 
 L.control.layers({
@@ -118,27 +128,76 @@ L.control.layers({
     collapsed: false,
 }).addTo(map);
 
-map.addControl(new L.Control.Draw({
+var controlDraw = new L.Control.Draw({
     edit: {
         featureGroup: drawnItems,
+        edit: false,
     },
     draw: {
-        polygon: false,
+        polygon: true,
         marker: false,
         circle: false,
         rectangle: false,
         circlemarker: false,
-        polyline: {
-            repeatMode: false,
-            allowIntersection: false,
-        },
+        polyline: false,
     },
-}));
-
-map.on(L.Draw.Event.CREATED, function (event) {
-    var layer = event.layer;
-
-    drawnItems.addLayer(layer);
 });
+
+map.addControl(controlDraw);
+
+var controlEdit = new L.Control.Draw({
+    edit: {
+        featureGroup: drawnItems,
+        edit: false,
+    },
+    draw: false,
+});
+
+map.on(L.Draw.Event.CREATED, function(e) {
+    drawnItems.addLayer(e.layer);
+    map.removeControl(controlDraw);
+    map.addControl(controlEdit);
+
+    console.log(e.layer.toGeoJSON());
+
+    var coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
+    var toSave = '';
+
+    for (var i = 0; i < coordinates.length; i += 1) {
+        toSave += coordinates[i][1] + ' ' + coordinates[i][0] + ', ';
+    }
+
+    $('#id_boundary').val(toSave)
+});
+
+map.on(L.Draw.Event.DELETED, function(e) {
+    map.removeControl(controlEdit);
+    map.addControl(controlDraw);
+    $('#id_boundary').val('')
+});
+
+{% if data_form.boundary.value %}
+var polygonSave = '{{ data_form.boundary.value }}'.split(', ');
+if (polygonSave.length) {
+    var arrayCoords = [];
+    for (var u = 0; u < polygonSave.length; u += 1) {
+         var coord = polygonSave[u].split(' ');
+         if (coord[0] && coord[1]) {
+             arrayCoords.push([parseFloat(coord[0]), parseFloat(coord[1])]);
+         }
+    }
+    var polygon = new L.Polygon([arrayCoords], {
+        editable: true
+    });
+    map.addLayer(polygon);
+    map.removeControl(controlDraw);
+    map.addControl(controlEdit);
+}
+// console.log(polygonSave);
+{% endif %}
+
+function submitForm() {
+    $('#form-project').submit();
+}
 </script>
 {% endblock %}

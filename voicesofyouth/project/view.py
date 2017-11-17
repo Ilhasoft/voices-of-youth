@@ -1,5 +1,6 @@
 from django.views.generic.base import TemplateView
 from django.contrib import messages
+from django.contrib.gis.geos import GEOSGeometry
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
@@ -28,14 +29,25 @@ class AddProjectView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         context = self.get_context_data()
-        form = ProjectForm(data=request.POST)
+        form = ProjectForm(request.POST, request.FILES)
 
         if form.is_valid():
+            boundary = 'POLYGON(( {0}))'.format(form.cleaned_data.get('boundary')[:-1])
+
             project = Project(
                 name=form.cleaned_data.get('name'),
-                path=form.cleaned_data.get('path')
+                path=form.cleaned_data.get('path'),
+                description=form.cleaned_data.get('description'),
+                language=form.cleaned_data.get('language'),
+                boundary=GEOSGeometry(boundary, srid=4326),
+                created_by=request.user,
+                modified_by=request.user,
+                thumbnail=form.cleaned_data.get('thumbnail'),
             )
             project.save()
+            project.tags.add(*[tag for tag in form.cleaned_data.get('tags').split(',')])
+            project.local_admin_group.user_set.add(*form.cleaned_data.get('local_admin'))
+
             messages.success(request, _('Project created'))
             return redirect(reverse('voy-admin:projects:index'))
         else:
