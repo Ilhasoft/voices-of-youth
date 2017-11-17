@@ -41,6 +41,7 @@ class MappersListView(TemplateView):
             except Exception:
                 return HttpResponse(status=500)
             return HttpResponse("Users deleted!")
+        return self.get(request)
 
     def get(self, request):
         context = self.get_context_data(request=request)

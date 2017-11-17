@@ -73,7 +73,7 @@
                         </div>
                         <div style="display: none" id="avatars">
                             {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
-                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
+                                <img src="{{ avatar_url }}" id="avatar_{{ id }}" style="cursor: pointer">
                             {% endfor %}
                         </div>
                         <div style="padding: 5px;">
@@ -122,14 +122,14 @@
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
             $(evt.target).parents('div').find('#avatars').slideToggle("slow");
-            console.log($(evt.target).parents('div').find('#avatars'));
         });
         $("img[id^='avatar_']").click((evt) => {
-            const selected_avatar = $(evt.target).attr('src');
+            const selected_avatar = $(evt.target);
             const avatars = $(evt.target).parents('div').find('#avatars');
             const current_avatar = $(evt.target).parents('div').find('#current_avatar');
-            $(current_avatar).attr('src', selected_avatar);
-            avatars.val(selected_avatar);
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
+            $(current_avatar).attr('src', selected_avatar.attr('src'));
+            hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
             avatars.slideUp("slow");
         });
     </script>
