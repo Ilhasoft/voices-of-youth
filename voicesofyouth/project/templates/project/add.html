@@ -164,7 +164,7 @@ map.on(L.Draw.Event.CREATED, function(e) {
     var toSave = '';
 
     for (var i = 0; i < coordinates.length; i += 1) {
-        toSave += coordinates[i][1] + ' ' + coordinates[i][0] + ', ';
+        toSave += coordinates[i][0] + ' ' + coordinates[i][1] + ', ';
     }
 
     $('#id_boundary').val(toSave)
