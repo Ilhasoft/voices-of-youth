@@ -60,12 +60,7 @@ class MappersListView(TemplateView):
             if form.is_valid():
                 mapper = MapperUser()
                 form.save(mapper)
-                print('-' * 80)
-                print(mapper.id)
-            else:
-                print('=' * 80)
-                print('invalid')
-                print(form.errors)
+
         return self.get(request)
 
     def get(self, request):
