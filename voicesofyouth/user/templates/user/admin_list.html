@@ -78,7 +78,7 @@
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 
         disable_remove_button = (state) => {
-            $("input[id^='remove_mappers']").prop("disabled", state);
+            $("button[id^='remove_admins']").prop("disabled", state);
         };
 
         $("[id^='admin_check']").change((event) => {
@@ -93,45 +93,59 @@
                 }
             }
         });
-        $('#remove_mappers').click(function () {
+
+        $('#remove_admins').click(function () {
             swal({
-                title: "{% trans "Are you sure?" %}",
-                text: "{% trans "We will delete the selected mapper(s)." %}",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            }).then(willDelete => {
-                if (willDelete) {
-                    event.preventDefault();
-                    let usersToDelete = new Promise((resolve, reject) => {
-                        let mappers = new Array();
-                        let params = new URLSearchParams();
-                        mappers.push(_.map($("[id^='admin_check']input:checked"),
-                            mapper => {
-                                return mapper.value
-                            }));
-                        params.append('deleteMappers', mappers);
-                        console.log(params);
-                        resolve(params);
-                    });
-                    usersToDelete.then(
-                        users => {
-                            axios.post("{% url 'voy-admin:users:mappers_list' %}", users)
-                                .then(() => {
-                                    swal("Success", "Users deleted!", "success").then(value => {
-                                        window.location.href = "{% url "voy-admin:users:mappers_list" %}"
-                                    })
-                                })
-                                .catch(() => {
-                                    swal("Ops!", "Somethings wrong happen!", "error")
-                                        .then(value => {
-                                            window.location.href = "{% url "voy-admin:users:mappers_list" %}"
-                                        })
-                                });
-                        }
-                    );
+                title: '{% trans "This feature is not implemented yet!" %}',
+                icon: 'warning',
+                text: 'For more details click on the link bellow:',
+                content: {
+                    element: 'a',
+                    attributes: {
+                        href: 'https://github.com/Ilhasoft/voices-of-youth/issues/27',
+                        text: 'issue 27'
+                    }
                 }
             });
+            {# When issue 27 is closed we can use the code bellow to implement the procedure to remove admins. #}
+{#            swal({#}
+{#                title: "{% trans "Are you sure?" %}",#}
+{#                text: "{% trans "We will delete the selected mapper(s)." %}",#}
+{#                icon: "warning",#}
+{#                buttons: true,#}
+{#                dangerMode: true#}
+{#            }).then(willDelete => {#}
+{#                if (willDelete) {#}
+{#                    event.preventDefault();#}
+{#                    let usersToDelete = new Promise((resolve, reject) => {#}
+{#                        let mappers = new Array();#}
+{#                        let params = new URLSearchParams();#}
+{#                        mappers.push(_.map($("[id^='admin_check']input:checked"),#}
+{#                            mapper => {#}
+{#                                return mapper.value#}
+{#                            }));#}
+{#                        params.append('deleteMappers', mappers);#}
+{#                        console.log(params);#}
+{#                        resolve(params);#}
+{#                    });#}
+{#                    usersToDelete.then(#}
+{#                        users => {#}
+{#                            axios.post("{% url 'voy-admin:users:mappers_list' %}", users)#}
+{#                                .then(() => {#}
+{#                                    swal("Success", "Users deleted!", "success").then(value => {#}
+{#                                        window.location.href = "{% url "voy-admin:users:mappers_list" %}"#}
+{#                                    })#}
+{#                                })#}
+{#                                .catch(() => {#}
+{#                                    swal("Ops!", "Somethings wrong happen!", "error")#}
+{#                                        .then(value => {#}
+{#                                            window.location.href = "{% url "voy-admin:users:mappers_list" %}"#}
+{#                                        })#}
+{#                                });#}
+{#                        }#}
+{#                    );#}
+{#                }#}
+{#            });#}
         })
     </script>
 {% endblock %}
