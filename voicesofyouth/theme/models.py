@@ -48,6 +48,8 @@ class Theme(BaseModel):
                                          blank=True,
                                          limit_choices_to={'name__icontains': '- mappers'})
     description = TextFieldTranslatable(null=True, blank=True)
+    start_at = models.DateField(null=True, blank=True)
+    end_at = models.DateField(null=True, blank=True)
     tags = TaggableManager(blank=True)
     color = models.CharField(max_length=6,
                              validators=[MinLengthValidator(6), ],
@@ -80,6 +82,10 @@ class Theme(BaseModel):
     def reports_count(self):
         return self.reports.count()
 
+    @property
+    def coordinates(self):
+        return [[bound[1], bound[0]] for bound in self.bounds.coords[0]]
+
     def get_absolute_url(self):
         return f'not-implemented/{self.id}'
 
@@ -93,6 +99,7 @@ def generate_color(sender, instance, **kwargs):
     if not instance.color:
         instance.color = '%06x' % random.randint(0, 0xFFFFFF)
 
+
 @receiver(post_save, sender=Theme)
 def create_theme_mapper_group(sender, instance, **kwargs):
     """
@@ -104,6 +111,7 @@ def create_theme_mapper_group(sender, instance, **kwargs):
         for perm in Group.objects.get(name=MAPPER_GROUP_TEMPLATE).permissions.all():
             instance.mappers_group.permissions.add(perm)
         instance.save()
+
 
 @receiver(m2m_changed, sender=Group.permissions.through)
 def change_group_permission(instance, action, model, pk_set, **_):

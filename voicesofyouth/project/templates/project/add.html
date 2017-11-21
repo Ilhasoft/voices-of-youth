@@ -158,8 +158,6 @@ map.on(L.Draw.Event.CREATED, function(e) {
     map.removeControl(controlDraw);
     map.addControl(controlEdit);
 
-    console.log(e.layer.toGeoJSON());
-
     var coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
     var toSave = '';
 
