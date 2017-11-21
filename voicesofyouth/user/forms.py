@@ -26,6 +26,13 @@ class MapperFilterForm(forms.Form):
 
 
 class MapperForm(forms.Form):
+    username = forms.CharField(max_length=32,
+                           label=_('Username'),
+                           widget=forms.TextInput(
+                               attrs={
+                                   'class': 'form-control'
+                               },
+                           ))
     name = forms.CharField(max_length=255,
                            label=_('Name'),
                            widget=forms.TextInput(
@@ -70,6 +77,7 @@ class MapperForm(forms.Form):
             cleaned_data = self.cleaned_data
             name = cleaned_data.get('name')
             email = cleaned_data.get('email')
+            username = cleaned_data.get('username')
             themes = cleaned_data.get('themes')
 
             # set name
@@ -78,8 +86,8 @@ class MapperForm(forms.Form):
             else:
                 mapper.first_name = name
 
-            # set email
             mapper.email = email
+            mapper.username = username
 
             if not mapper.id:
                 mapper.save()

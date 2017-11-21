@@ -138,6 +138,7 @@ class MapperDetailView(TemplateView):
 
         mapper = get_object_or_404(MapperUser, pk=mapper_id)
         data = {
+            'username': mapper.username,
             'name': mapper.get_full_name(),
             'email': mapper.email,
             'project': mapper.projects.last(),
