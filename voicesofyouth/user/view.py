@@ -7,8 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.user.forms import MapperFilterForm, MapperForm
-from voicesofyouth.user.models import AdminUser, AVATARS, DEFAULT_AVATAR
+from voicesofyouth.user.forms import AdminFilterForm
+from voicesofyouth.user.forms import AdminForm
+from voicesofyouth.user.forms import MapperFilterForm
+from voicesofyouth.user.forms import MapperForm
+from voicesofyouth.user.models import AVATARS
+from voicesofyouth.user.models import AdminUser
+from voicesofyouth.user.models import DEFAULT_AVATAR
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
 
@@ -19,13 +24,23 @@ def search_user(search_by, qs):
                      Q(last_name__icontains=search_by))
 
 
-class AdminView(TemplateView):
-    template_name = 'user/admin.html'
+class AdminListView(TemplateView):
+    template_name = 'user/admin_list.html'
 
-    def get_context_data(self, **kwargs):
+    def get(self, request):
+        context = self.get_context_data(request)
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admins'] = AdminUser.objects.all()
+        context['filter_form'] = AdminFilterForm(request.GET)
+        context['form_add_admin'] = AdminForm()
         return context
+
+
+class AdminDetailView(TemplateView):
+    template_name = 'user/admin_detail.html'
 
 
 class MappersListView(TemplateView):

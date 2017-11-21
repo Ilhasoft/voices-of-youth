@@ -12,9 +12,9 @@
         <div class="content-wrapper">
             <div class="content-heading">
                 <div style="display: flex; flex-direction: row-reverse;">
-                    <p style="order: 1; flex-grow: 2">Mappers</p>
+                    <p style="order: 1; flex-grow: 2">Admins</p>
                     <div class="input-group margin-bottom-sm col-xs-3">
-                        <form action="{% url "voy-admin:users:mappers_list" %}" method="get" id="mapper_search">
+                        <form action="{% url "voy-admin:users:mappers_list" %}" method="get" id="admin_search">
                             {% for field in filter_form.hidden_fields %}
                                 {{ field }}
                             {% endfor %}
@@ -57,10 +57,10 @@
 {% endblock content %}
 
 {% block extrahtml %}
-    <div id="modalAddMapper"
+    <div id="modalAddAdmin"
          tabindex="-1"
          role="dialog"
-         aria-labelledby="modalAddMapperLabel"
+         aria-labelledby="modalAddAdminLabel"
          aria-hidden="true"
          class="modal fade"
          style="display: none;">
@@ -69,16 +69,16 @@
                 <div class="modal-header text-center">
                     <div class="container-column">
                         <div>
-                            <h4 id="modalAddMapperLabel" class="modal-title">{% trans "Add mapper" %}</h4>
+                            <h4 id="modalAddAdminLabel" class="modal-title">{% trans "Add admin" %}</h4>
                         </div>
                         <div style="display: none" id="avatars">
-                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
+                            {% for id, avatar_url in form_add_admin.fields.avatars.choices %}
                                 <img src="{{ avatar_url }}" id="avatar_{{ id }}" style="cursor: pointer">
                             {% endfor %}
                         </div>
                         <div style="padding: 5px;">
-                            {% if mapper %}
-                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt=""
+                            {% if admin %}
+                                <img id="current_avatar" src="{{ admin.get_avatar_display }}" alt=""
                                      style="cursor: pointer">
                             {% else %}
                                 <img id="current_avatar" src="{{ default_avatar }}" alt="" style="cursor: pointer">
@@ -89,7 +89,7 @@
                 <form action="{% url "voy-admin:users:mappers_list" %}" id="addMapperForm" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ form_add_mapper }}
+                        {{ form_add_admin }}
                     </div>
                     <div class="modal-footer">
                         <button
