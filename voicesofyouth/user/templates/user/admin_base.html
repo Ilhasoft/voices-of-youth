@@ -14,13 +14,13 @@
                 <div style="display: flex; flex-direction: row-reverse;">
                     <p style="order: 1; flex-grow: 2">Admins</p>
                     <div class="input-group margin-bottom-sm col-xs-3">
-                        <form action="{% url "voy-admin:users:mappers_list" %}" method="get" id="admin_search">
+                        <form action="{% url "voy-admin:users:admin_list" %}" method="get" id="admin_search">
                             {% for field in filter_form.hidden_fields %}
                                 {{ field }}
                             {% endfor %}
                             {{ filter_form.search }}
                         </form>
-                        <span id="post_mapper_search" class="input-group-addon" style="cursor:pointer;">
+                        <span id="post_admin_search" class="input-group-addon" style="cursor:pointer;">
                         <i class="fa fa-search fa-fw"></i>
                     </span>
                     </div>
@@ -28,8 +28,8 @@
                         <button
                                 class="btn btn-default"
                                 data-toggle="modal"
-                                data-target="#modalAddMapper">
-                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> Add new mapper
+                                data-target="#modalAddAdmin">
+                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> Add new admin
                         </button>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </div>
-                <form action="{% url "voy-admin:users:mappers_list" %}" id="addMapperForm" method="post">
+                <form action="{% url "voy-admin:users:admin_list" %}" id="addAdminForm" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ form_add_admin }}
@@ -114,9 +114,8 @@
     {{ block.super }}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
-        $("#post_mapper_search").click(() => {
-            form = $("#mapper_search");
-            form.submit();
+        $("#post_admin_search").click(() => {
+            $("#admin_search").submit();
         });
     </script>
     <script type="text/javascript">
