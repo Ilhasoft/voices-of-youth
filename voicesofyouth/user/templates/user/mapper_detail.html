@@ -24,6 +24,7 @@
             </div>
             <div class="col-xs-10">
                 <h4>{{ mapper.get_full_name }}</h4>
+                <p>{{ mapper.username }}</p>
                 <p>{{ mapper.email }}</p>
                 <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
             </div>
@@ -90,7 +91,7 @@
                         </div>
                         <div style="padding: 5px;">
                             <div>
-                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt="">
+                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt="" style="cursor: pointer">
                             </div>
                         </div>
                         <div>

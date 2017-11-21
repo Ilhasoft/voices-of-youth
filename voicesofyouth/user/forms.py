@@ -88,9 +88,7 @@ class MapperForm(forms.Form):
 
             mapper.email = email
             mapper.username = username
-
-            if not mapper.id:
-                mapper.save()
+            mapper.save()
 
             # set mappers group
             # Admin user remove mapper from a group.
@@ -100,7 +98,6 @@ class MapperForm(forms.Form):
             for theme in Theme.objects.filter(id__in=themes):
                 theme.mappers_group.user_set.add(mapper)
 
-            mapper.save()
             return True
         else:
             return False

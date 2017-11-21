@@ -129,7 +129,10 @@ class MapperDetailView(TemplateView):
             messages.success(request, 'Mapper saved with success!')
         else:
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
-            return HttpResponse(status=500)
+            context = self.get_context_data(request, mapper.id)
+            context['mapper'] = mapper
+            context['form_edit_mapper'] = form
+            return render(request, self.template_name, context)
 
         return self.get(request, *args, **kwargs)
 
@@ -143,6 +146,7 @@ class MapperDetailView(TemplateView):
             'email': mapper.email,
             'project': mapper.projects.last(),
             'themes': mapper.themes.all(),
+            'avatars': mapper.avatar
         }
         context['filter_form'] = self.form_filter_class(request.GET)
         context['mapper'] = mapper
