@@ -29,30 +29,30 @@ class AdminListView(TemplateView):
     template_name = 'user/admin_list.html'
 
     def post(self, request):
-        # delete = request.POST.get('deleteMappers')
-        # if delete:
-        #     try:
-        #         MapperUser.objects.filter(id__in=delete.split(',')).delete()
-        #     except Exception:
-        #         return HttpResponse(status=500)
-        #     return HttpResponse("Users deleted!")
-        # else:
-        form = AdminForm(request.POST)
-        if form.is_valid():
-            admin = AdminUser()
+        delete = request.POST.get('deleteAdmins')
+        if delete:
             try:
-                form.save(admin)
-            except IntegrityError as exc:
-                messages.error(request, str(exc).split('\n')[0])
+                AdminUser.objects.filter(id__in=delete.split(',')).delete()
+            except Exception:
+                return HttpResponse(status=500)
+            return HttpResponse("Admin users deleted!")
+        else:
+            form = AdminForm(request.POST)
+            if form.is_valid():
+                admin = AdminUser()
+                try:
+                    form.save(admin)
+                except IntegrityError as exc:
+                    messages.error(request, str(exc).split('\n')[0])
+                    context = self.get_context_data()
+                    context['form_add_admin'] = form
+                    return render(request, self.template_name, context)
+            else:
+                messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
                 context = self.get_context_data()
                 context['form_add_admin'] = form
+                context['open_modal'] = True
                 return render(request, self.template_name, context)
-        else:
-            messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
-            context = self.get_context_data()
-            context['form_add_admin'] = form
-            context['open_modal'] = True
-            return render(request, self.template_name, context)
 
         return self.get(request)
 
