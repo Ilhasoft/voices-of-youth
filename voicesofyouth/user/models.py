@@ -77,6 +77,15 @@ class VoyUser(AbstractUser):
         from voicesofyouth.project.models import Project
         return Project.objects.filter(themes__in=self.themes).distinct()
 
+    @property
+    def local_admin_of(self):
+        """
+        Return all projects where this user is local admin.
+        """
+        # If we put this import in global scope we fall in a circular reference.
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(local_admin_group__in=self.groups.all())
+
     def get_absolute_url(self):
         """
         I try to implements this method directly in MapperUser model but, unfortunately doesn't work on proxy model.
