@@ -17,23 +17,14 @@
     list-style-type: none
 }
 
-.modal-header {
-    background-color: #00CDFC;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    color: #ffffff;
+#remove_mapper {
+    background-color: white;
+    color: black;
 }
 
-div {
-    a.btn-info {
-        background-color: white;
-        color: black;
-    }
-}
-
-.modal-sm {
-    width: 494px;
+#reset_password {
+    background-color: #E9E9E9;
+    color: black;
 }
 
 .form-control {

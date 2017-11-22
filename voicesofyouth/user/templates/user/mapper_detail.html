@@ -1,99 +1,75 @@
-{% extends "voyadmin/base.html" %}
+{% extends "user/mapper_base.html" %}
 {% load static i18n sass_tags %}
 
 {% block extracss %}
-    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+    {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
-    <section>
-        <div class="content-wrapper">
-            <div class="content-heading">
-                Mappers
-                <div class="input-group margin-bottom-sm col-xs-2 pull-right">
-                    <form action="{% url "voy-admin:users:mappers_list" %}" method="get" id="mapper_search">
-                        {% for field in filter_form.hidden_fields %}
-                            {{ field }}
-                        {% endfor %}
-                        {{ filter_form.search }}
-                    </form>
-                    <span id="post_mapper_search" class="input-group-addon" style="cursor:pointer;">
-                        <i class="fa fa-search fa-fw"></i>
-                    </span>
-                </div>
+{% block panel_heading %}
+    <div>
+        <a href="{% url "voy-admin:users:mappers_list" %}">
+            <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+        </a>
+        <span class="text-bold">{% trans "Profile" %}</span>
+    </div>
+{% endblock %}
+
+{% block panel_body %}
+    <div class="container-column">
+        <div style="display: flex; align-items: baseline">
+            <div class="col-xs-1">
+                <img src="{{ mapper.get_avatar_display }}" alt="">
             </div>
-
-            <div class="panel panel-default col-xs-11 pull-right" id="report">
-                <div class="panel-heading">
-                    <div>
-                        <a href="{% url "voy-admin:users:mappers_list" %}">
-                            <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
-                        </a>
-                        <span class="text-bold">{% trans "Profile" %}</span>
-                    </div>
-                </div>
-                <div class="panel-body">
-                    <div class="container-column">
-                        <div style="display: flex; align-items: baseline">
-                            <div class="col-xs-1">
-                                <img src="{{ mapper.get_avatar_display }}" alt="">
-                            </div>
-                            <div class="col-xs-10">
-                                <h4>{{ mapper.get_full_name }}</h4>
-                                <p>{{ mapper.email }}</p>
-                                <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
-                            </div>
-                            <div>
-                                <button
-                                        type="button"
-                                        data-toggle="modal"
-                                        data-target="#modalEditMapperProfile"
-                                        class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
-                                </button>
-                            </div>
-                        </div>
-                        <div class="container-row">
-                            <div class="col-xs-1"></div>
-                            <div class="col-xs-2">
-                                <h4>Projects</h4>
-                                <ul class="no-bullets">
-                                    {% for project in mapper.projects.all %}
-                                        <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                            <div class="col-xs-2">
-                                <h4>Themes</h4>
-                                <ul class="no-bullets">
-                                    {% for theme in mapper.themes.all %}
-                                        <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <h4>{{ mapper.reports.count }} reports by {{ mapper.first_name }}</h4>
-                    <hr>
-                    <div class="row">
-                        {% for report in mapper.reports.all %}
-                            {% include "report/report_resume.html" with report=report %}
-                        {% endfor %}
-                    </div>
-
-                </div>
-                <div class="panel-footer">
-                    <div class="panel-footer">
-                    </div>
-                </div>
+            <div class="col-xs-10">
+                <h4>{{ mapper.get_full_name }}</h4>
+                <p>{{ mapper.username }}</p>
+                <p>{{ mapper.email }}</p>
+                <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
+            </div>
+            <div>
+                <button
+                        type="button"
+                        data-toggle="modal"
+                        data-target="#modalEditMapperProfile"
+                        class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                </button>
             </div>
         </div>
-    </section>
-{% endblock content %}
+        <div class="container-row">
+            <div class="col-xs-1"></div>
+            <div class="col-xs-2">
+                <h4>Projects</h4>
+                <ul class="no-bullets">
+                    {% for project in mapper.projects.all %}
+                        <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-xs-2">
+                <h4>Themes</h4>
+                <ul class="no-bullets">
+                    {% for theme in mapper.themes.all %}
+                        <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <h4>{{ mapper.reports.count }} reports by {{ mapper.first_name }}</h4>
+    <hr>
+    <div class="row">
+        {% for report in mapper.reports.all %}
+            {% include "report/report_resume.html" with report=report %}
+        {% endfor %}
+    </div>
+
+{% endblock %}
 
 {% block extrahtml %}
+    {{ block.super }}
     <div id="modalEditMapperProfile"
          tabindex="-1"
          role="dialog"
@@ -108,20 +84,33 @@
                         <div>
                             <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
                         </div>
+                        <div style="display: none" id="avatars">
+                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
+                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
+                            {% endfor %}
+                        </div>
                         <div style="padding: 5px;">
-                            <img src="{{ mapper.get_avatar_display }}" alt="">
+                            <div>
+                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt="" style="cursor: pointer">
+                            </div>
                         </div>
                         <div>
-                            <a href="" class="btn btn-lg btn-info">{% trans "Remove mapper" %}</a>
+                            <button class="btn btn-lg btn-info" id="remove_mapper">{% trans "Remove mapper" %}</button>
                         </div>
                     </div>
                 </div>
                 <form action="{{ request.get_full_path }}" id="editMapperForm" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ form_mapper }}
+                        {{ form_edit_mapper }}
                     </div>
                     <div class="modal-footer">
+                        <button
+                                id="reset_password"
+                                type="button"
+                                class="btn btn-default btn-lg">
+                            {% trans "Reset password" %}
+                        </button>
                         <button
                                 type="button"
                                 data-dismiss="modal"
@@ -141,37 +130,31 @@
 {% endblock %}
 
 {% block extrajs %}
-    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    {{ block.super }}
     <script type="text/javascript">
-        $('#id_themes').chosen();
-        let selected = [];
-
-        /* Select the current values. */
-        {% for selected_theme in selected_themes %}
-            selected.push({{ selected_theme }});
-        {% endfor %}
-        $(".chosen-select").val(selected).trigger('chosen:updated');
-
-        $('#id_project').change(function (e) {
-            e.preventDefault();
-            var project = e.target.value;
-            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                $('#id_themes').empty();
-                $('#id_themes').trigger('chosen:updated');
-                $('#id_themes').append('<option value="">{% trans 'Theme' %}</option>');
-                response.data.map((item) => {
-                    $('#id_themes').append('<option value="' + item.id + '">' + item.name + '</option>');
-                    $('#id_themes').trigger('chosen:updated');
-                });
-            }).catch(error => {
-                console.log(error);
-            });
-        });
+        $("#reset_password").click(() => {
+            swal("Warning", "This feature is not implemented yet!", "warning");
+        })
     </script>
     <script type="text/javascript">
-        $("#post_mapper_search").click(() => {
-            form = $("#mapper_search");
-            form.submit();
+        $("#remove_mapper").click(() => {
+            swal({
+                title: '{% trans "You really want to delete this mapper?" %}',
+                text: '{% trans "This operation is irreversible!" %}',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((answer) => {
+                if (answer === true) {
+                    let params = new URLSearchParams();
+                    params.append('deleteMapper', true);
+                    axios.post('{% url "voy-admin:users:mapper_detail" mapper.id %}', params).then(() => {
+                        window.location = '{% url "voy-admin:users:mappers_list" %}'
+                    });
+                }
+            }).catch(error => {
+                swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
+            })
         });
     </script>
     <script type="text/javascript">

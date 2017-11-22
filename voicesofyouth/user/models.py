@@ -77,14 +77,26 @@ class VoyUser(AbstractUser):
         from voicesofyouth.project.models import Project
         return Project.objects.filter(themes__in=self.themes).distinct()
 
+    @property
+    def local_admin_of(self):
+        """
+        Return all projects where this user is local admin.
+        """
+        # If we put this import in global scope we fall in a circular reference.
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(local_admin_group__in=self.groups.all())
+
     def get_absolute_url(self):
         """
         I try to implements this method directly in MapperUser model but, unfortunately doesn't work on proxy model.
         """
+        url = ""
+
         if MapperUser.is_mapper(self):
             url = reverse('voy-admin:users:mapper_detail', args=[self.id, ])
-        else:
-            raise NotImplementedError("The VoyUser.get_absolute_url method is only implemented to MapperUser.")
+        elif GlobalUserAdmin.is_mapper(self) or LocalUserAdmin.is_mapper(self):
+            url = reverse('voy-admin:users:admin_detail', args=[self.id, ])
+
         return url
 
 
@@ -105,7 +117,7 @@ class MapperUser(VoyUser):
 
     @classmethod
     def is_mapper(cls, user):
-        return user in cls.objects.all()
+        return cls.objects.filter(id=user.id).exists()
 
 
 class LocalAdminUserManager(UserManager):
@@ -123,6 +135,10 @@ class LocalUserAdmin(VoyUser):
     class Meta:
         proxy = True
 
+    @classmethod
+    def is_mapper(cls, user):
+        return cls.objects.filter(id=user.id).exists()
+
 
 class GlobalAdminUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
@@ -138,6 +154,10 @@ class GlobalUserAdmin(VoyUser):
 
     class Meta:
         proxy = True
+
+    @classmethod
+    def is_mapper(cls, user):
+        return cls.objects.filter(id=user.id).exists()
 
 
 class AdminUserManager(models.Manager):

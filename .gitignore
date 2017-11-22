@@ -1,6 +1,7 @@
 voicesofyouth/media/*
 !voicesofyouth/media/users/avatars/
-voicesofyouth/static
+voicesofyouth/static/
+!voicesofyouth/static_dev/
 
 # Created by https://www.gitignore.io/api/git,node,python,django,pycharm
 

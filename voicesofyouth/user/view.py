@@ -1,14 +1,21 @@
 from django.contrib import messages
 from django.db.models.query_utils import Q
+from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
-from voicesofyouth.theme.models import Theme
-from voicesofyouth.user.forms import MapperFilterForm, MapperForm
+from voicesofyouth.user.forms import AdminFilterForm
+from voicesofyouth.user.forms import AdminForm
+from voicesofyouth.user.forms import MapperFilterForm
+from voicesofyouth.user.forms import MapperForm
+from voicesofyouth.user.models import AVATARS
 from voicesofyouth.user.models import AdminUser
+from voicesofyouth.user.models import DEFAULT_AVATAR
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
 
@@ -19,13 +26,53 @@ def search_user(search_by, qs):
                      Q(last_name__icontains=search_by))
 
 
-class AdminView(TemplateView):
-    template_name = 'user/admin.html'
+class AdminListView(TemplateView):
+    template_name = 'user/admin_list.html'
+
+    def post(self, request):
+        delete = request.POST.get('deleteAdmins')
+        current_user = request.user
+        if delete:
+            try:
+                if not current_user.is_superuser:
+                    return HttpResponseForbidden('Only a global admin can delete admins.')
+                else:
+                    # The current admin cannot delete yourself.
+                    AdminUser.objects.filter(id__in=delete.split(',')).exclude(id=current_user.id).delete()
+            except Exception as exc:
+                return HttpResponse(str(exc), status=500)
+            return HttpResponse("Admin users deleted!")
+        else:
+            form = AdminForm(request.POST)
+            if form.is_valid():
+                admin = AdminUser()
+                try:
+                    form.save(admin)
+                except IntegrityError as exc:
+                    messages.error(request, str(exc).split('\n')[0])
+                    context = self.get_context_data()
+                    context['form_add_admin'] = form
+                    return render(request, self.template_name, context)
+            else:
+                messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
+                context = self.get_context_data()
+                context['form_add_admin'] = form
+                context['open_modal'] = True
+                return render(request, self.template_name, context)
+
+        return self.get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admins'] = AdminUser.objects.all()
+        context['filter_form'] = AdminFilterForm(self.request.GET)
+        context['form_add_admin'] = AdminForm()
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         return context
+
+
+class AdminDetailView(TemplateView):
+    template_name = 'user/admin_detail.html'
 
 
 class MappersListView(TemplateView):
@@ -40,6 +87,13 @@ class MappersListView(TemplateView):
             except Exception:
                 return HttpResponse(status=500)
             return HttpResponse("Users deleted!")
+        else:
+            form = MapperForm(request.POST)
+            if form.is_valid():
+                mapper = MapperUser()
+                form.save(mapper)
+
+        return self.get(request)
 
     def get(self, request):
         context = self.get_context_data(request=request)
@@ -63,6 +117,7 @@ class MappersListView(TemplateView):
                 qs = MapperUser.objects.all()
 
             if not isinstance(qs, list) and search:
+                qs = qs.order_by('first_name')
                 qs = search_user(search, qs)
             context['mappers'] = get_paginator(qs, page)
 
@@ -73,72 +128,72 @@ class MappersListView(TemplateView):
         context['mappers'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
+        context['form_add_mapper'] = MapperForm()
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         return context
 
 
 class MapperDetailView(TemplateView):
     template_name = 'user/mapper_detail.html'
     form_filter_class = MapperFilterForm
-    form_mapper = MapperForm
+
+    def _search_mapper(self, filter_form):
+        if filter_form.is_valid():
+            cleaned_data = filter_form.cleaned_data
+            if cleaned_data['search']:
+                return MappersListView.as_view()(request)
+
+    def _delete(self, request, mapper):
+        mapper.delete()
+        messages.success(request, _('Mapper deleted with success!'))
+        return HttpResponse(status=200)
 
     def get(self, request, *args, **kwargs):
         mapper_id = kwargs.get('mapper_id', 0)
-        context = self.get_context_data(request=request)
-        mapper = get_object_or_404(MapperUser, pk=mapper_id)
-        context['mapper'] = mapper
-        context['form_mapper'] = self.form_mapper(initial={
-            'name': mapper.get_full_name(),
-            'email': mapper.email,
-            'project': mapper.projects.last(),
-            'themes': mapper.themes.all(),
-        })
-        context['selected_themes'] = [i[0] for i in mapper.themes.values_list('id')]
+        context = self.get_context_data(request=request, mapper_id=mapper_id)
         filter_form = context['filter_form']
 
-        if filter_form.is_valid():
-            cleaned_data = filter_form.cleaned_data
-            search = cleaned_data['search']
-            if search:
-                return MappersListView.as_view()(request)
+        search = self._search_mapper(filter_form)
+        if search:
+            return search
 
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
         mapper = get_object_or_404(MapperUser, pk=kwargs.get('mapper_id'))
-        print(request.POST)
-        print(mapper.themes.values_list('id'))
-        form = self.form_mapper(request.POST or None, initial={'themes': mapper.themes.values_list('id')})
-        if form.is_valid():
-            cleaned_data = form.cleaned_data
-            name = cleaned_data.get('name')
-            email = cleaned_data.get('email')
-            themes = cleaned_data.get('themes')
 
-            # set name
-            if len(name.split()) > 1:
-                mapper.first_name, mapper.last_name = name.split(maxsplit=1)
-            else:
-                mapper.first_name = name
+        if request.POST.get('deleteMapper'):
+            return self._delete(request, mapper)
 
-            # set email
-            mapper.email = email
+        form = MapperForm(request.POST)
 
-            # set mappers group
-            # Admin remove mapper from a group.
-            for group in mapper.groups.exclude(theme_mappers__id__in=themes):
-                group.user_set.remove(mapper)
-            # Admin add mapper to a group
-            for theme in Theme.objects.filter(id__in=themes):
-                theme.mappers_group.user_set.add(mapper)
-
-            mapper.save()
+        if form.save(mapper):
             messages.success(request, 'Mapper saved with success!')
         else:
-            print(form.errors)
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
+            context = self.get_context_data(request, mapper.id)
+            context['mapper'] = mapper
+            context['form_edit_mapper'] = form
+            return render(request, self.template_name, context)
+
         return self.get(request, *args, **kwargs)
 
-    def get_context_data(self, request, **kwargs):
+    def get_context_data(self, request, mapper_id, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        mapper = get_object_or_404(MapperUser, pk=mapper_id)
+        data = {
+            'username': mapper.username,
+            'name': mapper.get_full_name(),
+            'email': mapper.email,
+            'project': mapper.projects.last(),
+            'themes': mapper.themes.all(),
+            'avatars': mapper.avatar
+        }
         context['filter_form'] = self.form_filter_class(request.GET)
+        context['mapper'] = mapper
+        context['form_edit_mapper'] = MapperForm(initial=data)
+        context['form_add_mapper'] = MapperForm()
+        context['selected_themes'] = mapper.themes.values_list('id', flat=True)
+
         return context
