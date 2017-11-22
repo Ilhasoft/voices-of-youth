@@ -11,7 +11,7 @@
     <div class="content-wrapper" id="theme">
         <div class="content-heading">
             {{ project.name }} - {% trans 'Themes' %}
-            <a href="{% url 'voy-admin:themes:new' project.pk %}" class="btn btn-oval btn-lg btn-new-theme">{% trans 'New Theme' %}</a>
+            <a href="{% url 'voy-admin:themes:new' project.pk %}" class="btn btn-oval btn-new-theme">{% trans 'New Theme' %}</a>
         </div>
 
         <ol class="breadcrumb">
@@ -38,8 +38,10 @@
                             <p class="text-muted text-center"><strong>{{ theme.reports.count }}</strong> {% trans 'Reports' %}</p>
 
                             <div class="row buttons">
-                                <div class="col-xs-12 text-center">
+                                <div class="col-xs-6 text-center">
                                     <a href="{% url 'voy-admin:themes:edit' theme.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
+                                </div>
+                                <div class="col-xs-6 text-center">
                                     <a href="{% url 'voy-admin:reports:index' theme.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'See' %}</a>
                                 </div>
                             </div>

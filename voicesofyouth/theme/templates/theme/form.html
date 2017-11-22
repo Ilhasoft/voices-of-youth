@@ -1,14 +1,13 @@
 {% extends "voyadmin/base.html" %}
 
-{% load static i18n sass_tags %}
+{% load static i18n sass_tags leaflet_tags %}
 
 {% block extracss %}
 <link rel="stylesheet" href="{% sass_src 'css/theme/theme.scss' %}">
 <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 <link rel="stylesheet" href="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css' %}">
 <link rel="stylesheet" href="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.css" />
+{% leaflet_css plugins="forms" %}
 {% endblock %}
 
 {% block content %}
@@ -16,7 +15,7 @@
     <div class="content-wrapper" id="theme">
         <div class="content-heading">
             {% if editing %} {% trans 'Edit theme' %} {% else %} {% trans 'New theme' %} {% endif %}
-            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default btn-new-theme">
+            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-theme">
                 {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
             </a>
         </div>
@@ -30,7 +29,6 @@
 
         <form action="" enctype="multipart/form-data" method="post" role="form" id="form-theme">
             {% csrf_token %}
-            {{ data_form.boundary }}
             <div class="row">
                 <div class="col-lg-4">
                     <div class="panel">
@@ -108,7 +106,9 @@
                 </div>
 
                 <div class="col-lg-8">
-                    <div id="map"></div>
+                    <div id="map">
+                        {{ data_form.bounds }}
+                    </div>
                 </div>
             </div>
         </form>
@@ -120,11 +120,10 @@
 <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
 <script src="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js' %}"></script>
 <script src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
-<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.13/leaflet.draw.js"></script>
+
+{% leaflet_js plugins="forms" %}
 
 <script type="text/javascript">
-axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 $('#id_mappers_group').chosen();
 $('#id_tags').chosen();
 $('.demo-colorpicker').colorpicker();
@@ -164,84 +163,6 @@ $('.expiredatepicker').on('dp.change', function(e) {
     {% endfor %}
     $('#id_mappers_group').val(mappers);
     $('#id_mappers_group').trigger('chosen:updated');
-{% endif %}
-
-
-var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    osmAttrib = '&copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    osm = L.tileLayer(osmUrl, {
-        maxZoom: 18, attribution: osmAttrib
-    }),
-    map = new L.Map('map', {
-        center: new L.LatLng(51.505, -0.04), 
-        zoom: 13 
-    })
-    drawnItems = L.featureGroup().addTo(map);
-
-L.control.layers({
-    'osm': osm.addTo(map)
-}, { 
-    'drawlayer': drawnItems 
-}, { 
-    position: 'topright',
-    collapsed: false,
-}).addTo(map);
-
-var controlDraw = new L.Control.Draw({
-    edit: {
-        featureGroup: drawnItems,
-        edit: false,
-    },
-    draw: {
-        polygon: true,
-        marker: false,
-        circle: false,
-        rectangle: false,
-        circlemarker: false,
-        polyline: false,
-    },
-});
-
-map.addControl(controlDraw);
-
-var controlEdit = new L.Control.Draw({
-    edit: {
-        featureGroup: drawnItems,
-        edit: false,
-    },
-    draw: false,
-});
-
-map.on(L.Draw.Event.CREATED, function(e) {
-    drawnItems.addLayer(e.layer);
-    map.removeControl(controlDraw);
-    map.addControl(controlEdit);
-
-    var coordinates = e.layer.toGeoJSON().geometry.coordinates[0];
-    var toSave = [];
-
-    for (var i = 0; i < coordinates.length; i += 1) {
-        toSave += coordinates[i][0] + ' ' + coordinates[i][1] + ', ';
-    }
-
-    $('#id_boundary').val(toSave)
-});
-
-map.on(L.Draw.Event.DELETED, function(e) {
-    map.removeControl(controlEdit);
-    map.addControl(controlDraw);
-    $('#id_boundary').val('')
-});
-
-{% if data_form.boundary.value %}
-var polygonSave = eval('{{ data_form.boundary.value }}');
-
-if (polygonSave.length) {
-    var polygon = new L.Polygon(polygonSave);
-    drawnItems.addLayer(polygon);
-    map.removeControl(controlDraw);
-    map.addControl(controlEdit);
-}
 {% endif %}
 
 function submitForm() {

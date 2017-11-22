@@ -1,6 +1,8 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
+from leaflet.forms.fields import PolygonField
+
 from voicesofyouth.user.models import VoyUser
 
 
@@ -81,7 +83,7 @@ class ThemeForm(forms.Form):
 
     visible = forms.BooleanField(
         label=_('Visible'),
-        required=True
+        required=False
     )
 
     color = forms.CharField(
@@ -95,9 +97,8 @@ class ThemeForm(forms.Form):
         )
     )
 
-    boundary = forms.CharField(
-        required=True,
-        widget=forms.HiddenInput()
+    bounds = PolygonField(
+        required=True
     )
 
     mappers_group = forms.ModelMultipleChoiceField(
@@ -115,7 +116,13 @@ class ThemeForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         project = kwargs.pop('project')
-
         super(ThemeForm, self).__init__(*args, **kwargs)
         self.fields['tags'].choices = project.all_tags.values_list('name', 'name')
         self.fields['mappers_group'].queryset = VoyUser.objects.all()
+
+    def clean(self):
+        cleaned_data = super(ThemeForm, self).clean()
+        bounds = cleaned_data.get('bounds')
+
+        if bounds is None:
+            raise forms.ValidationError(_('Bounds is empty'))

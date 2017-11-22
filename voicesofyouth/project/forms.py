@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings as django_settings
 from django.utils.translation import ugettext as _
 
+from leaflet.forms.fields import PolygonField
+
 from voicesofyouth.user.models import VoyUser
 
 
@@ -56,10 +58,8 @@ class ProjectForm(forms.Form):
         )
     )
 
-    boundary = forms.CharField(
-        label=_('Boundary'),
-        required=True,
-        widget=forms.HiddenInput()
+    bounds = PolygonField(
+        required=True
     )
 
     tags = forms.CharField(
@@ -100,3 +100,10 @@ class ProjectForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['local_admin'].queryset = VoyUser.objects.all()
+
+    def clean(self):
+        cleaned_data = super(ProjectForm, self).clean()
+        bounds = cleaned_data.get('bounds')
+
+        if bounds is None:
+            raise forms.ValidationError(_('Bounds is empty'))

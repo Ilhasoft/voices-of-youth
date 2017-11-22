@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'compressor',
     'sass_processor',
     'qurl_templatetag',
+    'leaflet',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',

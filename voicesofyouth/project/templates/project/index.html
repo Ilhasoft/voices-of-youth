@@ -48,7 +48,7 @@
                         </a>
                         <div class="row buttons">
                             <div class="col-xs-6 text-center">
-                                <a class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
+                                <a href="{% url 'voy-admin:projects:edit' project.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
                             </div>
                             <div class="col-xs-6 text-center">
                                 <a href="{% url 'voy-admin:themes:index' project.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'View' %}</a>

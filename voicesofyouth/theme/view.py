@@ -1,9 +1,6 @@
-from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from django.contrib.gis.geos import GEOSGeometry
 from django.utils.translation import ugettext as _
-from django.shortcuts import redirect
-from django.http.response import HttpResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 
@@ -30,24 +27,17 @@ class AddThemeView(TemplateView):
 
     def post(self, request, *args, **kwargs):
         project_id = kwargs['project']
-        context = self.get_context_data()
-        context['project'] = get_object_or_404(Project, pk=project_id)
+        project = get_object_or_404(Project, pk=project_id)
 
-        form = ThemeForm(data=request.POST, project=context['project'])
-        context['selected_tags'] = request.POST.getlist('tags')
-
-        if request.POST.get('boundary') == '':
-            messages.error(request, _('Set a boundary'))
+        form = ThemeForm(data=request.POST, project=project)
 
         if form.is_valid():
-            boundary = 'POLYGON(( {0}))'.format(form.cleaned_data.get('boundary')[:-1])
-
             theme = Theme(
                 project=Project.objects.get(id=project_id),
                 name=form.cleaned_data.get('name'),
                 description=form.cleaned_data.get('description'),
                 color=form.cleaned_data.get('color')[1:],
-                bounds=GEOSGeometry(boundary, srid=4326),
+                bounds=form.cleaned_data.get('bounds'),
                 visible=form.cleaned_data.get('visible'),
                 start_at=form.cleaned_data.get('start_at'),
                 end_at=form.cleaned_data.get('end_at'),
@@ -55,22 +45,28 @@ class AddThemeView(TemplateView):
                 modified_by=request.user
             )
             theme.save()
-            theme.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+            theme.tags.add(*form.cleaned_data.get('tags'))
             theme.mappers_group.user_set.add(*form.cleaned_data.get('mappers_group'))
 
             messages.success(request, _('Theme created'))
             return redirect(reverse('voy-admin:themes:index', kwargs={'project': theme.project.id}))
         else:
+            context = self.get_context_data()
+            context['selected_tags'] = request.POST.getlist('tags')
+            context['selected_mappers'] = request.POST.getlist('mappers_group')
+            context['data_form'] = form
             messages.error(request, form.non_field_errors())
 
-        return super(AddThemeView, self).render_to_response(context)
+            return render(request, self.template_name, context)
+
+        return self.get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project_id = self.kwargs['project']
 
         context['project'] = get_object_or_404(Project, pk=project_id)
-        context['data_form'] = ThemeForm(data=self.request.POST, project=context['project']) if self.request.method == 'POST' else ThemeForm(project=context['project'])
+        context['data_form'] = ThemeForm(project=context['project'])
 
         return context
 
@@ -78,68 +74,73 @@ class AddThemeView(TemplateView):
 class EditThemeView(TemplateView):
     template_name = 'theme/form.html'
 
-    '''def post(self, request, *args, **kwargs):
-        project_id = kwargs['project']
-        context = self.get_context_data()
-        context['project'] = get_object_or_404(Project, pk=project_id)
+    def post(self, request, *args, **kwargs):
+        theme_id = kwargs['theme']
 
-        form = ThemeForm(data=request.POST, project=context['project'])
-        context['selected_tags'] = request.POST.getlist('tags')
+        theme = get_object_or_404(Theme, pk=theme_id)
+        project = get_object_or_404(Project, pk=theme.project.pk)
 
-        if request.POST.get('boundary') == '':
-            messages.error(request, _('Set a boundary'))
+        form = ThemeForm(request.POST, project=project)
 
         if form.is_valid():
-            boundary = 'POLYGON(( {0}))'.format(form.cleaned_data.get('boundary')[:-1])
+            theme.name = form.cleaned_data.get('name')
+            theme.description = form.cleaned_data.get('description')
+            theme.color = form.cleaned_data.get('color')[1:]
+            theme.bounds = form.cleaned_data.get('bounds')
+            theme.visible = form.cleaned_data.get('visible')
+            theme.start_at = form.cleaned_data.get('start_at')
+            theme.end_at = form.cleaned_data.get('end_at')
 
-            theme = Theme(
-                project=Project.objects.get(id=project_id),
-                name=form.cleaned_data.get('name'),
-                description=form.cleaned_data.get('description'),
-                color=form.cleaned_data.get('color')[1:],
-                bounds=GEOSGeometry(boundary, srid=4326),
-                visible=form.cleaned_data.get('visible'),
-                start_at=form.cleaned_data.get('start_at'),
-                end_at=form.cleaned_data.get('end_at'),
-                created_by=request.user,
-                modified_by=request.user
-            )
-            theme.save()
-            theme.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+            theme.tags.remove(*theme.tags.all())
+            theme.tags.add(*form.cleaned_data.get('tags'))
+
+            theme.mappers_group.user_set.remove(*theme.mappers_group.user_set.all())
             theme.mappers_group.user_set.add(*form.cleaned_data.get('mappers_group'))
+            theme.save()
 
-            messages.success(request, _('Theme created'))
+            messages.success(request, _('Theme edited'))
             return redirect(reverse('voy-admin:themes:index', kwargs={'project': theme.project.id}))
         else:
+            context = self.get_context_data()
+            context['selected_tags'] = request.POST.getlist('tags')
+            context['selected_mappers'] = request.POST.getlist('mappers_group')
+            context['data_form'] = form
             messages.error(request, form.non_field_errors())
 
-        return super(AddThemeView, self).render_to_response(context)'''
+            return render(request, self.template_name, context)
+
+        return self.get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         theme_id = self.kwargs['theme']
+        theme = get_object_or_404(Theme, pk=theme_id)
 
-        try:
-            theme = get_object_or_404(Theme, pk=theme_id)
+        start_at = None
+        end_at = None
 
-            data = {
-                'name': theme.name,
-                'description': theme.description,
-                'mappers_group': theme.mappers_group,
-                'visible': theme.visible,
-                'start_at': theme.start_at.strftime('%d/%m/%Y'),
-                'end_at': theme.end_at.strftime('%d/%m/%Y'),
-                'color': theme.color,
-                'tags': theme.tags.names(),
-                'boundary': theme.coordinates
-            }
+        if theme.start_at is not None:
+            start_at = theme.start_at.strftime('%d/%m/%Y')
 
-            context['editing'] = True
-            context['project'] = theme.project
-            context['selected_tags'] = theme.tags.names()
-            context['selected_mappers'] = theme.mappers_group.user_set.all().values_list('id', 'username')
-            context['data_form'] = ThemeForm(initial=self.request.POST, project=context['project']) if self.request.method == 'POST' else ThemeForm(initial=data, project=context['project'])
-        except Exception:
-            return HttpResponse(status=500)
+        if theme.end_at is not None:
+            end_at = theme.end_at.strftime('%d/%m/%Y')
+
+        data = {
+            'name': theme.name,
+            'description': theme.description,
+            'mappers_group': theme.mappers_group,
+            'visible': theme.visible,
+            'start_at': start_at,
+            'end_at': end_at,
+            'color': theme.color,
+            'tags': theme.tags.names(),
+            'bounds': theme.bounds
+        }
+
+        context['editing'] = True
+        context['project'] = theme.project
+        context['selected_tags'] = theme.tags.names()
+        context['selected_mappers'] = theme.mappers_group.user_set.all().values_list('id', 'username')
+        context['data_form'] = ThemeForm(initial=data, project=context['project'])
 
         return context

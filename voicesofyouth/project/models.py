@@ -73,7 +73,7 @@ class Project(BaseModel):
                                          verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_to)
-    boundary = gismodels.PolygonField()
+    bounds = gismodels.PolygonField()
     translations = GenericRelation(Translation)
     tags = TaggableManager(blank=True)
 
