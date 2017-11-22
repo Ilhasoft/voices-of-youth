@@ -73,7 +73,7 @@ class Project(BaseModel):
                                          verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
     thumbnail = models.ImageField(upload_to=upload_to)
-    boundary = gismodels.PolygonField()
+    bounds = gismodels.PolygonField()
     translations = GenericRelation(Translation)
     tags = TaggableManager(blank=True)
 
@@ -111,6 +111,7 @@ def set_project_path(sender, instance, **kwargs):
     if not instance.path:
         instance.path = slugify(instance.name)
 
+
 @receiver(pre_save, sender=Project)
 def set_project_window_title(sender, instance, **kwargs):
     """
@@ -118,6 +119,7 @@ def set_project_window_title(sender, instance, **kwargs):
     """
     if not instance.window_title:
         instance.window_title = instance.name
+
 
 @receiver(post_save, sender=Project)
 def create_project_local_admin_group(sender, instance, **kwargs):
@@ -131,6 +133,7 @@ def create_project_local_admin_group(sender, instance, **kwargs):
             instance.local_admin_group.permissions.add(perm)
         instance.save()
 
+
 @receiver(m2m_changed, sender=Group.permissions.through)
 def change_group_permission(instance, action, model, pk_set, **_):
     """
@@ -141,6 +144,7 @@ def change_group_permission(instance, action, model, pk_set, **_):
             project.local_admin_group.permissions.add(*model.objects.filter(id__in=pk_set))
         elif action == 'post_remove' and project.local_admin_group.permissions.filter(id__in=pk_set).exists():
             project.local_admin_group.permissions.remove(*model.objects.filter(id__in=pk_set))
+
 
 @receiver(post_save, sender=Project)
 def resize_thumbnail(sender, instance, **kwargs):

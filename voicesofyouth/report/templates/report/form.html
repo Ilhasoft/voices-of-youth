@@ -12,48 +12,54 @@
 <section>
     <div class="content-wrapper" id="new-report">
         <div class="content-heading">
-            {% trans 'New report' %}
-
-            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">{% trans 'Create' %}</a>
+            {% if editing %} {% trans 'Edit report' %} {% else %} {% trans 'New report' %} {% endif %}
+            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">
+                {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+            </a>
         </div>
 
         <div class="row">
             <div class="col-lg-4">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form action="{% url 'voy-admin:reports:new' %}" method="post" role="form" id="form-report">
+                        <form action="" method="post" role="form" id="form-report">
                             <fieldset>
                                 {% csrf_token %}
                                 {{ data_form.location }}
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.project.errors %}has-error{% endif %}">
                                     <label>{% trans 'Project' %}</label>
                                     {{ data_form.project }}
                                     {{ data_form.project.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.theme.errors %}has-error{% endif %}">
                                     <label>{% trans 'Theme' %}</label>
-                                    {{ data_form.theme }}
+                                    <select name="theme" required="" class="form-control" id="id_theme"></select>
+                                    {{ data_form.theme.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.mapper.errors %}has-error{% endif %}">
                                     <label>{% trans 'Mapper' %}</label>
-                                    {{ data_form.mapper }}
+                                    <select name="mapper" required="" class="form-control" id="id_mapper"></select>
+                                    {{ data_form.mapper.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.title.errors %}has-error{% endif %}">
                                     <label>{% trans 'Title' %}</label>
                                     {{ data_form.title }}
+                                    {{ data_form.title.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
                                     <label>{% trans 'Description' %}</label>
                                     {{ data_form.description }}
+                                    {{ data_form.description.errors }}
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
                                     <label>{% trans 'Tags' %}</label>
                                     {{ data_form.tags }}
+                                    {{ data_form.tags.errors }}
                                 </div>
                             </fieldset>
                         </form>
@@ -97,8 +103,15 @@ var icon = L.icon({
     popupAnchor:  [-3, -76]
 });
 
-var marker = L.marker([51.5, -0.09], {
-    icon: icon,
+var coordinates = [51.5, -0.09];
+
+{% if data_form.location.value %}
+var temp_coordinates = '{{ data_form.location.value }}'.split(',');
+coordinates = [temp_coordinates[0], temp_coordinates[1]];
+{% endif %}
+
+var marker = L.marker(coordinates, {
+    icon: icon, 
     draggable: true,
 }).addTo(map);
 
@@ -115,12 +128,32 @@ marker.on('move', function(e) {
 
 $('#id_project').change(function(e) {
     e.preventDefault();
-    var project = e.target.value;
+    loadThemes(e.target.value);
+});
+
+$('#id_theme').change(function(e) {
+    e.preventDefault();
+    loadMappers(e.target.value);
+});
+
+function submitForm() {
+    $('#form-report').submit();
+}
+
+function loadThemes(project, selected = null) {
     axios.get('{% url "voy-api:tags-list" %}?project=' + project).then((response) => {
         $('#id_tags').empty();
         $('#id_tags').trigger('chosen:updated');
+
+        $('#id_theme').empty();
+        $('#id_theme').trigger('chosen:updated');
+        $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
+
+        $('#id_mapper').empty();
+        $('#id_mapper').trigger('chosen:updated');
+
         response.data.map((item) => {
-            $('#id_tags').append('<option value="' + item.id + '">' + item.tag + '</option>');
+            $('#id_tags').append('<option value="' + item.tag + '">' + item.tag + '</option>');
             $('#id_tags').trigger('chosen:updated');
         });
     }).then(() => {
@@ -132,26 +165,41 @@ $('#id_project').change(function(e) {
                 $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
                 $('#id_theme').trigger('chosen:updated');
             });
+        }).then(() => {
+            if (selected) {
+                $('#id_theme').val(selected);
+                loadMappers(selected, {{ data_form.mapper.value }});
+            }
         });
-    }).catch(() => {
-        console.log('AA');
+    }).then(() => {
+        {% if selected_tags %}
+            var tags = [];
+            {% for tag in selected_tags %}
+                tags.push('{{ tag }}');
+            {% endfor %}
+            $('#id_tags').val(tags);
+            $('#id_tags').trigger('chosen:updated');
+        {% endif %}
     });
-});
+}
 
-$('#id_theme').change(function(e) {
-    e.preventDefault();
-    axios.get('/api/mappers/?theme=' + e.target.value).then((response) => {
+function loadMappers(theme, selected = null) {
+    axios.get('/api/mappers/?theme=' + theme).then((response) => {
         $('#id_mapper').empty();
         $('#id_mapper').trigger('chosen:updated');
         response.data.map((item) => {
             $('#id_mapper').append('<option value="' + item.id + '">' + item.full_name + '</option>');
             $('#id_mapper').trigger('chosen:updated');
         });
+    }).then(() => {
+        if (selected) {
+            $('#id_mapper').val(selected);
+        }
     });
-});
-
-function submitForm() {
-    $('#form-report').submit();
 }
+
+{% if data_form.project.value %}
+loadThemes($('#id_project option:selected').val(), {{ data_form.theme.value }});
+{% endif %}
 </script>
 {% endblock %}

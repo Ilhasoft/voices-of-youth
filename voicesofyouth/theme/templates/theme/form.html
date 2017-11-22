@@ -1,0 +1,172 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags leaflet_tags %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% sass_src 'css/theme/theme.scss' %}">
+<link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css' %}">
+<link rel="stylesheet" href="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
+{% leaflet_css plugins="forms" %}
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="content-wrapper" id="theme">
+        <div class="content-heading">
+            {% if editing %} {% trans 'Edit theme' %} {% else %} {% trans 'New theme' %} {% endif %}
+            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-theme">
+                {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+            </a>
+        </div>
+
+        <ol class="breadcrumb">
+            <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
+            <li>{{ project.name }}</li>
+            <li><a href="{% url 'voy-admin:themes:index' project.pk %}">{% trans 'Themes' %}</a></li>
+            <li>{% if editing %} {% trans 'Edit' %} {% else %} {% trans 'New' %} {% endif %}</li>
+        </ol>
+
+        <form action="" enctype="multipart/form-data" method="post" role="form" id="form-theme">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <h3>{% if editing %} {% trans 'Edit Theme' %} {% else %} {% trans 'New Theme' %} {% endif %}</h3>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Start At' %}</label>
+                                        <div id="datetimepicker1" class="input-group date">
+                                            {{ data_form.start_at }}
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group {% if data_form.end_at.errors %}has-error{% endif %}">
+                                        <label>{% trans 'End At' %}</label>
+                                        <div id="datetimepicker2" class="input-group date">
+                                            {{ data_form.end_at }}
+                                            <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Visible' %}</label>
+                                        <label class="switch switch-sm pull-right">
+                                            {{ data_form.visible }}
+                                            {{ data_form.visible.errors }}
+                                            <span></span>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Name' %}</label>
+                                        {{ data_form.name }}
+                                        {{ data_form.name.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.color.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Color' %}</label>
+                                        {{ data_form.color }}
+                                        {{ data_form.color.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Description' %}</label>
+                                        {{ data_form.description }}
+                                        {{ data_form.description.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Tags' %}</label>
+                                        {{ data_form.tags }}
+                                        {{ data_form.tags.errors }}
+                                    </div>
+
+                                    <div class="form-group {% if data_form.mappers_group.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Mappers' %}</label>
+                                        {{ data_form.mappers_group }}
+                                        {{ data_form.mappers_group.errors }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div id="map">
+                        {{ data_form.bounds }}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock content %}
+
+{% block extrajs %}
+<script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+<script src="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js' %}"></script>
+<script src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+
+{% leaflet_js plugins="forms" %}
+
+<script type="text/javascript">
+$('#id_mappers_group').chosen();
+$('#id_tags').chosen();
+$('.demo-colorpicker').colorpicker();
+
+$('.startdatepicker,.expiredatepicker').datetimepicker({
+    format:'DD/MM/YYYY',
+    icons: {
+        date: 'fa fa-calendar',
+        previous: 'fa fa-chevron-left',
+        next: 'fa fa-chevron-right',
+        today: 'fa fa-crosshairs',
+        clear: 'fa fa-trash'
+    }
+});
+
+$('.startdatepicker').on('dp.change', function(e) {
+    $('.expiredatepicker').data('DateTimePicker').minDate(e.date);
+});
+
+$('.expiredatepicker').on('dp.change', function(e) {
+    $('.startdatepicker').data('DateTimePicker').maxDate(e.date);
+});
+
+{% if selected_tags %}
+    var tags = [];
+    {% for tag in selected_tags %}
+        tags.push('{{ tag }}');
+    {% endfor %}
+    $('#id_tags').val(tags);
+    $('#id_tags').trigger('chosen:updated');
+{% endif %}
+
+{% if selected_mappers %}
+    var mappers = [];
+    {% for mapper in selected_mappers %}
+        mappers.push('{{ mapper.0 }}');
+    {% endfor %}
+    $('#id_mappers_group').val(mappers);
+    $('#id_mappers_group').trigger('chosen:updated');
+{% endif %}
+
+function submitForm() {
+    $('#form-theme').submit();
+}
+</script>
+{% endblock %}
