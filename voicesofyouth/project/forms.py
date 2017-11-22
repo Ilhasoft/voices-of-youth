@@ -88,10 +88,10 @@ class ProjectForm(forms.Form):
 
     thumbnail = forms.FileField(
         label=_('Thumbnail'),
-        required=True,
+        required=False,
         widget=forms.ClearableFileInput(
             attrs={
-                'required': True,
+                'required': False,
                 'class': 'form-control',
             }
         )
