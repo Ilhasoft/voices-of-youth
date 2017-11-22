@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.db.models.query_utils import Q
 from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
+from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
@@ -30,11 +31,16 @@ class AdminListView(TemplateView):
 
     def post(self, request):
         delete = request.POST.get('deleteAdmins')
+        current_user = request.user
         if delete:
             try:
-                AdminUser.objects.filter(id__in=delete.split(',')).delete()
-            except Exception:
-                return HttpResponse(status=500)
+                if not current_user.is_superuser:
+                    return HttpResponseForbidden('Only a global admin can delete admins.')
+                else:
+                    # The current admin cannot delete yourself.
+                    AdminUser.objects.filter(id__in=delete.split(',')).exclude(id=current_user.id).delete()
+            except Exception as exc:
+                return HttpResponse(str(exc), status=500)
             return HttpResponse("Admin users deleted!")
         else:
             form = AdminForm(request.POST)
