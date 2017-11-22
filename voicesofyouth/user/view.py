@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db.models.query_utils import Q
+from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -27,15 +28,40 @@ def search_user(search_by, qs):
 class AdminListView(TemplateView):
     template_name = 'user/admin_list.html'
 
-    def get(self, request):
-        context = self.get_context_data(request)
-        return render(request, self.template_name, context)
+    def post(self, request):
+        # delete = request.POST.get('deleteMappers')
+        # if delete:
+        #     try:
+        #         MapperUser.objects.filter(id__in=delete.split(',')).delete()
+        #     except Exception:
+        #         return HttpResponse(status=500)
+        #     return HttpResponse("Users deleted!")
+        # else:
+        form = AdminForm(request.POST)
+        if form.is_valid():
+            admin = AdminUser()
+            try:
+                form.save(admin)
+            except IntegrityError as exc:
+                messages.error(request, str(exc).split('\n')[0])
+                context = self.get_context_data()
+                context['form_add_admin'] = form
+                return render(request, self.template_name, context)
+        else:
+            messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
+            context = self.get_context_data()
+            context['form_add_admin'] = form
+            context['open_modal'] = True
+            return render(request, self.template_name, context)
 
-    def get_context_data(self, request, **kwargs):
+        return self.get(request)
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['admins'] = AdminUser.objects.all()
-        context['filter_form'] = AdminFilterForm(request.GET)
+        context['filter_form'] = AdminFilterForm(self.request.GET)
         context['form_add_admin'] = AdminForm()
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         return context
 
 

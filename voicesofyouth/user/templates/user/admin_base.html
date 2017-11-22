@@ -86,10 +86,28 @@
                         </div>
                     </div>
                 </div>
-                <form action="{% url "voy-admin:users:admin_list" %}" id="addAdminForm" method="post">
+                <form action="{% url "voy-admin:users:admin_list" %}" id="addAdminForm" method="post" novalidate>
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ form_add_admin }}
+                        {{ form_add_admin.non_field_errors }}
+                        {% for field in form_add_admin.hidden_fields %}
+                            {{ field }}
+                        {% endfor %}
+                        {% for field in form_add_admin.visible_fields %}
+                            {% if field.name == 'projects' %}
+                                <div name="local-admin-fields">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% else %}
+                                <div>
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                     <div class="modal-footer">
                         <button
@@ -99,6 +117,7 @@
                             {% trans "Cancel" %}
                         </button>
                         <button
+                                id="submit_form"
                                 type="submit"
                                 class="btn btn-info btn-lg">
                             {% trans "Create" %}
@@ -112,11 +131,44 @@
 
 {% block extrajs %}
     {{ block.super }}
+    <script>
+        {% if open_modal %}
+            $('#modalAddAdmin').modal('show');
+        {% endif %}
+    </script>
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
         $("#post_admin_search").click(() => {
             $("#admin_search").submit();
         });
+    </script>
+    <script>
+        $('#id_projects').removeAttr('required');
+
+        function disable_local_admin_fields() {
+            $('div[name=local-admin-fields]').fadeOut();
+            $('#id_projects').removeAttr('required');
+            $('#id_projects').trigger('chosen:updated');
+        }
+
+        function enable_local_admin_fields() {
+            $('div[name=local-admin-fields]').fadeIn();
+            $('#id_projects').attr('required', true);
+            $('#id_projects').trigger('chosen:updated');
+        }
+
+        if ($('input[id^=id_global_admin]:checked').val() === 'local') {
+            enable_local_admin_fields();
+        } else {
+            disable_local_admin_fields();
+        }
+        $('input[id^=id_global_admin]').change((evt) => {
+            if (evt.target.value === 'local') {
+                enable_local_admin_fields();
+            } else {
+                disable_local_admin_fields();
+            }
+        })
     </script>
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
@@ -133,25 +185,6 @@
         });
     </script>
     <script type="text/javascript">
-        $("select[id='id_themes']").chosen();
-        $("select[id='id_project']").chosen();
-
-        $("select[id='id_project']").change(function (e) {
-            e.preventDefault();
-            const currentFormId = $(e.target.closest("form")).attr('id');
-            var project = e.target.value;
-            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
-                themesSelect.empty();
-                themesSelect.trigger('chosen:updated');
-                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
-                response.data.map((item) => {
-                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
-                    themesSelect.trigger('chosen:updated');
-                });
-            }).catch(error => {
-                console.log(error);
-            });
-        });
+        $("select[id='id_projects']").chosen();
     </script>
 {% endblock %}

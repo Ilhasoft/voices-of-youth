@@ -36,7 +36,8 @@
                 display: flex;
             }
             td:last-child {
-                border: 0.1em solid #F0F0F1; width: 93px;
+                border: 0.1em solid #F0F0F1;
+                width: 93px;
             }
         }
     }
@@ -68,8 +69,22 @@
                 flex-wrap: wrap;
             }
             td:last-child {
-                border: 0.1em solid #F0F0F1; width: 93px;
+                border: 0.1em solid #F0F0F1;
+                width: 93px;
             }
         }
     }
+}
+
+.admin-profile-selector {
+    display: flex;
+    justify-content: space-around;
+}
+
+.badge-project {
+    background-color: #0e84b5;
+}
+
+.badge-global-admin {
+    background-color: #00CDFC;
 }
