@@ -6,7 +6,6 @@ django-extensions
 coverage
 Werkzeug
 flake8
-pygraphviz
 sphinx
 sphinxcontrib-napoleon
 sphinx-autodoc-napoleon-typehints
