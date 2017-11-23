@@ -1,5 +1,5 @@
 dj-database-url
-Django>1.11.4,<1.12
+Django>=1.11.7,<1.12
 djangorestframework
 djangorestframework-gis
 django-cors-headers
@@ -19,4 +19,4 @@ gdal
 django-filter
 django-crispy-forms
 django-sass-processor
-django-qurl-templatetag
+-e git://github.com/eltonplima/django-qurl-templatetag.git#egg=master
