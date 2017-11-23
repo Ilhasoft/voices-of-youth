@@ -114,6 +114,26 @@ class CommentsReportView(TemplateView):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
+class CommentsSaveView(TemplateView):
+    def post(self, request, *args, **kwargs):
+        comment = request.POST.get('comment')
+        report_id = kwargs['report']
+
+        if comment and report_id:
+            report = get_object_or_404(Report, pk=report_id)
+            comment = ReportComment(
+                report=report,
+                text=comment,
+                created_by=request.user,
+                modified_by=request.user,
+                status=REPORT_STATUS_APPROVED,
+            )
+            comment.save()
+
+            messages.success(request, _('Comment added'))
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
 class AddReportView(TemplateView):
     template_name = 'report/form.html'
 

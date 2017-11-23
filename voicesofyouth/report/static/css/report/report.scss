@@ -93,6 +93,13 @@ $color_delete: #DE486B;
 }
 
 #view-report {
+    textarea {
+        border-color: #cfcfcf;
+        border-radius: 10px;
+        resize: none;
+        width: 100%;
+    }
+
     .buttons {
         a {
             width: 100px;
@@ -135,6 +142,11 @@ $color_delete: #DE486B;
 
     .comment-text {
         background-color: #fafafa;
+    }
+
+    .btn-save {
+        background-color: #9f9f9f;
+        color: #fff;
     }
 
     .mt-20 {
