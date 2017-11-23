@@ -32,7 +32,7 @@ export default {
       optionsMap: { maxBounds: [[-90, -160], [90, 160]] },
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      center: null,
+      center: [0, 0],
       bounds: L.latLngBounds(),
     };
   },

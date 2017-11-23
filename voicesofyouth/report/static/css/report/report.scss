@@ -1,4 +1,4 @@
-$color_approve: #B7E683;
+$color_approve: #8CD644;
 $color_edit: #00CBFF;
 $color_reject: #E46A87;
 $color_delete: #DE486B;
@@ -31,7 +31,7 @@ $color_delete: #DE486B;
     }
 
     a.view, a.approve, .reject {
-        width: 150px;
+        width: 70%;
         margin: 15px;
         height: 39px;
         padding-top: 10px;
@@ -93,6 +93,13 @@ $color_delete: #DE486B;
 }
 
 #view-report {
+    textarea {
+        border-color: #cfcfcf;
+        border-radius: 10px;
+        resize: none;
+        width: 100%;
+    }
+
     .buttons {
         a {
             width: 100px;
@@ -122,6 +129,28 @@ $color_delete: #DE486B;
     .reject {
         border-color: $color_reject;
         color: $color_reject;
+    }
+
+    .comments-list {
+        max-width: 850px;
+        margin: auto;
+    }
+
+    .comment-author {
+        font-size: 16px;
+    }
+
+    .comment-text {
+        background-color: #fafafa;
+    }
+
+    .btn-save {
+        background-color: #9f9f9f;
+        color: #fff;
+    }
+
+    .mt-20 {
+        margin-top: 30px;
     }
 }
 

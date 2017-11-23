@@ -165,8 +165,8 @@ export default {
       isAccepted: false,
 
       login: {
-        username: 'admin',
-        password: 'Un1c3f@@',
+        username: '',
+        password: '',
       },
     };
   },
@@ -239,9 +239,14 @@ export default {
   border: solid 1px #979797;
 
   z-index: 10;
-  position: relative;
-  margin: auto;
   text-align: center;
+
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 
   .logo {
     margin-top: 30px;

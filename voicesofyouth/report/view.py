@@ -11,6 +11,7 @@ from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
 from voicesofyouth.voyadmin.utils import get_paginator
 from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
@@ -87,7 +88,7 @@ class ReportView(TemplateView):
         return context
 
 
-class ReportApproveView(TemplateView):
+class ApproveReportView(TemplateView):
     def get(self, request, *args, **kwargs):
         report_id = kwargs['report']
         if report_id:
@@ -96,6 +97,40 @@ class ReportApproveView(TemplateView):
             report.save()
 
             messages.success(request, _('Report approved'))
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class CommentsReportView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        comment_id = kwargs['comment']
+        status = kwargs['status']
+
+        if comment_id and status:
+            comment = get_object_or_404(ReportComment, pk=comment_id)
+            comment.status = REPORT_STATUS_APPROVED if status == '1' else REPORT_STATUS_REJECTED
+            comment.save()
+
+            messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'rejected')))
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class CommentsSaveView(TemplateView):
+    def post(self, request, *args, **kwargs):
+        comment = request.POST.get('comment')
+        report_id = kwargs['report']
+
+        if comment and report_id:
+            report = get_object_or_404(Report, pk=report_id)
+            comment = ReportComment(
+                report=report,
+                text=comment,
+                created_by=request.user,
+                modified_by=request.user,
+                status=REPORT_STATUS_APPROVED,
+            )
+            comment.save()
+
+            messages.success(request, _('Comment added'))
         return redirect(request.META.get('HTTP_REFERER'))
 
 

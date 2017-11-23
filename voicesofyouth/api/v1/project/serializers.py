@@ -20,7 +20,7 @@ class ProjectSerializer(VoySerializer):
             'description',
             'path',
             'language',
-            'boundary',
+            'bounds',
             'thumbnail',
             'window_title',
             'languages',

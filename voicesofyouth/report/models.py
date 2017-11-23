@@ -76,6 +76,10 @@ class Report(BaseModel):
     def videos(self):
         return self.files.filter(media_type=FILE_TYPE_VIDEO)
 
+    @property
+    def comments_to_moderation(self):
+        return self.comments.filter(status__in=[REPORT_STATUS_APPROVED, REPORT_STATUS_PENDING])
+
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')

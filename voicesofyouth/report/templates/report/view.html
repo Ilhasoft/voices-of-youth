@@ -40,7 +40,8 @@
 
                 <h3 class="mt0">{{ report.name }}</h3>
                 {% trans 'By' %} {{ report.created_by.first_name }} {{ report.created_on|date:'d M Y' }} {{ report.comments.count }} {% trans 'comments' %}
-                <hr>
+                
+                <hr />
 
                 <div class="row mb-lg">
                     <div class="col-lg-12 col-md-12">{{ report.description }}</div>      
@@ -57,7 +58,62 @@
                         </div>
                     {% endfor %}
                 </div>
-             </div>
+
+                {% if report.comments.count > 0 %}
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <hr />
+                            <h2>{% trans 'Comments' %}</h2>
+                        </div>
+                    </div>
+
+                    <div class="comments-list">
+                        <form action="{% url 'voy-admin:reports:comments-save' report.pk %}" method="post">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <textarea name="comment" id="comments" cols="30" rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button type="submit" class="btn btn-default btn-oval btn-save">{% trans 'Post' %}</button>
+                                </div>
+                            </div>
+                        </form>
+
+                        {% for comment in report.comments_to_moderation %}
+                        <div class="mt-20">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <img src="{{ comment.created_by.get_avatar_display }}" alt="">
+                                </div>
+                                <div class="col-md-11">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong class="comment-author">{{ comment.created_by.username }}</strong>
+                                            - <small>{{ comment.created_on|date:'d M Y - H:i' }}</small>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            {% if comment.status == 2 %}
+                                            <a href="{% url 'voy-admin:reports:comments' comment.pk 1 %}" class="btn btn-oval btn-default approve">Approve</a>
+                                            <a href="{% url 'voy-admin:reports:comments' comment.pk 2 %}" class="btn btn-oval btn-default reject">Reject</a>
+                                            {% endif %}                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1">&nbsp;</div>
+                                <div class="col-md-11 comment-text">
+                                    {{ comment.text }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </section>
