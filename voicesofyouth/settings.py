@@ -30,7 +30,9 @@ SECRET_KEY = config('SECRET_KEY', default='%3)=j$(#mt8!$t+kps2y8&2v*x63lb%hjjyw6
 DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG_TOOLBAR = config('DEBUG_TOOLBAR', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + config('ALLOWED_HOSTS', cast=lambda v: [h for h in v.split(',')])
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + config('ALLOWED_HOSTS',
+                                                    cast=lambda v: [h for h in v.split(',')],
+                                                    default='')
 
 # Application definition
 
