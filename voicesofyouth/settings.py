@@ -14,7 +14,6 @@ import os
 
 import dj_database_url
 from decouple import config
-from mommy_spatial_generators import MOMMY_SPATIAL_FIELDS
 from unipath import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -31,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY', default='%3)=j$(#mt8!$t+kps2y8&2v*x63lb%hjjyw6
 DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG_TOOLBAR = config('DEBUG_TOOLBAR', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.155']
 
 # Application definition
 
@@ -69,6 +68,9 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG:
+    from mommy_spatial_generators import MOMMY_SPATIAL_FIELDS
+    MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
+
     INSTALLED_APPS.append('django_extensions')
     INSTALLED_APPS.append('model_mommy')
     INSTALLED_APPS.append('mommy_spatial_generators')
@@ -200,7 +202,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
-MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
 
 # Default pagination items per page.
 ITEMS_PER_PAGE = 10
