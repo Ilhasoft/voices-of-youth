@@ -29,7 +29,11 @@
                     </div>
                 </div>
             </div>
-            <form action="{% url "voy-admin:users:admin_list" %}" id="addAdminForm" method="post" novalidate>
+            {% if instance %}
+                <form action="{% url "voy-admin:users:admin_detail" instance.id %}" id="{{ modal_name }}" method="post" novalidate>
+            {% else %}
+                <form action="{% url "voy-admin:users:admin_list" %}" id="{{ modal_name }}" method="post" novalidate>
+            {% endif %}
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ form.non_field_errors }}

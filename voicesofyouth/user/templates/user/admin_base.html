@@ -57,8 +57,16 @@
 {% endblock content %}
 
 {% block extrahtml %}
-    {% trans "Add admin" as modal_title %}
-    {% include "user/modal_edit_or_add.html" with modal_name="modalAddAdmin" form=form_add_admin modal_title=modal_title %}
+    {% trans "Add admin" as modal_add_title %}
+    {% trans "Edit admin" as modal_edit_title %}
+    {% include "user/modal_edit_or_add.html" with modal_name="modalAddAdmin" form=form_add_admin modal_title=modal_add_title %}
+    {% for admin in admins %}
+        {% with admin_id=admin.id|stringformat:"s" %}
+            {% with modal_name="modalEditAdmin"|add:admin_id %}
+                {% include "user/modal_edit_or_add.html" with modal_name=modal_name form=form_add_admin modal_title=modal_edit_title instance=admin %}
+            {% endwith %}
+        {% endwith %}
+    {% endfor %}
 {% endblock %}
 
 {% block extrajs %}
