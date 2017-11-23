@@ -146,10 +146,7 @@
                                                 })
                                             })
                                             .catch((error) => {
-                                                swal("Ops!", error.response.data, "error")
-                                                    .then(value => {
-                                                        window.location.href = "{% url "voy-admin:users:admin_list" %}"
-                                                    })
+                                                swal("Ops!", error.response.data, "error");
                                             });
                                     }
                                 );
