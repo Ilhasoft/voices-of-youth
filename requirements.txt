@@ -19,4 +19,5 @@ gdal
 django-filter
 django-crispy-forms
 django-sass-processor
+django-leaflet
 -e git://github.com/eltonplima/django-qurl-templatetag.git#egg=master
