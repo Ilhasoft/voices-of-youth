@@ -1,4 +1,4 @@
-$color_approve: #B7E683;
+$color_approve: #8CD644;
 $color_edit: #00CBFF;
 $color_reject: #E46A87;
 $color_delete: #DE486B;
@@ -122,6 +122,23 @@ $color_delete: #DE486B;
     .reject {
         border-color: $color_reject;
         color: $color_reject;
+    }
+
+    .comments-list {
+        max-width: 850px;
+        margin: auto;
+    }
+
+    .comment-author {
+        font-size: 16px;
+    }
+
+    .comment-text {
+        background-color: #fafafa;
+    }
+
+    .mt-20 {
+        margin-top: 30px;
     }
 }
 
