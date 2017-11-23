@@ -141,10 +141,10 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0001_initial'),
         ('translation', '0001_initial'),
-        ('project', '0002_auto_20171103_1505'),
-        ('theme', '0002_auto_20171103_1505'),
+        ('project', '0005_auto_20171122_1712'),
+        ('theme', '0004_auto_20171121_1406'),
         ('tag', '0001_initial'),
-        ('report', '0003_remove_reportcomment_creation_timestamp'),
+        ('report', '0004_auto_20171110_2008'),
         ('user', '0004_remove_voyuser_created_on'),
     ]
 
