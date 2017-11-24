@@ -43,7 +43,7 @@
                                         <div class="form-group {% if data_form.path.errors %}has-error{% endif %}">
                                             <label>{% trans 'Edit URL' %}</label>
                                             <div class="row">
-                                                <label class="col-lg-5 control-label">{{ request.META.SERVER_NAME }}/</label>
+                                                <label class="col-lg-5 control-label">{{ request.get_host }}/</label>
                                                 <div class="col-lg-7">
                                                     {{ data_form.path }}
                                                     {{ data_form.path.errors }}
