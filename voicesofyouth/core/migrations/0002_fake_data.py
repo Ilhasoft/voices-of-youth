@@ -153,7 +153,7 @@ if settings.DEBUG:
                         for _ in range(random.randint(1, 3)):
                             make_report_medias(report)
 
-        Migration.operations.append(migrations.RunPython(create_dev_data))
+    Migration.operations.append(migrations.RunPython(create_dev_data))
 
 else:
     def noop(*args, **kwargs):
