@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext as _
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
@@ -9,7 +10,7 @@ from voicesofyouth.theme.models import Theme
 from voicesofyouth.theme.forms import ThemeForm
 
 
-class ThemeView(TemplateView):
+class ThemeView(LoginRequiredMixin, TemplateView):
     template_name = 'theme/index.html'
 
     def get_context_data(self, **kwargs):
@@ -22,7 +23,7 @@ class ThemeView(TemplateView):
         return context
 
 
-class AddThemeView(TemplateView):
+class AddThemeView(LoginRequiredMixin, TemplateView):
     template_name = 'theme/form.html'
 
     def post(self, request, *args, **kwargs):
@@ -71,7 +72,7 @@ class AddThemeView(TemplateView):
         return context
 
 
-class EditThemeView(TemplateView):
+class EditThemeView(LoginRequiredMixin, TemplateView):
     template_name = 'theme/form.html'
 
     def post(self, request, *args, **kwargs):

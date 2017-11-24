@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
@@ -8,7 +9,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.project.forms import ProjectForm
 
 
-class ProjectView(TemplateView):
+class ProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/index.html'
 
     def get_context_data(self, **kwargs):
@@ -23,7 +24,7 @@ class ProjectView(TemplateView):
         return context
 
 
-class AddProjectView(TemplateView):
+class AddProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/form.html'
 
     def post(self, request, *args, **kwargs):
@@ -61,7 +62,7 @@ class AddProjectView(TemplateView):
         return context
 
 
-class EditProjectView(TemplateView):
+class EditProjectView(LoginRequiredMixin, TemplateView):
     template_name = 'project/form.html'
 
     def post(self, request, *args, **kwargs):

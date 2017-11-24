@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -19,7 +20,7 @@ from voicesofyouth.report.forms import ReportFilterForm
 from voicesofyouth.report.forms import ReportForm
 
 
-class ReportListView(TemplateView):
+class ReportListView(LoginRequiredMixin, TemplateView):
     template_name = 'report/index.html'
 
     def get_context_data(self, **kwargs):
@@ -60,7 +61,7 @@ class ReportListView(TemplateView):
         return context
 
 
-class ReportView(TemplateView):
+class ReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/view.html'
 
     def post(self, request, *args, **kwargs):
@@ -88,7 +89,7 @@ class ReportView(TemplateView):
         return context
 
 
-class ApproveReportView(TemplateView):
+class ApproveReportView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         report_id = kwargs['report']
         if report_id:
@@ -100,7 +101,7 @@ class ApproveReportView(TemplateView):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class CommentsReportView(TemplateView):
+class CommentsReportView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         comment_id = kwargs['comment']
         status = kwargs['status']
@@ -114,7 +115,7 @@ class CommentsReportView(TemplateView):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class CommentsSaveView(TemplateView):
+class CommentsSaveView(LoginRequiredMixin, TemplateView):
     def post(self, request, *args, **kwargs):
         comment = request.POST.get('comment')
         report_id = kwargs['report']
@@ -134,7 +135,7 @@ class CommentsSaveView(TemplateView):
         return redirect(request.META.get('HTTP_REFERER'))
 
 
-class AddReportView(TemplateView):
+class AddReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
@@ -172,7 +173,7 @@ class AddReportView(TemplateView):
         return context
 
 
-class EditReportView(TemplateView):
+class EditReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
@@ -231,7 +232,7 @@ class EditReportView(TemplateView):
         return context
 
 
-class PendingReportView(TemplateView):
+class PendingReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/pending.html'
 
     def get_context_data(self, **kwargs):

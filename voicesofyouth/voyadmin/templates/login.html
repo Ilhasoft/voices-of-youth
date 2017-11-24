@@ -75,15 +75,9 @@
         <div class="panel panel-orange panel-flat">
             <div class="panel-body">
                 <p class="text-center pv">{% trans 'Sign to continue' %}</p>
-                <form role="form" action="" method="post" data-parsley-validate="" novalidate="" class="mb-lg">
-                    <div class="form-group has-feedback">
-                        <input id="exampleInputEmail1" type="email" placeholder="Enter email" autocomplete="off"
-                               required="" class="form-control" data-parsley-id="4">
-                    </div>
-                    <div class="form-group has-feedback">
-                        <input id="exampleInputPassword1" type="password" placeholder="Password" required=""
-                               class="form-control" data-parsley-id="6">
-                    </div>
+                <form role="form" action="{{ request.get_full_path }}" method="post" class="mb-lg">
+                    {% csrf_token %}
+                    {{ form }}
                     <div class="clearfix">
                         <div class="pull-right">
                             <a href="" class="text-muted">{% trans 'Forgot your password?' %}</a>

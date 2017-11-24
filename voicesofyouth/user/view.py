@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query_utils import Q
 from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
@@ -26,7 +27,7 @@ def search_user(search_by, qs):
                      Q(last_name__icontains=search_by))
 
 
-class AdminListView(TemplateView):
+class AdminListView(LoginRequiredMixin, TemplateView):
     template_name = 'user/admin_list.html'
 
     def post(self, request):
@@ -71,11 +72,11 @@ class AdminListView(TemplateView):
         return context
 
 
-class AdminDetailView(TemplateView):
+class AdminDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'user/admin_detail.html'
 
 
-class MappersListView(TemplateView):
+class MappersListView(LoginRequiredMixin, TemplateView):
     template_name = 'user/mappers_list.html'
     form_class = MapperFilterForm
 
@@ -133,7 +134,7 @@ class MappersListView(TemplateView):
         return context
 
 
-class MapperDetailView(TemplateView):
+class MapperDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'user/mapper_detail.html'
     form_filter_class = MapperFilterForm
 
