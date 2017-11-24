@@ -7,53 +7,57 @@
 {% endblock %}
 
 {% block content %}
-<section>
-    <div class="content-wrapper" id="theme">
-        <div class="content-heading">
-            {{ project.name }} - {% trans 'Themes' %}
-            <a href="{% url 'voy-admin:themes:new' project.pk %}" class="btn btn-oval btn-new-theme">{% trans 'New Theme' %}</a>
-        </div>
+    <section>
+        <div class="content-wrapper" id="theme">
+            <div class="content-heading">
+                {{ project.name }} - {% trans 'Themes' %}
+                <a href="{% url 'voy-admin:themes:new' project.pk %}"
+                   class="btn btn-oval btn-new-theme">{% trans 'New Theme' %}</a>
+            </div>
 
-        <ol class="breadcrumb">
-            <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
-            <li>{{ project.name }}</li>
-            <li>{% trans 'Themes' %}</li>
-        </ol>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
+                <li>{{ project.name }}</li>
+                <li>{% trans 'Themes' %}</li>
+            </ol>
 
-        <div class="row">
-            {% for theme in themes %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel box">
-                        <div class="panel-heading header" style="background-color: #{{ theme.color }};">
-                            <div class="row">
-                                <div class="col-xs-12 text-center">
-                                    <h4>{{ theme.name }}</h4>
-                                    <p class="m0">{{ theme.created_on|date:"d M Y" }}</p>
+            <div class="row">
+                {% for theme in themes %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel box">
+                            <div class="panel-heading header" style="background-color: #{{ theme.color }};">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center">
+                                        <h4>{{ theme.name }}</h4>
+                                        <p class="m0">{{ theme.created_on|date:"d M Y" }}</p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="panel-body text-justify">
-                            <p>{{ theme.description|truncatewords:25 }}</p>
-                            <p class="text-muted text-center"><strong>{{ theme.reports.count }}</strong> {% trans 'Reports' %}</p>
+                            <div class="panel-body text-justify">
+                                <p>{{ theme.description|truncatewords:25 }}</p>
+                                <p class="text-muted text-center">
+                                    <strong>{{ theme.reports.count }}</strong> {% trans 'Reports' %}</p>
 
-                            <div class="row buttons">
-                                <div class="col-xs-6 text-center">
-                                    <a href="{% url 'voy-admin:themes:edit' theme.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
-                                </div>
-                                <div class="col-xs-6 text-center">
-                                    <a href="{% url 'voy-admin:reports:index' theme.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'See' %}</a>
+                                <div class="row buttons">
+                                    <div class="col-xs-6 text-center">
+                                        <a href="{% url 'voy-admin:themes:edit' theme.pk %}"
+                                           class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
+                                    </div>
+                                    <div class="col-xs-6 text-center">
+                                        <a href="{% url 'voy-admin:reports:index' theme.pk %}"
+                                           class="btn btn-oval btn-lg btn-default">{% trans 'See' %}</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {% empty %}
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
-                </div>
-            {% endfor %}
+                {% empty %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock content %}

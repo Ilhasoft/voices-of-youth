@@ -3,127 +3,128 @@
 {% load static i18n sass_tags leaflet_tags %}
 
 {% block extracss %}
-<link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
-<link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
-<link rel="stylesheet" href="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
-{% leaflet_css plugins="forms" %}
+    <link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
+    {% leaflet_css plugins="forms" %}
 {% endblock %}
 
 {% block content %}
-<section>
-    <div class="content-wrapper">
-        <div class="content-heading">
-            {% if editing %} {% trans 'Edit project' %} {% else %} {% trans 'New project' %} {% endif %}
-            <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-project">
-                {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
-            </a>
-        </div>
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                {% if editing %} {% trans 'Edit project' %} {% else %} {% trans 'New project' %} {% endif %}
+                <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-project">
+                    {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+                </a>
+            </div>
 
-        <form action="" enctype="multipart/form-data" method="post" role="form" id="form-project">
-            {% csrf_token %}
-            <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel">
-                        <div class="panel-body">
-                            <div class="row">
-                                <div class="col-md-12 text-center">
-                                    <h3>{% if editing %} {% trans 'Edit Project' %} {% else %} {% trans 'New Project' %} {% endif %}</h3>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Name' %}</label>
-                                        {{ data_form.name }}
-                                        {{ data_form.name.errors }}
+            <form action="" enctype="multipart/form-data" method="post" role="form" id="form-project">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <h3>{% if editing %} {% trans 'Edit Project' %} {% else %}
+                                            {% trans 'New Project' %} {% endif %}</h3>
                                     </div>
+                                </div>
 
-                                    <div class="form-group {% if data_form.path.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Edit URL' %}</label>
-                                        <div class="row">
-                                            <label class="col-lg-5 control-label">{{ request.META.SERVER_NAME }}/</label>
-                                            <div class="col-lg-7">
-                                                {{ data_form.path }}
-                                                {{ data_form.path.errors }}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Name' %}</label>
+                                            {{ data_form.name }}
+                                            {{ data_form.name.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.path.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Edit URL' %}</label>
+                                            <div class="row">
+                                                <label class="col-lg-5 control-label">{{ request.META.SERVER_NAME }}/</label>
+                                                <div class="col-lg-7">
+                                                    {{ data_form.path }}
+                                                    {{ data_form.path.errors }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Description' %}</label>
-                                        {{ data_form.description }}
-                                        {{ data_form.description.errors }}
-                                    </div>
+                                        <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Description' %}</label>
+                                            {{ data_form.description }}
+                                            {{ data_form.description.errors }}
+                                        </div>
 
-                                    <div class="form-group {% if data_form.thumbnail.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Thumbnail' %}</label>
-                                        {{ data_form.thumbnail }}
-                                        {{ data_form.thumbnail.errors }}
-                                    </div>
+                                        <div class="form-group {% if data_form.thumbnail.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Thumbnail' %}</label>
+                                            {{ data_form.thumbnail }}
+                                            {{ data_form.thumbnail.errors }}
+                                        </div>
 
-                                    <div class="form-group {% if data_form.language.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Language' %}</label>
-                                        {{ data_form.language }}
-                                        {{ data_form.language.errors }}
-                                    </div>
+                                        <div class="form-group {% if data_form.language.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Language' %}</label>
+                                            {{ data_form.language }}
+                                            {{ data_form.language.errors }}
+                                        </div>
 
-                                    <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Tags' %}</label>
-                                        {{ data_form.tags }}
-                                        {{ data_form.tags.errors }}
-                                    </div>
+                                        <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Tags' %}</label>
+                                            {{ data_form.tags }}
+                                            {{ data_form.tags.errors }}
+                                        </div>
 
-                                    <div class="form-group {% if data_form.local_admin.errors %}has-error{% endif %}">
-                                        <label>{% trans 'Local Admin' %}</label>
-                                        {{ data_form.local_admin }}
-                                        {{ data_form.local_admin.errors }}
+                                        <div class="form-group {% if data_form.local_admin.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Local Admin' %}</label>
+                                            {{ data_form.local_admin }}
+                                            {{ data_form.local_admin.errors }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-8">
-                    <div id="map">
-                        {{ data_form.bounds }}
+                    <div class="col-lg-8">
+                        <div id="map">
+                            {{ data_form.bounds }}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
-    </div>
-</section>
+            </form>
+        </div>
+    </section>
 {% endblock content %}
 
 {% block extrajs %}
-<script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
-{% leaflet_js plugins="forms" %}
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
+    {% leaflet_js plugins="forms" %}
 
-<script type="text/javascript">
-$('#id_local_admin').chosen();
-$('#id_tags').tagsinput();
+    <script type="text/javascript">
+        $('#id_local_admin').chosen();
+        $('#id_tags').tagsinput();
 
-{% if selected_tags %}
-    {% for tag in selected_tags %}
-        {% if tag %}
-            $('#id_tags').tagsinput('add', '{{ tag }}');
+        {% if selected_tags %}
+            {% for tag in selected_tags %}
+                {% if tag %}
+                    $('#id_tags').tagsinput('add', '{{ tag }}');
+                {% endif %}
+            {% endfor %}
         {% endif %}
-    {% endfor %}
-{% endif %}
 
-{% if selected_local_admins %}
-    var local_admin = [];
-    {% for local_admin in selected_local_admins %}
-        local_admin.push('{{ local_admin.0 }}');
-    {% endfor %}
-    $('#id_local_admin').val(local_admin);
-    $('#id_local_admin').trigger('chosen:updated');
-{% endif %}
+        {% if selected_local_admins %}
+            var local_admin = [];
+            {% for local_admin in selected_local_admins %}
+                local_admin.push('{{ local_admin.0 }}');
+            {% endfor %}
+            $('#id_local_admin').val(local_admin);
+            $('#id_local_admin').trigger('chosen:updated');
+        {% endif %}
 
-function submitForm() {
-    $('#form-project').submit();
-}
-</script>
+        function submitForm() {
+            $('#form-project').submit();
+        }
+    </script>
 {% endblock %}

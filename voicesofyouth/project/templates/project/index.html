@@ -7,57 +7,60 @@
 {% endblock %}
 
 {% block content %}
-<section>
-    <div class="content-wrapper">
-        <div class="content-heading">
-            {% trans 'My projects' %}
-        </div>
-
-        <div class="content-heading">
-            <div class="row">
-                <form action="{% url 'voy-admin:projects:index' %}" method="GET">
-                    <div class="col-lg-3 col-md-6">
-                        <div class="input-group m-b">
-                            <input type="text" class="form-control" name="query" placeholder="{% trans 'Search for project' %}">
-                            <span class="input-group-addon fa fa-search"></span>
-                        </div>
-                    </div>
-                </form>
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                {% trans 'My projects' %}
             </div>
-        </div>
 
-        <div class="row" id="project">
-            {% for project in projects %}
-                <div class="col-lg-3 col-md-6">
-                    <div class="panel panel-primary box">
-                        <div class="panel-heading header">
-                            <div class="row">
-                                <div class="col-xs-12 text-center">
-                                    <div class="text-md">{{ project }}</div>
-                                    <p class="m0">{{ project.created_on|date:"d M Y" }}</p>
+            <div class="content-heading">
+                <div class="row">
+                    <form action="{% url 'voy-admin:projects:index' %}" method="GET">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="input-group m-b">
+                                <input type="text" class="form-control" name="query"
+                                       placeholder="{% trans 'Search for project' %}">
+                                <span class="input-group-addon fa fa-search"></span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row" id="project">
+                {% for project in projects %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-primary box">
+                            <div class="panel-heading header">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center">
+                                        <div class="text-md">{{ project }}</div>
+                                        <p class="m0">{{ project.created_on|date:"d M Y" }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="panel-footer clearfix btn-block">
+                                <span class="pull-left">{% trans 'Themes' %}</span>
+                                <span class="pull-right">{{ project.themes.count }}</span>
+                            </a>
+                            <a href="#" class="panel-footer clearfix btn-block">
+                                <span class="pull-left">{% trans 'Admins' %}</span>
+                                <span class="pull-right">{{ project.local_admin_group.user_set.count }}</span>
+                            </a>
+                            <div class="row buttons">
+                                <div class="col-xs-6 text-center">
+                                    <a href="{% url 'voy-admin:projects:edit' project.pk %}"
+                                       class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
+                                </div>
+                                <div class="col-xs-6 text-center">
+                                    <a href="{% url 'voy-admin:themes:index' project.pk %}"
+                                       class="btn btn-oval btn-lg btn-default">{% trans 'View' %}</a>
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="panel-footer clearfix btn-block">
-                            <span class="pull-left">{% trans 'Themes' %}</span>
-                            <span class="pull-right">{{ project.themes.count }}</span>
-                        </a>
-                        <a href="#" class="panel-footer clearfix btn-block">
-                            <span class="pull-left">{% trans 'Admins' %}</span>
-                            <span class="pull-right">{{ project.local_admin_group.user_set.count }}</span>
-                        </a>
-                        <div class="row buttons">
-                            <div class="col-xs-6 text-center">
-                                <a href="{% url 'voy-admin:projects:edit' project.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'Edit' %}</a>
-                            </div>
-                            <div class="col-xs-6 text-center">
-                                <a href="{% url 'voy-admin:themes:index' project.pk %}" class="btn btn-oval btn-lg btn-default">{% trans 'View' %}</a>
-                            </div>
-                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock content %}
