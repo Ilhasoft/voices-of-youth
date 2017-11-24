@@ -24,7 +24,6 @@ class ProjectForm(forms.Form):
     description = forms.CharField(
         label=_('Path'),
         required=True,
-        max_length=255,
         widget=forms.Textarea(
             attrs={
                 'required': True,
