@@ -1,11 +1,12 @@
 {% extends "voyadmin/base.html" %}
 
-{% load static i18n sass_tags %}
+{% load static i18n sass_tags leaflet_tags %}
 
 {% block extracss %}
     <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/> -->
+    {% leaflet_css plugins="forms" %}
 {% endblock %}
 
 {% block content %}
@@ -19,13 +20,12 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <form action="" method="post" role="form" id="form-report">
+                <form action="" method="post" role="form" id="form-report">
+                    <div class="col-lg-4">
+                        <div class="panel panel-default">
+                            <div class="panel-body">                
                                 <fieldset>
                                     {% csrf_token %}
-                                    {{ data_form.location }}
                                     <div class="form-group {% if data_form.project.errors %}has-error{% endif %}">
                                         <label>{% trans 'Project' %}</label>
                                         {{ data_form.project }}
@@ -61,15 +61,17 @@
                                         {{ data_form.tags }}
                                         {{ data_form.tags.errors }}
                                     </div>
-                                </fieldset>
-                            </form>
+                                </fieldset>            
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="col-lg-8">
-                    <div id="map"></div>
-                </div>
+                    <div class="col-lg-8">
+                        <div id="map">
+                            {{ data_form.location }}
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -77,7 +79,8 @@
 
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
-    <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+    <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script> -->
+    {% leaflet_js plugins="forms" %}
 
     <script type="text/javascript">
         var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
@@ -85,46 +88,46 @@
 
         $('#id_tags').chosen();
 
-        var map = L.map('map', {
-            maxBounds: [[-90, -160], [90, 160]],
-        }).setView([51.505, -0.09], 13);
+        // var map = L.map('map', {
+        //     maxBounds: [[-90, -160], [90, 160]],
+        // }).setView([51.505, -0.09], 13);
 
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            noWrap: true,
-        }).addTo(map);
+        // L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //     noWrap: true,
+        // }).addTo(map);
 
-        var icon = L.icon({
-            iconUrl: '{% static 'img/pin.png' %}',
-            shadowUrl: '',
-            iconSize: [36, 54],
-            shadowSize: [0, 0],
-            iconAnchor: [22, 94],
-            shadowAnchor: [4, 62],
-            popupAnchor: [-3, -76]
-        });
+        // var icon = L.icon({
+        //     iconUrl: '{% static 'img/pin.png' %}',
+        //     shadowUrl: '',
+        //     iconSize: [36, 54],
+        //     shadowSize: [0, 0],
+        //     iconAnchor: [22, 94],
+        //     shadowAnchor: [4, 62],
+        //     popupAnchor: [-3, -76]
+        // });
 
-        var coordinates = [51.5, -0.09];
+        // var coordinates = [51.5, -0.09];
 
-        {% if data_form.location.value %}
-            var temp_coordinates = '{{ data_form.location.value }}'.split(',');
-            coordinates = [temp_coordinates[0], temp_coordinates[1]];
-        {% endif %}
+        // {% if data_form.location.value %}
+        //     var temp_coordinates = '{{ data_form.location.value }}'.split(',');
+        //     coordinates = [temp_coordinates[0], temp_coordinates[1]];
+        // {% endif %}
 
-        var marker = L.marker(coordinates, {
-            icon: icon,
-            draggable: true,
-        }).addTo(map);
+        // var marker = L.marker(coordinates, {
+        //     icon: icon,
+        //     draggable: true,
+        // }).addTo(map);
 
-        marker.on('move', function (e) {
-            var urlApi = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + mapsKey;
-            axios.get(urlApi).then((response) => {
-                if (response.data.results[0]) {
-                    var address = response.data.results[0].formatted_address;
-                    marker.bindPopup(`<strong>${address}</strong>`).openPopup();
-                    $('#id_location').val(e.latlng.lat + ',' + e.latlng.lng);
-                }
-            });
-        });
+        // marker.on('move', function (e) {
+        //     var urlApi = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + mapsKey;
+        //     axios.get(urlApi).then((response) => {
+        //         if (response.data.results[0]) {
+        //             var address = response.data.results[0].formatted_address;
+        //             marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+        //             $('#id_location').val(e.latlng.lat + ',' + e.latlng.lng);
+        //         }
+        //     });
+        // });
 
         $('#id_project').change(function (e) {
             e.preventDefault();

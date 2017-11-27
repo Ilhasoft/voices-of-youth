@@ -148,7 +148,6 @@ class AddReportView(LoginRequiredMixin, TemplateView):
 
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
-            location = form.cleaned_data.get('location').split(',')
 
             report = Report(
                 theme=Theme.objects.get(id=form.cleaned_data.get('theme')),
@@ -156,7 +155,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
                 description=form.cleaned_data.get('description'),
                 created_by=mapper,
                 modified_by=mapper,
-                location=GEOSGeometry('POINT({0} {1})'.format(location[0], location[1]), srid=4326)
+                location=form.cleaned_data.get('location')
             )
             report.save()
             report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
@@ -182,15 +181,11 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         context['data_form'] = form
         context['selected_tags'] = request.POST.getlist('tags')
 
-        if request.POST.get('location') == '':
-            messages.error(request, _('Set a location'))
-
         if form.is_valid():
             try:
                 report_id = kwargs['report']
                 report = get_object_or_404(Report, pk=report_id)
                 mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
-                location = form.cleaned_data.get('location').split(',')
 
                 report.name = form.cleaned_data.get('title')
                 report.theme = Theme.objects.get(id=form.cleaned_data.get('theme'))
@@ -198,7 +193,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 report.description = form.cleaned_data.get('description')
                 report.created_by = mapper
                 report.modified_by = mapper
-                report.location = GEOSGeometry('POINT({0} {1})'.format(location[0], location[1]), srid=4326)
+                report.location = form.cleaned_data.get('location')
                 report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
                 report.save()
 
@@ -222,7 +217,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             'project': report.theme.project.id,
             'theme': report.theme.id,
             'mapper': report.created_by.id,
-            'location': '{0},{1}'.format(report.location[0], report.location[1]),
+            'location': report.location,
             'tags': report.tags.names(),
         }
 

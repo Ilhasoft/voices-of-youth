@@ -1,5 +1,8 @@
 from django import forms
 from django.utils.translation import ugettext as _
+
+from leaflet.forms.fields import PointField
+
 from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
@@ -85,10 +88,8 @@ class ReportForm(forms.Form):
         )
     )
 
-    location = forms.CharField(
-        label=_('Location'),
-        required=True,
-        widget=forms.HiddenInput()
+    location = PointField(
+        required=True
     )
 
     def __init__(self, *args, **kwargs):
