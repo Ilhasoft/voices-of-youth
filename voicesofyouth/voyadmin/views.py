@@ -3,6 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls.base import reverse
+from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
 
 from voicesofyouth.project.models import Project
@@ -41,8 +42,10 @@ class LoginView(TemplateView):
                 login(request, user)
                 url = self._redirect_url
                 return redirect(url)
+            else:
+                form.add_error('username', _('Check your username and retype the password.'))
 
-        return render(reverse('voy-admin:dashboard'), context={'form': form})
+        return render(request, self.template_name, context={'form': form})
 
     def get_context_data(self, **kwargs):
         context = super(LoginView, self).get_context_data(**kwargs)
