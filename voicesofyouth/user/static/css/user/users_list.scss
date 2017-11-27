@@ -88,3 +88,13 @@
 .badge-global-admin {
     background-color: #00CDFC;
 }
+
+.panel-default {
+    .panel-heading {
+        background-color: transparent;
+    }
+    .panel-footer {
+        background-color: transparent;
+        border-top: transparent;
+    }
+}
