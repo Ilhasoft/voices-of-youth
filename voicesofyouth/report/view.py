@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.http.response import HttpResponse
 from django.views.generic.base import TemplateView
-from django.contrib.gis.geos import GEOSGeometry
 
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
