@@ -1,7 +1,7 @@
 <template>
-  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :bounds="bounds" :options="optionsMap" :center="center" ref="map" class="map">
+  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
-    <v-marker-cluster>
+    <v-marker-cluster :options="optionsCluster">
       <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon" />
     </v-marker-cluster>
   </v-map>
@@ -12,7 +12,7 @@ import { mapState, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-import markerPixel from '../../assets/img/pixel.png';
+// import markerPixel from '../../assets/img/pixel.png';
 import bus from '../../helper/bus';
 
 export default {
@@ -29,11 +29,19 @@ export default {
   data() {
     return {
       options: { noWrap: true },
-      optionsMap: { maxBounds: [[-90, -160], [90, 160]] },
+      optionsMap: {
+        maxBounds: [
+          [-85.0, -180.0],
+          [85.0, 180.0],
+        ],
+      },
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       center: [0, 0],
-      bounds: L.latLngBounds(),
+      optionsCluster: {
+        disableClusteringAtZoom: 17,
+        animate: false,
+      },
     };
   },
 
@@ -58,20 +66,15 @@ export default {
       const locations = Object.keys(reports).map((key, index) => {
         const item = {
           id: reports[index].id,
-          latlng: L.latLng(reports[index].location.coordinates[0],
-                           reports[index].location.coordinates[1]),
+          latlng: L.latLng(reports[index].location.coordinates[1],
+                           reports[index].location.coordinates[0]),
           text: reports[index].name,
           color: reports[index].theme_color,
           icon: L.icon({
-            iconUrl: markerPixel,
-            shadowUrl: markerPixel,
-            iconSize: [30, 30],
-            iconAnchor: [22, 94],
-            popupAnchor: [-8, -90],
-            shadowSize: [0, 0],
-            shadowAnchor: [22, 94],
-            className: 'icon-pin pin',
-            styleColorName: `#${reports[index].theme_color}`,
+            iconUrl: reports[index].pin,
+            shadowUrl: '',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
           }),
         };
         return item;

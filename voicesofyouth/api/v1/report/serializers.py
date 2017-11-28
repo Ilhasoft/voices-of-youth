@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from voicesofyouth.api.v1.serializers import VoySerializer
@@ -41,6 +42,7 @@ class ReportSerializer(VoySerializer):
     can_receive_comments = serializers.BooleanField(read_only=True)
     editable = serializers.BooleanField(read_only=True)
     visible = serializers.BooleanField(read_only=True)
+    pin = serializers.SerializerMethodField()
     # urls = serializers.StringRelatedField(many=True)
 
     class Meta:
@@ -57,12 +59,17 @@ class ReportSerializer(VoySerializer):
             'name',
             'tags',
             'theme_color',
+            'pin',
             'created_by',
             'last_image'
         )
 
     def get_tags(self, obj):
         return obj.tags.names()
+
+    def get_pin(self, obj):
+        request = self.context['request']
+        return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
 
 
 class ReportCommentsSerializer(VoySerializer):
