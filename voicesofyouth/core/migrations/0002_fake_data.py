@@ -58,13 +58,14 @@ if settings.DEBUG:
 
     def make_translation(obj, lang):
         for field in TranslatableField.objects.filter(model__model=obj._meta.model_name):
+            current_value = getattr(obj, field.field_name)
             try:
                 with transaction.atomic():
                     mommy.make(Translation,
                                field=field,
                                content_object=obj,
                                language=lang,
-                               translation=f'{lang} - {lorem.sentence()}')
+                               translation=f'{lang} - {lorem.sentence()[:len(current_value) - len(lang)]}')
             except IntegrityError:
                 pass
 
