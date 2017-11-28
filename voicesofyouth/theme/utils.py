@@ -18,8 +18,8 @@ def generate_pin(color_hex):
         raise ValueError('You must inform the color hex in the following format: RRGGBB')
 
     color_rgb = struct.unpack('BBB', bytes.fromhex(color_hex))
-    change_colors(settings.MEDIA_ROOT.child('pins', 'pin_base.png'),
-                  settings.MEDIA_ROOT.child('pins', f'{color_hex}.png'),
+    change_colors(settings.PIN_ROOT.child('pin_base.png'),
+                  settings.PIN_ROOT.child(f'{color_hex}.png'),
                   [(12, 187, 232), (12, 187, 233), (13, 188, 234), (14, 187, 233), (14, 191, 232), (13, 188, 232),
                    (12, 188, 233), (15, 193, 240), (13, 187, 233), (12, 188, 234), (16, 187, 235), (13, 187, 232),
                    (16, 187, 234), (13, 188, 233), (14, 188, 234), (12, 189, 234), (15, 188, 233), (14, 189, 233),
