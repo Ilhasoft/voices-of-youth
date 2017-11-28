@@ -102,23 +102,24 @@ if settings.DEBUG:
                     'star wars',
                     'crazy',
                     'anything')
-            fake_users = ('freddy',
-                     'jason',
-                     'michael',
-                     'luke',
-                     'yoda',
-                     'goku',
-                     'wick',
-                     'chaves',
-                          'quico')
+            fake_users = (('Neil', 'Tyson'),
+                          ('Albert', 'Einstein'),
+                          ('Isaac', 'Newton'),
+                          ('Max', 'Planck'),
+                          ('Carl', 'Sagan'),
+                          ('Stephen', 'Hawking'),
+                          ('Nikola', 'Tesla'),
+                          ('Galileu', 'Galilei'),
+                          ('Charles', 'Darwin'))
             fake_thumbnail = ImageFile(image)
             users = []
             for i in range(1, 9):
+                user = fake_users[i]
                 users.append(mommy.make(User,
-                                        username=fake_users[i],
+                                        username=user[1].lower(),
                                         avatar=random.randint(1, 22),
-                                        first_name=fake_users[i].title(),
-                                        last_name=fake_users[i].title()))
+                                        first_name=user[0],
+                                        last_name=user[1]))
             for x in range(random.randint(5, 10)):
                 user = random.choice(users)
                 project = mommy.make(Project,
@@ -142,6 +143,7 @@ if settings.DEBUG:
                     make_translation(theme, lang)
                     make_translation(project, lang)
                     for z in range(random.randint(1, 10)):
+                        user = random.choice(users)
                         report = mommy.make(Report,
                                             name=f'Report {z}',
                                             description=lorem.paragraph(),
@@ -154,6 +156,7 @@ if settings.DEBUG:
                                                      k=random.randint(1, len(valid_tags)))
                         report.tags.add(*report_tags)
                         for _ in range(random.randint(1, 10)):
+                            user = random.choice(users)
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
                                        report=report,
@@ -167,5 +170,6 @@ if settings.DEBUG:
 else:
     def noop(*args, **kwargs):
         pass
+
 
     Migration.operations.append(migrations.RunPython(noop))
