@@ -35,6 +35,7 @@ if settings.DEBUG:
     from django.db.utils import IntegrityError
 
     from voicesofyouth.project.models import Project
+    from voicesofyouth.report.models import REPORT_STATUS_CHOICES
     from voicesofyouth.report.models import FILE_TYPES
     from voicesofyouth.report.models import Report
     from voicesofyouth.report.models import ReportComment
@@ -152,6 +153,7 @@ if settings.DEBUG:
                                             description=lorem.paragraph(),
                                             theme=theme,
                                             created_by=user,
+                                            status=random.choice(REPORT_STATUS_CHOICES)[0],
                                             modified_by=user)
                         valid_tags = list(theme.tags.names()) + list(theme.project.tags.names())
                         report_tags = random.choices(valid_tags,
