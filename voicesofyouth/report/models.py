@@ -53,6 +53,9 @@ class Report(BaseModel):
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
     tags = TaggableManager(blank=True, manager=_ReportTaggableManager)
 
+    class Meta:
+        ordering = ('-created_on', )
+
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)
 

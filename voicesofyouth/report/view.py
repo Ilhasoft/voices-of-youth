@@ -55,7 +55,7 @@ class ReportListView(LoginRequiredMixin, TemplateView):
             if cleaned_data['search'] is not None:
                 qs_filter['name__icontains'] = cleaned_data['search']
 
-            context['reports'] = get_paginator(Report.objects.filter(**qs_filter).order_by('created_on'), page)
+            context['reports'] = get_paginator(Report.objects.filter(**qs_filter), page)
 
         return context
 
