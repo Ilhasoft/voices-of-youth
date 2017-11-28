@@ -1,0 +1,100 @@
+.media-body {
+    left: 2em;
+    position: relative;
+}
+
+.container {
+    display: flex;
+    align-content: flex-start;
+}
+
+.item {
+    margin: auto;
+    align-self: center;
+}
+
+.badge-info {
+    background-color: #C5C5C5;
+}
+
+.admins-list {
+    thead {
+        tr {
+            th:first-child {
+                width: 36px;
+            }
+        }
+    }
+    tbody {
+        tr {
+            height: 90px;
+            border-bottom: 0.1em solid #F0F0F1;
+            td:nth-child(2n) {
+                width: 105px;
+            }
+            td:nth-child(3n) {
+                display: flex;
+            }
+            td:last-child {
+                border: 0.1em solid #F0F0F1;
+                width: 93px;
+            }
+        }
+    }
+}
+
+.mappers-list {
+    thead {
+        tr {
+            th:nth-child(2n) {
+                button {
+                    background-color: #E9E9E9;
+                    color: #000000;
+                }
+            }
+            th {
+                div {
+                    display: flex;
+                    justify-content: flex-end;
+                }
+            }
+        }
+    }
+    tbody {
+        tr {
+            height: 90px;
+            border-bottom: 0.1em solid #F0F0F1;
+            td:nth-child(3n) {
+                display: flex;
+                flex-wrap: wrap;
+            }
+            td:last-child {
+                border: 0.1em solid #F0F0F1;
+                width: 93px;
+            }
+        }
+    }
+}
+
+.admin-profile-selector {
+    display: flex;
+    justify-content: space-around;
+}
+
+.badge-project {
+    background-color: #0e84b5;
+}
+
+.badge-global-admin {
+    background-color: #00CDFC;
+}
+
+.panel-default {
+    .panel-heading {
+        background-color: transparent;
+    }
+    .panel-footer {
+        background-color: transparent;
+        border-top: transparent;
+    }
+}
