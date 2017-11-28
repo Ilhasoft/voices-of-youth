@@ -42,6 +42,12 @@ def get_content_file_path(instance, filename):
     return os.path.join('content/%d/%d/%d/' % (now.year, now.month, now.day), filename)
 
 
+class ReportApprovedManager(models.Manager):
+    def get_queryset(self):
+        qs = super(ReportApprovedManager, self).get_queryset()
+        return qs.filter(status=REPORT_STATUS_APPROVED)
+
+
 class Report(BaseModel):
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='reports')
     location = gismodels.PointField(null=False, blank=False)
@@ -52,6 +58,8 @@ class Report(BaseModel):
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
     tags = TaggableManager(blank=True, manager=_ReportTaggableManager)
+    objects = ReportApprovedManager()
+    default_objects = models.Manager()
 
     class Meta:
         ordering = ('-created_on', )
