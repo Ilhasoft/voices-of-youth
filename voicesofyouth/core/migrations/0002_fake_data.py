@@ -33,8 +33,10 @@ if settings.DEBUG:
     from django.core.files.images import ImageFile
     from django.db import transaction
     from django.db.utils import IntegrityError
+    from django.contrib.gis.geos import GEOSGeometry
 
     from voicesofyouth.project.models import Project
+    from voicesofyouth.report.models import REPORT_STATUS_CHOICES
     from voicesofyouth.report.models import FILE_TYPES
     from voicesofyouth.report.models import Report
     from voicesofyouth.report.models import ReportComment
@@ -55,16 +57,16 @@ if settings.DEBUG:
     mommy.generators.add(TextFieldTranslatable, gen_string)
     mommy.generators.add(CharFieldTranslatable, gen_string)
 
-
     def make_translation(obj, lang):
         for field in TranslatableField.objects.filter(model__model=obj._meta.model_name):
+            current_value = getattr(obj, field.field_name)
             try:
                 with transaction.atomic():
                     mommy.make(Translation,
                                field=field,
                                content_object=obj,
                                language=lang,
-                               translation=f'{lang} - {lorem.sentence()}')
+                               translation=f'{lang} - {lorem.sentence()[:len(current_value) - len(lang)]}')
             except IntegrityError:
                 pass
 
@@ -102,23 +104,24 @@ if settings.DEBUG:
                     'star wars',
                     'crazy',
                     'anything')
-            fake_users = ('freddy',
-                     'jason',
-                     'michael',
-                     'luke',
-                     'yoda',
-                     'goku',
-                     'wick',
-                     'chaves',
-                          'quico')
+            fake_users = (('Neil', 'Tyson'),
+                          ('Albert', 'Einstein'),
+                          ('Isaac', 'Newton'),
+                          ('Max', 'Planck'),
+                          ('Carl', 'Sagan'),
+                          ('Stephen', 'Hawking'),
+                          ('Nikola', 'Tesla'),
+                          ('Galileu', 'Galilei'),
+                          ('Charles', 'Darwin'))
             fake_thumbnail = ImageFile(image)
             users = []
             for i in range(1, 9):
+                user = fake_users[i]
                 users.append(mommy.make(User,
-                                        username=fake_users[i],
+                                        username=user[1].lower(),
                                         avatar=random.randint(1, 22),
-                                        first_name=fake_users[i].title(),
-                                        last_name=fake_users[i].title()))
+                                        first_name=user[0],
+                                        last_name=user[1]))
             for x in range(random.randint(5, 10)):
                 user = random.choice(users)
                 project = mommy.make(Project,
@@ -135,18 +138,24 @@ if settings.DEBUG:
                                        description=lorem.paragraph(),
                                        created_by=user,
                                        modified_by=user)
-                    theme.mappers_group.user_set.add(user)
+                    # Create the link between mapper and theme.
+                    theme.mappers_group.user_set.add(*random.choices(users,
+                                                                     (len(t.username) for t in users),
+                                                                     k=random.randint(1, 6)))
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
                     lang = settings.LANGUAGES[lang_idx][0]
                     make_translation(theme, lang)
                     make_translation(project, lang)
                     for z in range(random.randint(1, 10)):
+                        user = random.choice(users)
                         report = mommy.make(Report,
                                             name=f'Report {z}',
+                                            location=GEOSGeometry(f'POINT({random.randint(-75, 75)} {random.randint(-180, 180)})'),
                                             description=lorem.paragraph(),
                                             theme=theme,
                                             created_by=user,
+                                            status=random.choice(REPORT_STATUS_CHOICES)[0],
                                             modified_by=user)
                         valid_tags = list(theme.tags.names()) + list(theme.project.tags.names())
                         report_tags = random.choices(valid_tags,
@@ -154,10 +163,12 @@ if settings.DEBUG:
                                                      k=random.randint(1, len(valid_tags)))
                         report.tags.add(*report_tags)
                         for _ in range(random.randint(1, 10)):
+                            user = random.choice(users)
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
                                        report=report,
                                        created_by=user,
+                                       status=random.choice(REPORT_STATUS_CHOICES)[0],
                                        modified_by=user)
                         for _ in range(random.randint(1, 3)):
                             make_report_medias(report)
@@ -167,5 +178,6 @@ if settings.DEBUG:
 else:
     def noop(*args, **kwargs):
         pass
+
 
     Migration.operations.append(migrations.RunPython(noop))

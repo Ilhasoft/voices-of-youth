@@ -6,7 +6,7 @@
 
     <div class="column text">
       <h1>{{ comment.created_by.first_name }}</h1>
-      <small>Aug 03, 2017</small>
+      <small>{{ formatDate() }}</small>
       <p>{{ comment.text }}</p>
     </div>
 
@@ -22,6 +22,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import helper from '../../helper';
 
 export default {
   name: 'CommentItem',
@@ -56,10 +57,8 @@ export default {
     ]),
 
     formatDate() {
-      const date = new Date(this.comment.created_on);
-      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+      return helper.formatDate(this.comment.created_on);
     },
-
     removeComment() {
       this.deleteComment(this.comment.id);
     },
