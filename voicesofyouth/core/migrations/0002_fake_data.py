@@ -33,6 +33,7 @@ if settings.DEBUG:
     from django.core.files.images import ImageFile
     from django.db import transaction
     from django.db.utils import IntegrityError
+    from django.contrib.gis.geos import GEOSGeometry
 
     from voicesofyouth.project.models import Project
     from voicesofyouth.report.models import REPORT_STATUS_CHOICES
@@ -150,6 +151,7 @@ if settings.DEBUG:
                         user = random.choice(users)
                         report = mommy.make(Report,
                                             name=f'Report {z}',
+                                            location=GEOSGeometry(f'POINT({random.randint(-75, 75)} {random.randint(-180, 180)})'),
                                             description=lorem.paragraph(),
                                             theme=theme,
                                             created_by=user,
@@ -166,6 +168,7 @@ if settings.DEBUG:
                                        text=lorem.paragraph(),
                                        report=report,
                                        created_by=user,
+                                       status=random.choice(REPORT_STATUS_CHOICES)[0],
                                        modified_by=user)
                         for _ in range(random.randint(1, 3)):
                             make_report_medias(report)
