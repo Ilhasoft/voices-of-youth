@@ -55,7 +55,6 @@ if settings.DEBUG:
     mommy.generators.add(TextFieldTranslatable, gen_string)
     mommy.generators.add(CharFieldTranslatable, gen_string)
 
-
     def make_translation(obj, lang):
         for field in TranslatableField.objects.filter(model__model=obj._meta.model_name):
             current_value = getattr(obj, field.field_name)
@@ -137,7 +136,10 @@ if settings.DEBUG:
                                        description=lorem.paragraph(),
                                        created_by=user,
                                        modified_by=user)
-                    theme.mappers_group.user_set.add(user)
+                    # Create the link between mapper and theme.
+                    theme.mappers_group.user_set.add(*random.choices(users,
+                                                                     (len(t.username) for t in users),
+                                                                     k=random.randint(1, 6)))
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
                     lang = settings.LANGUAGES[lang_idx][0]
