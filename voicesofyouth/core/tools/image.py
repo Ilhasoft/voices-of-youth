@@ -1,3 +1,5 @@
+import os
+
 from PIL import Image
 import numpy as np
 
@@ -19,6 +21,8 @@ def change_colors(original_image, dest_image, from_colors, to_color):
             to_image = f'step{n}.png'
         change_color(from_image, to_image, from_colors[n], to_color)
         from_image = to_image
+        if n > 0:
+            os.remove(f'step{n-1}.png')
 
 def change_color(original_image, dest_image, from_color, to_color):
     """
