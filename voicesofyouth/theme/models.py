@@ -18,6 +18,7 @@ from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
+from voicesofyouth.theme.utils import generate_pin
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
@@ -98,6 +99,7 @@ class Theme(BaseModel):
 def generate_color(sender, instance, **kwargs):
     if not instance.color:
         instance.color = '%06x' % random.randint(0, 0xFFFFFF)
+    generate_pin(instance.color)
 
 
 @receiver(post_save, sender=Theme)

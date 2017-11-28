@@ -183,7 +183,9 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+MEDIA_URL = Path('/media/')
+PIN_URL = MEDIA_URL.child('pins') + '/'
+PIN_ROOT = MEDIA_ROOT.child('pins')
 SASS_PROCESSOR_INCLUDE_FILE_PATTERN = r'^.+\.scss$'
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
