@@ -104,14 +104,13 @@ class CommentsReportView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         comment_id = kwargs['comment']
         status = kwargs['status']
-
         if comment_id and status:
             comment = get_object_or_404(ReportComment, pk=comment_id)
-            comment.status = REPORT_STATUS_APPROVED if status == '1' else REPORT_STATUS_REJECTED
+            comment.status = int(status)
             comment.save()
 
             messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'rejected')))
-        return redirect(request.META.get('HTTP_REFERER'))
+        return redirect(reverse('voy-admin:reports:view', kwargs={'report': comment.report.id}))
 
 
 class CommentsSaveView(LoginRequiredMixin, TemplateView):
@@ -126,7 +125,7 @@ class CommentsSaveView(LoginRequiredMixin, TemplateView):
                 text=comment,
                 created_by=request.user,
                 modified_by=request.user,
-                status=REPORT_STATUS_APPROVED,
+                status=REPORT_STATUS_APPROVED
             )
             comment.save()
 

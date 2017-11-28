@@ -35,7 +35,7 @@ class ReportsViewSet(viewsets.ModelViewSet):
 class ReportCommentsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny, ]
     serializer_class = ReportCommentsSerializer
-    queryset = ReportComment.objects.all()
+    queryset = ReportComment.objects.approved()
     filter_class = ReportCommentFilter
 
     def list(self, request, *args, **kwargs):

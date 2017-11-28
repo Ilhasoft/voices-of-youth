@@ -16,10 +16,20 @@ REPORT_STATUS_APPROVED = 1
 REPORT_STATUS_PENDING = 2
 REPORT_STATUS_REJECTED = 3
 
+REPORT_COMMENT_STATUS_APPROVED = 1
+REPORT_COMMENT_STATUS_PENDING = 2
+REPORT_COMMENT_STATUS_REJECTED = 3
+
 REPORT_STATUS_CHOICES = (
     (REPORT_STATUS_APPROVED, _('Approved')),
     (REPORT_STATUS_PENDING, _('Pending')),
     (REPORT_STATUS_REJECTED, _('Rejected')),
+)
+
+REPORT_COMMENT_STATUS_CHOICES = (
+    (REPORT_COMMENT_STATUS_APPROVED, _('Approved')),
+    (REPORT_COMMENT_STATUS_PENDING, _('Pending')),
+    (REPORT_COMMENT_STATUS_REJECTED, _('Rejected')),
 )
 
 FILE_TYPE_IMAGE = 'image'
@@ -42,10 +52,55 @@ def get_content_file_path(instance, filename):
     return os.path.join('content/%d/%d/%d/' % (now.year, now.month, now.day), filename)
 
 
-class ReportApprovedManager(models.Manager):
+class ReportQuerySet(models.QuerySet):
+
+    def approved(self):
+        return self.filter(status=REPORT_STATUS_APPROVED)
+
+    def rejected(self):
+        return self.filter(status=REPORT_STATUS_REJECTED)
+
+    def pending(self):
+        return self.filter(status=REPORT_STATUS_PENDING)
+
+
+class ReportManager(models.Manager):
     def get_queryset(self):
-        qs = super(ReportApprovedManager, self).get_queryset()
-        return qs.filter(status=REPORT_STATUS_APPROVED)
+        return ReportQuerySet(self.model, using=self._db)
+
+    def approved(self):
+        return self.get_queryset().approved()
+
+    def rejected(self):
+        return self.get_queryset().rejected()
+
+    def pending(self):
+        return self.get_queryset().pending()
+
+
+class ReportCommentQuerySet(models.QuerySet):
+    def approved(self):
+        return self.filter(status=REPORT_COMMENT_STATUS_APPROVED)
+
+    def rejected(self):
+        return self.filter(status=REPORT_COMMENT_STATUS_REJECTED)
+
+    def pending(self):
+        return self.filter(status=REPORT_COMMENT_STATUS_PENDING)
+
+
+class ReportCommentManager(models.Manager):
+    def get_queryset(self):
+        return ReportCommentQuerySet(self.model, using=self._db)
+
+    def approved(self):
+        return self.get_queryset().approved()
+
+    def rejected(self):
+        return self.get_queryset().rejected()
+
+    def pending(self):
+        return self.get_queryset().pending()
 
 
 class Report(BaseModel):
@@ -58,8 +113,7 @@ class Report(BaseModel):
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
     tags = TaggableManager(blank=True, manager=_ReportTaggableManager)
-    objects = ReportApprovedManager()
-    default_objects = models.Manager()
+    objects = ReportManager()
 
     class Meta:
         ordering = ('-created_on', )
@@ -87,15 +141,12 @@ class Report(BaseModel):
     def videos(self):
         return self.files.filter(media_type=FILE_TYPE_VIDEO)
 
-    @property
-    def comments_to_moderation(self):
-        return self.comments.filter(status__in=[REPORT_STATUS_APPROVED, REPORT_STATUS_PENDING])
-
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField(null=False, blank=False, verbose_name=_('Comment'))
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
+    objects = ReportCommentManager()
 
     def __str__(self):
         return self.text
