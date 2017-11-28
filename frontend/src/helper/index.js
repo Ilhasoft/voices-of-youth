@@ -10,4 +10,9 @@ export default {
     }
     return '';
   },
+
+  formatDate(createdOn) {
+    const date = new Date(createdOn);
+    return `${date.toLocaleString('en-us', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
+  },
 };

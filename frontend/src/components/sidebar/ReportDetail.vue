@@ -6,7 +6,7 @@
       :closeButton="true"
       backTo="Theme"
       @openComponent="openTheme" />
-  
+
     <div class="map-box">
       <div class="columns">
         <div class="column no-padding">
@@ -66,6 +66,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import bus from '../../helper/bus';
+import helper from '../../helper';
 import NavigationBar from './Navigation';
 
 export default {
@@ -116,8 +117,7 @@ export default {
     },
 
     formatDate() {
-      const date = new Date(this.item.created_on);
-      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+      return helper.formatDate(this.item.created_on);
     },
 
     formatColor() {
@@ -180,7 +180,7 @@ export default {
 
   .header {
     width: 100%;
-    
+
     img {
       max-height: 200px;
     }
