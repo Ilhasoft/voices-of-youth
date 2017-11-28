@@ -63,19 +63,25 @@ export default {
 
     getMarkers(state) {
       const reports = state.ReportStore.all;
+
+      const LeafIcon = L.Icon.extend({
+        options: {
+          shadowUrl: '',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+        },
+      });
+
       const locations = Object.keys(reports).map((key, index) => {
+        console.log(reports[index].pin);
+        const tempIcon = new LeafIcon({ iconUrl: reports[index].pin });
         const item = {
           id: reports[index].id,
           latlng: L.latLng(reports[index].location.coordinates[1],
                            reports[index].location.coordinates[0]),
           text: reports[index].name,
           color: reports[index].theme_color,
-          icon: L.icon({
-            iconUrl: reports[index].pin,
-            shadowUrl: '',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-          }),
+          icon: tempIcon,
         };
         return item;
       });
