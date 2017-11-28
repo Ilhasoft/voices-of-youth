@@ -64,7 +64,7 @@ if settings.DEBUG:
                                field=field,
                                content_object=obj,
                                language=lang,
-                               translation=f'{lang} - {lorem.paragraph()}')
+                               translation=f'{lang} - {lorem.sentence()}')
             except IntegrityError:
                 pass
 
@@ -102,14 +102,23 @@ if settings.DEBUG:
                     'star wars',
                     'crazy',
                     'anything')
+            fake_users = ('freddy',
+                     'jason',
+                     'michael',
+                     'luke',
+                     'yoda',
+                     'goku',
+                     'wick',
+                     'chaves',
+                          'quico')
             fake_thumbnail = ImageFile(image)
             users = []
-            for i in range(1, 10):
+            for i in range(1, 9):
                 users.append(mommy.make(User,
-                                        username=f'fakeuser{i}',
+                                        username=fake_users[i],
                                         avatar=random.randint(1, 22),
-                                        first_name=f'Fake{i}',
-                                        last_name='User'))
+                                        first_name=fake_users[i].title(),
+                                        last_name=fake_users[i].title()))
             for x in range(random.randint(5, 10)):
                 user = random.choice(users)
                 project = mommy.make(Project,
