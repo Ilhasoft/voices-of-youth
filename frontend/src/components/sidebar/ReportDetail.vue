@@ -92,7 +92,15 @@ export default {
     ...mapGetters({
       item: 'getReport',
       files: 'getReportFiles',
+      preview: 'getReportPreview',
     }),
+  },
+
+  watch: {
+    preview() {
+      this.filePreview = this.preview.file;
+      this.filePreviewType = this.preview.media_type;
+    },
   },
 
   methods: {
@@ -174,8 +182,7 @@ export default {
     width: 100%;
     
     img {
-      width: 100%;
-      height: 200px;
+      max-height: 200px;
     }
   }
 

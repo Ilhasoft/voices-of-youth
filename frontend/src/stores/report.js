@@ -31,6 +31,7 @@ export default {
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
     getReportNewData: state => state.newReport,
+    getReportPreview: state => state.files[0],
   },
 
   /* eslint-disable no-param-reassign */
@@ -159,7 +160,7 @@ export default {
         text: obj.text,
         report: obj.report,
       }, options).then(() => {
-        dispatch('notifyOpen', { type: 1, message: 'Comment saved.' });
+        dispatch('notifyOpen', { type: 1, message: 'Comment Sent!' });
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
@@ -171,7 +172,7 @@ export default {
         headers: { authorization: `Token ${token}` },
       }).then(() => {
         commit(TYPES.REMOVE_COMMENT, obj);
-        dispatch('notifyOpen', { type: 1, message: 'Comment removed.' });
+        dispatch('notifyOpen', { type: 1, message: 'Comment Removed!' });
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
@@ -197,7 +198,7 @@ export default {
       }, {
         headers: { authorization: `Token ${token}` },
       }).then(() => {
-        dispatch('notifyOpen', { type: 1, message: 'Report saved.' });
+        dispatch('notifyOpen', { type: 1, message: 'Report Sent!' });
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error on save report.' });
         throw new Error(error);
