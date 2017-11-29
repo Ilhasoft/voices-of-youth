@@ -3,6 +3,8 @@ VENV_NAME=${1:-"env"}
 WORKSPACE=${WORKSPACE:-$PWD}
 VENV_PATH=$WORKSPACE/${VENV_NAME}
 PROJECT_NAME=`find . -not -path '*/\.*' -iname settings.py | cut -d \/ -f 2`
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
 
 create_venv() {
     if [ ! -d "${VENV_PATH}" ]; then
@@ -32,15 +34,6 @@ install_deps() {
     }
 }
 
-init_git() {
-    if [ ! -d ".git" ]; then
-        git init
-    fi
-    if [ ! -f ".gitignore" ]; then
-        printf ${VENV_NAME}"\n*.pyc\nstatic\n*.sqlite3" > .gitignore
-    fi
-}
-
 create_dotenv() {
     if [ ! -d ".env" ]; then
         echo DEBUG=True > .env
@@ -50,7 +43,6 @@ create_dotenv() {
 create_venv && {
     validate_venv && {
         install_deps
-        init_git
         create_dotenv
     }
 }
