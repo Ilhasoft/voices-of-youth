@@ -3,6 +3,8 @@ VENV_NAME=${1:-"env"}
 WORKSPACE=${WORKSPACE:-$PWD}
 VENV_PATH=$WORKSPACE/${VENV_NAME}
 PROJECT_NAME=`find . -not -path '*/\.*' -iname settings.py | cut -d \/ -f 2`
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
 
 create_venv() {
     if [ ! -d "${VENV_PATH}" ]; then
