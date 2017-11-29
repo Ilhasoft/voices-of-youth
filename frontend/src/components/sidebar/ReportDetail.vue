@@ -99,8 +99,10 @@ export default {
 
   watch: {
     preview() {
-      this.filePreview = this.preview.file;
-      this.filePreviewType = this.preview.media_type;
+      if (this.preview) {
+        this.filePreview = this.preview.file;
+        this.filePreviewType = this.preview.media_type;
+      }
     },
   },
 

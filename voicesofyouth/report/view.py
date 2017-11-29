@@ -1,3 +1,5 @@
+import magic
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
@@ -6,12 +8,14 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.http.response import HttpResponse
 from django.views.generic.base import TemplateView
+from django.core.files.images import ImageFile
 
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
 from voicesofyouth.voyadmin.utils import get_paginator
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
+from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
@@ -141,9 +145,6 @@ class AddReportView(LoginRequiredMixin, TemplateView):
         form = ReportForm(data=request.POST)
         context['selected_tags'] = request.POST.getlist('tags')
 
-        if request.POST.get('location') == '':
-            messages.error(request, _('Set a location'))
-
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
 
@@ -153,10 +154,34 @@ class AddReportView(LoginRequiredMixin, TemplateView):
                 description=form.cleaned_data.get('description'),
                 created_by=mapper,
                 modified_by=mapper,
-                location=form.cleaned_data.get('location')
+                location=form.cleaned_data.get('location'),
+                status=REPORT_STATUS_APPROVED
             )
             report.save()
             report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+
+            files = request.FILES.getlist('files')
+
+            if files:
+                for file in files:
+                    mime_type = magic.from_buffer(file.read(), mime=True)
+                    if mime_type in ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']:
+                        media_type = mime_type.split('/')[0]
+
+                        try:
+                            report_file = ReportFile(
+                                report=report,
+                                title=file.name,
+                                description=file.name,
+                                media_type=media_type,
+                                file=ImageFile(file),
+                                created_by=mapper,
+                                modified_by=mapper
+                            )
+                            report_file.save()
+                        except Exception as e:
+                            return HttpResponse(status=500)
+
             messages.success(request, _('Report created'))
             return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
         else:
@@ -178,6 +203,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         form = ReportForm(data=request.POST)
         context['data_form'] = form
         context['selected_tags'] = request.POST.getlist('tags')
+        context['remove_files'] = request.POST.getlist('remove_files[]')
 
         if form.is_valid():
             try:
@@ -194,6 +220,31 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 report.location = form.cleaned_data.get('location')
                 report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
                 report.save()
+
+                files = request.FILES.getlist('files')
+
+                if files:
+                    for file in files:
+                        mime_type = magic.from_buffer(file.read(), mime=True)
+                        if mime_type in ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']:
+                            media_type = mime_type.split('/')[0]
+
+                            try:
+                                report_file = ReportFile(
+                                    report=report,
+                                    title=file.name,
+                                    description=file.name,
+                                    media_type=media_type,
+                                    file=ImageFile(file),
+                                    created_by=mapper,
+                                    modified_by=mapper
+                                )
+                                report_file.save()
+                            except Exception as e:
+                                return HttpResponse(status=500)
+
+                if context['remove_files'] is not None:
+                    ReportFile.objects.filter(id__in=context['remove_files'], report=report).delete()
 
                 messages.success(request, _('Report edited'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
@@ -221,6 +272,8 @@ class EditReportView(LoginRequiredMixin, TemplateView):
 
         context['editing'] = True
         context['selected_tags'] = report.tags.names()
+
+        context['files_list'] = report.files.all()
         context['data_form'] = ReportForm(initial=self.request.POST) if self.request.method == 'POST' else ReportForm(initial=data)
         return context
 

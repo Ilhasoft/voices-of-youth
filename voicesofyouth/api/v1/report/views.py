@@ -27,7 +27,7 @@ class ReportsPagination(PageNumberPagination):
 class ReportsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
-    queryset = Report.objects.prefetch_related('theme', 'created_by', 'files', 'tags').all()
+    queryset = Report.objects.approved().prefetch_related('theme', 'created_by', 'files', 'tags').all()
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
