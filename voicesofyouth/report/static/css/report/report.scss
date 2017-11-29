@@ -119,7 +119,8 @@ $color_delete: #DE486B;
 
     .approve {
         border-color: $color_approve;
-        color: $color_approve;
+        background-color: #fff;
+        color: #333;
     }
 
     .approve:hover, .approve:focus, .approve:active {

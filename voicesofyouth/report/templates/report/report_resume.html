@@ -44,9 +44,9 @@
                    class="btn btn-oval approve">{% trans 'Approve' %}</a>
             {% endif %}
 
-            {% if report.status == 3 %}
-                <a class="btn btn-oval btn-danger reject" >{% trans 'Rejected' %}</a>
-            {% endif %}
+            <!-- {% if report.status == 3 %}
+                <a class="btn btn-oval btn-danger reject" disabled="disabled">{% trans 'Rejected' %}</a>
+            {% endif %} -->
 
             <p class="comments">{{ report.comments.pending.count }} {% trans 'comments' %}</p>
         </div>
