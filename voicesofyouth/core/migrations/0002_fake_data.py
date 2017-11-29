@@ -113,6 +113,34 @@ if settings.DEBUG:
                           ('Nikola', 'Tesla'),
                           ('Galileu', 'Galilei'),
                           ('Charles', 'Darwin'))
+            projects_names = (
+                'Apollo',
+                'Astro',
+                'Barracuda',
+                'Camelot',
+                'Elixir',
+                'Firestorm',
+                'Phoenix',
+                'Nautilus',
+                'Sand storm'
+            )
+            themes_names = (
+                'Trash problems',
+                'Health problems',
+                'Zica virus',
+                'Security problems',
+                'Hazardous area',
+                'Degradation of nature',
+                'Pollution',
+                'Political negligence',
+                'Human rights',
+                'Education',
+                'Violence, war and conflicts',
+                'Employment',
+                'Culture',
+                'Technology',
+                'Governance'
+            )
             fake_thumbnail = ImageFile(image)
             users = []
             for i in range(1, 9):
@@ -124,17 +152,23 @@ if settings.DEBUG:
                                         last_name=user[1]))
             for x in range(random.randint(5, 10)):
                 user = random.choice(users)
+                project_name = random.choice(projects_names)
+                while Project.objects.filter(name=project_name).count() > 0:
+                    project_name = random.choice(themes_names)
                 project = mommy.make(Project,
-                                     name=f'Project {x}',
+                                     name=project_name,
                                      thumbnail=fake_thumbnail,
                                      description=lorem.paragraph(),
                                      created_by=user,
                                      modified_by=user)
                 project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 for y in range(random.randint(5, 10)):
+                    theme_name = random.choice(themes_names)
+                    while Theme.objects.filter(name=theme_name, project=project).count() > 0:
+                        theme_name = random.choice(themes_names)
                     theme = mommy.make(Theme,
                                        project=project,
-                                       name=f'Theme {y}',
+                                       name=theme_name,
                                        description=lorem.paragraph(),
                                        created_by=user,
                                        modified_by=user)
