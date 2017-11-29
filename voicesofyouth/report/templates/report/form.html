@@ -20,7 +20,7 @@
             </div>
 
             <div class="row">
-                <form action="" method="post" role="form" id="form-report">
+                <form action="" method="post" role="form" id="form-report" enctype="multipart/form-data">
                     <div class="col-lg-4">
                         <div class="panel panel-default">
                             <div class="panel-body">                
@@ -61,6 +61,61 @@
                                         {{ data_form.tags }}
                                         {{ data_form.tags.errors }}
                                     </div>
+
+                                    <div class="form-group {% if data_form.files.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Add Photo/Video' %}</label>
+                                        {{ data_form.files }}
+                                        {{ data_form.files.errors }}
+                                    </div>
+
+                                    {% if files_list %}
+                                        <label>{% trans 'Select to remove file' %}</label>
+                                        {% for file in files_list %}
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="checkbox c-checkbox needsclick">
+                                                    <label class="needsclick">
+                                                        <input type="checkbox" name="remove_files[]" value="{{ file.id }}" class="needsclick"/>
+                                                        <span class="fa fa-check"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-10">
+                                                <img src="{{ file.file.url }}" class="media-object thumb48" alt="">
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    {% endif %}
+
+                                    <!-- <div class="form-group {% if data_form.link.errors %}has-error{% endif %}">
+                                        <label>{% trans 'Links' %}</label>
+                                        <div class="input-group">
+                                            {{ data_form.link }}
+                                            {{ data_form.link.errors }}
+
+                                            <span class="input-group-btn">
+                                                <button id="btnAddLink" type="button" class="btn btn-default">
+                                                    <em class="fa fa-check"></em>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div> -->
+
+                                    <div id="links">
+                                        <!--<div class="form-group">
+                                            <div class="input-group">
+                                                <input type="hidden" name="links[]" value="google.com" id="link_1">
+                                                <input type="text" value="google.com" disabled class="form-control">
+    
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default">
+                                                        <em class="fa fa-remove"></em>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>-->
+                                    </div>
                                 </fieldset>            
                             </div>
                         </div>
@@ -88,53 +143,19 @@
 
         $('#id_tags').chosen();
 
-        // var map = L.map('map', {
-        //     maxBounds: [[-90, -160], [90, 160]],
-        // }).setView([51.505, -0.09], 13);
+        $('#btnAddLink').click(function(e) {
+            var link = $('#id_link').val();
+            if (link) {
+                $('#links').append('<div class="form-group"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_1"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
+            }
+        });
 
-        // L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        //     noWrap: true,
-        // }).addTo(map);
-
-        // var icon = L.icon({
-        //     iconUrl: '{% static 'img/pin.png' %}',
-        //     shadowUrl: '',
-        //     iconSize: [36, 54],
-        //     shadowSize: [0, 0],
-        //     iconAnchor: [22, 94],
-        //     shadowAnchor: [4, 62],
-        //     popupAnchor: [-3, -76]
-        // });
-
-        // var coordinates = [51.5, -0.09];
-
-        // {% if data_form.location.value %}
-        //     var temp_coordinates = '{{ data_form.location.value }}'.split(',');
-        //     coordinates = [temp_coordinates[0], temp_coordinates[1]];
-        // {% endif %}
-
-        // var marker = L.marker(coordinates, {
-        //     icon: icon,
-        //     draggable: true,
-        // }).addTo(map);
-
-        // marker.on('move', function (e) {
-        //     var urlApi = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + e.latlng.lat + ',' + e.latlng.lng + '&key=' + mapsKey;
-        //     axios.get(urlApi).then((response) => {
-        //         if (response.data.results[0]) {
-        //             var address = response.data.results[0].formatted_address;
-        //             marker.bindPopup(`<strong>${address}</strong>`).openPopup();
-        //             $('#id_location').val(e.latlng.lat + ',' + e.latlng.lng);
-        //         }
-        //     });
-        // });
-
-        $('#id_project').change(function (e) {
+        $('#id_project').change(function(e) {
             e.preventDefault();
             loadThemes(e.target.value);
         });
 
-        $('#id_theme').change(function (e) {
+        $('#id_theme').change(function(e) {
             e.preventDefault();
             loadMappers(e.target.value);
         });

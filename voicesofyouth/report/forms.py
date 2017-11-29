@@ -92,6 +92,24 @@ class ReportForm(forms.Form):
         required=True
     )
 
+    link = forms.CharField(
+        label=_('Links from website'),
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'required': False,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    files = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={
+            'multiple': True
+        })
+    )
+
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
         self.fields['project'].queryset = Project.objects.all()
