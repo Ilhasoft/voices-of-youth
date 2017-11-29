@@ -1,4 +1,5 @@
 import axios from 'axios';
+import L from 'leaflet';
 import * as TYPES from './types';
 import helper from '../helper';
 
@@ -32,6 +33,34 @@ export default {
     getReportUrls: state => state.urls,
     getReportNewData: state => state.newReport,
     getReportPreview: state => state.files[0],
+    getReportsPins: (state) => {
+      const markers = [];
+
+      if (state.all.length > 0) {
+        const LeafIcon = L.Icon.extend({
+          options: {
+            shadowUrl: '',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+          },
+        });
+
+        state.all.map((report) => {
+          const tempIcon = new LeafIcon({ iconUrl: report.pin });
+
+          markers.push({
+            id: report.id,
+            latlng: L.latLng(report.location.coordinates[1], report.location.coordinates[0]),
+            text: report.text,
+            color: report.theme_color,
+            icon: tempIcon,
+          });
+
+          return true;
+        });
+      }
+      return markers;
+    },
   },
 
   /* eslint-disable no-param-reassign */

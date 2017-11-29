@@ -2,17 +2,16 @@
   <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map" class="map">
     <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
     <v-marker-cluster :options="optionsCluster">
-      <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in getMarkers" :lat-lng="item.latlng" :icon="item.icon" />
+      <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in reports" :lat-lng="item.latlng" :icon="item.icon" />
     </v-marker-cluster>
   </v-map>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-// import markerPixel from '../../assets/img/pixel.png';
 import bus from '../../helper/bus';
 
 export default {
@@ -58,40 +57,8 @@ export default {
     });
   },
 
-  computed: mapState({
-    themesSelected: state => state.ReportStore.themes,
-
-    getMarkers(state) {
-      const reports = state.ReportStore.all;
-
-      const LeafIcon = L.Icon.extend({
-        options: {
-          shadowUrl: '',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-        },
-      });
-
-      const locations = Object.keys(reports).map((key, index) => {
-        console.log(reports[index].pin);
-        const tempIcon = new LeafIcon({ iconUrl: reports[index].pin });
-        const item = {
-          id: reports[index].id,
-          latlng: L.latLng(reports[index].location.coordinates[1],
-                           reports[index].location.coordinates[0]),
-          text: reports[index].name,
-          color: reports[index].theme_color,
-          icon: tempIcon,
-        };
-        return item;
-      });
-
-      Promise.all(locations).then(() => {
-        this.bounds = L.latLngBounds(locations.map(o => o.latlng));
-      });
-
-      return locations;
-    },
+  computed: mapGetters({
+    reports: 'getReportsPins',
   }),
 
   methods: {
