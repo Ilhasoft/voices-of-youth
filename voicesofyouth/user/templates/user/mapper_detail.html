@@ -39,21 +39,21 @@
         </div>
         <div class="container-row">
             <div class="col-xs-1"></div>
-            <div class="col-xs-2">
+            <div class="col-xs-6">
                 <h4>Projects</h4>
-                <ul class="no-bullets">
+                <div>
                     {% for project in mapper.projects.all %}
-                        <li><a href="{{ project.get_absolute_url }}">{{ project }}</a></li>
+                        <div class="badge badge-info">{{ project }}</div>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
-            <div class="col-xs-2">
+            <div class="col">
                 <h4>Themes</h4>
-                <ul class="no-bullets">
+                <div>
                     {% for theme in mapper.themes.all %}
-                        <li><a href="{{ theme.get_absolute_url }}">{{ theme.name }}</a></li>
+                        <div class="badge badge-info">{{ theme }}</div>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
         </div>
     </div>
