@@ -1,0 +1,177 @@
+{% extends "voyadmin/base.html" %}
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% sass_src 'css/user/users_list.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                <div style="display: flex; flex-direction: row-reverse;">
+                    <p style="order: 1; flex-grow: 2">{% block title %}{% endblock %}</p>
+                    <div class="input-group margin-bottom-sm col-xs-3">
+                        {% block search_form %}{% endblock %}
+                    </div>
+                    <div class="input-group margin-bottom-sm" style="order: -1; margin-left: 47px;">
+                        <button
+                                class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#modalAddUser">
+                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> {% block add_button_title %}Add
+                            new user{% endblock %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; flex-direction: row-reverse">
+                {# TODO: We need a more concisive way to format this panel without use id. #}
+                <div class="panel panel-default col-xs-11" id="report">
+                    <div class="panel-heading">
+                        {% block panel_heading %}
+                        {% endblock %}
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table users-list {% block extra_table_users_class %}{% endblock %}">
+                                <thead>
+                                <tr>
+                                    <th data-check-all="">
+                                        <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox">
+                                            <label>
+                                                <input type="checkbox" id="users_check_all">
+                                                <span class="fa fa-check"></span>
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th>
+                                        <div>
+                                            <button
+                                                    class="btn btn-default btn-lg"
+                                                    id="remove_user"
+                                                    disabled
+                                            >{% trans "Remove" %}</button>
+                                        </div>
+                                    </th>
+                                    {% block search_bar %}
+                                        <th></th>
+                                        <th></th>
+                                    {% endblock %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% block panel_body %}
+                                {% endblock %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        {% block panel_footer %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block extrahtml %}
+    {% block modal_add %}{% endblock %}
+{% endblock %}
+
+{% block extrajs %}
+    <script type="text/javascript" src="https://unpkg.com/@reactivex/rxjs@5.5.2/dist/global/Rx.js"></script>
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+    <script type="text/javascript">
+        var usersDeleteSubject = new Rx.Subject();
+
+        axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+        disable_remove_button = (state) => {
+            $("button[id^='remove_user']").prop("disabled", state);
+        };
+
+        $("[id^='user_check']").change((event) => {
+            if (event.target.checked) {
+                disable_remove_button(false);
+            } else {
+                if (event.target.id === 'users_check_all' && !event.target.checked) {
+                    disable_remove_button(true);
+                }
+                if ($("[id^='user_check']input:checked").length <= 0) {
+                    disable_remove_button(true);
+                }
+            }
+        });
+
+        $('#remove_user').click(function () {
+            swal({
+                title: "{% trans "Are you sure?" %}",
+                text: "{% trans "We will delete the selected user(s)." %}",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then(willDelete => {
+                if (willDelete) {
+                    let users = new Array();
+                    users.push(_.map($("[id^='user_check']input:checked"),
+                        mapper => {
+                            return mapper.value
+                        }));
+                    usersDeleteSubject.next(users);
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("img[id='current_avatar']").click((evt) => {
+            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
+        });
+        $("img[id^='avatar_']").click((evt) => {
+            const selected_avatar = $(evt.target);
+            const avatars = $(evt.target).parents('div').find('#avatars');
+            const current_avatar = $(evt.target).parents('div').find('#current_avatar');
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
+            $(current_avatar).attr('src', selected_avatar.attr('src'));
+            hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
+            avatars.slideUp("slow");
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("select[id='id_themes']").chosen();
+        $("select[id='id_project']").chosen();
+
+        $("select[id='id_project']").change(function (e) {
+            e.preventDefault();
+            const currentFormId = $(e.target.closest("form")).attr('id');
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
+                themesSelect.empty();
+                themesSelect.trigger('chosen:updated');
+                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    themesSelect.trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#post_user_search").click(() => {
+            form = $("#user_search");
+            form.submit();
+        });
+    </script>
+{% endblock %}

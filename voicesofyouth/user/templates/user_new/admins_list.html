@@ -1,0 +1,55 @@
+{% extends "./users_list_base.html" %}
+{% load static i18n sass_tags %}
+
+{% block extra_table_users_class %}admins-list{% endblock %}
+
+{% block title %} Admins {% endblock %}
+{% block add_button_title %} Add new admin {% endblock %}
+{% block modal_add %}
+    {% url "voy-admin:users:admin_list" as mapper_add_url %}
+    {% include "user_new/modal_add_user.html" with modal_add_title="Add mapper" avatars=form_add_mapper.fields.avatars.choices user=mapper post_add_user_url=mapper_add_url form_add_user=form_add_mapper %}
+{% endblock %}
+
+{% block search_form %}
+    {% url "voy-admin:users:admin_list" as search_form_url %}
+    {% include "user_new/search_form.html" %}
+{% endblock %}
+
+{% block panel_body %}
+    {% for user in admins %}
+        {% include "user_new/user_render.html" %}
+    {% endfor %}
+{% endblock %}
+
+{% block panel_footer %}
+    {% if admins.has_next %}
+        <div class="row">
+            <div class="text-right">
+                {% include "voyadmin/paginator.html" with paginator=mappers %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script type="text/javascript">
+        usersDeleteSubject.subscribe(users => {
+            var params = new URLSearchParams();
+            params.append('deleteAdmins', users);
+            axios.post("{% url 'voy-admin:users:admin_list' %}", params)
+                .then(() => {
+                    swal("Success", "Admin(s) deleted!", "success").then(value => {
+                        window.location.href = "{% url "voy-admin:users:admin_list" %}"
+                    })
+                })
+                .catch(() => {
+                    swal("Ops!", "Somethings wrong happen!", "error")
+                        .then(value => {
+                            window.location.href = "{% url "voy-admin:users:admin_list" %}"
+                        })
+                });
+        });
+    </script>
+
+{% endblock %}

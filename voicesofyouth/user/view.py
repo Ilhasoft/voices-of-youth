@@ -28,7 +28,7 @@ def search_user(search_by, qs):
 
 
 class AdminListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user/admin_list.html'
+    template_name = 'user_new/admins_list.html'
 
     def post(self, request):
         delete = request.POST.get('deleteAdmins')
@@ -77,7 +77,7 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
 
 
 class MappersListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user/mappers_list.html'
+    template_name = 'user_new/mappers_list.html'
     form_class = MapperFilterForm
 
     def post(self, request):
@@ -136,7 +136,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
 
 
 class MapperDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user/mapper_detail.html'
+    template_name = 'user_new/mapper_detail.html'
     form_filter_class = MapperFilterForm
 
     def _search_mapper(self, filter_form):

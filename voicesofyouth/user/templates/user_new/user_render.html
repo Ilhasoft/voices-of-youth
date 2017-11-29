@@ -1,0 +1,41 @@
+{% load i18n %}
+
+<tr>
+    <td>
+        <div class="checkbox c-checkbox">
+            <label>
+                <input type="checkbox"
+                       value="{{ user.id }}"
+                       id="user_check_{{ user.id }}">
+                <span class="fa fa-check"></span>
+            </label>
+        </div>
+    </td>
+    <td class="text-center">
+        <div>
+            <img src="{{ user.get_avatar_display }}" alt="">
+        </div>
+    </td>
+    <td>
+        <div>
+            <h4 class="media-heading">{{ user.get_full_name }}</h4>
+            <div class="col-xs-3">
+                {% for project in user.projects %}
+                    <div class="badge badge-info">{{ project }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    </td>
+    <td>
+        <div>
+            {% for theme in user.themes %}
+                <div class="badge badge-info">{{ theme }}</div>
+            {% endfor %}
+        </div>
+
+    </td>
+    <td class="text-center">
+        <a class="btn btn-default btn-lg btn-oval"
+           href="{{ user.get_absolute_url }}">{% trans "Profile" %}</a>
+    </td>
+</tr>
