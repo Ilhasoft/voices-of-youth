@@ -34,15 +34,6 @@ install_deps() {
     }
 }
 
-init_git() {
-    if [ ! -d ".git" ]; then
-        git init
-    fi
-    if [ ! -f ".gitignore" ]; then
-        printf ${VENV_NAME}"\n*.pyc\nstatic\n*.sqlite3" > .gitignore
-    fi
-}
-
 create_dotenv() {
     if [ ! -d ".env" ]; then
         echo DEBUG=True > .env
@@ -52,7 +43,6 @@ create_dotenv() {
 create_venv && {
     validate_venv && {
         install_deps
-        init_git
         create_dotenv
     }
 }
