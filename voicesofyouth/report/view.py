@@ -55,7 +55,7 @@ class ReportListView(LoginRequiredMixin, TemplateView):
             if cleaned_data['search'] is not None:
                 qs_filter['name__icontains'] = cleaned_data['search']
 
-            context['reports'] = get_paginator(Report.default_objects.filter(**qs_filter), page)
+            context['reports'] = get_paginator(Report.objects.filter(**qs_filter), page)
 
         return context
 
@@ -82,7 +82,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         report_id = kwargs['report']
 
-        context['report'] = get_object_or_404(Report.default_objects, pk=report_id)
+        context['report'] = get_object_or_404(Report, pk=report_id)
         context['theme'] = context['report'].theme
 
         return context
@@ -92,7 +92,7 @@ class ApproveReportView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         report_id = kwargs['report']
         if report_id:
-            report = get_object_or_404(Report.default_objects, pk=report_id)
+            report = get_object_or_404(Report, pk=report_id)
             report.status = REPORT_STATUS_APPROVED
             report.save()
 
@@ -119,7 +119,7 @@ class CommentsSaveView(LoginRequiredMixin, TemplateView):
         report_id = kwargs['report']
 
         if comment and report_id:
-            report = get_object_or_404(Report.default_objects, pk=report_id)
+            report = get_object_or_404(Report, pk=report_id)
             comment = ReportComment(
                 report=report,
                 text=comment,
@@ -182,7 +182,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         if form.is_valid():
             try:
                 report_id = kwargs['report']
-                report = get_object_or_404(Report.default_objects, pk=report_id)
+                report = get_object_or_404(Report, pk=report_id)
                 mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
 
                 report.name = form.cleaned_data.get('title')
@@ -207,7 +207,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         report_id = self.kwargs['report']
-        report = get_object_or_404(Report.default_objects, pk=report_id)
+        report = get_object_or_404(Report, pk=report_id)
 
         data = {
             'title': report.name,
@@ -231,6 +231,6 @@ class PendingReportView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page = self.request.GET.get('page')
-        context['reports'] = get_paginator(Report.default_objects.filter(status=REPORT_STATUS_PENDING), page)
+        context['reports'] = get_paginator(Report.objects.filter(status=REPORT_STATUS_PENDING), page)
 
         return context
