@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'sass_processor',
     'qurl_templatetag',
     'leaflet',
+    'docs',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',
@@ -77,6 +78,9 @@ if DEBUG:
     INSTALLED_APPS.append('model_mommy')
     INSTALLED_APPS.append('mommy_spatial_generators')
     INTERNAL_IPS = ('127.0.0.1', 'localhost')
+
+DOCS_ROOT = os.path.join(BASE_DIR, '../docs/users/build/html')
+DOCS_ACCESS = 'staff'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
