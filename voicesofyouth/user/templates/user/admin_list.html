@@ -141,10 +141,10 @@
                     });
                     usersToDelete.then(
                         users => {
-                            axios.post("{% url 'voy-admin:users:admin_list' %}", users)
+                            axios.post("{% url 'voy-admin:users:admins_list' %}", users)
                                 .then((response) => {
                                     swal("Success", response.data, "success").then(value => {
-                                        window.location.href = "{% url "voy-admin:users:admin_list" %}"
+                                        window.location.href = "{% url "voy-admin:users:admins_list" %}"
                                     })
                                 })
                                 .catch((error) => {

@@ -33,7 +33,7 @@
                 <form action="{% url "voy-admin:users:admin_detail" instance.id %}" id="{{ modal_name }}" method="post"
                       novalidate>
             {% else %}
-                <form action="{% url "voy-admin:users:admin_list" %}" id="{{ modal_name }}" method="post" novalidate>
+                <form action="{% url "voy-admin:users:admins_list" %}" id="{{ modal_name }}" method="post" novalidate>
             {% endif %}
             <div class="modal-body">
                 {% csrf_token %}

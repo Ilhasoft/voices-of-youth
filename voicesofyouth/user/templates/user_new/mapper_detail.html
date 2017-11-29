@@ -1,21 +1,11 @@
-{% extends "user/mapper_base.html" %}
+{% extends "user_new/users_detail_base.html" %}
 {% load static i18n sass_tags %}
 
 {% block extracss %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
 {% endblock %}
-
-{% block panel_heading %}
-    <div>
-        <a href="{% url "voy-admin:users:mappers_list" %}">
-            <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
-        </a>
-        <span class="text-bold">{% trans "Profile" %}</span>
-    </div>
-{% endblock %}
-
+{% url "voy-admin:users:mappers_list" as users_list_url%}
 {% block panel_body %}
     <div class="container-column">
         <div style="display: flex; align-items: baseline">

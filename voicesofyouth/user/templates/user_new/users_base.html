@@ -1,0 +1,54 @@
+{% extends "voyadmin/base.html" %}
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                <div style="display: flex; flex-direction: row-reverse;">
+                    <p style="order: 1; flex-grow: 2">{{ title }}</p>
+                    <div class="input-group margin-bottom-sm col-xs-3">
+                        {% include "user_new/users_search_form.html" %}
+                    </div>
+                    <div class="input-group margin-bottom-sm" style="order: -1; margin-left: 47px;">
+                        <button
+                                class="btn btn-default"
+                                data-toggle="modal"
+                                data-target="#modalAddUser">
+                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> {% block add_button_title %}Add
+                            new user{% endblock %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: row-reverse">
+            {# TODO: We need a more concisive way to format this panel without use id. #}
+            <div class="panel panel-default col-xs-11" id="report">
+                <div class="panel-heading">
+                    {% block users_base_panel_heading %}
+                    {% endblock %}
+                </div>
+                <div class="panel-body">
+                    {% block users_base_panel_body %}
+                    {% endblock %}
+                </div>
+                <div class="panel-footer">
+                    {% block users_base_panel_footer %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
+{% endblock %}

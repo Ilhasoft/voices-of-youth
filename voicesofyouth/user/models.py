@@ -114,6 +114,7 @@ class MapperUser(VoyUser):
 
     class Meta:
         proxy = True
+        ordering = ('first_name', 'username',)
 
     @classmethod
     def is_mapper(cls, user):

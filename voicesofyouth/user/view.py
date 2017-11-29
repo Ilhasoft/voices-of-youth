@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
 
@@ -65,10 +66,17 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['admins'] = AdminUser.objects.all()
-        context['filter_form'] = AdminFilterForm(self.request.GET)
-        context['form_add_admin'] = AdminForm()
+        context['users'] = AdminUser.objects.all()
+        context['search_form'] = AdminFilterForm(self.request.GET)
+        context['form_add_user'] = AdminForm()
         context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
+        context['modal_add_title'] = "Add admin"
+        context['title'] = "Admins"
+        context['avatars'] = AVATARS
+        context['post_add_user_url'] = reverse('voy-admin:users:admins_list')
+        context['search_form_url'] = reverse('voy-admin:users:admins_list')
+        context['delete_users_url'] = reverse('voy-admin:users:admins_list')
+        context['list_users_url'] = reverse('voy-admin:users:admins_list')
         return context
 
 
@@ -81,7 +89,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
-        delete = request.POST.get('deleteMappers')
+        delete = request.POST.get('deleteUsers')
         if delete:
             try:
                 MapperUser.objects.filter(id__in=delete.split(',')).delete()
@@ -127,11 +135,19 @@ class MappersListView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['mappers'] = MapperUser.objects.all()
+        context['users'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
-        context['form_add_mapper'] = MapperForm()
+        context['search_form'] = self.form_class(request.GET)
+        context['form_add_user'] = MapperForm()
         context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
+        context['modal_add_title'] = "Add mapper"
+        context['title'] = "Mappers"
+        context['avatars'] = AVATARS
+        context['post_add_user_url'] = reverse('voy-admin:users:mappers_list')
+        context['search_form_url'] = reverse('voy-admin:users:mappers_list')
+        context['delete_users_url'] = reverse('voy-admin:users:mappers_list')
+        context['list_users_url'] = reverse('voy-admin:users:mappers_list')
         return context
 
 
@@ -197,5 +213,6 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         context['form_edit_mapper'] = MapperForm(initial=data)
         context['form_add_mapper'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
+        context['users_list_url'] = reverse('voy-admin:users:mappers_list')
 
         return context
