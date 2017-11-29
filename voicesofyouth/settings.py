@@ -80,7 +80,7 @@ if DEBUG:
     INTERNAL_IPS = ('127.0.0.1', 'localhost')
 
 DOCS_ROOT = os.path.join(BASE_DIR, '../docs/users/build/html')
-DOCS_ACCESS = 'staff'
+# DOCS_ACCESS = 'staff'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
