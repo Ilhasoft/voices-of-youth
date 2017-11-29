@@ -117,9 +117,10 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             else:
                 qs = MapperUser.objects.all()
 
-            if not isinstance(qs, list) and search:
+            if not isinstance(qs, list):
+                if search:
+                    qs = search_user(search, qs)
                 qs = qs.order_by('first_name')
-                qs = search_user(search, qs)
             context['mappers'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
