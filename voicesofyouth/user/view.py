@@ -81,7 +81,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
 
 class AdminDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user/admin_detail.html'
+    template_name = 'user_new/admin_detail.html'
 
 
 class MappersListView(LoginRequiredMixin, TemplateView):
@@ -166,6 +166,12 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         messages.success(request, _('Mapper deleted with success!'))
         return HttpResponse(status=200)
 
+    def delete(self, _request, *_, **kwargs):
+        mapper_id = kwargs.get('mapper_id', 0)
+        messages.success(request, _('Mapper deleted with success!'))
+        get_object_or_404(MapperUser, pk=mapper_id).delete()
+        return HttpResponse()
+
     def get(self, request, *args, **kwargs):
         mapper_id = kwargs.get('mapper_id', 0)
         context = self.get_context_data(request=request, mapper_id=mapper_id)
@@ -209,9 +215,10 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
             'avatars': mapper.avatar
         }
         context['filter_form'] = self.form_filter_class(request.GET)
-        context['mapper'] = mapper
-        context['form_edit_mapper'] = MapperForm(initial=data)
-        context['form_add_mapper'] = MapperForm()
+        context['user'] = mapper
+        context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
+        context['form_edit_user'] = MapperForm(initial=data)
+        context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:mappers_list')
 
