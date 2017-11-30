@@ -41,16 +41,8 @@
         <div style="display: flex; padding: 2rem">
             {# TODO: We need a more concisive way to format this panel without use id. #}
             <div class="panel panel-default col-xs-12" id="report">
-                <div class="panel-heading">
-                    {% block users_base_panel_heading %}
-                    {% endblock %}
-                </div>
                 <div class="panel-body">
                     {% block users_base_panel_body %}{% endblock %}
-                </div>
-                <div class="panel-footer">
-                    {% block users_base_panel_footer %}
-                    {% endblock %}
                 </div>
             </div>
         </div>
