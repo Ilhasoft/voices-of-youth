@@ -60,21 +60,23 @@ $color_delete: #DE486B;
         }
 
         .badge-image {
-            position:relative;
-            padding-top:20px;
-            display:inline-block;
+            position: relative;
+            padding-top: 20px;
+            display: inline-block;
 
             .text {
                 position: absolute;
-                right: 28px;
+                /* right: 30px; */
                 min-width: 28px;
                 min-height: 28px;
-                background-color: $color_edit;
+                background-color: #00CBFF;
                 text-align: center;
                 border-radius: 50px;
                 color: white;
                 font-size: 20px;
-                bottom: 30px;
+                /* bottom: 30px; */
+                left: 5px;
+                top: 25px;
             }
         }
     }

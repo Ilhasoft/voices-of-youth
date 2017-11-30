@@ -1,13 +1,15 @@
-{% load i18n %}
+{% load i18n static %}
 
 <div class="row b-bottom">
     <div class="col-lg-2 col-md-2 d-flex align-items-center">
-        {% if report.images.first %}
-            <div class="badge-image">
-                <span class="text">{{ report.files.count }}</span>
+        <div class="badge-image">
+            <span class="text">{{ report.files.count }}</span>
+            {% if report.images %}
                 <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
-            </div>
-        {% endif %}
+            {% else %}
+                <img src="{% static 'img/video.png' %}" class="img-responsive" alt="">
+            {% endif %}
+        </div>
     </div>
     <div class="col-lg-8 col-md-8 m-top">
         <div class="row">
