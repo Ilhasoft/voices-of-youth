@@ -39,6 +39,15 @@ FILE_TYPES = (
     (FILE_TYPE_VIDEO, _('Video')),
 )
 
+FILE_FORMATS = [
+    'image/jpeg',
+    'image/pjpeg',
+    'image/png',
+    'image/gif',
+    'video/webm',
+    'video/mp4'
+]
+
 
 def unique_filename(filename):
     filename, ext = os.path.splitext(filename)
@@ -132,6 +141,10 @@ class Report(BaseModel):
     @cached_property
     def theme_color(self):
         return self.theme.color
+
+    @cached_property
+    def comments_views(self):
+        return self.comments.filter(status__in=[REPORT_COMMENT_STATUS_APPROVED, REPORT_COMMENT_STATUS_PENDING])
 
     @property
     def images(self):

@@ -39,7 +39,7 @@
                     </div>
 
                     <h3 class="mt0">{{ report.name }}</h3>
-                    {% trans 'By' %} {{ report.created_by.first_name }} {{ report.created_on|date:'d M Y' }} {{ report.comments.pending.count }} {% trans 'comments' %}
+                    {% trans 'By' %} {{ report.created_by.first_name }} {{ report.created_on|date:'d M Y' }} {{ report.comments_views.count }} {% trans 'comments' %}
 
                     <hr/>
 
@@ -82,7 +82,7 @@
                             </div>
                         </form>
 
-                        {% for comment in report.comments.pending %}
+                        {% for comment in report.comments_views %}
                             <div class="mt-20">
                                 <div class="row">
                                     <div class="col-md-1">
