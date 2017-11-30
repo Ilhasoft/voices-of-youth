@@ -1,7 +1,7 @@
 Project
 =======
 
-The project is the entry point.
+In the :ref:`voy`, the project is the entry point.
 
 When create a new project, you can see these fields:
     * name - The name of the project;

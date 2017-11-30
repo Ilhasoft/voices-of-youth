@@ -1,11 +1,20 @@
 Terms
 =====
 
+.. _voy:
+
+Voices of Youth(VoY)
+--------------------
+To simplify your overview of VoY, let's make a simple analogy:
+
+Think of VoY as a large file cabinet with several drawers, where each drawer is a project and inside this drawer we can
+save several file folders, these folders are the themes and the files inside these folders are the reports.
+
 .. _project:
 
 Project
 -------
-The project is the grate data aggregator, besides users, groups and profiles, nothing can exists without a project.
+The project is a great data aggregator, besides users, groups and profiles, nothing can exists without a project.
 Each project have a region where one or more :ref:`theme` s can be created.
 
 .. note::
