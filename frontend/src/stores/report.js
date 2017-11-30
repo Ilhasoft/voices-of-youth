@@ -3,7 +3,6 @@ import L from 'leaflet';
 import * as TYPES from './types';
 import helper from '../helper';
 
-const token = helper.getItem('token');
 const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
 
 export default {
@@ -180,7 +179,9 @@ export default {
     },
 
     saveNewComment({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
       const options = {};
+
       if (token) {
         options.headers = { authorization: `Token ${token}` };
       }
@@ -197,6 +198,7 @@ export default {
     },
 
     deleteComment({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
       return axios.delete(`/api/report-comments/${obj}/`, {}, {
         headers: { authorization: `Token ${token}` },
       }).then(() => {
@@ -218,6 +220,7 @@ export default {
     },
 
     saveNewReport({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
       return axios.post('/api/reports/', {
         name: obj.name,
         description: obj.description,
