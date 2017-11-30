@@ -53,7 +53,9 @@
                                 {% if file.media_type == 'image' %}
                                     <img src="{{ file.file.url }}" alt="" class="img-responsive">
                                 {% elif file.media_type == 'video' %}
-                                    <video src="{{ file.file.url }}"></video>
+                                    <video width="335" height="180" controls>
+                                        <source src="{{ file.file.url }}" type="video/mp4">
+                                    </video>
                                 {% endif %}
                             </div>
                         {% endfor %}
