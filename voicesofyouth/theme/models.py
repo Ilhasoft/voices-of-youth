@@ -81,7 +81,7 @@ class Theme(BaseModel):
 
     @property
     def reports_count(self):
-        return self.reports.count()
+        return self.reports.approved().count()
 
     @property
     def coordinates(self):
