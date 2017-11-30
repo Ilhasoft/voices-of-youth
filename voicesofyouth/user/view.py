@@ -166,11 +166,10 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         messages.success(request, _('Mapper deleted with success!'))
         return HttpResponse(status=200)
 
-    def delete(self, _request, *_, **kwargs):
+    def delete(self, request, *_, **kwargs):
         mapper_id = kwargs.get('mapper_id', 0)
-        messages.success(request, _('Mapper deleted with success!'))
-        get_object_or_404(MapperUser, pk=mapper_id).delete()
-        return HttpResponse()
+        mapper = get_object_or_404(MapperUser, pk=mapper_id)
+        return self._delete(request, mapper)
 
     def get(self, request, *args, **kwargs):
         mapper_id = kwargs.get('mapper_id', 0)
