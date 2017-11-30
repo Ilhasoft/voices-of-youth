@@ -73,8 +73,10 @@ export default {
         isActived: true,
       }).then(() => {
         const marker = JSON.parse(JSON.stringify(item));
-        this.$refs.map.mapObject.setView(marker.latlng);
-        this.getReport(item.id);
+        if (this.$refs.map) {
+          this.$refs.map.mapObject.setView(marker.latlng);
+          this.getReport(item.id);
+        }
       });
     },
   },

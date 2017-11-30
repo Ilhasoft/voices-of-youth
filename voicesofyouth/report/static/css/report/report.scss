@@ -84,7 +84,13 @@ $color_delete: #DE486B;
     }
 
     .approve {
+        color: #333;
         border-color: $color_approve;
+    }
+
+    .approve:hover {
+        background-color: $color_approve;
+        color: #fff;
     }
 
     .reject {
@@ -113,7 +119,14 @@ $color_delete: #DE486B;
 
     .approve {
         border-color: $color_approve;
-        color: $color_approve;
+        background-color: #fff;
+        color: #333;
+    }
+
+    .approve:hover, .approve:focus, .approve:active {
+        border-color: $color_approve;
+        background-color: $color_approve;
+        color: #fff;
     }
 
     .edit {
@@ -121,14 +134,27 @@ $color_delete: #DE486B;
         color: $color_edit;
     }
 
+    .edit:hover {
+        border-color: $color_edit;
+        background-color: $color_edit;
+        color: #fff;
+    }
+
     .delete {
         border-color: $color_delete;
         color: $color_delete;
     }
 
+    .delete:hover {
+        color: #fff;
+    }
+
     .reject {
-        border-color: $color_reject;
-        color: $color_reject;
+        border-color: $color_delete;
+    }
+
+    .reject:hover {
+        color: #fff;
     }
 
     .comments-list {
@@ -207,13 +233,22 @@ $color_delete: #DE486B;
             }
 
             .cancel {
-                border-color: $color_reject;
-                color: $color_reject;
+                border-color: $color_delete;
+                color: $color_delete;
+            }
+
+            .cancel:hover {
+                background-color: $color_delete;
+                color: #fff;
             }
 
             .send {
                 border-color: $color_edit;
                 color: $color_edit;
+            }
+
+            .send:hover {
+                color: #fff;
             }
         }
     }

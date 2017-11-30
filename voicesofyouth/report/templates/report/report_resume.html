@@ -41,12 +41,12 @@
                class="btn btn-oval btn-default view">{% trans 'View' %}</a>
             {% if report.status == 2 %}
                 <a href="{% url 'voy-admin:reports:approve' report.pk %}"
-                   class="btn btn-oval btn-default approve">{% trans 'Approve' %}</a>
+                   class="btn btn-oval approve">{% trans 'Approve' %}</a>
             {% endif %}
 
-            {% if report.status == 3 %}
-                <a class="btn btn-oval btn-default reject" disabled="disabled">{% trans 'Rejected' %}</a>
-            {% endif %}
+            <!-- {% if report.status == 3 %}
+                <a class="btn btn-oval btn-danger reject" disabled="disabled">{% trans 'Rejected' %}</a>
+            {% endif %} -->
 
             <p class="comments">{{ report.comments.pending.count }} {% trans 'comments' %}</p>
         </div>

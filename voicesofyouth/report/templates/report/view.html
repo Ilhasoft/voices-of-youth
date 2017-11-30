@@ -29,12 +29,12 @@
                         {% endif %}
 
                         {% if report.status == 1 %}
-                            <a class="btn btn-default delete">Delete</a>
+                            <a class="btn btn-danger delete">Delete</a>
                         {% endif %}
 
                         {% if report.status == 2 %}
-                            <a href="javascript:;" class="btn btn-default reject" id="openModal">Reject</a>
-                            <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-default approve">Approve</a>
+                            <a href="javascript:;" class="btn btn-danger reject" id="openModal">Reject</a>
+                            <a href="{% url 'voy-admin:reports:approve' report.pk %}" class="btn btn-success approve">Approve</a>
                         {% endif %}
                     </div>
 
@@ -100,7 +100,7 @@
                                                     <a href="{% url 'voy-admin:reports:comments' comment.pk 1 %}"
                                                        class="btn btn-oval btn-default approve">Approve</a>
                                                     <a href="{% url 'voy-admin:reports:comments' comment.pk 3 %}"
-                                                       class="btn btn-oval btn-default reject">Reject</a>
+                                                       class="btn btn-oval btn-danger reject">Reject</a>
                                                 {% endif %}
                                             </div>
                                         </div>

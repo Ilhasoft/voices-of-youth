@@ -17,7 +17,7 @@
     </div>
 
     <div class="body container">
-      <h1>Country Maps</h1>
+      <h1>Projects</h1>
 
       <div class="columns is-marginless m-bottom" :key="item.id" v-for="item in projectsList">
         <div class="column is-2 is-paddingless image">
