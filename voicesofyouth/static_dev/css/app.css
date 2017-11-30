@@ -443,7 +443,7 @@ body {
   line-height: 1.1;
   color: #929292;
   margin: -15px;
-  margin-bottom: 20px;
+  /*margin-bottom: 20px;*/
   padding: 15px;
   font-weight: normal;
   background-color: #fafbfc;
@@ -465,13 +465,13 @@ body {
   padding-right: 0;
 }
 @media only screen and (min-width: 768px) {
-  .content-wrapper {
-    padding: 20px;
-  }
+  /*.content-wrapper {*/
+    /*padding: 20px;*/
+  /*}*/
   .content-wrapper > h3,
   .content-wrapper > .content-heading {
-    margin: -20px;
-    margin-bottom: 20px;
+    /*margin: -20px;*/
+    /*margin-bottom: 20px;*/
     padding: 20px;
   }
   .content-wrapper > button,
@@ -4982,7 +4982,7 @@ x:-o-prefocus,
  ========================================================================== */
 /**
  * Custom form elements
- *    - Checkbox 
+ *    - Checkbox
  *    - Radios
  *    - Switch
  *    - Rounded inputs
@@ -7610,7 +7610,7 @@ body .jvectormap-zoomout {
   max-width: 100%;
   min-width: 100%;
 }
-/** 
+/**
  * Displays hidden content on hover. Add this class to the parent element.
  * Markup
  *   <div class="hover-visible">
@@ -7995,7 +7995,7 @@ fieldset[disabled] .flatdoc-wrapper .button.focus {
     border-radius: 50%;
     display: inline-block;
     margin-right: 3px;
-} 
+}
 .utilization-list {
   padding: 1px;
   background: #FFFFFF;
@@ -8018,9 +8018,9 @@ margin-right: 2%;
 }
 
 #id_operations_released li{
-  
+
   float: left;
-  margin-right: 50px; 
+  margin-right: 50px;
 }
 
 .input-error {

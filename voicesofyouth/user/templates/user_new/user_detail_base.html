@@ -1,0 +1,154 @@
+{% extends "./user_base.html" %}
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
+    <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
+{% endblock %}
+
+{% block users_base_panel_body %}
+    <div class="container-column">
+        <div style="display: flex; align-items: baseline">
+            <div class="col-xs-1">
+                <img src="{{ user.get_avatar_display }}" alt="">
+            </div>
+            <div class="col-xs-10">
+                <h4>{{ user.get_full_name }}</h4>
+                <p>{{ user.username }}</p>
+                <p>{{ user.email }}</p>
+                <p>{% trans "Creation date" %}: {{ user.date_joined|date:"d N Y" }}</p>
+            </div>
+            <div>
+                <button
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#modalEditUserProfile"
+                    class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                </button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrahtml %}
+    {{ block.super }}
+    <div id="modalEditUserProfile"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modalEditUserProfileLabel"
+         aria-hidden="true"
+         class="modal fade"
+         style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="container-column">
+                        <div>
+                            <h4 id="modalEditUserProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
+                        </div>
+                        <div style="display: none" id="avatars">
+                            {% for id, avatar_url in form_add_user.fields.avatars.choices %}
+                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
+                            {% endfor %}
+                        </div>
+                        <div style="padding: 5px;">
+                            <div>
+                                <img id="current_avatar" src="{{ user.get_avatar_display }}" alt=""
+                                     style="cursor: pointer">
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-lg btn-info" id="remove_user">
+                                {% block remove_user_button_title %}{% trans "Remove user" %}{% endblock %}</button>
+                        </div>
+                    </div>
+                </div>
+                <form action="{{ request.get_full_path }}" id="editUserForm" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form_edit_user }}
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            id="reset_password"
+                            type="button"
+                            class="btn btn-default btn-lg">
+                            {% trans "Reset password" %}
+                        </button>
+                        <button
+                            type="button"
+                            data-dismiss="modal"
+                            class="btn btn-default btn-lg">
+                            {% trans "Close" %}
+                        </button>
+                        <button
+                            type="submit"
+                            class="btn btn-info btn-lg">
+                            {% trans "Save changes" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script type="text/javascript">
+        $("img[id='current_avatar']").click((evt) => {
+            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
+        });
+        $("img[id^='avatar_']").click((evt) => {
+            const selected_avatar = $(evt.target);
+            const avatars = $(evt.target).parents('div').find('#avatars');
+            const current_avatar = $(evt.target).parents('div').find('#current_avatar');
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
+            $(current_avatar).attr('src', selected_avatar.attr('src'));
+            hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
+            avatars.slideUp("slow");
+        });
+    </script>
+    <script type="text/javascript">
+        $("select[id='id_themes']").chosen();
+        $("select[id='id_project']").chosen();
+
+        $("select[id='id_project']").change(function (e) {
+            e.preventDefault();
+            const currentFormId = $(e.target.closest("form")).attr('id');
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
+                themesSelect.empty();
+                themesSelect.trigger('chosen:updated');
+                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    themesSelect.trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $("#remove_user").click(() => {
+            swal({
+                title: '{% trans "You really want to delete this user?" %}',
+                text: '{% trans "This operation is irreversible!" %}',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((answer) => {
+                if (answer === true) {
+                    axios.delete('{{ user_delete_url }}').then(() => {
+                        window.location = '{{ users_list_url }}'
+                    });
+                }
+            }).catch(error => {
+                swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
+            })
+        });
+    </script>
+{% endblock %}

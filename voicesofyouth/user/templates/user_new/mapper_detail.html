@@ -1,122 +1,37 @@
-{% extends "user_new/users_detail_base.html" %}
+{% extends "user_new/user_detail_base.html" %}
 {% load static i18n sass_tags %}
 
-{% block extracss %}
+{% block add_new_user_button_title %}Add new mapper{% endblock %}
+{% block title %}Mapper{% endblock %}
+
+{% block users_base_panel_body %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
-{% endblock %}
-{% url "voy-admin:users:mappers_list" as users_list_url%}
-{% block panel_body %}
-    <div class="container-column">
-        <div style="display: flex; align-items: baseline">
-            <div class="col-xs-1">
-                <img src="{{ mapper.get_avatar_display }}" alt="">
-            </div>
-            <div class="col-xs-10">
-                <h4>{{ mapper.get_full_name }}</h4>
-                <p>{{ mapper.username }}</p>
-                <p>{{ mapper.email }}</p>
-                <p>{% trans "Creation date" %}: {{ mapper.date_joined|date:"d N Y" }}</p>
-            </div>
+    <div class="container-row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-6">
+            <h4>Projects</h4>
             <div>
-                <button
-                        type="button"
-                        data-toggle="modal"
-                        data-target="#modalEditMapperProfile"
-                        class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
-                </button>
+                {% for project in user.projects.all %}
+                    <div class="badge badge-info">{{ project }}</div>
+                {% endfor %}
             </div>
         </div>
-        <div class="container-row">
-            <div class="col-xs-1"></div>
-            <div class="col-xs-6">
-                <h4>Projects</h4>
-                <div>
-                    {% for project in mapper.projects.all %}
-                        <div class="badge badge-info">{{ project }}</div>
-                    {% endfor %}
-                </div>
-            </div>
-            <div class="col">
-                <h4>Themes</h4>
-                <div>
-                    {% for theme in mapper.themes.all %}
-                        <div class="badge badge-info">{{ theme }}</div>
-                    {% endfor %}
-                </div>
+        <div class="col">
+            <h4>Themes</h4>
+            <div>
+                {% for theme in user.themes.all %}
+                    <div class="badge badge-info">{{ theme }}</div>
+                {% endfor %}
             </div>
         </div>
     </div>
     <hr>
-    <h4>{{ mapper.reports.count }} reports by {{ mapper.first_name }}</h4>
+    <h4>{{ user.reports.count }} reports by {{ user.first_name }}</h4>
     <hr>
     <div class="row">
-        {% for report in mapper.reports.all %}
+        {% for report in user.reports.all %}
             {% include "report/report_resume.html" with report=report %}
         {% endfor %}
-    </div>
-
-{% endblock %}
-
-{% block extrahtml %}
-    {{ block.super }}
-    <div id="modalEditMapperProfile"
-         tabindex="-1"
-         role="dialog"
-         aria-labelledby="modalEditMapperProfileLabel"
-         aria-hidden="true"
-         class="modal fade"
-         style="display: none;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <div class="container-column">
-                        <div>
-                            <h4 id="modalEditMapperProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
-                        </div>
-                        <div style="display: none" id="avatars">
-                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
-                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
-                            {% endfor %}
-                        </div>
-                        <div style="padding: 5px;">
-                            <div>
-                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt=""
-                                     style="cursor: pointer">
-                            </div>
-                        </div>
-                        <div>
-                            <button class="btn btn-lg btn-info" id="remove_mapper">{% trans "Remove mapper" %}</button>
-                        </div>
-                    </div>
-                </div>
-                <form action="{{ request.get_full_path }}" id="editMapperForm" method="post">
-                    <div class="modal-body">
-                        {% csrf_token %}
-                        {{ form_edit_mapper }}
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                                id="reset_password"
-                                type="button"
-                                class="btn btn-default btn-lg">
-                            {% trans "Reset password" %}
-                        </button>
-                        <button
-                                type="button"
-                                data-dismiss="modal"
-                                class="btn btn-default btn-lg">
-                            {% trans "Close" %}
-                        </button>
-                        <button
-                                type="submit"
-                                class="btn btn-info btn-lg">
-                            {% trans "Save changes" %}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
 {% endblock %}
 
@@ -127,87 +42,64 @@
             swal("Warning", "This feature is not implemented yet!", "warning");
         })
     </script>
-    <script type="text/javascript">
-        $("#remove_mapper").click(() => {
-            swal({
-                title: '{% trans "You really want to delete this mapper?" %}',
-                text: '{% trans "This operation is irreversible!" %}',
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            }).then((answer) => {
-                if (answer === true) {
-                    let params = new URLSearchParams();
-                    params.append('deleteMapper', true);
-                    axios.post('{% url "voy-admin:users:mapper_detail" mapper.id %}', params).then(() => {
-                        window.location = '{% url "voy-admin:users:mappers_list" %}'
-                    });
-                }
-            }).catch(error => {
-                swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
-            })
-        });
-    </script>
-    <script type="text/javascript">
-        axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
-
-        disable_remove_button = (state) => {
-            $("input[id^='remove_mappers']").prop("disabled", state);
-        };
-
-        $("[id^='mapper_check']").change((event) => {
-            if (event.target.checked) {
-                disable_remove_button(false);
-            } else {
-                if (event.target.id === 'mapper_check_all' && !event.target.checked) {
-                    disable_remove_button(true);
-                }
-                if ($("[id^='mapper_check']input:checked").length <= 0) {
-                    disable_remove_button(true);
-                }
-            }
-        });
-        $('#remove_mappers').click(function () {
-            swal({
-                title: "{% trans "Are you sure?" %}",
-                text: "{% trans "We will delete the selected mapper(s)." %}",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            }).then(willDelete => {
-                if (willDelete) {
-                    event.preventDefault();
-                    let usersToDelete = new Promise((resolve, reject) => {
-                        let mappers = new Array();
-                        let params = new URLSearchParams();
-                        mappers.push(_.map($("[id^='mapper_check']input:checked"),
-                            mapper => {
-                                return mapper.value
-                            }));
-                        params.append('deleteMappers', mappers);
-                        console.log(params);
-                        resolve(params);
-                    });
-                    usersToDelete.then(
-                        users => {
-                            axios.post("{% url 'voy-admin:users:mappers_list' %}", users)
-                                .then(() => {
-                                    swal("Success", "Users deleted!", "success").then(value => {
-                                        window.location.href = "{% url "voy-admin:users:mappers_list" %}"
-                                    })
-                                })
-                                .catch(() => {
-                                    swal("Ops!", "Somethings wrong happen!", "error")
-                                        .then(value => {
-                                            window.location.href = "{% url "voy-admin:users:mappers_list" %}"
-                                        })
-                                });
-
-                        }
-                    );
-
-                }
-            });
-        })
-    </script>
+{#    <script type="text/javascript">#}
+{#        disable_remove_button = (state) => {#}
+{#            $("input[id^='remove_mappers']").prop("disabled", state);#}
+{#        };#}
+{##}
+{#        $("[id^='mapper_check']").change((event) => {#}
+{#            if (event.target.checked) {#}
+{#                disable_remove_button(false);#}
+{#            } else {#}
+{#                if (event.target.id === 'mapper_check_all' && !event.target.checked) {#}
+{#                    disable_remove_button(true);#}
+{#                }#}
+{#                if ($("[id^='mapper_check']input:checked").length <= 0) {#}
+{#                    disable_remove_button(true);#}
+{#                }#}
+{#            }#}
+{#        });#}
+{#        $('#remove_mappers').click(function () {#}
+{#            swal({#}
+{#                title: "{% trans "Are you sure?" %}",#}
+{#                text: "{% trans "We will delete the selected mapper(s)." %}",#}
+{#                icon: "warning",#}
+{#                buttons: true,#}
+{#                dangerMode: true#}
+{#            }).then(willDelete => {#}
+{#                if (willDelete) {#}
+{#                    event.preventDefault();#}
+{#                    let usersToDelete = new Promise((resolve, reject) => {#}
+{#                        let mappers = new Array();#}
+{#                        let params = new URLSearchParams();#}
+{#                        mappers.push(_.map($("[id^='mapper_check']input:checked"),#}
+{#                            mapper => {#}
+{#                                return mapper.value#}
+{#                            }));#}
+{#                        params.append('deleteMappers', mappers);#}
+{#                        console.log(params);#}
+{#                        resolve(params);#}
+{#                    });#}
+{#                    usersToDelete.then(#}
+{#                        users => {#}
+{#                            axios.post("{% url 'voy-admin:users:mappers_list' %}", users)#}
+{#                                .then(() => {#}
+{#                                    swal("Success", "Users deleted!", "success").then(value => {#}
+{#                                        window.location.href = "{% url "voy-admin:users:mappers_list" %}"#}
+{#                                    })#}
+{#                                })#}
+{#                                .catch(() => {#}
+{#                                    swal("Ops!", "Somethings wrong happen!", "error")#}
+{#                                        .then(value => {#}
+{#                                            window.location.href = "{% url "voy-admin:users:mappers_list" %}"#}
+{#                                        })#}
+{#                                });#}
+{##}
+{#                        }#}
+{#                    );#}
+{##}
+{#                }#}
+{#            });#}
+{#        })#}
+{#    </script>#}
 {% endblock %}

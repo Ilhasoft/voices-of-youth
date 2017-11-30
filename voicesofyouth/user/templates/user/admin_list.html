@@ -87,8 +87,6 @@
 {% block extrajs %}
     {{ block.super }}
     <script type="text/javascript">
-        axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
-
         disable_remove_button = (state) => {
             $("button[id^='remove_admins']").prop("disabled", state);
         };

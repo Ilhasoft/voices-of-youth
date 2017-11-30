@@ -1,4 +1,4 @@
-{% extends "user_new/users_base.html" %}
+{% extends "./user_base.html" %}
 {% load static i18n sass_tags %}
 
 {% block extracss %}
@@ -68,7 +68,7 @@
             <tbody>
             {% block users_list_panel_body %}
                 {% for user in users %}
-                    {% include "user_new/user_render.html" %}
+                    {% include "./include/user_render.html" %}
                 {% endfor %}
             {% endblock %}
             </tbody>
@@ -88,7 +88,7 @@
 
 {% block extrahtml %}
     {% block modal_add %}
-        {% include "user_new/modal_add_user.html" %}
+        {% include "./include/modal_add_user.html" %}
     {% endblock %}
 {% endblock %}
 
