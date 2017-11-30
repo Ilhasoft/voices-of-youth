@@ -3,7 +3,6 @@ from django.utils.translation import ugettext as _
 
 from leaflet.forms.fields import PolygonField
 
-from voicesofyouth.user.models import VoyUser
 from voicesofyouth.user.models import MapperUser
 
 
