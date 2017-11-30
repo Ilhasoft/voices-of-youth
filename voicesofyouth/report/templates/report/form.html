@@ -71,20 +71,24 @@
                                     {% if files_list %}
                                         <label>{% trans 'Select to remove file' %}</label>
                                         {% for file in files_list %}
-                                        <div class="row">
-                                            <div class="col-md-1">
-                                                <div class="checkbox c-checkbox needsclick">
-                                                    <label class="needsclick">
-                                                        <input type="checkbox" name="remove_files[]" value="{{ file.id }}" class="needsclick"/>
-                                                        <span class="fa fa-check"></span>
-                                                    </label>
+                                            <div class="row mt-10">
+                                                <div class="col-md-1">
+                                                    <div class="checkbox c-checkbox needsclick">
+                                                        <label class="needsclick">
+                                                            <input type="checkbox" name="remove_files[]" value="{{ file.id }}" class="needsclick"/>
+                                                            <span class="fa fa-check"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-10">
+                                                    {% if file.media_type == 'image' %}
+                                                        <img src="{{ file.file.url }}" class="media-object thumb48" alt="">
+                                                    {% elif file.media_type == 'video' %}
+                                                        <img src="{% static 'img/video.png' %}" class="media-object thumb48" alt="">
+                                                    {% endif %}
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-md-10">
-                                                <img src="{{ file.file.url }}" class="media-object thumb48" alt="">
-                                            </div>
-                                        </div>
                                         {% endfor %}
                                     {% endif %}
 

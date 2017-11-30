@@ -3,7 +3,7 @@ import magic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 from django.http.response import HttpResponse
@@ -19,6 +19,7 @@ from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
+from voicesofyouth.report.models import FILE_FORMATS
 from voicesofyouth.report.forms import ReportFilterForm
 from voicesofyouth.report.forms import ReportForm
 
@@ -141,9 +142,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context_data()
         form = ReportForm(data=request.POST)
-        context['selected_tags'] = request.POST.getlist('tags')
 
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
@@ -165,7 +164,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
             if files:
                 for file in files:
                     mime_type = magic.from_buffer(file.read(), mime=True)
-                    if mime_type in ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']:
+                    if mime_type in FILE_FORMATS:
                         media_type = mime_type.split('/')[0]
 
                         try:
@@ -185,13 +184,18 @@ class AddReportView(LoginRequiredMixin, TemplateView):
             messages.success(request, _('Report created'))
             return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
         else:
+            context = self.get_context_data()
+            context['data_form'] = form
+            context['selected_tags'] = request.POST.getlist('tags')
             messages.error(request, form.non_field_errors())
 
-        return super(AddReportView, self).render_to_response(context)
+            return render(request, self.template_name, context)
+
+        return self.get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['data_form'] = ReportForm(data=self.request.POST) if self.request.method == 'POST' else ReportForm()
+        context['data_form'] = ReportForm()
         return context
 
 
@@ -199,11 +203,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context_data()
         form = ReportForm(data=request.POST)
-        context['data_form'] = form
-        context['selected_tags'] = request.POST.getlist('tags')
-        context['remove_files'] = request.POST.getlist('remove_files[]')
 
         if form.is_valid():
             try:
@@ -226,7 +226,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 if files:
                     for file in files:
                         mime_type = magic.from_buffer(file.read(), mime=True)
-                        if mime_type in ['image/jpeg', 'image/pjpeg', 'image/png', 'image/gif']:
+                        if mime_type in FILE_FORMATS:
                             media_type = mime_type.split('/')[0]
 
                             try:
@@ -243,17 +243,26 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                             except Exception as e:
                                 return HttpResponse(status=500)
 
-                if context['remove_files'] is not None:
-                    ReportFile.objects.filter(id__in=context['remove_files'], report=report).delete()
+                remove_files = request.POST.getlist('remove_files[]')
+
+                if remove_files is not None:
+                    ReportFile.objects.filter(id__in=remove_files, report=report).delete()
 
                 messages.success(request, _('Report edited'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
             except Exception:
                 return HttpResponse(status=500)
         else:
-            messages.error(request, form.non_field_errors())
+            context = self.get_context_data()
 
-        return super().render_to_response(context)
+            context['data_form'] = form
+            context['selected_tags'] = request.POST.getlist('tags')
+            context['remove_files'] = request.POST.getlist('remove_files[]')
+
+            messages.error(request, form.non_field_errors())
+            return render(request, self.template_name, context)
+
+        return self.get(request)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -274,7 +283,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         context['selected_tags'] = report.tags.names()
 
         context['files_list'] = report.files.all()
-        context['data_form'] = ReportForm(initial=self.request.POST) if self.request.method == 'POST' else ReportForm(initial=data)
+        context['data_form'] = ReportForm(initial=data)
         return context
 
 

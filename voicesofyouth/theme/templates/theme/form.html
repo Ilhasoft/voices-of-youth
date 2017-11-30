@@ -131,7 +131,7 @@
         $('#id_tags').chosen();
         $('.demo-colorpicker').colorpicker();
 
-        $('.startdatepicker,.expiredatepicker').datetimepicker({
+        $('#datetimepicker1,#datetimepicker2').datetimepicker({
             format: 'DD/MM/YYYY',
             icons: {
                 date: 'fa fa-calendar',
@@ -142,12 +142,12 @@
             }
         });
 
-        $('.startdatepicker').on('dp.change', function (e) {
-            $('.expiredatepicker').data('DateTimePicker').minDate(e.date);
+        $('#datetimepicker1').on('dp.change', function (e) {
+            $('#datetimepicker2').data('DateTimePicker').minDate(e.date);
         });
 
-        $('.expiredatepicker').on('dp.change', function (e) {
-            $('.startdatepicker').data('DateTimePicker').maxDate(e.date);
+        $('#datetimepicker2').on('dp.change', function (e) {
+            $('#datetimepicker1').data('DateTimePicker').maxDate(e.date);
         });
 
         {% if selected_tags %}

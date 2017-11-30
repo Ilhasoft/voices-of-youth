@@ -24,7 +24,7 @@
               <ul class="images">
                 <li v-for="(file, key) in files" :key="key">
                   <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
-                  <img v-if="file.media_type == 'video'" src="../../assets/img/report-example.png" @click.prevent="openFile(file)" alt="">
+                  <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="">
                 </li>
               </ul>
             </div>

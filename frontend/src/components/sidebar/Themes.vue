@@ -13,7 +13,6 @@
                 <div class="control">
                   <div class="select is-info">
                     <select v-model="yearStart" @change="getThemesByPeriod">
-                      <option value=""></option>
                       <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
                     </select>
                   </div>
@@ -30,7 +29,6 @@
                 <div class="control">
                   <div class="select is-info">
                     <select v-model="yearEnd" @change="getThemesByPeriod">
-                      <option value=""></option>
                       <option :key="key" v-for="(year, key) in currentProject.years">{{ year.substr(0, 4) }}</option>
                     </select>
                   </div>
@@ -40,7 +38,7 @@
 
             <div class="column">
               <div class="control t-right">
-                <label class="radio">
+                <!-- <label class="radio">
                   Select all &nbsp;&nbsp;
                   <svg @click.prevent="setCheckAll(false)" v-if="isCheckedAll" xmlns="http://www.w3.org/2000/svg" width="23" height="21" viewBox="0 0 23 21">
                     <g fill="none" fill-rule="evenodd" stroke="#00D3C2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
@@ -51,7 +49,7 @@
                   <svg @click.prevent="setCheckAll(true)" v-else xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
                     <rect width="18" height="18" fill="none" fill-rule="evenodd" stroke="#AFAFAF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" rx="2" transform="translate(1.399 1.602)"/>
                   </svg>
-                </label>
+                </label> -->
               </div>
             </div>
           </div>
@@ -97,6 +95,11 @@ export default {
 
   mounted() {
     this.getThemes();
+
+    if (this.currentProject.years.length === 1) {
+      this.yearStart = this.currentProject.years[0].substr(0, 4);
+      this.yearEnd = this.currentProject.years[0].substr(0, 4);
+    }
   },
 
   computed: {
