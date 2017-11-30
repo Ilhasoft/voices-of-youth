@@ -83,6 +83,43 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 class AdminDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'user_new/admin_detail.html'
 
+    def post(self, request, admin_id, *args, **kwargs):
+        admin = get_object_or_404(MapperUser, pk=admin_id)
+
+        form = AdminForm(request.POST)
+
+        if form.save(admin):
+            messages.success(request, _('Admin saved with success!'))
+        else:
+            messages.error(request, _('Somethings wrong happened when save the admin. Please try again!'))
+            context = self.get_context_data(admin.id)
+            context['user'] = admin
+            context['form_edit_user'] = form
+            return render(request, self.template_name, context)
+
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, admin_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        admin = get_object_or_404(AdminUser, pk=admin_id)
+        data = {
+            'username': admin.username,
+            'name': admin.get_full_name(),
+            'email': admin.email,
+            # 'project': admin.projects.last(),
+            # 'themes': admin.themes.all(),
+            'avatars': admin.avatar
+        }
+        context['user'] = admin
+        context['user_delete_url'] = reverse('voy-admin:users:admin_detail', args=(admin.id, ))
+        context['form_edit_user'] = AdminForm(initial=data)
+        context['form_add_user'] = AdminForm()
+        context['selected_themes'] = admin.themes.values_list('id', flat=True)
+        context['users_list_url'] = reverse('voy-admin:users:admins_list')
+
+        return context
+
 
 class MappersListView(LoginRequiredMixin, TemplateView):
     template_name = 'user_new/mappers_list.html'
@@ -195,8 +232,8 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         else:
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
             context = self.get_context_data(request, mapper.id)
-            context['mapper'] = mapper
-            context['form_edit_mapper'] = form
+            context['user'] = mapper
+            context['form_edit_user'] = form
             return render(request, self.template_name, context)
 
         return self.get(request, *args, **kwargs)

@@ -32,3 +32,20 @@
 .table {
     border-collapse: unset;
 }
+
+.content-wrapper {
+    .content-heading {
+        margin-bottom: 0px;
+    }
+
+    .content-heading {
+        margin: 0px;
+        margin-bottom: 0px;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .content-wrapper {
+        padding: 0px;
+    }
+}
