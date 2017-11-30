@@ -1,0 +1,9 @@
+<form action="{{ search_form_url }}" method="get" id="user_search">
+    {% for field in search_form.hidden_fields %}
+        {{ field }}
+    {% endfor %}
+    {{ search_form.search }}
+</form>
+<span id="post_user_search" class="input-group-addon" style="cursor:pointer;">
+    <i class="fa fa-search fa-fw"></i>
+</span>

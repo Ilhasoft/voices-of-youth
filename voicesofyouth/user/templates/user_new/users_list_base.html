@@ -1,0 +1,195 @@
+{% extends "user_new/users_base.html" %}
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/user/users_list.scss' %}" type="text/css">
+{% endblock %}
+
+{% block users_base_panel_body %}
+    <div class="table-responsive">
+        <table class="table users-list {% block extra_table_users_class %}{% endblock %}">
+            <thead>
+            <tr>
+                <th data-check-all="">
+                    <div data-toggle="tooltip" data-title="Check All" class="checkbox c-checkbox">
+                        <label>
+                            <input type="checkbox" id="users_check_all">
+                            <span class="fa fa-check"></span>
+                        </label>
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        <button
+                                class="btn btn-default btn-lg"
+                                id="remove_user"
+                                disabled
+                        >{% trans "Remove" %}</button>
+                    </div>
+                </th>
+                {% block search_bar %}
+                    {% if filter_form %}
+                        <form action={% url "voy-admin:users:mappers_list" %} method="get" role="form">
+                            <th colspan="2">
+                                <div>
+                                    {{ form.non_field_errors }}
+                                    <p>Filter by:</p>
+                                    {% for field in filter_form.hidden_fields %}
+                                        {{ field }}
+                                    {% endfor %}
+                                    {% for field in filter_form.visible_fields %}
+                                        {% if field != filter_form.search %}
+                                            <div class="col-xs-3">
+                                                {{ field }}
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </th>
+                            <th>
+                                <div>
+                                    <input
+                                            type="submit"
+                                            value={% trans "Filter" %}
+                                                    class="btn btn-primary btn-lg"/>
+                                </div>
+
+                            </th>
+                        </form>
+                    {% else %}
+                        <th></th>
+                        <th></th>
+                    {% endif %}
+                {% endblock %}
+            </tr>
+            </thead>
+            <tbody>
+            {% block users_list_panel_body %}
+                {% for user in users %}
+                    {% include "user_new/user_render.html" %}
+                {% endfor %}
+            {% endblock %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block users_base_panel_footer %}
+    {% if users.has_next %}
+        <div class="row">
+            <div class="text-right">
+                {% include "voyadmin/paginator.html" with paginator=users %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block extrahtml %}
+    {% block modal_add %}
+        {% include "user_new/modal_add_user.html" %}
+    {% endblock %}
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    <script type="text/javascript">
+        axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+        disable_remove_button = (state) => {
+            $("button[id^='remove_user']").prop("disabled", state);
+        };
+
+        $("[id^='user_check']").change((event) => {
+            if (event.target.checked) {
+                disable_remove_button(false);
+            } else {
+                if (event.target.id === 'users_check_all' && !event.target.checked) {
+                    disable_remove_button(true);
+                }
+                if ($("[id^='user_check']input:checked").length <= 0) {
+                    disable_remove_button(true);
+                }
+            }
+        });
+
+        $('#remove_user').click(function () {
+            swal({
+                title: "{% trans "Are you sure?" %}",
+                text: "{% trans "We will delete the selected user(s)." %}",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then(willDelete => {
+                if (willDelete) {
+                    let users = new Array();
+                    users.push(_.map($("[id^='user_check']input:checked"),
+                        mapper => {
+                            return mapper.value
+                        }));
+                    var params = new URLSearchParams();
+                    params.append('deleteUsers', users);
+                    axios.post("{{ delete_users_url }}", params)
+                        .then(() => {
+                            swal("Success", "Users deleted!", "success").then(value => {
+                                window.location.href = "{{ list_users_url }}"
+                            })
+                        })
+                        .catch(() => {
+                            swal("Ops!", "Somethings wrong happen!", "error")
+                                .then(value => {
+                                    window.location.href = "{{ list_users_url }}"
+                                })
+                        });
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("img[id='current_avatar']").click((evt) => {
+            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
+        });
+        $("img[id^='avatar_']").click((evt) => {
+            const selected_avatar = $(evt.target);
+            const avatars = $(evt.target).parents('div').find('#avatars');
+            const current_avatar = $(evt.target).parents('div').find('#current_avatar');
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
+            $(current_avatar).attr('src', selected_avatar.attr('src'));
+            hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
+            avatars.slideUp("slow");
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("select[id='id_themes']").chosen();
+        $("select[id='id_project']").chosen();
+        $("select[id='id_projects']").chosen();
+
+        $("select[id='id_project']").change(function (e) {
+            e.preventDefault();
+            const currentFormId = $(e.target.closest("form")).attr('id');
+            var project = e.target.value;
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
+                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
+                themesSelect.empty();
+                themesSelect.trigger('chosen:updated');
+                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
+                response.data.map((item) => {
+                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    themesSelect.trigger('chosen:updated');
+                });
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $("#post_user_search").click(() => {
+            form = $("#user_search");
+            form.submit();
+        });
+    </script>
+{% endblock %}

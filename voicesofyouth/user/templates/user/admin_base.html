@@ -14,7 +14,7 @@
                 <div style="display: flex; flex-direction: row-reverse;">
                     <p style="order: 1; flex-grow: 2">Admins</p>
                     <div class="input-group margin-bottom-sm col-xs-3">
-                        <form action="{% url "voy-admin:users:admin_list" %}" method="get" id="admin_search">
+                        <form action="{% url "voy-admin:users:admins_list" %}" method="get" id="admin_search">
                             {% for field in filter_form.hidden_fields %}
                                 {{ field }}
                             {% endfor %}
@@ -81,34 +81,6 @@
         $("#post_admin_search").click(() => {
             $("#admin_search").submit();
         });
-    </script>
-    <script>
-        $('#id_projects').removeAttr('required');
-
-        function disable_local_admin_fields() {
-            $('div[name=local-admin-fields]').fadeOut();
-            $('#id_projects').removeAttr('required');
-            $('#id_projects').trigger('chosen:updated');
-        }
-
-        function enable_local_admin_fields() {
-            $('div[name=local-admin-fields]').fadeIn();
-            $('#id_projects').attr('required', true);
-            $('#id_projects').trigger('chosen:updated');
-        }
-
-        if ($('input[id^=id_global_admin]:checked').val() === 'local') {
-            enable_local_admin_fields();
-        } else {
-            disable_local_admin_fields();
-        }
-        $('input[id^=id_global_admin]').change((evt) => {
-            if (evt.target.value === 'local') {
-                enable_local_admin_fields();
-            } else {
-                disable_local_admin_fields();
-            }
-        })
     </script>
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
