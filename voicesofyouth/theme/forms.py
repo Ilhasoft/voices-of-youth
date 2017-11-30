@@ -4,6 +4,7 @@ from django.utils.translation import ugettext as _
 from leaflet.forms.fields import PolygonField
 
 from voicesofyouth.user.models import VoyUser
+from voicesofyouth.user.models import MapperUser
 
 
 class MyModelChoiceField(forms.ModelChoiceField):
@@ -118,7 +119,10 @@ class ThemeForm(forms.Form):
         project = kwargs.pop('project')
         super(ThemeForm, self).__init__(*args, **kwargs)
         self.fields['tags'].choices = project.all_tags.values_list('name', 'name')
-        self.fields['mappers_group'].queryset = VoyUser.objects.all()
+
+        groups_ids = project.themes.values_list('mappers_group__id')
+        qs = MapperUser.objects.filter(groups__id__in=groups_ids)
+        self.fields['mappers_group'].queryset = qs
 
     def clean(self):
         cleaned_data = super(ThemeForm, self).clean()
