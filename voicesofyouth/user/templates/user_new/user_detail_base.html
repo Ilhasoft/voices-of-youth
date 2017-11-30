@@ -1,8 +1,9 @@
-{% extends "voyadmin/base.html" %}
+{% extends "./user_base.html" %}
 {% load static i18n sass_tags %}
 
 {% block extracss %}
     {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}" type="text/css">
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
 {% endblock %}
 
@@ -11,15 +12,17 @@
         <div class="content-wrapper">
             <div class="content-heading">
                 <div style="display: flex; flex-direction: row-reverse;">
-                    <p style="order: 1; flex-grow: 2">Mappers</p>
+                    <div style="order: 1; flex-grow: 2">
+                        <p>{% block title %}Users{% endblock %}</p>
+                    </div>
                     <div class="input-group margin-bottom-sm col-xs-3">
-                        <form action="{{ users_list_url }}" method="get" id="mapper_search">
+                        <form action="{{ users_list_url }}" method="get" id="user_search">
                             {% for field in filter_form.hidden_fields %}
                                 {{ field }}
                             {% endfor %}
                             {{ filter_form.search }}
                         </form>
-                        <span id="post_mapper_search" class="input-group-addon" style="cursor:pointer;">
+                        <span id="post_user_search" class="input-group-addon" style="cursor:pointer;">
                         <i class="fa fa-search fa-fw"></i>
                     </span>
                     </div>
@@ -27,16 +30,16 @@
                         <button
                                 class="btn btn-default"
                                 data-toggle="modal"
-                                data-target="#modalAddMapper">
-                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> Add new mapper
+                                data-target="#modalAddUser">
+                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> {% block add_new_user_button_title %}Add new user{% endblock %}
                         </button>
                     </div>
                 </div>
             </div>
 
-            <div style="display: flex; flex-direction: row-reverse">
+            <div style="display: flex;">
                 {# TODO: We need a more concisive way to format this panel without use id. #}
-                <div class="panel panel-default col-xs-11" id="report">
+                <div class="panel panel-default col-xs-12" id="report">
                     <div class="panel-heading">
                         {% block panel_heading %}
                             <div>
@@ -48,12 +51,31 @@
                         {% endblock %}
                     </div>
                     <div class="panel-body">
-                        {% block panel_body %}
-                        {% endblock %}
+                        <div class="container-column">
+                            <div style="display: flex; align-items: baseline">
+                                <div class="col-xs-1">
+                                    <img src="{{ user.get_avatar_display }}" alt="">
+                                </div>
+                                <div class="col-xs-10">
+                                    <h4>{{ user.get_full_name }}</h4>
+                                    <p>{{ user.username }}</p>
+                                    <p>{{ user.email }}</p>
+                                    <p>{% trans "Creation date" %}: {{ user.date_joined|date:"d N Y" }}</p>
+                                </div>
+                                <div>
+                                    <button
+                                            type="button"
+                                            data-toggle="modal"
+                                            data-target="#modalEditUserProfile"
+                                            class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% block panel_body %}{% endblock %}
                     </div>
                     <div class="panel-footer">
-                        {% block panel_footer %}
-                        {% endblock %}
+                        {% block panel_footer %}{% endblock %}
                     </div>
                 </div>
             </div>
@@ -62,10 +84,11 @@
 {% endblock content %}
 
 {% block extrahtml %}
-    <div id="modalAddMapper"
+    {{ block.super }}
+    <div id="modalEditUserProfile"
          tabindex="-1"
          role="dialog"
-         aria-labelledby="modalAddMapperLabel"
+         aria-labelledby="modalEditUserProfileLabel"
          aria-hidden="true"
          class="modal fade"
          style="display: none;">
@@ -74,39 +97,46 @@
                 <div class="modal-header text-center">
                     <div class="container-column">
                         <div>
-                            <h4 id="modalAddMapperLabel" class="modal-title">{% trans "Add mapper" %}</h4>
+                            <h4 id="modalEditUserProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
                         </div>
                         <div style="display: none" id="avatars">
-                            {% for id, avatar_url in form_add_mapper.fields.avatars.choices %}
-                                <img src="{{ avatar_url }}" id="avatar_{{ id }}" style="cursor: pointer">
+                            {% for id, avatar_url in form_add_user.fields.avatars.choices %}
+                                <img src="{{ avatar_url }}" alt="" id="avatar_id" style="cursor: pointer">
                             {% endfor %}
                         </div>
                         <div style="padding: 5px;">
-                            {% if mapper %}
-                                <img id="current_avatar" src="{{ mapper.get_avatar_display }}" alt=""
+                            <div>
+                                <img id="current_avatar" src="{{ user.get_avatar_display }}" alt=""
                                      style="cursor: pointer">
-                            {% else %}
-                                <img id="current_avatar" src="{{ default_avatar }}" alt="" style="cursor: pointer">
-                            {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-lg btn-info" id="remove_user">{% block remove_user_button_title %}{% trans "Remove user" %}{% endblock %}</button>
                         </div>
                     </div>
                 </div>
-                <form action="{{ users_list_url }}" id="addMapperForm" method="post">
+                <form action="{{ request.get_full_path }}" id="editUserForm" method="post">
                     <div class="modal-body">
                         {% csrf_token %}
-                        {{ form_add_mapper }}
+                        {{ form_edit_user }}
                     </div>
                     <div class="modal-footer">
+                        <button
+                                id="reset_password"
+                                type="button"
+                                class="btn btn-default btn-lg">
+                            {% trans "Reset password" %}
+                        </button>
                         <button
                                 type="button"
                                 data-dismiss="modal"
                                 class="btn btn-default btn-lg">
-                            {% trans "Cancel" %}
+                            {% trans "Close" %}
                         </button>
                         <button
                                 type="submit"
                                 class="btn btn-info btn-lg">
-                            {% trans "Create" %}
+                            {% trans "Save changes" %}
                         </button>
                     </div>
                 </form>
@@ -117,13 +147,6 @@
 
 {% block extrajs %}
     {{ block.super }}
-    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
-    <script type="text/javascript">
-        $("#post_mapper_search").click(() => {
-            form = $("#mapper_search");
-            form.submit();
-        });
-    </script>
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
             $(evt.target).parents('div').find('#avatars').slideToggle("slow");
@@ -158,6 +181,25 @@
             }).catch(error => {
                 console.log(error);
             });
+        });
+    </script>
+    <script type="text/javascript">
+        $("#remove_user").click(() => {
+            swal({
+                title: '{% trans "You really want to delete this user?" %}',
+                text: '{% trans "This operation is irreversible!" %}',
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((answer) => {
+                if (answer === true) {
+                    axios.delete('{{ user_delete_url }}').then(() => {
+                        window.location = '{{ users_list_url }}'
+                    });
+                }
+            }).catch(error => {
+                swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
+            })
         });
     </script>
 {% endblock %}
