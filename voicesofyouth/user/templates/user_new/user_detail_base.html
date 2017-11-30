@@ -7,81 +7,29 @@
     <link rel="stylesheet" href="{% sass_src 'css/user/user_detail.scss' %}" type="text/css">
 {% endblock %}
 
-{% block content %}
-    <section>
-        <div class="content-wrapper">
-            <div class="content-heading">
-                <div style="display: flex; flex-direction: row-reverse;">
-                    <div style="order: 1; flex-grow: 2">
-                        <p>{% block title %}Users{% endblock %}</p>
-                    </div>
-                    <div class="input-group margin-bottom-sm col-xs-3">
-                        <form action="{{ users_list_url }}" method="get" id="user_search">
-                            {% for field in filter_form.hidden_fields %}
-                                {{ field }}
-                            {% endfor %}
-                            {{ filter_form.search }}
-                        </form>
-                        <span id="post_user_search" class="input-group-addon" style="cursor:pointer;">
-                        <i class="fa fa-search fa-fw"></i>
-                    </span>
-                    </div>
-                    <div class="input-group margin-bottom-sm" style="order: -1; margin-left: 47px;">
-                        <button
-                                class="btn btn-default"
-                                data-toggle="modal"
-                                data-target="#modalAddUser">
-                            <i class="fa fa-plus fa-lg" style="margin-right: 5px"></i> {% block add_new_user_button_title %}Add new user{% endblock %}
-                        </button>
-                    </div>
-                </div>
+{% block users_base_panel_body %}
+    <div class="container-column">
+        <div style="display: flex; align-items: baseline">
+            <div class="col-xs-1">
+                <img src="{{ user.get_avatar_display }}" alt="">
             </div>
-
-            <div style="display: flex;">
-                {# TODO: We need a more concisive way to format this panel without use id. #}
-                <div class="panel panel-default col-xs-12" id="report">
-                    <div class="panel-heading">
-                        {% block panel_heading %}
-                            <div>
-                                <a href="{{ users_list_url }}">
-                                    <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
-                                </a>
-                                <span class="text-bold">{% trans "Profile" %}</span>
-                            </div>
-                        {% endblock %}
-                    </div>
-                    <div class="panel-body">
-                        <div class="container-column">
-                            <div style="display: flex; align-items: baseline">
-                                <div class="col-xs-1">
-                                    <img src="{{ user.get_avatar_display }}" alt="">
-                                </div>
-                                <div class="col-xs-10">
-                                    <h4>{{ user.get_full_name }}</h4>
-                                    <p>{{ user.username }}</p>
-                                    <p>{{ user.email }}</p>
-                                    <p>{% trans "Creation date" %}: {{ user.date_joined|date:"d N Y" }}</p>
-                                </div>
-                                <div>
-                                    <button
-                                            type="button"
-                                            data-toggle="modal"
-                                            data-target="#modalEditUserProfile"
-                                            class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {% block panel_body %}{% endblock %}
-                    </div>
-                    <div class="panel-footer">
-                        {% block panel_footer %}{% endblock %}
-                    </div>
-                </div>
+            <div class="col-xs-10">
+                <h4>{{ user.get_full_name }}</h4>
+                <p>{{ user.username }}</p>
+                <p>{{ user.email }}</p>
+                <p>{% trans "Creation date" %}: {{ user.date_joined|date:"d N Y" }}</p>
+            </div>
+            <div>
+                <button
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#modalEditUserProfile"
+                    class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                </button>
             </div>
         </div>
-    </section>
-{% endblock content %}
+    </div>
+{% endblock %}
 
 {% block extrahtml %}
     {{ block.super }}
@@ -111,7 +59,8 @@
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-lg btn-info" id="remove_user">{% block remove_user_button_title %}{% trans "Remove user" %}{% endblock %}</button>
+                            <button class="btn btn-lg btn-info" id="remove_user">
+                                {% block remove_user_button_title %}{% trans "Remove user" %}{% endblock %}</button>
                         </div>
                     </div>
                 </div>
@@ -122,20 +71,20 @@
                     </div>
                     <div class="modal-footer">
                         <button
-                                id="reset_password"
-                                type="button"
-                                class="btn btn-default btn-lg">
+                            id="reset_password"
+                            type="button"
+                            class="btn btn-default btn-lg">
                             {% trans "Reset password" %}
                         </button>
                         <button
-                                type="button"
-                                data-dismiss="modal"
-                                class="btn btn-default btn-lg">
+                            type="button"
+                            data-dismiss="modal"
+                            class="btn btn-default btn-lg">
                             {% trans "Close" %}
                         </button>
                         <button
-                                type="submit"
-                                class="btn btn-info btn-lg">
+                            type="submit"
+                            class="btn btn-info btn-lg">
                             {% trans "Save changes" %}
                         </button>
                     </div>
