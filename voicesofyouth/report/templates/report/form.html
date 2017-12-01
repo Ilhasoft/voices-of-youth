@@ -5,7 +5,6 @@
 {% block extracss %}
     <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
-    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"/> -->
     {% leaflet_css plugins="forms" %}
 {% endblock %}
 
@@ -92,7 +91,7 @@
                                         {% endfor %}
                                     {% endif %}
 
-                                    <!-- <div class="form-group {% if data_form.link.errors %}has-error{% endif %}">
+                                    <div class="form-group {% if data_form.link.errors %}has-error{% endif %}">
                                         <label>{% trans 'Links' %}</label>
                                         <div class="input-group">
                                             {{ data_form.link }}
@@ -104,7 +103,7 @@
                                                 </button>
                                             </span>
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                     <div id="links">
                                         <!--<div class="form-group">
@@ -138,11 +137,11 @@
 
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
-    <!-- <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script> -->
     {% leaflet_js plugins="forms" %}
 
     <script type="text/javascript">
         var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
+        var linksCount = 0;
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 
         $('#id_tags').chosen();
@@ -150,9 +149,22 @@
         $('#btnAddLink').click(function(e) {
             var link = $('#id_link').val();
             if (link) {
-                $('#links').append('<div class="form-group"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_1"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
+                $('#links').append('<div class="form-group" id="' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
+                linksCount += 1;
+                $('#id_link').val('')
             }
         });
+
+        {% if selected_links %}
+            {% for link in selected_links %}
+                $('#links').append('<div class="form-group" id="link_' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="{{ link }}" id="link_check_' + linksCount + '"><input type="text" value="{{ link }}" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
+                linksCount += 1;
+            {% endfor %}
+        {% endif %}
+
+        function removeLink(item) {
+            $('#link_' + item).empty();
+        }
 
         $('#id_project').change(function(e) {
             e.preventDefault();
