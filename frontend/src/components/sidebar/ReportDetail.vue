@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="columns urls" v-if="urls">
+          <div class="columns urls" v-if="urls.length > 0">
             <div class="column">
               <strong>External Links</strong>
               <p v-for="(url, key) in urls" :key="key">
