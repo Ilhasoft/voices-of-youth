@@ -149,7 +149,7 @@
         $('#btnAddLink').click(function(e) {
             var link = $('#id_link').val();
             if (link) {
-                $('#links').append('<div class="form-group" id="' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
+                $('#links').append('<div class="form-group" id="link_' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
                 linksCount += 1;
                 $('#id_link').val('')
             }
@@ -163,6 +163,7 @@
         {% endif %}
 
         function removeLink(item) {
+            console.log(item);
             $('#link_' + item).empty();
         }
 
