@@ -19,6 +19,7 @@
     "vue": "^2.4.4",
     "vue-router": "^2.7.0",
     "vue-select": "github:sagalbot/vue-select",
+    "vue-social-sharing": "^2.2.10",
     "vue2-leaflet": "0.0.55",
     "vue2-leaflet-markercluster": "^1.2.0",
     "vuex": "^2.4.1",
