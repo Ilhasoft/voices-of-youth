@@ -55,11 +55,34 @@
 
           <div class="columns buttons">
             <div class="column">
-              <a class="button share">
+              <a class="button share shared">
                 <span class="icon-icon-share"></span> Share
+                <social-sharing 
+                  :url="formatURI()"
+                  :title="item.name"
+                  :description="item.description"
+                  :quote="item.description"
+                  :hashtags="formatTags()"
+                  v-cloak
+                  class="popover"
+                  inline-template>
+                  <div>
+                    <div class="columns">
+                      <div class="column">
+                        <network network="facebook">
+                          <i class="social-facebook"></i>
+                        </network>
+                      </div>
+                      <div class="column">
+                        <network network="twitter">
+                          <i class="social-twitter"></i>
+                        </network>
+                      </div>
+                    </div>
+                  </div>
+                </social-sharing>
               </a>
             </div>
-
             <div class="column">
               <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
                 <span class="icon-icon-comment"></span> Comment
@@ -78,10 +101,12 @@ import bus from '../../helper/bus';
 import helper from '../../helper';
 import NavigationBar from './Navigation';
 
+const socialSharing = require('vue-social-sharing');
+
 export default {
   name: 'ReportDetail',
 
-  components: { NavigationBar },
+  components: { NavigationBar, socialSharing },
 
   data() {
     return {
@@ -141,7 +166,7 @@ export default {
     },
 
     formatDescription() {
-      return this.item.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
+      return (this.item.description ? this.item.description.replace(/(?:\r\n|\r|\n)/g, '<br />') : '');
     },
 
     formatUrl(url) {
@@ -151,6 +176,17 @@ export default {
       }
 
       return tempUrl;
+    },
+
+    formatTags() {
+      if (this.item.tags) {
+        return this.item.tags.join(', ');
+      }
+      return '';
+    },
+
+    formatURI() {
+      return window.location.href;
     },
 
     openTheme() {
@@ -175,6 +211,70 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.shared {
+  .popover {
+      background-color: #00cbff;
+      border-radius: 5px;
+      bottom: 55px;
+      box-shadow: 0 0 5px #00cbff;
+      color: #fff;
+      left: 0px;
+      padding-top: 7px;
+      display: none;
+      font-size: 40px;
+      position: absolute;
+      width: 267px;
+      z-index: 4;
+      text-align: center;
+
+      &:before {
+        border-top: 7px solid #00cbff;
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        bottom: -7px;
+        content: '';
+        display: block;
+        left: 50%;
+        margin-left: -7px;
+        position: absolute;
+      }
+    }
+    
+  &:hover {
+    .popover {
+      display: block;
+      -webkit-animation: fade-in .5s linear 1, move-up .5s linear 1;
+      -moz-animation: fade-in .5s linear 1, move-up .5s linear 1;
+      -ms-animation: fade-in .5s linear 1, move-up .5s linear 1;
+    }
+  }
+}
+
+@-webkit-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-moz-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-ms-keyframes fade-in {
+	from   { opacity: 0; }
+	to { opacity: 1; }
+}
+@-webkit-keyframes move-up {
+	from   { bottom: 55px; }
+	to { bottom: 55px; }
+}
+@-moz-keyframes move-up {
+	from   { bottom: 55px; }
+	to { bottom: 55px; }
+}
+@-ms-keyframes move-up {
+	from   { bottom: 55px; }
+	to { bottom: 55px; }
+}
+
 .map-box {
   margin: auto;
 
