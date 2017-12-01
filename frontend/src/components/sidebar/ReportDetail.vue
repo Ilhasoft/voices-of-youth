@@ -34,7 +34,16 @@
             <div class="column">
               <h1 :style="formatFontColor()">{{ item.name }}</h1>
               <small :style="formatFontColor()">{{ formatDate() }}</small>
-              <p>{{ item.description }}</p>
+              <p v-html="formatDescription()" class="description"></p>
+            </div>
+          </div>
+
+          <div class="columns urls" v-if="urls">
+            <div class="column">
+              <strong>External Links</strong>
+              <p v-for="(url, key) in urls" :key="key">
+                <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
+              </p>
             </div>
           </div>
 
@@ -93,6 +102,7 @@ export default {
     ...mapGetters({
       item: 'getReport',
       files: 'getReportFiles',
+      urls: 'getReportUrls',
       preview: 'getReportPreview',
     }),
   },
@@ -128,6 +138,19 @@ export default {
 
     formatFontColor() {
       return `color: #${this.item.theme_color} !important;`;
+    },
+
+    formatDescription() {
+      return this.item.description.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    },
+
+    formatUrl(url) {
+      let tempUrl = url;
+      if (!/^https?:\/\//i.test(tempUrl)) {
+        tempUrl = `http://${tempUrl}`;
+      }
+
+      return tempUrl;
     },
 
     openTheme() {
@@ -230,6 +253,16 @@ export default {
       color: #000000;
       margin-top: 30px;
     }
+  }
+
+  .urls {
+    margin-left: 7px;
+    margin-right: 7px;
+  }
+
+  .description {
+    max-height: 370px;
+    overflow: auto;
   }
 
   .tags {
