@@ -1,0 +1,27 @@
+<script>
+    $("select[id='id_projects']").chosen();
+    $('#id_projects').removeAttr('required');
+
+    function disable_local_admin_fields() {
+        $('[id=id_projects_chosen],[for^=id_projects]').removeAttr('required').hide();
+    }
+
+    function enable_local_admin_fields() {
+        $('[id=id_projects_chosen],[for^=id_projects]').attr('required', true).show();
+        $('#id_projects').trigger('chosen:updated');
+    }
+
+    if ($('input[id^=id_global_admin]:checked').val() === 'local') {
+        enable_local_admin_fields();
+    } else {
+        disable_local_admin_fields();
+    }
+
+    $('input[id^=id_global_admin]').change((evt) => {
+        if (evt.target.value === 'local') {
+            enable_local_admin_fields();
+        } else {
+            disable_local_admin_fields();
+        }
+    })
+</script>

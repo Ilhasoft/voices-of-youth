@@ -1,5 +1,15 @@
-{% extends "user_new/user_detail_base.html" %}
+{% extends "./user_detail_base.html" %}
 {% load static i18n sass_tags %}
 
 {% block add_new_user_button_title %}Add new admin{% endblock %}
 {% block title %}Admin{% endblock %}
+
+{% block extracss %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% sass_src 'css/user/admin_common.scss' %}" type="text/css">
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    {% include "./include/common_admin_js.html" %}
+{% endblock %}
