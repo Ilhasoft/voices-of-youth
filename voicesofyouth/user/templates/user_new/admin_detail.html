@@ -12,4 +12,14 @@
 {% block extrajs %}
     {{ block.super }}
     {% include "./include/common_admin_js.html" %}
+    <script>
+        {# Update the chosen with selected projects. #}
+        var projects = [];
+        {% for project in user.projects.all %}
+            projects.push('{{ project.id }}');
+        {% endfor %}
+
+        const elem = $('form[id=editUserForm] select[id=id_projects]');
+        elem.val(projects).trigger('chosen:updated');
+    </script>
 {% endblock %}
