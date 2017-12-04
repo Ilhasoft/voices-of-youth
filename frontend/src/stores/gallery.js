@@ -61,7 +61,7 @@ export default {
       }
 
       const project = helper.getItem('project');
-      axios.get(`/api/report-files/?project=${project.id}${queryString}&page_size=20`).then((response) => {
+      axios.get(`/api/report-files/?project=${project.id}${queryString}&page_size=20&media_type=image`).then((response) => {
         commit(TYPES.SET_GALLERY_IMAGES, response.data);
         commit(TYPES.SET_GALLERY_PAGE, currentPage);
       }).catch((error) => {
