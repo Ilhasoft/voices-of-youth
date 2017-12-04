@@ -20,7 +20,7 @@ class ReportFilter(filters.FilterSet):
 class ReportFileFilter(filters.FilterSet):
     theme = filters.NumberFilter(name='report__theme',
                                  help_text='Get all files from the all reports linked with the theme id.')
-    report = filters.NumberFilter(name='id',
+    report = filters.NumberFilter(name='report__id',
                                   help_text='Get all files from the reports id.')
     project = filters.NumberFilter(name='report__theme__project__id',
                                    help_text='Get all files from the project id.')

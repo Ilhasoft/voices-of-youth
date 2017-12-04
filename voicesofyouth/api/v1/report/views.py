@@ -47,12 +47,15 @@ class ReportCommentsViewSet(viewsets.ModelViewSet):
         return response or super().list(request, *args, **kwargs)
 
 
-class ReportFilesViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportFilesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('-created_on').all()
     filter_class = ReportFileFilter
     pagination_class = ReportFilesResultsSetPagination
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user, modified_by=self.request.user)
 
 
 class ReportURLsViewSet(viewsets.ModelViewSet):

@@ -12,7 +12,11 @@ from voicesofyouth.user.models import User
 
 
 class ReportFilesSerializer(VoySerializer):
-    created_by = UserSerializer()
+    created_by = UserSerializer(required=False)
+    media_type = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    report_id = serializers.IntegerField()
+    file = serializers.FileField()
 
     class Meta:
         model = ReportFile
@@ -22,7 +26,11 @@ class ReportFilesSerializer(VoySerializer):
             'media_type',
             'file',
             'created_by',
+            'report_id'
         )
+
+    def create(self, validated_data):
+        return ReportFile.objects.create(**validated_data)
 
 
 class ReportURLsSerializer(VoySerializer):
