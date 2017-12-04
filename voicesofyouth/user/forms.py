@@ -151,9 +151,9 @@ class AdminForm(VoyUserBaseForm):
             for field, value in self.cleaned_data.items():
                 setattr(admin, field, value)
             admin.is_superuser = global_admin == 'global'
+            admin.save()
             for project in projects:
                 project.local_admin_group.user_set.add(admin)
-            admin.save()
             return True
         else:
             return False
