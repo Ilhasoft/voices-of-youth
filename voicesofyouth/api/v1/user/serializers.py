@@ -5,6 +5,7 @@ from voicesofyouth.user.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
+    is_mapper = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -13,3 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
     def get_avatar(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(obj.get_avatar_display())
+
+    def get_is_mapper(self, obj):
+        return obj.is_mapper(obj)
