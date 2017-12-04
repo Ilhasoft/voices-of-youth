@@ -1,9 +1,10 @@
 from django.conf import settings
 from rest_framework import serializers
+import magic
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer
-from voicesofyouth.report.models import Report
+from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
@@ -30,6 +31,11 @@ class ReportFilesSerializer(VoySerializer):
         )
 
     def create(self, validated_data):
+        mime_type = magic.from_buffer(validated_data['file'].read(), mime=True)
+        if mime_type.startswith('image'):
+            validated_data['media_type'] = FILE_TYPE_IMAGE
+        else:
+            validated_data['media_type'] = FILE_TYPE_VIDEO
         return ReportFile.objects.create(**validated_data)
 
 
