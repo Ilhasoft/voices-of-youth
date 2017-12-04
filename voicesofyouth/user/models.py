@@ -69,13 +69,15 @@ class VoyUser(AbstractUser):
 
     @property
     def themes(self):
-        from voicesofyouth.theme.models import Theme
-        return Theme.objects.filter(mappers_group__user=self)
+        raise NotImplementedError()
 
     @property
     def projects(self):
-        from voicesofyouth.project.models import Project
-        return Project.objects.filter(themes__in=self.themes).distinct()
+        raise NotImplementedError()
+
+    @classmethod
+    def is_mapper(cls, user):
+        return cls.objects.filter(id=user.id).exists()
 
     @property
     def local_admin_of(self):
@@ -120,6 +122,16 @@ class MapperUser(VoyUser):
     def is_mapper(cls, user):
         return cls.objects.filter(id=user.id).exists()
 
+    @property
+    def themes(self):
+        from voicesofyouth.theme.models import Theme
+        return Theme.objects.filter(mappers_group__user=self)
+
+    @property
+    def projects(self):
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(themes__in=self.themes).distinct()
+
 
 class LocalAdminUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
@@ -127,7 +139,22 @@ class LocalAdminUserManager(UserManager):
         return qs.filter(groups__name__contains='- local admin').distinct()
 
 
-class LocalUserAdmin(VoyUser):
+class BaseAdminUser(VoyUser):
+    class Meta:
+        proxy = True
+
+    @property
+    def projects(self):
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(local_admin_group__user=self).distinct()
+
+    @property
+    def themes(self):
+        from voicesofyouth.theme.models import Theme
+        return Theme.objects.filter(project__in=self.projects).distinct()
+
+
+class LocalUserAdmin(BaseAdminUser):
     """
     Represents a local admin user.
     """
@@ -136,10 +163,6 @@ class LocalUserAdmin(VoyUser):
     class Meta:
         proxy = True
 
-    @classmethod
-    def is_mapper(cls, user):
-        return cls.objects.filter(id=user.id).exists()
-
 
 class GlobalAdminUserManager(UserManager):
     def get_queryset(self, *args, **kwargs):
@@ -147,7 +170,7 @@ class GlobalAdminUserManager(UserManager):
         return qs.filter(is_superuser=True).distinct()
 
 
-class GlobalUserAdmin(VoyUser):
+class GlobalUserAdmin(BaseAdminUser):
     """
     Represents a global admin user.
     """
@@ -155,10 +178,6 @@ class GlobalUserAdmin(VoyUser):
 
     class Meta:
         proxy = True
-
-    @classmethod
-    def is_mapper(cls, user):
-        return cls.objects.filter(id=user.id).exists()
 
 
 class AdminUserManager(models.Manager):
@@ -168,7 +187,7 @@ class AdminUserManager(models.Manager):
         return qs.order_by('-is_superuser')
 
 
-class AdminUser(VoyUser):
+class AdminUser(BaseAdminUser):
     """
     Represents a admin user(global or local).
     """
