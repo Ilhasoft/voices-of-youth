@@ -171,7 +171,8 @@ if settings.DEBUG:
                                        name=theme_name,
                                        description=lorem.paragraph(),
                                        created_by=user,
-                                       modified_by=user)
+                                       modified_by=user,
+                                       bounds=project.bounds)
                     # Create the link between mapper and theme.
                     theme.mappers_group.user_set.add(*random.choices(users,
                                                                      (len(t.username) for t in users),
