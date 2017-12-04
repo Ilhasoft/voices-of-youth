@@ -9,10 +9,12 @@ from voicesofyouth.report.models import ReportURL
 class ReportFilter(filters.FilterSet):
     project = filters.NumberFilter(name='theme__project__id', help_text='Filter reports by project id.')
     theme = filters.NumberFilter(name='theme__id', help_text='Filter reports by theme id.')
+    mapper = filters.NumberFilter(name='created_by__id', help_text='Filter reports by mapper id.')
+    status = filters.NumberFilter(name='status', help_text='Filter reports by status.')
 
     class Meta:
         model = Report
-        fields = ('theme', 'project')
+        fields = ('theme', 'project', 'mapper', 'status')
 
 
 class ReportFileFilter(filters.FilterSet):

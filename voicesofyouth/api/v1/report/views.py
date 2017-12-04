@@ -1,6 +1,7 @@
 from rest_framework import permissions, viewsets
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
@@ -27,7 +28,7 @@ class ReportsPagination(PageNumberPagination):
 class ReportsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
-    queryset = Report.objects.approved().prefetch_related('theme', 'created_by', 'files', 'tags').all()
+    queryset = Report.objects.all().prefetch_related('theme', 'created_by', 'files', 'tags').all()
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
