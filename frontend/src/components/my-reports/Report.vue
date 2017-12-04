@@ -1,24 +1,39 @@
 <template>
   <div class="columns item">
     <div class="column is-3">
-      <img src="./../../assets/img/report-example.png" alt="">
+      <img :src="report.last_image.file" alt="" v-if="report.last_image">
     </div>
 
     <div class="column text">
-      <h4 class="is-marginless">Polluted water due to garbage disposal in river</h4>
-      <small>Aug 4, 2017</small>
-      <p>Lorem ipsum dolor sit amet, conseadipiscing elit, sed doet, conseadipiscing elit, sed do eiusmod…et, conseadipiscing elit, sed do eiusmod…et, conseadipiscing elit, sed do eiusmod… eiusmod…</p>
+      <h4 class="is-marginless">{{ report.name }}</h4>
+      <small>{{ formatDate() }}</small>
+      <p>{{ report.description }}</p>
     </div>
 
     <div class="column is-2 m-auto">
-      <button class="button btn-edit">Edit</button>
+      <!-- <button class="button btn-edit">Edit</button> -->
     </div>
   </div>
 </template>
 
 <script>
+import helper from '../../helper';
+
 export default {
   name: 'ReportItem',
+
+  props: {
+    report: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  methods: {
+    formatDate() {
+      return helper.formatDate(this.report.created_on);
+    },
+  },
 };
 </script>
 
