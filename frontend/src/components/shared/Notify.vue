@@ -33,6 +33,16 @@ export default {
     },
   },
 
+  watch: {
+    isVisible() {
+      if (this.isVisible === 'fade-in') {
+        setTimeout(() => {
+          this.close();
+        }, 4000);
+      }
+    },
+  },
+
   methods: {
     ...mapActions([
       'notifyClose',

@@ -30,7 +30,6 @@ class ReportURLsSerializer(VoySerializer):
         model = ReportURL
         fields = (
             'url',
-            'report',
         )
 
 
@@ -61,7 +60,8 @@ class ReportSerializer(VoySerializer):
             'theme_color',
             'pin',
             'created_by',
-            'last_image'
+            'last_image',
+            # 'urls'
         )
 
     def get_tags(self, obj):
@@ -70,6 +70,9 @@ class ReportSerializer(VoySerializer):
     def get_pin(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
+
+    def get_urls(self, obj):
+        return obj.urls.all()
 
 
 class ReportCommentsSerializer(VoySerializer):

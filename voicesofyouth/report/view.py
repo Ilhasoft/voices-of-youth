@@ -16,6 +16,7 @@ from voicesofyouth.voyadmin.utils import get_paginator
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
+from voicesofyouth.report.models import ReportURL
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_REJECTED
@@ -181,14 +182,30 @@ class AddReportView(LoginRequiredMixin, TemplateView):
                         except Exception as e:
                             return HttpResponse(status=500)
 
+            links = request.POST.getlist('links[]')
+
+            if links:
+                for link in links:
+                    try:
+                        report_link = ReportURL(
+                            report=report,
+                            url=link,
+                            created_by=mapper,
+                            modified_by=mapper
+                        )
+                        report_link.save()
+                    except Exception as e:
+                        return HttpResponse(status=500)
+
             messages.success(request, _('Report created'))
             return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
         else:
             context = self.get_context_data()
             context['data_form'] = form
             context['selected_tags'] = request.POST.getlist('tags')
-            messages.error(request, form.non_field_errors())
+            context['selected_links'] = request.POST.getlist('links[]')
 
+            messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
 
         return self.get(request)
@@ -248,6 +265,23 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 if remove_files is not None:
                     ReportFile.objects.filter(id__in=remove_files, report=report).delete()
 
+                ReportURL.objects.filter(report=report).delete()
+                links = request.POST.getlist('links[]')
+
+                if links:
+                    for link in links:
+                        try:
+                            report_link = ReportURL(
+                                report=report,
+                                url=link,
+                                created_by=mapper,
+                                modified_by=mapper
+                            )
+                            report_link.save()
+                        except Exception as e:
+                            print(e)
+                            return HttpResponse(status=500)
+
                 messages.success(request, _('Report edited'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
             except Exception:
@@ -258,6 +292,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             context['data_form'] = form
             context['selected_tags'] = request.POST.getlist('tags')
             context['remove_files'] = request.POST.getlist('remove_files[]')
+            context['selected_links'] = request.POST.getlist('links[]')
 
             messages.error(request, form.non_field_errors())
             return render(request, self.template_name, context)
@@ -281,6 +316,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
 
         context['editing'] = True
         context['selected_tags'] = report.tags.names()
+        context['selected_links'] = report.urls.all()
 
         context['files_list'] = report.files.all()
         context['data_form'] = ReportForm(initial=data)
