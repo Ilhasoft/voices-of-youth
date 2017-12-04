@@ -1,6 +1,22 @@
 <script>
+    {# Update the chosen with selected projects. #}
+    var projects = [];
+    {% for project in user.projects.all %}
+        projects.push('{{ project.id }}');
+    {% endfor %}
+
+    const elem = $('form[id=editUserForm] select[id=id_projects]');
+    elem.val(projects).trigger('chosen:updated');
+</script>
+
+<script>
     $("select[id='id_projects']").chosen();
     $('#id_projects').removeAttr('required');
+    {% if user.is_superuser %}
+        $('form[id=editUserForm] input[id=id_global_admin_0]').prop('checked', true);
+    {% else %}
+        $('form[id=editUserForm] input[id=id_global_admin_1]').prop('checked', true);
+    {% endif %}
 
     function disable_local_admin_fields() {
         $('[id=id_projects_chosen],[for^=id_projects]').removeAttr('required').hide();
