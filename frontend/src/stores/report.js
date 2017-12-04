@@ -122,7 +122,7 @@ export default {
   actions: {
     getReports({ commit, dispatch }) {
       const project = helper.getItem('project');
-      axios.get(`/api/reports?project=${project.id}`).then((response) => {
+      axios.get(`/api/reports?project=${project.id}&status=1`).then((response) => {
         commit(TYPES.SET_REPORTS, response.data);
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
@@ -132,7 +132,7 @@ export default {
 
     getReportsByTheme({ dispatch, commit, state }, obj) {
       if (obj.isChecked) {
-        axios.get(`/api/reports?theme=${obj.themeId}`).then((response) => {
+        axios.get(`/api/reports?theme=${obj.themeId}&status=1`).then((response) => {
           commit(TYPES.ADD_REPORTS_LIST, {
             data: response.data,
             theme: obj.themeId,
