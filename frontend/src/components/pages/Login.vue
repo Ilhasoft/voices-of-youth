@@ -12,34 +12,36 @@
                 </div>
               </div>
 
-              <div class="columns">
-                <div class="column has-text-center">
-                  <h1>Hello, again!</h1>
-                  <small>Login to your account</small>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="Name" v-model="login.username"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="Password" v-model="login.password"/>
-                </div>
-              </div>
-
-              <div class="columns">
-                <div class="column has-text-center">
-                  <a href="" class="forgot">Forgot password?</a>
+              <form action="" @submit.prevent="execLogin()">
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <h1>Hello, again!</h1>
+                    <small>Login to your account</small>
+                  </div>
                 </div>
 
-                <div class="column has-text-center">
-                  <button type="submit" @click.prevent="execLogin()" class="btn button l-submit">Login</button>
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="text" class="input" name="name" value="" placeholder="Name" v-model="login.username"/>
+                  </div>
                 </div>
-              </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <input type="password" class="input" name="password" placeholder="Password" v-model="login.password"/>
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
+                    <a href="" class="forgot">Forgot password?</a>
+                  </div>
+
+                  <div class="column has-text-center">
+                    <button type="submit" @click.prevent="execLogin()" class="btn button l-submit">Login</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </article>
         </div>
