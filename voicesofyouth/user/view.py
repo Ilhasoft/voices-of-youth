@@ -28,11 +28,27 @@ def search_user(search_by, qs):
                      Q(last_name__icontains=search_by))
 
 
+def _add_admin(request, admin=None):
+    admin = admin or AdminUser()
+    form = AdminForm(request.POST)
+    error = None
+    saved = False
+    try:
+        saved = form.save(admin)
+        if not saved:
+            messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
+        else:
+            messages.info(request, 'Admin saved successfully!')
+    except IntegrityError as exc:
+        error = str(exc).split('\n')[0]
+        messages.error(request, error)
+    return saved, form, error
+
 class AdminListView(LoginRequiredMixin, TemplateView):
     template_name = 'user_new/admins_list.html'
 
     def post(self, request):
-        delete = request.POST.get('deleteAdmins')
+        delete = request.POST.get('deleteUsers')
         current_user = request.user
         if delete:
             try:
@@ -45,18 +61,8 @@ class AdminListView(LoginRequiredMixin, TemplateView):
                 return HttpResponse(str(exc), status=500)
             return HttpResponse("Admin users deleted!")
         else:
-            form = AdminForm(request.POST)
-            if form.is_valid():
-                admin = AdminUser()
-                try:
-                    form.save(admin)
-                except IntegrityError as exc:
-                    messages.error(request, str(exc).split('\n')[0])
-                    context = self.get_context_data()
-                    context['form_add_admin'] = form
-                    return render(request, self.template_name, context)
-            else:
-                messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
+            saved, form, error = _add_admin(request)
+            if error or not saved:
                 context = self.get_context_data()
                 context['form_add_admin'] = form
                 context['open_modal'] = True
@@ -84,20 +90,16 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
     template_name = 'user_new/admin_detail.html'
 
     def post(self, request, admin_id, *args, **kwargs):
-        admin = get_object_or_404(MapperUser, pk=admin_id)
+        admin = get_object_or_404(AdminUser, pk=admin_id)
 
-        form = AdminForm(request.POST)
-
-        if form.save(admin):
-            messages.success(request, _('Admin saved with success!'))
-        else:
-            messages.error(request, _('Somethings wrong happened when save the admin. Please try again!'))
-            context = self.get_context_data(admin.id)
-            context['user'] = admin
-            context['form_edit_user'] = form
+        saved, form, error = _add_admin(request, admin)
+        if error or not saved:
+            context = self.get_context_data(admin_id=admin.id)
+            context['form_edit_admin'] = form
+            context['open_modal'] = True
             return render(request, self.template_name, context)
 
-        return self.get(request, *args, **kwargs)
+        return self.get(request, admin_id=admin.id)
 
     def get_context_data(self, admin_id, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -117,6 +119,7 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
         context['form_add_user'] = AdminForm()
         context['selected_themes'] = admin.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:admins_list')
+        context['post_add_user_url'] = reverse('voy-admin:users:admins_list')
 
         return context
 

@@ -145,13 +145,18 @@ class AdminForm(VoyUserBaseForm):
         self.fields['projects'].queryset = Project.objects.all()
 
     def save(self, admin):
-        global_admin = self.cleaned_data['global_admin']
-        projects = self.cleaned_data['projects']
         if super().save(admin):
+            global_admin = self.cleaned_data.pop('global_admin')
+            projects = self.cleaned_data.pop('projects')
+            for field, value in self.cleaned_data.items():
+                setattr(admin, field, value)
             admin.is_superuser = global_admin == 'global'
             for project in projects:
                 project.local_admin_group.user_set.add(admin)
             admin.save()
+            return True
+        else:
+            return False
 
     def clean(self):
         global_admin = self.cleaned_data['global_admin']
