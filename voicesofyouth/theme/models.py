@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.db import models as gismodels
+from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models.query_utils import Q
@@ -94,6 +95,15 @@ class Theme(BaseModel):
 ###############################################################################
 # Signals handlers
 ###############################################################################
+
+@receiver(pre_save, sender=Theme)
+def validate_theme_area(sender, instance, **kwargs):
+    """
+    Check if theme bounds is inside the project bounds area.
+    """
+    if not instance.project.bounds.contains(instance.bounds):
+        raise ValidationError(_('You cannot create a theme outside of project bounds.'))
+
 
 @receiver(pre_save, sender=Theme)
 def generate_color(sender, instance, **kwargs):
