@@ -22,10 +22,12 @@ class ReportFileFilter(filters.FilterSet):
                                   help_text='Get all files from the reports id.')
     project = filters.NumberFilter(name='report__theme__project__id',
                                    help_text='Get all files from the project id.')
+    media_type = filters.CharFilter(name='media_type',
+                                    help_text='Get all files from the media type')
 
     class Meta:
         model = ReportFile
-        fields = ('theme', 'report', 'project')
+        fields = ('theme', 'report', 'project', 'media_type')
 
 
 class ReportCommentFilter(filters.FilterSet):
