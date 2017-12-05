@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.contrib.gis.geos.point import Point
 from django.db import migrations
+import numpy as np
 
 from unipath import Path
 
@@ -209,10 +210,14 @@ if settings.DEBUG:
                     # Reports creation
                     for z in range(random.randint(1, len(mappers))):
                         mapper = random.choice(mappers)
+                        valid_point = theme.bounds.point_on_surface
+                        dp_x, dp_y = np.std(np.array(theme.bounds.coords), axis=1)[0]
+                        x, y = random.uniform(0, dp_x), random.uniform(0, dp_y)
                         theme.mappers_group.user_set.add(mapper)
+                        random_point = Point(valid_point.coords[0] + x, valid_point.coords[1] + y)
                         report = mommy.make(Report,
                                             name=f'Report {z}',
-                                            location=Point(random.randint(-150, 150), random.randint(-60, 60)),
+                                            location=random_point,
                                             description=lorem.paragraph(),
                                             theme=theme,
                                             created_by=mapper,
