@@ -56,7 +56,6 @@ class ReportSerializer(VoySerializer):
     editable = serializers.BooleanField(read_only=True)
     visible = serializers.BooleanField(read_only=True)
     pin = serializers.SerializerMethodField()
-    # urls = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Report
@@ -75,7 +74,6 @@ class ReportSerializer(VoySerializer):
             'pin',
             'created_by',
             'last_image',
-            # 'urls'
         )
 
     def get_tags(self, obj):
@@ -84,9 +82,6 @@ class ReportSerializer(VoySerializer):
     def get_pin(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
-
-    def get_urls(self, obj):
-        return obj.urls.all()
 
 
 class ReportCommentsSerializer(VoySerializer):
