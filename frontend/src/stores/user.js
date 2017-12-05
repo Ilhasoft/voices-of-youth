@@ -7,11 +7,13 @@ export default {
     userData: {},
     isLogged: false,
     loginError: {},
+    myReports: {},
   },
 
   getters: {
     getUserData: state => state.userData,
     userIsLogged: state => state.isLogged,
+    getMyReports: state => state.myReports,
   },
 
   /* eslint-disable no-param-reassign */
@@ -23,6 +25,10 @@ export default {
     [TYPES.SET_USER_DATA](state, obj) {
       state.userData = obj.userData;
       state.isLogged = obj.isLogged;
+    },
+
+    [TYPES.SET_USER_REPORTS](state, obj) {
+      state.myReports = obj;
     },
   },
 
@@ -62,6 +68,15 @@ export default {
       return commit(TYPES.SET_USER_DATA, {
         userData: {},
         isLogged: false,
+      });
+    },
+
+    myReports({ commit, dispatch }, obj) {
+      const user = helper.getItem('user');
+      axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}`).then((response) => {
+        commit(TYPES.SET_USER_REPORTS, response.data);
+      }).catch(() => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
       });
     },
   },

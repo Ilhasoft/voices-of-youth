@@ -8,29 +8,31 @@
             
           <div class="columns">
             <div class="column is-2">
-              <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('approved', 'Ups! You have not created any report yet')">Approved</button>
+              <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
             </div>
+            
             <div class="column is-2">
-              <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('pending', 'Great! All your reports has been approved')">Pending</button>
+              <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
             </div>
+
             <div class="column is-2">
-              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="setStatus('rejected', 'Good job! You have no rejected reports')">Rejected</button>
+              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Rejected</button>
             </div>
+            
             <div class="column">
-              <input type="text" class="input" placeholder="Search for report" />
+              <!-- <input type="text" class="input" placeholder="Search for report" /> -->
             </div>
           </div>
 
-          <report-item v-show="status == ''" />
-          <report-item v-show="status == ''" />
+          <report-item :key="key" :report="report" v-for="(report, key) in reports" />
 
-          <empty-list :status="status" :text="textTag" v-show="status" />
+          <empty-list :status="status" :text="text" v-show="isEmpty" />
 
-          <div class="columns" v-show="status == ''">
+          <!-- <div class="columns" v-show="status == ''">
             <div class="column">
               <p class="more-oldest"><a href="">More oldest</a></p>
             </div>
-          </div>
+          </div> -->
           </div>
         </div>
       </div>
@@ -39,6 +41,7 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
 import HeaderIndex from '../header/Index';
 import ReportItem from '../my-reports/Report';
 import EmptyList from '../my-reports/Empty';
@@ -51,7 +54,13 @@ export default {
   data() {
     return {
       status: '',
-      textTag: '',
+      text: '',
+      isEmpty: false,
+      descriptions: {
+        approved: 'Ups! You have not created any report yet',
+        pending: 'Great! All your reports has been approved',
+        rejected: 'Good job! You have no rejected reports',
+      },
     };
   },
 
@@ -63,10 +72,28 @@ export default {
     document.body.className = 'white';
   },
 
+  mounted() {
+    this.getReports('approved', 1);
+  },
+
+  computed: mapGetters({
+    reports: 'getMyReports',
+  }),
+
   methods: {
-    setStatus(status, text) {
+    ...mapActions([
+      'myReports',
+    ]),
+
+    getReports(status, type) {
       this.status = status;
-      this.textTag = text;
+      this.myReports(type);
+      this.isEmpty = false;
+
+      if (this.reports.length === 0) {
+        this.text = this.descriptions[status];
+        this.isEmpty = true;
+      }
     },
   },
 };
