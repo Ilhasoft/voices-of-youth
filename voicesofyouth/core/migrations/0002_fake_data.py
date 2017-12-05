@@ -118,7 +118,8 @@ if settings.DEBUG:
                                   ('Galileu', 'Galilei'))
             fake_local_admins = (('Neil', 'Tyson'),
                                  ('Albert', 'Einstein'),
-                                 ('Max', 'Planck'))
+                                 ('Max', 'Planck'),
+                                 ('Michael', 'Faraday'))
             projects_names = (
                 'Apollo',
                 'Astro',
@@ -165,14 +166,15 @@ if settings.DEBUG:
                                                 avatar=random.randint(1, 22),
                                                 first_name=global_admin[0],
                                                 last_name=global_admin[1]))
-            for i in range(1, 3):
+            for i in range(1, 4):
                 local_admin = fake_local_admins[i]
                 local_admins.append(mommy.make(GlobalUserAdmin,
                                                username=local_admin[1].lower(),
                                                avatar=random.randint(1, 22),
                                                first_name=local_admin[0],
                                                last_name=local_admin[1]))
-            for x in range(random.randint(1, 5)):
+            # Projects creation
+            for x in range(random.randint(3, 6)):
                 global_admin = random.choice(global_admins)
                 project_name = random.choice(projects_names)
                 while Project.objects.filter(name=project_name).count() > 0:
@@ -184,7 +186,8 @@ if settings.DEBUG:
                                      created_by=global_admin,
                                      modified_by=global_admin)
                 project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
-                for y in range(random.randint(5, 10)):
+                # Themes creation
+                for y in range(random.randint(4, 6)):
                     local_admin = random.choice(local_admins)
                     project.local_admin_group.user_set.add(local_admin)
                     theme_name = random.choice(themes_names)
@@ -197,12 +200,12 @@ if settings.DEBUG:
                                        created_by=local_admin,
                                        modified_by=local_admin,
                                        bounds=project.bounds)
-                    # Create the link between mapper and theme.
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
                     lang = settings.LANGUAGES[lang_idx][0]
                     make_translation(theme, lang)
                     make_translation(project, lang)
+                    # Reports creation
                     for z in range(random.randint(1, 10)):
                         mapper = random.choice(mappers)
                         theme.mappers_group.user_set.add(mapper)
