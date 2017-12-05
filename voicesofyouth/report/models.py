@@ -3,7 +3,10 @@ import uuid
 from datetime import datetime
 
 from django.contrib.gis.db import models as gismodels
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
@@ -194,3 +197,16 @@ class ReportURL(BaseModel):
 
     def __str__(self):
         return self.url
+
+
+###############################################################################
+# Signals handlers
+###############################################################################
+
+@receiver(pre_save, sender=Report)
+def check_user_permission(sender, instance, **kwargs):
+    """
+    Mapper cannot create report for a theme that he haven't permission.
+    """
+    if instance.theme not in instance.created_by.themes:
+        raise ValidationError(_('You cannot create a report for a theme that you don\'t have permission.'))

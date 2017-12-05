@@ -11,7 +11,7 @@ __email__ = 'eltonplima AT gmail DOT com'
 __status__ = 'Development'
 
 test_img = Path(__file__).absolute().ancestor(3).child('test', 'assets', 'python.png')
-user = None
+mapper = None
 
 
 class Migration(migrations.Migration):
@@ -48,7 +48,7 @@ if settings.DEBUG:
     from voicesofyouth.translation.models import TranslatableField
     from voicesofyouth.translation.models import Translation
     from voicesofyouth.translation.models import create_translatable_model
-    from voicesofyouth.user.models import User
+    from voicesofyouth.user.models import User, MapperUser, GlobalUserAdmin
 
     import lorem
     from model_mommy import mommy
@@ -56,6 +56,7 @@ if settings.DEBUG:
 
     mommy.generators.add(TextFieldTranslatable, gen_string)
     mommy.generators.add(CharFieldTranslatable, gen_string)
+
 
     def make_translation(obj, lang):
         for field in TranslatableField.objects.filter(model__model=obj._meta.model_name):
@@ -79,20 +80,20 @@ if settings.DEBUG:
                        title=lorem.sentence(),
                        description=lorem.paragraph(),
                        report=report,
-                       created_by=user,
-                       modified_by=user,
+                       created_by=mapper,
+                       modified_by=mapper,
                        media_type=random.choice(FILE_TYPES)[0],
                        file=fake_file)
 
         mommy.make(ReportURL,
                    report=report,
-                   created_by=user,
-                   modified_by=user,
+                   created_by=mapper,
+                   modified_by=mapper,
                    url='https://google.com')
 
 
     def create_dev_data(apps, schema_editor):
-        global user
+        global mapper
         create_translatable_model(Project)
         create_translatable_model(Theme)
         with open(test_img, 'rb') as image, transaction.atomic():
@@ -104,15 +105,20 @@ if settings.DEBUG:
                     'star wars',
                     'crazy',
                     'anything')
-            fake_users = (('Neil', 'Tyson'),
-                          ('Albert', 'Einstein'),
-                          ('Isaac', 'Newton'),
-                          ('Max', 'Planck'),
-                          ('Carl', 'Sagan'),
-                          ('Stephen', 'Hawking'),
-                          ('Nikola', 'Tesla'),
-                          ('Galileu', 'Galilei'),
-                          ('Charles', 'Darwin'))
+            fake_mappers = (('Johannes', 'Keppler'),
+                            ('Marie', 'Currie'),
+                            ('Isaac', 'Newton'),
+                            ('Antoine', 'Lavoisier'),
+                            ('Carl', 'Sagan'),
+                            ('Stephen', 'Hawking'),
+                            ('Nikola', 'Tesla'),
+                            ('Nicolau', 'Copérnico'),
+                            ('Charles', 'Darwin'))
+            fake_global_admins = (('Isaac', 'Newton'),
+                                  ('Galileu', 'Galilei'))
+            fake_local_admins = (('Neil', 'Tyson'),
+                                 ('Albert', 'Einstein'),
+                                 ('Max', 'Planck'))
             projects_names = (
                 'Apollo',
                 'Astro',
@@ -142,16 +148,32 @@ if settings.DEBUG:
                 'Governance'
             )
             fake_thumbnail = ImageFile(image)
-            users = []
+            mappers = []
+            global_admins = []
+            local_admins = []
             for i in range(1, 9):
-                user = fake_users[i]
-                users.append(mommy.make(User,
-                                        username=user[1].lower(),
-                                        avatar=random.randint(1, 22),
-                                        first_name=user[0],
-                                        last_name=user[1]))
-            for x in range(random.randint(5, 10)):
-                user = random.choice(users)
+                mapper = fake_mappers[i]
+                mappers.append(mommy.make(MapperUser,
+                                          username=mapper[1].lower(),
+                                          avatar=random.randint(1, 22),
+                                          first_name=mapper[0],
+                                          last_name=mapper[1]))
+            for i in range(1, 2):
+                global_admin = fake_global_admins[i]
+                global_admins.append(mommy.make(GlobalUserAdmin,
+                                                username=global_admin[1].lower(),
+                                                avatar=random.randint(1, 22),
+                                                first_name=global_admin[0],
+                                                last_name=global_admin[1]))
+            for i in range(1, 3):
+                local_admin = fake_local_admins[i]
+                local_admins.append(mommy.make(GlobalUserAdmin,
+                                               username=local_admin[1].lower(),
+                                               avatar=random.randint(1, 22),
+                                               first_name=local_admin[0],
+                                               last_name=local_admin[1]))
+            for x in range(random.randint(1, 5)):
+                global_admin = random.choice(global_admins)
                 project_name = random.choice(projects_names)
                 while Project.objects.filter(name=project_name).count() > 0:
                     project_name = random.choice(themes_names)
@@ -159,10 +181,12 @@ if settings.DEBUG:
                                      name=project_name,
                                      thumbnail=fake_thumbnail,
                                      description=lorem.paragraph(),
-                                     created_by=user,
-                                     modified_by=user)
+                                     created_by=global_admin,
+                                     modified_by=global_admin)
                 project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 for y in range(random.randint(5, 10)):
+                    local_admin = random.choice(local_admins)
+                    project.local_admin_group.user_set.add(local_admin)
                     theme_name = random.choice(themes_names)
                     while Theme.objects.filter(name=theme_name, project=project).count() > 0:
                         theme_name = random.choice(themes_names)
@@ -170,42 +194,43 @@ if settings.DEBUG:
                                        project=project,
                                        name=theme_name,
                                        description=lorem.paragraph(),
-                                       created_by=user,
-                                       modified_by=user)
+                                       created_by=local_admin,
+                                       modified_by=local_admin,
+                                       bounds=project.bounds)
                     # Create the link between mapper and theme.
-                    theme.mappers_group.user_set.add(*random.choices(users,
-                                                                     (len(t.username) for t in users),
-                                                                     k=random.randint(1, 6)))
                     theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                     lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
                     lang = settings.LANGUAGES[lang_idx][0]
                     make_translation(theme, lang)
                     make_translation(project, lang)
                     for z in range(random.randint(1, 10)):
-                        user = random.choice(users)
+                        mapper = random.choice(mappers)
+                        theme.mappers_group.user_set.add(mapper)
+                        mapper.refresh_from_db()
                         report = mommy.make(Report,
                                             name=f'Report {z}',
                                             location=Point(random.randint(-150, 150), random.randint(-60, 60)),
                                             description=lorem.paragraph(),
                                             theme=theme,
-                                            created_by=user,
+                                            created_by=mapper,
                                             status=random.choice(REPORT_STATUS_CHOICES)[0],
-                                            modified_by=user)
+                                            modified_by=mapper)
                         valid_tags = list(theme.tags.names()) + list(theme.project.tags.names())
                         report_tags = random.choices(valid_tags,
                                                      (len(t) for t in valid_tags),
                                                      k=random.randint(1, len(valid_tags)))
                         report.tags.add(*report_tags)
                         for _ in range(random.randint(1, 10)):
-                            user = random.choice(users)
+                            mapper = random.choice(mappers)
                             mommy.make(ReportComment,
                                        text=lorem.paragraph(),
                                        report=report,
-                                       created_by=user,
+                                       created_by=mapper,
                                        status=random.choice(REPORT_STATUS_CHOICES)[0],
-                                       modified_by=user)
+                                       modified_by=mapper)
                         for _ in range(random.randint(1, 3)):
                             make_report_medias(report)
+
 
     Migration.operations.append(migrations.RunPython(create_dev_data))
 

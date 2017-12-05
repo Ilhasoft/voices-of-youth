@@ -68,12 +68,14 @@ class VoyUser(AbstractUser):
         return self.report_report_creations.all()
 
     @property
-    def themes(self):
-        raise NotImplementedError()
+    def projects(self):
+        from voicesofyouth.project.models import Project
+        return Project.objects.filter(local_admin_group__user=self).distinct()
 
     @property
-    def projects(self):
-        raise NotImplementedError()
+    def themes(self):
+        from voicesofyouth.theme.models import Theme
+        return Theme.objects.filter(project__in=self.projects).distinct()
 
     @classmethod
     def is_mapper(cls, user):
@@ -139,22 +141,7 @@ class LocalAdminUserManager(UserManager):
         return qs.filter(groups__name__contains='- local admin').distinct()
 
 
-class BaseAdminUser(VoyUser):
-    class Meta:
-        proxy = True
-
-    @property
-    def projects(self):
-        from voicesofyouth.project.models import Project
-        return Project.objects.filter(local_admin_group__user=self).distinct()
-
-    @property
-    def themes(self):
-        from voicesofyouth.theme.models import Theme
-        return Theme.objects.filter(project__in=self.projects).distinct()
-
-
-class LocalUserAdmin(BaseAdminUser):
+class LocalUserAdmin(VoyUser):
     """
     Represents a local admin user.
     """
@@ -170,7 +157,7 @@ class GlobalAdminUserManager(UserManager):
         return qs.filter(is_superuser=True).distinct()
 
 
-class GlobalUserAdmin(BaseAdminUser):
+class GlobalUserAdmin(VoyUser):
     """
     Represents a global admin user.
     """
@@ -187,7 +174,7 @@ class AdminUserManager(models.Manager):
         return qs.order_by('-is_superuser')
 
 
-class AdminUser(BaseAdminUser):
+class AdminUser(VoyUser):
     """
     Represents a admin user(global or local).
     """
