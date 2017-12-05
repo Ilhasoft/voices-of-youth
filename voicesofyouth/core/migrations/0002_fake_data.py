@@ -107,7 +107,7 @@ if settings.DEBUG:
                     'anything')
             fake_mappers = (('Johannes', 'Keppler'),
                             ('Marie', 'Currie'),
-                            ('Isaac', 'Newton'),
+                            ('James', 'Maxwell'),
                             ('Antoine', 'Lavoisier'),
                             ('Carl', 'Sagan'),
                             ('Stephen', 'Hawking'),
@@ -119,6 +119,7 @@ if settings.DEBUG:
             fake_local_admins = (('Neil', 'Tyson'),
                                  ('Albert', 'Einstein'),
                                  ('Max', 'Planck'),
+                                 ('Neils', 'Bohr'),
                                  ('Michael', 'Faraday'))
             projects_names = (
                 'Apollo',
@@ -152,21 +153,21 @@ if settings.DEBUG:
             mappers = []
             global_admins = []
             local_admins = []
-            for i in range(1, 9):
+            for i in range(len(fake_mappers)):
                 mapper = fake_mappers[i]
                 mappers.append(mommy.make(MapperUser,
                                           username=mapper[1].lower(),
                                           avatar=random.randint(1, 22),
                                           first_name=mapper[0],
                                           last_name=mapper[1]))
-            for i in range(1, 2):
+            for i in range(len(fake_global_admins)):
                 global_admin = fake_global_admins[i]
                 global_admins.append(mommy.make(GlobalUserAdmin,
                                                 username=global_admin[1].lower(),
                                                 avatar=random.randint(1, 22),
                                                 first_name=global_admin[0],
                                                 last_name=global_admin[1]))
-            for i in range(1, 4):
+            for i in range(len(fake_local_admins)):
                 local_admin = fake_local_admins[i]
                 local_admins.append(mommy.make(GlobalUserAdmin,
                                                username=local_admin[1].lower(),
@@ -174,7 +175,7 @@ if settings.DEBUG:
                                                first_name=local_admin[0],
                                                last_name=local_admin[1]))
             # Projects creation
-            for x in range(random.randint(3, 6)):
+            for x in range(random.randint(3, len(projects_names))):
                 global_admin = random.choice(global_admins)
                 project_name = random.choice(projects_names)
                 while Project.objects.filter(name=project_name).count() > 0:
@@ -187,7 +188,7 @@ if settings.DEBUG:
                                      modified_by=global_admin)
                 project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 # Themes creation
-                for y in range(random.randint(4, 6)):
+                for y in range(random.randint(4, len(themes_names))):
                     local_admin = random.choice(local_admins)
                     project.local_admin_group.user_set.add(local_admin)
                     theme_name = random.choice(themes_names)
@@ -206,10 +207,9 @@ if settings.DEBUG:
                     make_translation(theme, lang)
                     make_translation(project, lang)
                     # Reports creation
-                    for z in range(random.randint(1, 10)):
+                    for z in range(random.randint(1, len(mappers))):
                         mapper = random.choice(mappers)
                         theme.mappers_group.user_set.add(mapper)
-                        mapper.refresh_from_db()
                         report = mommy.make(Report,
                                             name=f'Report {z}',
                                             location=Point(random.randint(-150, 150), random.randint(-60, 60)),
