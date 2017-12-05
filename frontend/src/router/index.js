@@ -115,9 +115,10 @@ export default new Router({
 
     {
       path: '/my-reports',
-      name: 'MyReports',
+      name: 'my-reports',
       component: MyReportsPage,
       beforeEnter: (to, from, next) => {
+        dispatchStores();
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'My Reports',
           showMenu: false,

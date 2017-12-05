@@ -29,7 +29,9 @@
       </div>
       
       <div class="column" v-if="userIsLogged">
-        <a href="">My reports</a>
+        <router-link
+          :to="{ name: 'my-reports' }">My reports
+        </router-link>
       </div>
       
       <div class="column new-report">
