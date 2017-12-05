@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime
 
 from django.contrib.gis.db import models as gismodels
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
@@ -128,7 +128,7 @@ class Report(BaseModel):
     objects = ReportManager()
 
     class Meta:
-        ordering = ('-created_on', )
+        ordering = ('-created_on',)
 
     def __str__(self):
         return '{} - {}'.format(self.theme.project.name, self.theme.name)
@@ -209,4 +209,6 @@ def check_user_permission(sender, instance, **kwargs):
     Mapper cannot create report for a theme that he haven't permission.
     """
     if instance.theme not in instance.created_by.themes:
-        raise ValidationError(_('You cannot create a report for a theme that you don\'t have permission.'))
+        msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
+                f'"{instance.theme.name}({instance.theme.id})".')
+        raise PermissionDenied(msg)
