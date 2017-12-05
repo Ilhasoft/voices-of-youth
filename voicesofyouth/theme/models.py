@@ -97,6 +97,16 @@ class Theme(BaseModel):
 ###############################################################################
 
 @receiver(pre_save, sender=Theme)
+def validate_theme_local_admin(sender, instance, **kwargs):
+    """
+    Check if user is a local admin of project.
+    """
+    user = instance.created_by
+    if not instance.project.local_admin_group.user_set.filter(id=user.id).exists():
+        raise ValidationError(_('You don\'t have permission to create themes in this project.'))
+
+
+@receiver(pre_save, sender=Theme)
 def validate_theme_area(sender, instance, **kwargs):
     """
     Check if theme bounds is inside the project bounds area.
