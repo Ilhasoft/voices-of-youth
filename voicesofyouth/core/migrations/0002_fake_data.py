@@ -147,7 +147,6 @@ if settings.DEBUG:
             except IntegrityError:
                 pass
 
-
     def make_report_medias(report, mapper):
         with open(test_img, 'rb') as image:
             fake_file = ImageFile(image)

@@ -71,13 +71,13 @@ INSTALLED_APPS = [
 ]
 
 if DEBUG:
-    from mommy_spatial_generators import MOMMY_SPATIAL_FIELDS
+    from voicesofyouth.core.model_mommy import MOMMY_SPATIAL_FIELDS
     MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
 
-    INSTALLED_APPS.append('django_extensions')
-    INSTALLED_APPS.append('model_mommy')
-    INSTALLED_APPS.append('mommy_spatial_generators')
-    INTERNAL_IPS = ('127.0.0.1', 'localhost')
+INSTALLED_APPS.append('django_extensions')
+INSTALLED_APPS.append('model_mommy')
+INSTALLED_APPS.append('mommy_spatial_generators')
+INTERNAL_IPS = ('127.0.0.1', 'localhost')
 
 DOCS_ROOT = os.path.join(BASE_DIR, '../docs/users/build/html')
 # DOCS_ACCESS = 'staff'
@@ -130,7 +130,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -163,7 +162,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -178,7 +176,6 @@ USE_L10N = True
 USE_TZ = True
 
 AUTH_USER_MODEL = 'user.VoyUser'
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
@@ -212,7 +209,6 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
-
 
 # Default pagination items per page.
 ITEMS_PER_PAGE = 10
