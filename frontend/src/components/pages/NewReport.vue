@@ -14,7 +14,14 @@
             <div class="columns">
               <div class="column">
                 <label for="select-theme">Select theme</label>
-                <v-select v-model="themeSelected" @input="loadTags" :value.sync="selected" :options="themeOptions"></v-select>
+                <v-select v-model="themeSelected" @input="loadTagsAndUsers" :options="themeOptions"></v-select>
+              </div>
+            </div>
+
+            <div class="columns">
+              <div class="column">
+                <label for="select-mapper">Mapper</label>
+                <v-select v-model="mapperSelected" :options="mappersOptions"></v-select>
               </div>
             </div>
 
@@ -44,13 +51,21 @@
                 <label for="select-theme">Add photos and videos</label>
                 <ul class="images">
                   <li>
-                    <button class="new-file" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
+                    <button class="new-file" @click.prevent="openFile" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
                       <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
                         <path fill="#C7C7C7" fill-rule="evenodd" d="M17.126 10.8V4.493a3.602 3.602 0 0 0-7.204 0V10.8h-6.31a3.602 3.602 0 1 0 0 7.205h6.31v6.309a3.602 3.602 0 0 0 7.205 0v-6.31h6.309a3.602 3.602 0 0 0 0-7.204h-6.31z"/>
                       </svg>
                     </button>
+                    <input type="file" name="file" @change="addFileToUpload" id="file" ref="fileInput" style="display: none;" />
                   </li>
-                  <file-item />
+
+                  <file-item
+                    :file="item"
+                    :index="key"
+                    :key="key"
+                    v-for="(item, key) in files"
+                    @remove-file="removeFile(item)"
+                    />
                 </ul>
               </div>
             </div>
@@ -103,8 +118,7 @@
           <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
         </v-map>
       </div>
-     </div>
-      
+    </div>  
   </div>
 </template>
 
@@ -140,13 +154,16 @@ export default {
   data() {
     return {
       selected: null,
+
       isWarningVisible: false,
       name: '',
       description: '',
       location: {},
       themeSelected: 0,
+      mapperSelected: 0,
       tagsSelected: [],
       tagsOptions: [],
+      files: [],
 
       marker: null,
       options: { noWrap: true },
@@ -216,6 +233,10 @@ export default {
         return option;
       });
     },
+
+    mappersOptions() {
+      return [];
+    },
   },
 
   methods: {
@@ -226,11 +247,43 @@ export default {
       'getGeoLocation',
     ]),
 
-    loadTags(theme) {
+    openFile() {
+      this.$refs.fileInput.click();
+    },
+
+    uploadPreventDefault(e) {
+      e.stopPropagation();
+      e.preventDefault();
+    },
+
+    removeFile(file) {
+      this.files.splice(this.files.indexOf(file), 1);
+    },
+
+    addFileToUpload(e) {
+      this.uploadPreventDefault(e);
+      const file = e.target.files || e.dataTransfer.files;
+      const reader = new FileReader();
+
+      reader.onload = (f) => {
+        this.files.push({
+          item: file,
+          blob: f.target.result,
+        });
+      };
+
+      reader.readAsDataURL(file[0]);
+    },
+
+    loadTagsAndUsers(theme) {
       this.tagsSelected = [];
       const tags = this.reportData.themes.filter(item => item.id === theme.value);
       if (tags.length > 0) {
         this.tagsOptions = tags[0].tags.map(tag => tag);
+      }
+
+      if (this.currentUser.is_admin) {
+        console.log('AA');
       }
     },
 
@@ -338,6 +391,7 @@ export default {
       }
 
       .new-file {
+        outline: none;
         width: 86px;
         height: 86px;
         border-radius: 10px;

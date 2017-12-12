@@ -2,15 +2,15 @@
   <li>
     <div class="div">
       <div class="item">
-        <img src="../../assets/img/report-example.png" alt="">
+        <img :src="file.blob" alt="">
       </div>
       <div tabindex="-1" class="media-item-remove close">
-        <i class="media-item-button">
+        <i class="media-item-button" @click.prevent="$emit('remove-file')">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25">
             <g fill="none" fill-rule="evenodd" transform="translate(-.51 -.758)">
               <circle cx="13" cy="12.849" r="12.067" fill="#070707"/>
               <g stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3">
-                  <path d="M17.83 8.34l-9.34 9.34M8.49 8.34l9.34 9.34"/>
+                <path d="M17.83 8.34l-9.34 9.34M8.49 8.34l9.34 9.34"/>
               </g>
             </g>
           </svg>
@@ -23,6 +23,19 @@
 <script>
 export default {
   name: 'File',
+
+  props: {
+    file: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  methods: {
+    removeFile() {
+      this.$emit('removeFile', this.file);
+    },
+  },
 };
 </script>
 
@@ -51,6 +64,7 @@ export default {
 }
 
 .media-item-remove {
+  outline: none;
   background-color: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 50%;
@@ -76,7 +90,4 @@ export default {
   color: #333;
   font-weight: bold;
 }
-
-
-
 </style>
