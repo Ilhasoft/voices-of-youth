@@ -44,35 +44,6 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Start At' %}</label>
-                                            <div id="datetimepicker1" class="input-group date">
-                                                {{ data_form.start_at }}
-                                                <span class="input-group-addon">
-                                                <span class="fa fa-calendar"></span>
-                                            </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group {% if data_form.end_at.errors %}has-error{% endif %}">
-                                            <label>{% trans 'End At' %}</label>
-                                            <div id="datetimepicker2" class="input-group date">
-                                                {{ data_form.end_at }}
-                                                <span class="input-group-addon">
-                                                <span class="fa fa-calendar"></span>
-                                            </span>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Visible' %}</label>
-                                            <label class="switch switch-sm pull-right">
-                                                {{ data_form.visible }}
-                                                {{ data_form.visible.errors }}
-                                                <span></span>
-                                            </label>
-                                        </div>
-
                                         <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
                                             <label>{% trans 'Name' %}</label>
                                             {{ data_form.name }}
@@ -101,6 +72,35 @@
                                             <label>{% trans 'Mappers' %}</label>
                                             {{ data_form.mappers_group }}
                                             {{ data_form.mappers_group.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Visible' %}</label>
+                                            <label class="switch switch-sm pull-right">
+                                                {{ data_form.visible }}
+                                                {{ data_form.visible.errors }}
+                                                <span></span>
+                                            </label>
+                                        </div>
+
+                                        <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Start At' %}</label>
+                                            <div id="datetimepicker1" class="input-group date">
+                                                {{ data_form.start_at }}
+                                                <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group {% if data_form.end_at.errors %}has-error{% endif %}">
+                                            <label>{% trans 'End At' %}</label>
+                                            <div id="datetimepicker2" class="input-group date">
+                                                {{ data_form.end_at }}
+                                                <span class="input-group-addon">
+                                                <span class="fa fa-calendar"></span>
+                                            </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
