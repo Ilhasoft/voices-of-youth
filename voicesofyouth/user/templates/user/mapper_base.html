@@ -4,7 +4,6 @@
 {% block extracss %}
     {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -112,7 +111,6 @@
 
 {% block extrajs %}
     {{ block.super }}
-    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script type="text/javascript">
         $("#post_mapper_search").click(() => {
             form = $("#mapper_search");
@@ -131,28 +129,6 @@
             $(current_avatar).attr('src', selected_avatar.attr('src'));
             hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
             avatars.slideUp("slow");
-        });
-    </script>
-    <script type="text/javascript">
-        $("select[id='id_themes']").chosen();
-        $("select[id='id_project']").chosen();
-
-        $("select[id='id_project']").change(function (e) {
-            e.preventDefault();
-            const currentFormId = $(e.target.closest("form")).attr('id');
-            var project = e.target.value;
-            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
-                themesSelect.empty();
-                themesSelect.trigger('chosen:updated');
-                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
-                response.data.map((item) => {
-                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
-                    themesSelect.trigger('chosen:updated');
-                });
-            }).catch(error => {
-                console.log(error);
-            });
         });
     </script>
 {% endblock %}
