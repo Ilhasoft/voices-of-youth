@@ -22,10 +22,14 @@ from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.utils import get_paginator
 
 
-def search_user(search_by, qs):
-    return qs.filter(Q(username__icontains=search_by) |
-                     Q(first_name__icontains=search_by) |
-                     Q(last_name__icontains=search_by))
+def search_user(search_by, qs=None):
+    filter = (Q(username__icontains=search_by) |
+              Q(first_name__icontains=search_by) |
+              Q(last_name__icontains=search_by))
+    if qs is None:
+        return MapperUser.objects.filter(filter)
+    else:
+        return qs.filter(filter)
 
 
 def _add_admin(request, admin=None):
@@ -129,7 +133,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
-        delete = request.POST.get('deleteUsers')
+        delete = request.POST.pop('deleteUsers')
         if delete:
             try:
                 MapperUser.objects.filter(id__in=delete.split(',')).delete()
@@ -166,9 +170,12 @@ class MappersListView(LoginRequiredMixin, TemplateView):
                 qs = MapperUser.objects.all()
 
             if not isinstance(qs, list):
+                qs = qs.order_by('first_name')
                 if search:
                     qs = search_user(search, qs)
-                qs = qs.order_by('first_name')
+            elif search:
+                qs = search_user(search)
+
             context['users'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
