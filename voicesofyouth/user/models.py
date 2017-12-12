@@ -63,6 +63,18 @@ class VoyUser(AbstractUser):
     def is_mapper(self):
         return self.groups.filter(name__contains='- mappers').exists()
 
+    @cached_property
+    def is_global_admin(self):
+        return self.is_superuser
+
+    @cached_property
+    def is_local_admin(self):
+        return self.groups.filter(name__contains='- local admin').exists()
+
+    @property
+    def is_admin(self):
+        return self.is_local_admin or self.is_global_admin
+
     @property
     def reports(self):
         return self.report_report_creations.all()
@@ -77,10 +89,6 @@ class VoyUser(AbstractUser):
         from voicesofyouth.theme.models import Theme
         return Theme.objects.filter(project__in=self.projects).distinct()
 
-    @classmethod
-    def is_mapper(cls, user):
-        return cls.objects.filter(id=user.id).exists()
-
     @property
     def local_admin_of(self):
         """
@@ -94,14 +102,10 @@ class VoyUser(AbstractUser):
         """
         I try to implements this method directly in MapperUser model but, unfortunately doesn't work on proxy model.
         """
-        url = ""
-
-        if MapperUser.is_mapper(self):
-            url = reverse('voy-admin:users:mapper_detail', args=[self.id, ])
-        elif GlobalUserAdmin.is_mapper(self) or LocalUserAdmin.is_mapper(self):
-            url = reverse('voy-admin:users:admin_detail', args=[self.id, ])
-
-        return url
+        if self.is_mapper:
+            return reverse('voy-admin:users:mapper_detail', args=[self.id, ])
+        elif GlobalUserAdmin.is_mapper or LocalUserAdmin.is_mapper:
+            return reverse('voy-admin:users:admin_detail', args=[self.id, ])
 
 
 class MapperUserManager(UserManager):
@@ -119,10 +123,6 @@ class MapperUser(VoyUser):
     class Meta:
         proxy = True
         ordering = ('first_name', 'username',)
-
-    @classmethod
-    def is_mapper(cls, user):
-        return cls.objects.filter(id=user.id).exists()
 
     @property
     def themes(self):
