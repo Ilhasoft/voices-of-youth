@@ -155,8 +155,8 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             search = cleaned_data['search']
             page = request.GET.get('page')
 
-            if project and theme and project != theme.project:
-                qs = []
+            if project and theme:
+                qs = MapperUser.objects.filter(groups=theme.mappers_group)
             elif theme:
                 qs = theme.mappers_group.user_set.all()
             elif project:
@@ -169,7 +169,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
                 if search:
                     qs = search_user(search, qs)
                 qs = qs.order_by('first_name')
-            context['mappers'] = get_paginator(qs, page)
+            context['users'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
 
