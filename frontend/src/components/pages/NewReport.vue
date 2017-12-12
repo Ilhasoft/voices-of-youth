@@ -2,105 +2,109 @@
   <div>
     <header-index />
 
-    <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map" class="map">
-      <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
-    </v-map>
+    <div class="columns is-marginless">
+      <div class="column is-5 sidebar is-paddingless">
+        <div class="header">
+          <h1>Add new report</h1>
+          <small>Drag the pin to mark your report</small>
+        </div>
 
-    <div class="sidebar">
-      <div class="header">
-        <h1>Add new report</h1>
-        <small>Drag the pin to mark your report</small>
-      </div>
-
-      <div class="box-form">
-        <div class="form">
-
-          <div class="columns">
-            <div class="column">
-              <label for="select-theme">Select theme</label>
-              <v-select v-model="themeSelected" @input="loadTags" :value.sync="selected" :options="themeOptions"></v-select>
+        <div class="box-form">
+          <div class="form">
+            <div class="columns">
+              <div class="column">
+                <label for="select-theme">Select theme</label>
+                <v-select v-model="themeSelected" @input="loadTags" :value.sync="selected" :options="themeOptions"></v-select>
+              </div>
             </div>
-          </div>
 
-          <div class="columns">
-            <div class="column">
-              <label for="title">Title</label>
-              <input class="input" type="text" placeholder="" v-model="name">
+            <div class="columns">
+              <div class="column">
+                <label for="title">Title</label>
+                <input class="input" type="text" placeholder="" v-model="name">
+              </div>
             </div>
-          </div>
 
-          <div class="columns">
-            <div class="column">
-              <label for="description">Description</label>
-              <textarea name="" id="" cols="30" rows="10" v-model="description"></textarea>
+            <div class="columns">
+              <div class="column">
+                <label for="description">Description</label>
+                <textarea name="" id="" cols="30" rows="10" v-model="description"></textarea>
+              </div>
             </div>
-          </div>
 
-          <div class="columns">
-            <div class="column">
-              <label for="select-theme">Tags</label>
-              <v-select v-model="tagsSelected" multiple :value.sync="selected" :options="tagsOptions"></v-select>
+            <div class="columns">
+              <div class="column">
+                <label for="select-theme">Tags</label>
+                <v-select v-model="tagsSelected" multiple :value.sync="selected" :options="tagsOptions"></v-select>
+              </div>
             </div>
-          </div>
 
-          <div class="columns">
-            <div class="column size">
-              <label for="select-theme">Add photos and videos</label>
-              <ul class="images">
-                <li>
-                  <button class="new-file" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-                      <path fill="#C7C7C7" fill-rule="evenodd" d="M17.126 10.8V4.493a3.602 3.602 0 0 0-7.204 0V10.8h-6.31a3.602 3.602 0 1 0 0 7.205h6.31v6.309a3.602 3.602 0 0 0 7.205 0v-6.31h6.309a3.602 3.602 0 0 0 0-7.204h-6.31z"/>
-                    </svg>
-                  </button>
-                </li>
-                <file-item />
-              </ul>
+            <div class="columns">
+              <div class="column size">
+                <label for="select-theme">Add photos and videos</label>
+                <ul class="images">
+                  <li>
+                    <button class="new-file" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+                        <path fill="#C7C7C7" fill-rule="evenodd" d="M17.126 10.8V4.493a3.602 3.602 0 0 0-7.204 0V10.8h-6.31a3.602 3.602 0 1 0 0 7.205h6.31v6.309a3.602 3.602 0 0 0 7.205 0v-6.31h6.309a3.602 3.602 0 0 0 0-7.204h-6.31z"/>
+                      </svg>
+                    </button>
+                  </li>
+                  <file-item />
+                </ul>
+              </div>
             </div>
-          </div>
 
-          <div class="warning" :class="[isWarningVisible ? 'fade-in' : 'fade-out']">
-            <div class="point"></div>
-            <div class="content">
-              <p>
-                Remember, use only your own photos or photos that you are allowed to use
-              </p>
+            <div class="warning" :class="[isWarningVisible ? 'fade-in' : 'fade-out']">
+              <div class="point"></div>
+              <div class="content">
+                <p>
+                  Remember, use only your own photos or photos that you are allowed to use
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div class="columns">
-            <div class="column">
-              <label for="select-theme">Add link from website</label>
+            <div class="columns">
+              <div class="column">
+                <label for="select-theme">Add link from website</label>
 
-              <link-item />
+                <link-item />
 
-              <div class="columns">
-                <div class="column is-10"><input class="input" type="text"></div>
-                <div class="column t-center">
-                  <button class="btn-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="21" height="17" viewBox="0 0 21 17">
-                      <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M18.116 2.74l-10.117 11-4.599-5"/>
-                    </svg>
-                  </button>
+                <div class="columns">
+                  <div class="column is-10"><input class="input" type="text"></div>
+                  <div class="column t-center">
+                    <button class="btn-link">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="21" height="17" viewBox="0 0 21 17">
+                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M18.116 2.74l-10.117 11-4.599-5"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="buttons">
-          <div class="columns is-mobile">
-            <div class="column">
-              <button class="cancel">Cancel</button>
-            </div>
+          <div class="buttons">
+            <div class="columns is-mobile">
+              <div class="column">
+                <button class="cancel">Cancel</button>
+              </div>
 
-            <div class="column">
-              <button class="send" @click.prevent="saveReport()">Send report</button>
+              <div class="column">
+                <button class="send" @click.prevent="saveReport()">Send report</button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div class="column is-paddingless map-report">
+        <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map">
+          <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
+        </v-map>
+      </div>
+     </div>
+      
   </div>
 </template>
 
@@ -111,7 +115,7 @@ import vSelect from 'vue-select';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-import markerPixel from '../../assets/img/pixel.png';
+import markerPixel from '../../assets/img/map-pin.png';
 import router from '../../router/';
 
 import HeaderIndex from '../header/Index';
@@ -149,18 +153,16 @@ export default {
       optionsMap: { maxBounds: [[-90, -160], [90, 160]] },
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      center: [39.63953756436671, -10.019531250000002],
+      center: [0, 0],
 
       icon: L.icon({
         iconUrl: markerPixel,
-        shadowUrl: markerPixel,
-        iconSize: [30, 30],
-        iconAnchor: [22, 94],
+        shadowUrl: '',
+        iconSize: [36, 54],
+        iconAnchor: [18, 92],
         popupAnchor: [-0, -90],
         shadowSize: [0, 0],
         shadowAnchor: [22, 94],
-        className: 'icon-pin pin-report',
-        styleColorName: '#d32f49',
       }),
     };
   },
@@ -169,7 +171,13 @@ export default {
     if (!this.userIsLogged) {
       router.push({ name: 'login' });
     } else {
-      this.getUserThemes(this.currentUser.id);
+      if (this.currentUser.is_admin) {
+        console.log('ADMIN');
+        this.getProjectThemes();
+      } else if (this.currentUser.is_mapper) {
+        this.getUserThemes(this.currentUser.id);
+      }
+
       this.$refs.map.mapObject.zoomControl.remove();
       L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
@@ -196,6 +204,7 @@ export default {
       currentUser: 'getUserData',
       userIsLogged: 'userIsLogged',
       reportData: 'getReportNewData',
+      currentProject: 'getCurrentProject',
     }),
 
     themeOptions() {
@@ -212,6 +221,7 @@ export default {
   methods: {
     ...mapActions([
       'getUserThemes',
+      'getProjectThemes',
       'saveNewReport',
       'getGeoLocation',
     ]),
@@ -241,6 +251,10 @@ export default {
         });
       }
     },
+
+    closeForm() {
+      router.push({ name: 'project', params: { path: this.currentProject.path } });
+    },
   },
 };
 </script>
@@ -265,16 +279,14 @@ export default {
   background-color: #fff;
 }
 
+.map-report {
+  height: 91vh;
+  z-index: 0;
+}
+
 .sidebar {
-  width: 622px;
   box-shadow: 0 9px 10px 0 rgba(0, 0, 0, 0.16);
-  position: absolute;
-  margin: auto;
-  top: 78px;
-  left: 0;
-  bottom: 0;
-  background-color: #fbfbfb;
-  z-index: 10000;
+  height: 91vh;
 
   .box-form {
     height: 86%;

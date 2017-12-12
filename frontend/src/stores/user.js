@@ -37,7 +37,11 @@ export default {
       const userData = helper.getItem('user');
       if (userData) {
         commit(TYPES.SET_USER_DATA, {
-          userData: userData[0],
+          // test
+          userData: {
+            is_admin: true,
+            ...userData[0],
+          },
           isLogged: true,
         });
       }

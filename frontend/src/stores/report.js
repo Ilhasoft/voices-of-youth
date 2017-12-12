@@ -219,6 +219,16 @@ export default {
       });
     },
 
+    getProjectThemes({ commit, dispatch }) {
+      const project = helper.getItem('project');
+      axios.get(`/api/themes?project=${project.id}`).then((response) => {
+        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
+        throw new Error(error);
+      });
+    },
+
     saveNewReport({ commit, dispatch }, obj) {
       const token = helper.getItem('token');
       return axios.post('/api/reports/', {
