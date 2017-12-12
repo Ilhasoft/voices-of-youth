@@ -13,16 +13,13 @@
         <div class="content-wrapper" id="new-report">
             <div class="content-heading">
                 {% if editing %} {% trans 'Edit report' %} {% else %} {% trans 'New report' %} {% endif %}
-                <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-default create">
-                    {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
-                </a>
             </div>
 
             <div class="row">
                 <form action="" method="post" role="form" id="form-report" enctype="multipart/form-data">
                     <div class="col-lg-4">
                         <div class="panel panel-default">
-                            <div class="panel-body">                
+                            <div class="panel-body">
                                 <fieldset>
                                     {% csrf_token %}
                                     <div class="form-group {% if data_form.project.errors %}has-error{% endif %}">
@@ -74,17 +71,20 @@
                                                 <div class="col-md-1">
                                                     <div class="checkbox c-checkbox needsclick">
                                                         <label class="needsclick">
-                                                            <input type="checkbox" name="remove_files[]" value="{{ file.id }}" class="needsclick"/>
+                                                            <input type="checkbox" name="remove_files[]"
+                                                                   value="{{ file.id }}" class="needsclick"/>
                                                             <span class="fa fa-check"></span>
                                                         </label>
                                                     </div>
                                                 </div>
-                                                
+
                                                 <div class="col-md-10">
                                                     {% if file.media_type == 'image' %}
-                                                        <img src="{{ file.file.url }}" class="media-object thumb48" alt="">
+                                                        <img src="{{ file.file.url }}" class="media-object thumb48"
+                                                             alt="">
                                                     {% elif file.media_type == 'video' %}
-                                                        <img src="{% static 'img/video.png' %}" class="media-object thumb48" alt="">
+                                                        <img src="{% static 'img/video.png' %}"
+                                                             class="media-object thumb48" alt="">
                                                     {% endif %}
                                                 </div>
                                             </div>
@@ -110,7 +110,7 @@
                                             <div class="input-group">
                                                 <input type="hidden" name="links[]" value="google.com" id="link_1">
                                                 <input type="text" value="google.com" disabled class="form-control">
-    
+
                                                 <span class="input-group-btn">
                                                     <button type="button" class="btn btn-default">
                                                         <em class="fa fa-remove"></em>
@@ -119,7 +119,10 @@
                                             </div>
                                         </div>-->
                                     </div>
-                                </fieldset>            
+                                </fieldset>
+                                <a href="javascript:" onclick="submitForm()" class="pull-right btn btn-default create">
+                                    {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -146,7 +149,7 @@
 
         $('#id_tags').chosen();
 
-        $('#btnAddLink').click(function(e) {
+        $('#btnAddLink').click(function (e) {
             var link = $('#id_link').val();
             if (link) {
                 $('#links').append('<div class="form-group" id="link_' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
@@ -167,12 +170,12 @@
             $('#link_' + item).empty();
         }
 
-        $('#id_project').change(function(e) {
+        $('#id_project').change(function (e) {
             e.preventDefault();
             loadThemes(e.target.value);
         });
 
-        $('#id_theme').change(function(e) {
+        $('#id_theme').change(function (e) {
             e.preventDefault();
             loadMappers(e.target.value);
         });

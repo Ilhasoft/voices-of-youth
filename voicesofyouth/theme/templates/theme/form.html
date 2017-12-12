@@ -15,13 +15,6 @@
 {% block content %}
     <section>
         <div class="content-wrapper" id="theme">
-            <div class="content-heading">
-                {% if editing %} {% trans 'Edit theme' %} {% else %} {% trans 'New theme' %} {% endif %}
-                <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-theme">
-                    {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
-                </a>
-            </div>
-
             <ol class="breadcrumb">
                 <li><a href="{% url 'voy-admin:projects:index' %}">{% trans 'My projects' %}</a></li>
                 <li>{{ project.name }}</li>
@@ -44,6 +37,47 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Name' %}</label>
+                                            {{ data_form.name }}
+                                            {{ data_form.name.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.color.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Color' %}</label>
+                                            {{ data_form.color }}
+                                            {{ data_form.color.errors }}
+                                        </div>
+
+                                        <div
+                                            class="form-group {% if data_form.description.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Description' %}</label>
+                                            {{ data_form.description }}
+                                            {{ data_form.description.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Tags' %}</label>
+                                            {{ data_form.tags }}
+                                            {{ data_form.tags.errors }}
+                                        </div>
+
+                                        <div
+                                            class="form-group {% if data_form.mappers_group.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Mappers' %}</label>
+                                            {{ data_form.mappers_group }}
+                                            {{ data_form.mappers_group.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Visible' %}</label>
+                                            <label class="switch switch-sm pull-right">
+                                                {{ data_form.visible }}
+                                                {{ data_form.visible.errors }}
+                                                <span></span>
+                                            </label>
+                                        </div>
+
                                         <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
                                             <label>{% trans 'Start At' %}</label>
                                             <div id="datetimepicker1" class="input-group date">
@@ -63,45 +97,13 @@
                                             </span>
                                             </div>
                                         </div>
-
-                                        <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Visible' %}</label>
-                                            <label class="switch switch-sm pull-right">
-                                                {{ data_form.visible }}
-                                                {{ data_form.visible.errors }}
-                                                <span></span>
-                                            </label>
-                                        </div>
-
-                                        <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Name' %}</label>
-                                            {{ data_form.name }}
-                                            {{ data_form.name.errors }}
-                                        </div>
-
-                                        <div class="form-group {% if data_form.color.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Color' %}</label>
-                                            {{ data_form.color }}
-                                            {{ data_form.color.errors }}
-                                        </div>
-
-                                        <div class="form-group {% if data_form.description.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Description' %}</label>
-                                            {{ data_form.description }}
-                                            {{ data_form.description.errors }}
-                                        </div>
-
-                                        <div class="form-group {% if data_form.tags.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Tags' %}</label>
-                                            {{ data_form.tags }}
-                                            {{ data_form.tags.errors }}
-                                        </div>
-
-                                        <div class="form-group {% if data_form.mappers_group.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Mappers' %}</label>
-                                            {{ data_form.mappers_group }}
-                                            {{ data_form.mappers_group.errors }}
-                                        </div>
+                                        {% if editing %} {% trans 'Edit theme' %} {% else %}
+                                            {% trans 'New theme' %} {% endif %}
+                                        <a href="javascript:"
+                                           onclick="submitForm()"
+                                           class="pull-right btn btn-oval btn-new-theme">
+                                            {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +124,8 @@
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script src="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js' %}"></script>
-    <script src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script
+        src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
 
     {% leaflet_js plugins="forms" %}
 

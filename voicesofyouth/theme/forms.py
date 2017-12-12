@@ -104,7 +104,7 @@ class ThemeForm(forms.Form):
     mappers_group = forms.ModelMultipleChoiceField(
         queryset=None,
         label=_('Mappers'),
-        required=True,
+        required=False,
         widget=forms.SelectMultiple(
             attrs={
                 'required': True,

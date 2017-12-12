@@ -4,6 +4,7 @@
 
 {% block extracss %}
     <link rel="stylesheet" href="{% sass_src 'css/theme/theme.scss' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/theme/layout.scss' %}">
 {% endblock %}
 
 {% block content %}
@@ -21,7 +22,7 @@
                 <li>{% trans 'Themes' %}</li>
             </ol>
 
-            <div class="row">
+            <div class="flex-content">
                 {% for theme in themes %}
                     <div class="col-lg-3 col-md-6">
                         <div class="panel box">
@@ -35,7 +36,9 @@
                             </div>
 
                             <div class="panel-body text-justify">
-                                <p>{{ theme.description|truncatewords:25 }}</p>
+                                <div class="panel-text">
+                                    <p>{{ theme.description|truncatewords:25 }}</p>
+                                </div>
                                 <p class="text-muted text-center">
                                     <strong>{{ theme.reports.count }}</strong> {% trans 'Reports' %}</p>
 

@@ -212,3 +212,12 @@ def check_user_permission(sender, instance, **kwargs):
         msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
                 f'"{instance.theme.name}({instance.theme.id})".')
         raise PermissionDenied(msg)
+
+@receiver(pre_save, sender=Report)
+def check_report_within_theme_bounds(sender, instance, **kwargs):
+    """
+    Report can only be created inside the theme bounds.
+    """
+    if not instance.theme.bounds.contains(instance.location):
+        msg = _(f'You cannot create a report outside the theme bounds.')
+        raise PermissionDenied(msg)
