@@ -10,10 +10,10 @@ from voicesofyouth.user.models import DEFAULT_AVATAR
 class MapperFilterForm(forms.Form):
     project = forms.ModelChoiceField(queryset=None,
                                      required=False,
-                                     widget=forms.Select(attrs={'class': 'form-control'}))
+                                     widget=forms.Select())
     theme = forms.ModelChoiceField(queryset=None,
                                    required=False,
-                                   widget=forms.Select(attrs={'class': 'form-control'}))
+                                   widget=forms.Select())
     search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _('Search for mappers'),
                                                            'class': 'form-control'}),
                              required=False)

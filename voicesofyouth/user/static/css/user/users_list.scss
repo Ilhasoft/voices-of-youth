@@ -53,9 +53,12 @@
                 }
             }
             th {
-                div {
+                div:first-child {
                     display: flex;
                     justify-content: flex-end;
+                    div:first-child {
+                        align-self: flex-end;
+                    }
                 }
             }
         }

@@ -22,19 +22,21 @@
                 <th>
                     <div>
                         <button
-                                class="btn btn-default btn-lg"
-                                id="remove_user"
-                                disabled
+                            class="btn btn-default btn-lg"
+                            id="remove_user"
+                            disabled
                         >{% trans "Remove" %}</button>
                     </div>
                 </th>
                 {% block search_bar %}
                     {% if filter_form %}
-                        <form action={% url "voy-admin:users:mappers_list" %} method="get" role="form">
-                            <th colspan="2">
+                        <th colspan="2">
+                            <form action={% url "voy-admin:users:mappers_list" %} method="get" role="form" id="filter_form">
                                 <div>
                                     {{ form.non_field_errors }}
-                                    <p>Filter by:</p>
+                                    <div>
+                                        <p>Filter by:</p>
+                                    </div>
                                     {% for field in filter_form.hidden_fields %}
                                         {{ field }}
                                     {% endfor %}
@@ -47,17 +49,16 @@
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-                            </th>
-                            <th>
-                                <div>
-                                    <input
-                                            type="submit"
-                                            value={% trans "Filter" %}
-                                                    class="btn btn-primary btn-lg"/>
-                                </div>
-
-                            </th>
-                        </form>
+                            </form>
+                        </th>
+                        <th>
+                            <div>
+                                <input
+                                    id="submit_filter"
+                                    value={% trans "Filter" %}
+                                    class="btn btn-primary btn-lg"/>
+                            </div>
+                        </th>
                     {% else %}
                         <th></th>
                         <th></th>
@@ -88,6 +89,11 @@
 
 {% block extrajs %}
     {{ block.super }}
+    <script type="text/javascript">
+        $('#submit_filter').click(() => {
+            $('#filter_form').submit();
+        });
+    </script>
     <script type="text/javascript">
         disable_remove_button = (state) => {
             $("button[id^='remove_user']").prop("disabled", state);
