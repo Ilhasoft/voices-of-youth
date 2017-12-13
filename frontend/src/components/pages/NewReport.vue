@@ -208,7 +208,7 @@ export default {
         }).then((address) => {
           this.location = {
             type: 'Point',
-            coordinates: [e.latlng.lat, e.latlng.lng],
+            coordinates: [e.latlng.lng, e.latlng.lat],
           };
           this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
         });
@@ -244,6 +244,7 @@ export default {
       'getUserThemes',
       'getProjectThemes',
       'saveNewReport',
+      'uploadAndSaveFiles',
       'getGeoLocation',
     ]),
 
@@ -295,7 +296,14 @@ export default {
           theme: this.themeSelected.value,
           tags: this.tagsSelected,
           location: this.location,
-        }).then(() => {
+        }).then((data) => {
+          console.log(data);
+          console.log(this.files[0].item[0]);
+
+          this.uploadAndSaveFiles({
+            id: data.id,
+            file: this.files[0].item[0],
+          });
           this.name = '';
           this.description = '';
           this.themeSelected = '';

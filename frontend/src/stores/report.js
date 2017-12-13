@@ -239,11 +239,42 @@ export default {
         tags: obj.tags,
       }, {
         headers: { authorization: `Token ${token}` },
-      }).then(() => {
+      }).then((response) => {
         dispatch('notifyOpen', { type: 1, message: 'Report Sent!' });
+        return response.data;
       }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error on save report.' });
+        let messageError = '';
+        const json = JSON.parse(error.response.request.responseText);
+
+        if (json.location) {
+          messageError = json.location[0];
+        }
+
+        if (json.detail) {
+          messageError = json.detail;
+        }
+
+        dispatch('notifyOpen', { type: 0, message: messageError });
         throw new Error(error);
+      });
+    },
+
+    uploadAndSaveFiles({ commit }, obj) {
+      const token = helper.getItem('token');
+      const data = new FormData();
+      data.append('file', obj.file);
+      data.append('title', 'test');
+      data.append('description', 'bla bla bla');
+      data.append('report_id', obj.id);
+
+      const config = { headers: {
+        'Content-Type': 'multipart/form-data',
+        authorization: `Token ${token}`,
+      } };
+      return axios.post('/api/report-files/', data, config).then((response) => {
+        console.log(response);
+      }).catch((error) => {
+        console.log(error);
       });
     },
 

@@ -203,21 +203,22 @@ class ReportURL(BaseModel):
 # Signals handlers
 ###############################################################################
 
-@receiver(pre_save, sender=Report)
-def check_user_permission(sender, instance, **kwargs):
-    """
-    Mapper cannot create report for a theme that he haven't permission.
-    """
-    if instance.theme not in instance.created_by.themes:
-        msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
-                f'"{instance.theme.name}({instance.theme.id})".')
-        raise PermissionDenied(msg)
+# @receiver(pre_save, sender=Report)
+# def check_user_permission(sender, instance, **kwargs):
+#     """
+#     Mapper cannot create report for a theme that he haven't permission.
+#     """
+#     if instance.theme not in instance.created_by.themes:
+#         msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
+#                 f'"{instance.theme.name}({instance.theme.id})".')
+#         raise PermissionDenied(msg)
 
 @receiver(pre_save, sender=Report)
 def check_report_within_theme_bounds(sender, instance, **kwargs):
     """
     Report can only be created inside the theme bounds.
     """
+    print(instance.location)
     if not instance.theme.bounds.contains(instance.location):
         msg = _(f'You cannot create a report outside the theme bounds.')
         raise PermissionDenied(msg)
