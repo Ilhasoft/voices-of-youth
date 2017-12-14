@@ -9,7 +9,7 @@
 
     <div class="map-box">
       <div class="columns">
-        <div class="column no-padding">
+        <div class="column no-padding is-paddingless">
           <div class="columns header">
             <div class="column no-padding">
               <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
