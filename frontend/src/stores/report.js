@@ -211,7 +211,8 @@ export default {
     },
 
     getUserThemes({ commit, dispatch }, obj) {
-      axios.get(`/api/themes/?user=${obj}`).then((response) => {
+      const project = helper.getItem('project');
+      axios.get(`/api/themes/?user=${obj}&project=${project.id}`).then((response) => {
         commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
@@ -229,15 +230,18 @@ export default {
       });
     },
 
+    getUsersByTheme({ commit, dispatch }, obj) {
+      return axios.get(`/api/users?theme=${obj}`)
+      .then(response => response.data)
+      .catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
+        throw new Error(error);
+      });
+    },
+
     saveNewReport({ commit, dispatch }, obj) {
       const token = helper.getItem('token');
-      return axios.post('/api/reports/', {
-        name: obj.name,
-        description: obj.description,
-        theme: obj.theme,
-        location: obj.location,
-        tags: obj.tags,
-      }, {
+      return axios.post('/api/reports/', obj, {
         headers: { authorization: `Token ${token}` },
       }).then((response) => {
         const data = response.data;
@@ -286,7 +290,7 @@ export default {
       const token = helper.getItem('token');
       return axios.post('/api/report-urls/', {
         url: obj.url,
-        report_id: obj.id,
+        report: obj.id,
       }, {
         headers: { authorization: `Token ${token}` },
       }).then(response => response.data)

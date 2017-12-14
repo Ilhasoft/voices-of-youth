@@ -18,7 +18,7 @@
               </div>
             </div>
 
-            <div class="columns">
+            <div class="columns" v-if="showMappers">
               <div class="column">
                 <label for="select-mapper">Mapper</label>
                 <v-select v-model="mapperSelected" :options="mappersOptions"></v-select>
@@ -106,7 +106,7 @@
           <div class="buttons">
             <div class="columns is-mobile">
               <div class="column">
-                <button class="cancel">Cancel</button>
+                <button class="cancel" @click.prevent="closeForm">Cancel</button>
               </div>
 
               <div class="column">
@@ -166,10 +166,12 @@ export default {
       location: {},
       themeSelected: 0,
       mapperSelected: 0,
+      mappersOptions: [],
       tagsSelected: [],
       tagsOptions: [],
       files: [],
       urls: [],
+      showMappers: false,
 
       marker: null,
       options: { noWrap: true },
@@ -198,7 +200,7 @@ export default {
       router.push({ name: 'login' });
     } else {
       if (this.currentUser.is_admin) {
-        console.log('ADMIN');
+        this.showMappers = true;
         this.getProjectThemes();
       } else if (this.currentUser.is_mapper) {
         this.getUserThemes(this.currentUser.id);
@@ -242,16 +244,13 @@ export default {
         return option;
       });
     },
-
-    mappersOptions() {
-      return [];
-    },
   },
 
   methods: {
     ...mapActions([
       'getUserThemes',
       'getProjectThemes',
+      'getUsersByTheme',
       'saveNewReport',
       'saveFiles',
       'saveUrls',
@@ -277,9 +276,11 @@ export default {
       this.name = '';
       this.description = '';
       this.themeSelected = '';
+      this.mapperSelected = '';
       this.tagsSelected = [];
       this.tagsOptions = [];
       this.files = [];
+      this.urls = [];
       this.notifyOpen({ type: 1, message: 'Report Sent!' });
     },
 
@@ -295,16 +296,16 @@ export default {
     addFileToUpload(e) {
       this.uploadPreventDefault(e);
       const file = e.target.files || e.dataTransfer.files;
-      const reader = new FileReader();
-
-      reader.onload = (f) => {
-        this.files.push({
-          item: file,
-          blob: f.target.result,
-        });
-      };
-
-      reader.readAsDataURL(file[0]);
+      if (file[0].type === 'image/jpeg' || file[0].type === 'image/png') {
+        const reader = new FileReader();
+        reader.onload = (f) => {
+          this.files.push({
+            item: file,
+            blob: f.target.result,
+          });
+        };
+        reader.readAsDataURL(file[0]);
+      }
     },
 
     addLink() {
@@ -328,8 +329,16 @@ export default {
         this.tagsOptions = tags[0].tags.map(tag => tag);
       }
 
-      if (this.currentUser.is_admin) {
-        console.log('AA');
+      if (this.currentUser.is_admin && this.themeSelected.value > 0) {
+        this.getUsersByTheme(this.themeSelected.value).then((users) => {
+          this.mappersOptions = users.map((user) => {
+            const option = {
+              label: user.username,
+              value: user.id,
+            };
+            return option;
+          });
+        });
       }
     },
 
@@ -337,13 +346,19 @@ export default {
       if (this.name && this.description && this.themeSelected && this.location) {
         this.lockButtonSend();
 
-        this.saveNewReport({
+        const dataToSave = {
           name: this.name,
           description: this.description,
           theme: this.themeSelected.value,
           tags: this.tagsSelected,
           location: this.location,
-        }).then((data) => {
+        };
+
+        if (this.currentUser.is_admin) {
+          dataToSave.mapper_id = this.mapperSelected.value;
+        }
+
+        this.saveNewReport(dataToSave).then((data) => {
           if (this.urls.length) {
             this.urls.map(link => this.saveUrls({ id: data.id, url: link }));
           }
