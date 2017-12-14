@@ -211,7 +211,8 @@ export default {
     },
 
     getUserThemes({ commit, dispatch }, obj) {
-      axios.get(`/api/themes/?user=${obj}`).then((response) => {
+      const project = helper.getItem('project');
+      axios.get(`/api/themes/?user=${obj}&project=${project.id}`).then((response) => {
         commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
@@ -219,22 +220,84 @@ export default {
       });
     },
 
-    saveNewReport({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.post('/api/reports/', {
-        name: obj.name,
-        description: obj.description,
-        theme: obj.theme,
-        location: obj.location,
-        tags: obj.tags,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      }).then(() => {
-        dispatch('notifyOpen', { type: 1, message: 'Report Sent!' });
+    getProjectThemes({ commit, dispatch }) {
+      const project = helper.getItem('project');
+      axios.get(`/api/themes?project=${project.id}`).then((response) => {
+        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
       }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error on save report.' });
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
+    },
+
+    getUsersByTheme({ commit, dispatch }, obj) {
+      return axios.get(`/api/users?theme=${obj}`)
+      .then(response => response.data)
+      .catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
+        throw new Error(error);
+      });
+    },
+
+    saveNewReport({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
+      return axios.post('/api/reports/', obj, {
+        headers: { authorization: `Token ${token}` },
+      }).then((response) => {
+        const data = response.data;
+        return data;
+      }).catch((error) => {
+        let messageError = '';
+        const json = JSON.parse(error.response.request.responseText);
+
+        if (json.location) {
+          messageError = json.location[0];
+        }
+
+        if (json.detail) {
+          messageError = json.detail;
+        }
+
+        dispatch('notifyOpen', { type: 0, message: messageError });
+        throw new Error(error);
+      });
+    },
+
+    saveFiles({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
+      const data = new FormData();
+      data.append('file', obj.file);
+      data.append('title', obj.file.name);
+      data.append('description', obj.file.name);
+      data.append('report_id', obj.id);
+
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Token ${token}`,
+        },
+      };
+
+      return axios.post('/api/report-files/', data, config)
+        .then(response => response.data)
+        .catch((error) => {
+          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
+          throw new Error(error);
+        });
+    },
+
+    saveUrls({ commit, dispatch }, obj) {
+      const token = helper.getItem('token');
+      return axios.post('/api/report-urls/', {
+        url: obj.url,
+        report: obj.id,
+      }, {
+        headers: { authorization: `Token ${token}` },
+      }).then(response => response.data)
+        .catch((error) => {
+          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
+          throw new Error(error);
+        });
     },
 
     getGeoLocation({ commit }, obj) {

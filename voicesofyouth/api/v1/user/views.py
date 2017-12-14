@@ -18,7 +18,7 @@ class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
 
         if not isinstance(user, AnonymousUser):
-            if user.is_admin:
+            if user.is_admin and not token:
                 if theme:
                     theme = get_object_or_404(Theme, id=theme)
                     return theme.mappers_group.user_set.all()

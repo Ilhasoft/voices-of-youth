@@ -71,7 +71,7 @@ export default {
   animation-fill-mode: both;
 
   .alert {
-    height: 53px;
+    // height: 53px;
     color: #fff;
     padding: 16px;
     margin-bottom: 21px;

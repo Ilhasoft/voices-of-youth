@@ -102,7 +102,7 @@ def validate_theme_local_admin(sender, instance, **kwargs):
     Check if user is a local admin of project.
     """
     user = instance.created_by
-    if not instance.project.local_admin_group.user_set.filter(id=user.id).exists():
+    if not user.is_global_admin and not instance.project.local_admin_group.user_set.filter(id=user.id).exists():
         raise ValidationError(_('You don\'t have permission to create themes in this project.'))
 
 

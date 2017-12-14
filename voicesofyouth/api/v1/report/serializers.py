@@ -91,7 +91,7 @@ class ReportSerializer(VoySerializer):
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save()
-        report.tags.add(kwargs.get('tags'))
+        report.tags.add(*kwargs.get('tags'))
         return report
 
 
