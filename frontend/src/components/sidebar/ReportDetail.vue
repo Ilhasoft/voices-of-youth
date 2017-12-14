@@ -9,7 +9,7 @@
 
     <div class="map-box">
       <div class="columns">
-        <div class="column no-padding is-paddingless">
+        <div class="column no-padding">
           <div class="columns header">
             <div class="column no-padding">
               <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
@@ -351,7 +351,7 @@ export default {
     p {
       font-size: 14px;
       color: #000000;
-      margin-top: 30px;
+      margin-top: 25px;
     }
   }
 
