@@ -1,7 +1,7 @@
 <template>
   <div class="header logo">
     <div class="columns is-mobile h-height">
-      <div class="column is-3 p-left is-hidden-touch">
+      <div class="column is-4 p-left is-hidden-touch">
         <img class="logo-img" src="~@/assets/img/logo.png">
       </div>
       
