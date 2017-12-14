@@ -83,6 +83,11 @@ class ReportSerializer(VoySerializer):
         request = self.context['request']
         return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
 
+    def save(self, **kwargs):
+        report = super(ReportSerializer, self).save()
+        report.tags.add(kwargs.get('tags'))
+        return report
+
 
 class ReportCommentsSerializer(VoySerializer):
     created_by = UserSerializer(required=False)
