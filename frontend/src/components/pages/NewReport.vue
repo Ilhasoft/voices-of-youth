@@ -64,8 +64,7 @@
                     :index="key"
                     :key="key"
                     v-for="(item, key) in files"
-                    @remove-file="removeFile(item)"
-                    />
+                    @remove-file="removeFile(item)"/>
                 </ul>
               </div>
             </div>
@@ -83,18 +82,23 @@
               <div class="column">
                 <label for="select-theme">Add link from website</label>
 
-                <link-item />
-
                 <div class="columns">
-                  <div class="column is-10"><input class="input" type="text"></div>
+                  <div class="column is-10"><input class="input" value="link" type="text" v-model="link"></div>
                   <div class="column t-center">
-                    <button class="btn-link">
+                    <button class="btn-link" @click.prevent="addLink">
                       <svg xmlns="http://www.w3.org/2000/svg" width="21" height="17" viewBox="0 0 21 17">
                         <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M18.116 2.74l-10.117 11-4.599-5"/>
                       </svg>
                     </button>
                   </div>
                 </div>
+
+                <link-item
+                  :url="item"
+                  :index="key"
+                  :key="key"
+                  v-for="(item, key) in urls"
+                  @remove-url="removeUrl(item)"/>
               </div>
             </div>
           </div>
@@ -106,7 +110,7 @@
               </div>
 
               <div class="column">
-                <button class="send" @click.prevent="saveReport()">Send report</button>
+                <button class="send" @click.prevent="saveReport()">{{ btnSendName }}</button>
               </div>
             </div>
           </div>
@@ -158,12 +162,14 @@ export default {
       isWarningVisible: false,
       name: '',
       description: '',
+      link: '',
       location: {},
       themeSelected: 0,
       mapperSelected: 0,
       tagsSelected: [],
       tagsOptions: [],
       files: [],
+      urls: [],
 
       marker: null,
       options: { noWrap: true },
@@ -181,6 +187,9 @@ export default {
         shadowSize: [0, 0],
         shadowAnchor: [22, 94],
       }),
+
+      btnSendName: 'Send report',
+      btnSendDisabled: '',
     };
   },
 
@@ -244,12 +253,33 @@ export default {
       'getUserThemes',
       'getProjectThemes',
       'saveNewReport',
-      'uploadAndSaveFiles',
+      'saveFiles',
       'getGeoLocation',
+      'notifyOpen',
     ]),
 
     openFile() {
       this.$refs.fileInput.click();
+    },
+
+    lockButtonSend() {
+      this.btnSendName = 'Wait please';
+      this.btnSendDisabled = true;
+    },
+
+    unlockButtonSend() {
+      this.btnSendName = 'Send report';
+      this.btnSendDisabled = false;
+    },
+
+    cleanForm() {
+      this.name = '';
+      this.description = '';
+      this.themeSelected = '';
+      this.tagsSelected = [];
+      this.tagsOptions = [];
+      this.files = [];
+      this.notifyOpen({ type: 1, message: 'Report Sent!' });
     },
 
     uploadPreventDefault(e) {
@@ -276,6 +306,17 @@ export default {
       reader.readAsDataURL(file[0]);
     },
 
+    addLink() {
+      if (this.link) {
+        this.urls.push(this.link);
+        this.link = '';
+      }
+    },
+
+    removeUrl(url) {
+      this.urls.splice(this.urls.indexOf(url), 1);
+    },
+
     loadTagsAndUsers(theme) {
       this.tagsSelected = [];
       const tags = this.reportData.themes.filter(item => item.id === theme.value);
@@ -290,6 +331,8 @@ export default {
 
     saveReport() {
       if (this.name && this.description && this.themeSelected && this.location) {
+        this.lockButtonSend();
+
         this.saveNewReport({
           name: this.name,
           description: this.description,
@@ -297,18 +340,26 @@ export default {
           tags: this.tagsSelected,
           location: this.location,
         }).then((data) => {
-          console.log(data);
-          console.log(this.files[0].item[0]);
+          if (this.files.length > 0) {
+            const promiseAll = this.files.map((file) => {
+              const promiseUpload = new Promise((resolve, reject) => {
+                this.saveFiles({
+                  id: data.id,
+                  file: file.item[0],
+                }).then(() => resolve(),
+                ).catch(() => reject());
+              });
+              return promiseUpload;
+            });
 
-          this.uploadAndSaveFiles({
-            id: data.id,
-            file: this.files[0].item[0],
-          });
-          this.name = '';
-          this.description = '';
-          this.themeSelected = '';
-          this.tagsSelected = [];
-          this.tagsOptions = [];
+            Promise.all(promiseAll).then(() => {
+              this.cleanForm();
+              this.unlockButtonSend();
+            });
+          } else {
+            this.cleanForm();
+            this.unlockButtonSend();
+          }
         });
       }
     },

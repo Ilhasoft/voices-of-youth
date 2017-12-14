@@ -240,8 +240,8 @@ export default {
       }, {
         headers: { authorization: `Token ${token}` },
       }).then((response) => {
-        dispatch('notifyOpen', { type: 1, message: 'Report Sent!' });
-        return response.data;
+        const data = response.data;
+        return data;
       }).catch((error) => {
         let messageError = '';
         const json = JSON.parse(error.response.request.responseText);
@@ -259,23 +259,27 @@ export default {
       });
     },
 
-    uploadAndSaveFiles({ commit }, obj) {
+    saveFiles({ commit, dispatch }, obj) {
       const token = helper.getItem('token');
       const data = new FormData();
       data.append('file', obj.file);
-      data.append('title', 'test');
-      data.append('description', 'bla bla bla');
+      data.append('title', obj.file.name);
+      data.append('description', obj.file.name);
       data.append('report_id', obj.id);
 
-      const config = { headers: {
-        'Content-Type': 'multipart/form-data',
-        authorization: `Token ${token}`,
-      } };
-      return axios.post('/api/report-files/', data, config).then((response) => {
-        console.log(response);
-      }).catch((error) => {
-        console.log(error);
-      });
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Token ${token}`,
+        },
+      };
+
+      return axios.post('/api/report-files/', data, config)
+        .then(response => response.data)
+        .catch((error) => {
+          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
+          throw new Error(error);
+        });
     },
 
     getGeoLocation({ commit }, obj) {

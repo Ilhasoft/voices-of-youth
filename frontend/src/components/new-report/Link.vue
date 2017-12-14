@@ -1,14 +1,13 @@
 <template>
   <div class="columns links">
     <div class="column is-10">
-      <p class="left">sdf</p>
+      <p class="left">{{ url }}</p>
     </div>
 
     <div class="column right" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more">
         <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
-          <p><a>Edit</a></p>
-          <p><a>Remove</a></p>
+          <p><a href="" @click.prevent="$emit('remove-url')">Remove</a></p>
         </div>
       </span>
     </div>
@@ -18,6 +17,13 @@
 <script>
 export default {
   name: 'Link',
+
+  props: {
+    url: {
+      type: String,
+      required: true,
+    },
+  },
 
   data() {
     return {
@@ -53,7 +59,7 @@ export default {
 
   .actions {
     width: 83px;
-    height: 79px;
+    height: 50px;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
