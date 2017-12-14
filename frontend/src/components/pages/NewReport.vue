@@ -254,6 +254,7 @@ export default {
       'getProjectThemes',
       'saveNewReport',
       'saveFiles',
+      'saveUrls',
       'getGeoLocation',
       'notifyOpen',
     ]),
@@ -308,6 +309,9 @@ export default {
 
     addLink() {
       if (this.link) {
+        if (!/^https?:\/\//i.test(this.link)) {
+          this.link = `http://${this.link}`;
+        }
         this.urls.push(this.link);
         this.link = '';
       }
@@ -340,6 +344,10 @@ export default {
           tags: this.tagsSelected,
           location: this.location,
         }).then((data) => {
+          if (this.urls.length) {
+            this.urls.map(link => this.saveUrls({ id: data.id, url: link }));
+          }
+
           if (this.files.length > 0) {
             const promiseAll = this.files.map((file) => {
               const promiseUpload = new Promise((resolve, reject) => {

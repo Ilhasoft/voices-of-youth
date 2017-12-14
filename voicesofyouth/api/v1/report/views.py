@@ -35,7 +35,7 @@ class ReportsViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         try:
-            serializer.save(tags=self.request.data.get('tags', None))
+            serializer.save(tags=self.request.data.get('tags', []))
         except DjangoPermissionDenied as exc:
             raise PermissionDenied(detail=str(exc))
 
