@@ -2,6 +2,7 @@ from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
 from rest_framework import permissions, viewsets
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -77,6 +78,11 @@ class ReportURLsViewSet(viewsets.ModelViewSet):
         if 'report' not in url_query:
             response = Response({}, status=status.HTTP_404_NOT_FOUND)
         return response or super().list(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        report_id = self.request.data.get('report', 0)
+        report = get_object_or_404(Report, id=report_id)
+        serializer.save(report=report)
 
 
 class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):

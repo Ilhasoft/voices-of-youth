@@ -43,8 +43,14 @@ class ReportURLsSerializer(VoySerializer):
     class Meta:
         model = ReportURL
         fields = (
+            'report_id',
             'url',
         )
+
+    def save(self, **kwargs):
+        report = kwargs.get('report')
+        self.validated_data['report'] = report
+        return super(ReportURLsSerializer, self).save(**kwargs)
 
 
 class ReportSerializer(VoySerializer):
