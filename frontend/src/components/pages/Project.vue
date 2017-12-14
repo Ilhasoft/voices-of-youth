@@ -1,15 +1,16 @@
 <template>
   <div>
     <header-index />
-    <!-- PROJECT RIO -->
-    <!-- <router-link to="/login"><h4>LOGIN</h4></router-link>
-    <router-link to="/profile"><h4>PROFILE</h4></router-link>
-    <router-link to="/my-reports"><h4>MY REPORTS</h4></router-link>
-    <router-link to="/project/rio/gallery"><h4>GALLERY</h4></router-link>
-    <router-link to="/project/rio/new-report"><h4>NEW REPORT</h4></router-link> -->
-    <map-osm/>
-    <intro-project/>
-    <side-bar v-show="sideBarActived" />
+    <intro-project />
+    <div class="columns is-marginless">
+      <div class="column is-4 is-paddingless" v-show="sideBarActived">
+        <side-bar />
+      </div>
+
+      <div class="column is-paddingless map-osm">
+        <map-osm />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -47,3 +48,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.map-osm {
+  z-index: 0;
+  height: 91vh;
+}
+</style>
