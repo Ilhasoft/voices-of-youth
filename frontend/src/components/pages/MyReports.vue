@@ -87,13 +87,14 @@ export default {
 
     getReports(status, type) {
       this.status = status;
-      this.myReports(type);
-      this.isEmpty = false;
-
-      if (this.reports.length === 0) {
-        this.text = this.descriptions[status];
-        this.isEmpty = true;
-      }
+      this.myReports(type).then((response) => {
+        if (response.length === 0) {
+          this.text = this.descriptions[status];
+          this.isEmpty = true;
+        } else {
+          this.isEmpty = false;
+        }
+      });
     },
   },
 };

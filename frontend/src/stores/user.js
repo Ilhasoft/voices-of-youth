@@ -73,8 +73,9 @@ export default {
 
     myReports({ commit, dispatch }, obj) {
       const user = helper.getItem('user');
-      axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}`).then((response) => {
+      return axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}`).then((response) => {
         commit(TYPES.SET_USER_REPORTS, response.data);
+        return response.data;
       }).catch(() => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
       });
