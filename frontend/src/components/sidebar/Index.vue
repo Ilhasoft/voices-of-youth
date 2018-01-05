@@ -33,10 +33,10 @@ export default {
   box-shadow: 0 9px 10px 0 rgba(0, 0, 0, 0.16);
   position: absolute;
   margin: auto;
-  top: 78px;
   left: 0;
   bottom: 0;
   background-color: #fbfbfb;
   z-index: 10000;
+  height: calc(100vh - 78px);
 }
 </style>

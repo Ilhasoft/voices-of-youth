@@ -80,6 +80,7 @@ class ReportSerializer(VoySerializer):
             'pin',
             'created_by',
             'last_image',
+            'status'
         )
 
     def get_tags(self, obj):

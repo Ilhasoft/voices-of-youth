@@ -7,92 +7,87 @@
       backTo="Theme"
       @openComponent="openTheme" />
 
-    <div class="map-box">
-      <div class="columns">
-        <div class="column no-padding">
-          <div class="columns header">
-            <div class="column no-padding">
-              <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
-              <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
-                <source :src="filePreview" type="video/mp4">
-              </video>
+      <div class="map-box">
+        <div class="box-flex">
+          <div class="header">
+            <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
+            <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
+              <source :src="filePreview" type="video/mp4">
+            </video>
+
+            <div class="columns">
+              <div class="column">
+                <ul class="images">
+                  <li v-for="(file, key) in files" :key="key">
+                    <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
+                    <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="">
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div class="columns">
-            <div class="column">
-              <ul class="images">
-                <li v-for="(file, key) in files" :key="key">
-                  <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
-                  <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="">
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="columns reports">
-            <div class="column">
+          <div class="report-content">
+            <div class="reports">
               <h1 :style="formatFontColor()">{{ item.name }}</h1>
               <small :style="formatFontColor()">{{ formatDate() }}</small>
-              <p v-html="formatDescription()" class="description"></p>
+              <p v-html="formatDescription()"></p>
+
+              <div class="urls" v-if="urls.length > 0">
+                <strong>External Links</strong>
+                <p v-for="(url, key) in urls" :key="key">
+                  <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
+                </p>
+              </div>
+
+              <div class="tags">
+                <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+              </div>
             </div>
           </div>
 
-          <div class="columns urls" v-if="urls.length > 0">
-            <div class="column">
-              <strong>External Links</strong>
-              <p v-for="(url, key) in urls" :key="key">
-                <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
-              </p>
-            </div>
-          </div>
-
-          <div class="columns">
-            <div class="column tags">
-              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
-            </div>
-          </div>
-
-          <div class="columns buttons">
-            <div class="column">
-              <a class="button share shared">
-                <span class="icon-icon-share"></span> Share
-                <social-sharing 
-                  :url="formatURI()"
-                  :title="item.name"
-                  :description="item.description"
-                  :quote="item.description"
-                  :hashtags="formatTags()"
-                  v-cloak
-                  class="popover"
-                  inline-template>
-                  <div>
-                    <div class="columns">
-                      <div class="column">
-                        <network network="facebook">
-                          <i class="social-facebook"></i>
-                        </network>
-                      </div>
-                      <div class="column">
-                        <network network="twitter">
-                          <i class="social-twitter"></i>
-                        </network>
+          <div class="buttons-size">
+            <div class="columns buttons">
+              <div class="column">
+                <a class="button share shared">
+                  <span class="icon-icon-share"></span> Share
+                  <social-sharing 
+                    :url="formatURI()"
+                    :title="item.name"
+                    :description="item.description"
+                    :quote="item.description"
+                    :hashtags="formatTags()"
+                    v-cloak
+                    class="popover"
+                    inline-template>
+                    <div>
+                      <div class="columns">
+                        <div class="column">
+                          <network network="facebook">
+                            <i class="social-facebook"></i>
+                          </network>
+                        </div>
+                        <div class="column">
+                          <network network="twitter">
+                            <i class="social-twitter"></i>
+                          </network>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </social-sharing>
-              </a>
-            </div>
-            <div class="column">
-              <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
-                <span class="icon-icon-comment"></span> Comment
-              </a>
+                  </social-sharing>
+                </a>
+              </div>
+
+              <div class="column">
+                <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
+                  <span class="icon-icon-comment"></span> Comment
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -278,12 +273,26 @@ export default {
 .map-box {
   margin: auto;
 
+  .box-flex {
+    display: flex;
+    flex-direction: column;
+    height: 84vh;
+  }
+
   .no-padding {
     padding-right: 0px !important;
   }
 
+  .buttons-size {
+    height: 64px;
+  }
+
   .buttons {
+    height: 64px;
     margin-left: 7px;
+    position: absolute;
+    bottom: 12px;
+    left: 0;
 
     .share {
       width: 267.8px;
@@ -305,6 +314,7 @@ export default {
 
   .header {
     width: 100%;
+    text-align: center;
 
     img {
       max-height: 200px;
@@ -328,6 +338,11 @@ export default {
     height: 86px;
     padding: 5px;
     cursor: pointer;
+  }
+
+  .report-content {
+    flex: 1;
+    overflow-y: auto;
   }
 
   .reports {
@@ -356,18 +371,15 @@ export default {
   }
 
   .urls {
-    margin-left: 7px;
-    margin-right: 7px;
-  }
+    margin-top: 14px;
 
-  .description {
-    max-height: 370px;
-    overflow: auto;
+    p {
+      margin-top: 0px;
+    }
   }
 
   .tags {
-    margin-left: 18px;
-    margin-right: 35px;
+    margin-top: 5px;
 
     small {
       margin-right: 3px;
