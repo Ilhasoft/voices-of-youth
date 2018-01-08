@@ -143,7 +143,6 @@
     {% leaflet_js plugins="forms" %}
 
     <script type="text/javascript">
-        var mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
         var linksCount = 0;
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 
@@ -166,7 +165,6 @@
         {% endif %}
 
         function removeLink(item) {
-            console.log(item);
             $('#link_' + item).empty();
         }
 

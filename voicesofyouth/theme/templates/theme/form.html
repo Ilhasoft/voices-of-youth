@@ -124,8 +124,7 @@
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script src="{% static 'vendor/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js' %}"></script>
-    <script
-        src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
 
     {% leaflet_js plugins="forms" %}
 
@@ -133,6 +132,22 @@
         $('#id_mappers_group').chosen();
         $('#id_tags').chosen();
         $('.demo-colorpicker').colorpicker();
+
+        window.addEventListener('map:init', function(e) {
+            var detail = e.detail;
+            var project_bounds = {{ project_bounds }};
+            var bounds = project_bounds[0].map((item) => {
+                return [item[1], item[0]];
+            });
+
+            var polygon = new L.Polygon(bounds);
+            polygon.setStyle({color: '#ff7800'});
+            e.detail.map.addLayer(polygon);
+
+            e.detail.map.on(L.Draw.Event.CREATED, function(e) {
+                alert(e.layer);
+            });
+        }, false);
 
         $('#datetimepicker1,#datetimepicker2').datetimepicker({
             format: 'DD/MM/YYYY',

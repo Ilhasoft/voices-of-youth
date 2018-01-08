@@ -212,3 +212,7 @@ REST_FRAMEWORK = {
 
 # Default pagination items per page.
 ITEMS_PER_PAGE = 10
+
+LEAFLET_CONFIG = {
+    'RESET_VIEW': False
+}
