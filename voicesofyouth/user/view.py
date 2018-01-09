@@ -48,8 +48,9 @@ def _add_admin(request, admin=None):
         messages.error(request, error)
     return saved, form, error
 
+
 class AdminListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/admins_list.html'
+    template_name = 'user/admins_list.html'
 
     def post(self, request):
         delete = request.POST.get('deleteUsers')
@@ -91,7 +92,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
 
 class AdminDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/admin_detail.html'
+    template_name = 'user/admin_detail.html'
 
     def post(self, request, admin_id, *args, **kwargs):
         admin = get_object_or_404(AdminUser, pk=admin_id)
@@ -129,7 +130,7 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
 
 
 class MappersListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/mappers_list.html'
+    template_name = 'user/mappers_list.html'
     form_class = MapperFilterForm
 
     def post(self, request):
@@ -199,14 +200,14 @@ class MappersListView(LoginRequiredMixin, TemplateView):
 
 
 class MapperDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/mapper_detail.html'
+    template_name = 'user/mapper_detail.html'
     form_filter_class = MapperFilterForm
 
     def _search_mapper(self, filter_form):
         if filter_form.is_valid():
             cleaned_data = filter_form.cleaned_data
             if cleaned_data['search']:
-                return MappersListView.as_view()(request)
+                return MappersListView.as_view()(self.request)
 
     def _delete(self, request, mapper):
         mapper.delete()
