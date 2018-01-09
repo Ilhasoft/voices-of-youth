@@ -122,17 +122,6 @@ def set_project_window_title(sender, instance, **kwargs):
         instance.window_title = instance.name
 
 
-@receiver(pre_save, sender=Project)
-def validate_change_project_bounds(sender, instance, **kwargs):
-    """
-    Checks if the new project bounds have any theme outside of the project bounds.
-    """
-    if instance.id:
-        original_instance = sender.objects.get(id=instance.id)
-        if original_instance.bounds != instance.bounds and instance.themes.count() > 0:
-            raise ValidationError(_('You cannot change the bounds of a project that have at least one themes.'))
-
-
 @receiver(post_save, sender=Project)
 def create_project_local_admin_group(sender, instance, **kwargs):
     """
