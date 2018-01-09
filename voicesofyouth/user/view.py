@@ -32,6 +32,16 @@ def search_user(search_by, qs=None):
         return qs.filter(filter)
 
 
+def search_admin(search_by, qs=None):
+    filter = (Q(username__icontains=search_by) |
+              Q(first_name__icontains=search_by) |
+              Q(last_name__icontains=search_by))
+    if qs is None:
+        return AdminUser.objects.filter(filter)
+    else:
+        return qs.filter(filter)
+
+
 def _add_admin(request, admin=None):
     admin = admin or AdminUser()
     form = AdminForm(request.POST)
@@ -74,6 +84,23 @@ class AdminListView(LoginRequiredMixin, TemplateView):
                 return render(request, self.template_name, context)
 
         return self.get(request)
+
+    def get(self, request):
+        context = self.get_context_data(request=request)
+        qs = AdminUser.objects.all()
+        page = request.GET.get('page')
+        search = request.GET.get('search')
+
+        if not isinstance(qs, list):
+            qs = qs.order_by('first_name')
+            if search:
+                qs = search_admin(search, qs)
+        elif search:
+            qs = search_admin(search)
+
+        context['users'] = get_paginator(qs, page)
+
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
