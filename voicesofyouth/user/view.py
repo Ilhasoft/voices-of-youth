@@ -134,8 +134,8 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     form_class = MapperFilterForm
 
     def post(self, request):
-        delete = request.POST.pop('deleteUsers')
-        if delete:
+        if hasattr(request.POST, 'deleteUsers'):
+            delete = request.POST.pop('deleteUsers')
             try:
                 MapperUser.objects.filter(id__in=delete.split(',')).delete()
             except Exception:
@@ -145,7 +145,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             form = MapperForm(request.POST)
             if form.is_valid():
                 mapper = MapperUser()
-                form.save(mapper)
+                form.save(mapper, request.POST.getlist('themes'))
 
         return self.get(request)
 
@@ -238,7 +238,7 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
 
         form = MapperForm(request.POST)
 
-        if form.save(mapper):
+        if form.save(mapper, request.POST.getlist('themes')):
             messages.success(request, 'Mapper saved with success!')
         else:
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
@@ -261,10 +261,12 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
             'themes': mapper.themes.all(),
             'avatars': mapper.avatar
         }
+
         context['filter_form'] = self.form_filter_class(request.GET)
         context['user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
         context['form_edit_user'] = MapperForm(initial=data)
+        context['form_edit_user_theme'] = mapper.themes.all()
         context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:mappers_list')

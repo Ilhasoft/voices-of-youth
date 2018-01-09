@@ -89,25 +89,28 @@ class MapperForm(VoyUserBaseForm):
                                              'class': 'form-control',
                                          }
                                      ))
-    themes = forms.ModelMultipleChoiceField(queryset=None,
-                                            label=_('Themes'),
-                                            required=False,
-                                            widget=forms.SelectMultiple(
-                                                attrs={
-                                                    'multiple': True,
-                                                    'class': 'chosen-select form-control',
-                                                }
-                                            ))
+
+    # themes = forms.MultipleChoiceField(choices=[],
+    #                                         label=_('Themes'),
+    #                                         required=False,
+    #                                         widget=forms.SelectMultiple(
+    #                                             attrs={
+    #                                                 'multiple': True,
+    #                                                 'class': 'chosen-select form-control',
+    #                                             }
+    #                                         ))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['project'].queryset = Project.objects.all()
-        self.fields['themes'].queryset = Theme.objects.all()
+        # self.fields['themes'].queryset = Theme.objects.none()
 
-    def save(self, mapper):
+        # if 'initial' in kwargs.keys():
+        #     initial = kwargs.get('initial')
+        #     self.fields['themes'].queryset = initial['themes']
+
+    def save(self, mapper, themes):
         if super().save(mapper):
-            themes = self.cleaned_data.get('themes')
-
             # Remove mapper from a group.
             for group in mapper.groups.exclude(theme_mappers__id__in=themes):
                 group.user_set.remove(mapper)
@@ -127,8 +130,8 @@ class AdminForm(VoyUserBaseForm):
                                          attrs={
                                              'class': 'admin-profile-selector radio-inline'
                                          }
-                                     ),
-                                     label=_('Profile'))
+    ),
+        label=_('Profile'))
     projects = forms.ModelMultipleChoiceField(queryset=None,
                                               label=_('Project'),
                                               required=False,

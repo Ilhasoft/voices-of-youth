@@ -68,6 +68,12 @@
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ form_edit_user }}
+                        <label for="id_theme">{% trans "Themes" %}:</label>
+                        <select name="themes" id="id_themes" multiple="multiple" class="chosen-select form-control">
+                            {% for theme in form_edit_user_theme %}
+                            <option value="{{ theme.pk }}" selected>{{ theme }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <div class="modal-footer">
                         <button
@@ -123,7 +129,6 @@
                 themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
                 themesSelect.empty();
                 themesSelect.trigger('chosen:updated');
-                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
                 response.data.map((item) => {
                     themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
                     themesSelect.trigger('chosen:updated');
