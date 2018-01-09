@@ -90,24 +90,9 @@ class MapperForm(VoyUserBaseForm):
                                          }
                                      ))
 
-    # themes = forms.MultipleChoiceField(choices=[],
-    #                                         label=_('Themes'),
-    #                                         required=False,
-    #                                         widget=forms.SelectMultiple(
-    #                                             attrs={
-    #                                                 'multiple': True,
-    #                                                 'class': 'chosen-select form-control',
-    #                                             }
-    #                                         ))
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['project'].queryset = Project.objects.all()
-        # self.fields['themes'].queryset = Theme.objects.none()
-
-        # if 'initial' in kwargs.keys():
-        #     initial = kwargs.get('initial')
-        #     self.fields['themes'].queryset = initial['themes']
 
     def save(self, mapper, themes):
         if super().save(mapper):
