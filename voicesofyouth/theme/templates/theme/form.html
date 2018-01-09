@@ -143,10 +143,6 @@
             var polygon = new L.Polygon(bounds);
             polygon.setStyle({color: '#ff7800'});
             e.detail.map.addLayer(polygon);
-
-            e.detail.map.on(L.Draw.Event.CREATED, function(e) {
-                alert(e.layer);
-            });
         }, false);
 
         $('#datetimepicker1,#datetimepicker2').datetimepicker({
