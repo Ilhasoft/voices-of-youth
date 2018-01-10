@@ -41,7 +41,7 @@ class Theme(BaseModel):
         color: Color used for this theme in front end.
     """
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='themes')
-    bounds = gismodels.PolygonField()
+    bounds = gismodels.PolygonField(blank=True)
     name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
     mappers_group = models.OneToOneField(Group,
@@ -95,6 +95,14 @@ class Theme(BaseModel):
 ###############################################################################
 # Signals handlers
 ###############################################################################
+@receiver(pre_save, sender=Theme)
+def set_theme_area(sender, instance, **kwargs):
+    """
+    Set theme bounds with project bounds if theme bounds is empty.
+    """
+    if instance.bounds is None:
+        instance.bounds = instance.project.bounds
+
 
 @receiver(pre_save, sender=Theme)
 def validate_theme_local_admin(sender, instance, **kwargs):

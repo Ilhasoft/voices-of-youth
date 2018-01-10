@@ -98,7 +98,7 @@ class ThemeForm(forms.Form):
     )
 
     bounds = PolygonField(
-        required=True
+        required=False
     )
 
     mappers_group = forms.ModelMultipleChoiceField(
@@ -122,10 +122,3 @@ class ThemeForm(forms.Form):
         groups_ids = project.themes.values_list('mappers_group__id')
         qs = MapperUser.objects.filter(groups__id__in=groups_ids)
         self.fields['mappers_group'].queryset = qs
-
-    def clean(self):
-        cleaned_data = super(ThemeForm, self).clean()
-        bounds = cleaned_data.get('bounds')
-
-        if bounds is None:
-            raise forms.ValidationError(_('Bounds is empty'))

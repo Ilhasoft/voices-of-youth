@@ -4,7 +4,8 @@
 {% block extracss %}
     {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'vendor/chosen/1.8.2/chosen.min.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'vendor/chosen/1.8.2/chosen.min.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 {% endblock %}
 
 {% block extrahtml %}
@@ -15,13 +16,15 @@
 
 {% block extrajs %}
     {{ block.super }}
-    <script src="{% static 'vendor/chosen/1.8.2/chosen.jquery.min.js' %}"></script>
+    <!-- <script src="{% static 'vendor/chosen/1.8.2/chosen.jquery.min.js' %}"></script> -->
+    <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script>
         axios.defaults.headers.common = {'X-CSRFToken': '{{ csrf_token }}'};
     </script>
 
     <script type="text/javascript">
         $("select[id='id_theme']").chosen();
+        $("select[id='id_themes']").chosen();
         $("select[id='id_project']").chosen();
 
         $("select[id='id_project']").change(function (e) {
@@ -29,10 +32,9 @@
             const currentFormId = $(e.target.closest("form")).attr('id');
             var project = e.target.value;
             axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                themesSelect = $('#' + currentFormId + ' select[id=id_theme]');
+                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
                 themesSelect.empty();
                 themesSelect.trigger('chosen:updated');
-                themesSelect.append('<option value="">{% trans 'Theme' %}</option>');
                 response.data.map((item) => {
                     themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
                     themesSelect.trigger('chosen:updated');

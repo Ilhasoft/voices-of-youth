@@ -29,9 +29,6 @@
         tr {
             height: 90px;
             border-bottom: 0.1em solid #F0F0F1;
-            td:nth-child(2n) {
-                width: 105px;
-            }
             td:nth-child(3n) {
                 display: flex;
             }

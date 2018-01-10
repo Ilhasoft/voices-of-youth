@@ -28,7 +28,7 @@
     </td>
     <td>
         <div>
-            {% for theme in user.themes %}
+            {% for theme in user.themes|slice:":10" %}
                 <div class="badge badge-info">{{ theme }}</div>
             {% endfor %}
         </div>

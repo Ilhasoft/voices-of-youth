@@ -32,6 +32,16 @@ def search_user(search_by, qs=None):
         return qs.filter(filter)
 
 
+def search_admin(search_by, qs=None):
+    filter = (Q(username__icontains=search_by) |
+              Q(first_name__icontains=search_by) |
+              Q(last_name__icontains=search_by))
+    if qs is None:
+        return AdminUser.objects.filter(filter)
+    else:
+        return qs.filter(filter)
+
+
 def _add_admin(request, admin=None):
     admin = admin or AdminUser()
     form = AdminForm(request.POST)
@@ -48,8 +58,9 @@ def _add_admin(request, admin=None):
         messages.error(request, error)
     return saved, form, error
 
+
 class AdminListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/admins_list.html'
+    template_name = 'user/admins_list.html'
 
     def post(self, request):
         delete = request.POST.get('deleteUsers')
@@ -74,6 +85,23 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
         return self.get(request)
 
+    def get(self, request):
+        context = self.get_context_data(request=request)
+        qs = AdminUser.objects.all()
+        page = request.GET.get('page')
+        search = request.GET.get('search')
+
+        if not isinstance(qs, list):
+            qs = qs.order_by('first_name')
+            if search:
+                qs = search_admin(search, qs)
+        elif search:
+            qs = search_admin(search)
+
+        context['users'] = get_paginator(qs, page)
+
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users'] = AdminUser.objects.all()
@@ -91,7 +119,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
 
 class AdminDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/admin_detail.html'
+    template_name = 'user/admin_detail.html'
 
     def post(self, request, admin_id, *args, **kwargs):
         admin = get_object_or_404(AdminUser, pk=admin_id)
@@ -129,12 +157,12 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
 
 
 class MappersListView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/mappers_list.html'
+    template_name = 'user/mappers_list.html'
     form_class = MapperFilterForm
 
     def post(self, request):
-        delete = request.POST.pop('deleteUsers')
-        if delete:
+        if hasattr(request.POST, 'deleteUsers'):
+            delete = request.POST.pop('deleteUsers')
             try:
                 MapperUser.objects.filter(id__in=delete.split(',')).delete()
             except Exception:
@@ -144,7 +172,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             form = MapperForm(request.POST)
             if form.is_valid():
                 mapper = MapperUser()
-                form.save(mapper)
+                form.save(mapper, request.POST.getlist('themes'))
 
         return self.get(request)
 
@@ -199,14 +227,14 @@ class MappersListView(LoginRequiredMixin, TemplateView):
 
 
 class MapperDetailView(LoginRequiredMixin, TemplateView):
-    template_name = 'user_new/mapper_detail.html'
+    template_name = 'user/mapper_detail.html'
     form_filter_class = MapperFilterForm
 
     def _search_mapper(self, filter_form):
         if filter_form.is_valid():
             cleaned_data = filter_form.cleaned_data
             if cleaned_data['search']:
-                return MappersListView.as_view()(request)
+                return MappersListView.as_view()(self.request)
 
     def _delete(self, request, mapper):
         mapper.delete()
@@ -237,7 +265,7 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
 
         form = MapperForm(request.POST)
 
-        if form.save(mapper):
+        if form.save(mapper, request.POST.getlist('themes')):
             messages.success(request, 'Mapper saved with success!')
         else:
             messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
@@ -260,10 +288,12 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
             'themes': mapper.themes.all(),
             'avatars': mapper.avatar
         }
+
         context['filter_form'] = self.form_filter_class(request.GET)
         context['user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
         context['form_edit_user'] = MapperForm(initial=data)
+        context['form_edit_user_theme'] = mapper.themes.all()
         context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:mappers_list')

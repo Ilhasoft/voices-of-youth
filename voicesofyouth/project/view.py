@@ -19,7 +19,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         if query:
             context['projects'] = Project.objects.filter(name__icontains=query)
         else:
-            context['projects'] = Project.objects.all()
+            context['projects'] = Project.objects.all().order_by('-created_on')
 
         return context
 

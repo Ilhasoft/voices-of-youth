@@ -1,9 +1,12 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import ugettext as _
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
+from django.contrib.gis.geos import GEOSGeometry
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
@@ -67,6 +70,7 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
         project_id = self.kwargs['project']
 
         context['project'] = get_object_or_404(Project, pk=project_id)
+        context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(project=context['project'])
 
         return context
@@ -142,6 +146,7 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
         context['project'] = theme.project
         context['selected_tags'] = theme.tags.names()
         context['selected_mappers'] = theme.mappers_group.user_set.all().values_list('id', 'username')
+        context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(initial=data, project=context['project'])
 
         return context
