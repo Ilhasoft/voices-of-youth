@@ -49,7 +49,7 @@
 
                     <div class="row mb-lg">
                         {% for file in report.files.all %}
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 {% if file.media_type == 'image' %}
                                     <img src="{{ file.file.url }}" alt="" class="img-responsive">
                                 {% elif file.media_type == 'video' %}
@@ -58,6 +58,10 @@
                                     </video>
                                 {% endif %}
                             </div>
+                        {% if forloop.counter|divisibleby:4 %}
+                            </div>
+                            <div class="row mb-lg">
+                        {% endif %}
                         {% endfor %}
                     </div>
 
