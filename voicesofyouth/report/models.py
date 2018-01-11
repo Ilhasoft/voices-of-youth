@@ -177,7 +177,7 @@ class ReportFile(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='files')
     title = models.CharField(max_length=256, null=False, blank=False, verbose_name=_('Title'))
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-    file = models.FileField(upload_to='reports', blank=True, verbose_name=_('File'))
+    file = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('File'))
     media_type = models.CharField(max_length=5, choices=FILE_TYPES, verbose_name=_('Type'))
 
     class Meta:
