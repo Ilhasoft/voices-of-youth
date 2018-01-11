@@ -279,7 +279,6 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                             )
                             report_link.save()
                         except Exception as e:
-                            print(e)
                             return HttpResponse(status=500)
 
                 messages.success(request, _('Report edited'))

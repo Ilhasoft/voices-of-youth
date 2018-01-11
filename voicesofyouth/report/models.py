@@ -218,7 +218,6 @@ def check_report_within_theme_bounds(sender, instance, **kwargs):
     """
     Report can only be created inside the theme bounds.
     """
-    print(instance.location)
     if not instance.theme.bounds.contains(instance.location):
         msg = _(f'You cannot create a report outside the theme bounds.')
         raise PermissionDenied(msg)
