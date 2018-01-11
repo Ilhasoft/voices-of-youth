@@ -266,6 +266,7 @@
                 polygonMap = new L.Polygon(bounds);
                 polygonMap.setStyle({color: '#ff7800'});
                 mapObject.addLayer(polygonMap);
+                mapObject.fitBounds(polygonMap.getBounds());
             }
         }
 
