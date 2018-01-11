@@ -144,11 +144,19 @@
 
     <script type="text/javascript">
         var linksCount = 0;
+        var mapObject = null;
+        var themeMaps = [];
+        var polygonMap = null;
+
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
+
+        window.addEventListener('map:init', function(e) {
+            mapObject = e.detail.map;
+        });
 
         $('#id_tags').chosen();
 
-        $('#btnAddLink').click(function (e) {
+        $('#btnAddLink').click(function(e) {
             var link = $('#id_link').val();
             if (link) {
                 $('#links').append('<div class="form-group" id="link_' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
@@ -176,6 +184,7 @@
         $('#id_theme').change(function (e) {
             e.preventDefault();
             loadMappers(e.target.value);
+            loadThemeBounds(e.target.value);
         });
 
         function submitForm() {
@@ -206,11 +215,13 @@
                     response.data.map((item) => {
                         $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
                         $('#id_theme').trigger('chosen:updated');
+                        themeMaps[item.id] = item.bounds;
                     });
                 }).then(() => {
                     if (selected) {
                         $('#id_theme').val(selected);
                         loadMappers(selected, {{ data_form.mapper.value }});
+                        loadThemeBounds(selected);
                     }
                 });
             }).then(() => {
@@ -238,6 +249,24 @@
                     $('#id_mapper').val(selected);
                 }
             });
+        }
+
+        function loadThemeBounds(themeId) {
+            if (themeId) {
+                var theme = themeMaps[themeId];
+                var theme_bounds = theme['coordinates'][0];
+                var bounds = theme_bounds.map((item) => {
+                    return [item[1], item[0]];
+                });
+
+                if (polygonMap) {
+                    mapObject.removeLayer(polygonMap);
+                }
+            
+                polygonMap = new L.Polygon(bounds);
+                polygonMap.setStyle({color: '#ff7800'});
+                mapObject.addLayer(polygonMap);
+            }
         }
 
         {% if data_form.project.value %}
