@@ -10,6 +10,7 @@ from django.contrib.gis.geos import GEOSGeometry
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.theme.models import THEMES_COLORS
 from voicesofyouth.theme.forms import ThemeForm
 
 
@@ -72,6 +73,7 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
         context['project'] = get_object_or_404(Project, pk=project_id)
         context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(project=context['project'])
+        context['colors'] = THEMES_COLORS
 
         return context
 
@@ -148,5 +150,6 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
         context['selected_mappers'] = theme.mappers_group.user_set.all().values_list('id', 'username')
         context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(initial=data, project=context['project'])
+        context['colors'] = THEMES_COLORS
 
         return context

@@ -25,6 +25,30 @@ from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
 
 
+THEMES_COLORS = [
+    'ce6c9e',
+    'f08ea5',
+    'f3c154',
+    '569ee5',
+    '5cc0e5',
+    '82d8c5',
+    'ae74e1',
+    '9f7de3',
+    '8979e8',
+    'd164e8',
+    '72c691',
+    'b4e186',
+    'b8c978',
+    'c29267',
+    'ea8064',
+    'd6bc7d',
+    '616b76',
+    '8f9aa8',
+    '8dbdb2',
+    '9bb6da'
+]
+
+
 class Theme(BaseModel):
     """
     Themes is used to create a study around a theme.

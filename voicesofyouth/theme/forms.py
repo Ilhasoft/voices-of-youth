@@ -87,14 +87,8 @@ class ThemeForm(forms.Form):
     )
 
     color = forms.CharField(
-        label=_('Color'),
         required=True,
-        max_length=7,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control demo-colorpicker colorpicker-element',
-            }
-        )
+        widget=forms.HiddenInput()
     )
 
     bounds = PolygonField(

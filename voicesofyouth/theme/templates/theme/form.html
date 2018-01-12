@@ -24,6 +24,7 @@
 
             <form action="" enctype="multipart/form-data" method="post" role="form" id="form-theme">
                 {% csrf_token %}
+                {{ data_form.color }}
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="panel">
@@ -45,8 +46,13 @@
 
                                         <div class="form-group {% if data_form.color.errors %}has-error{% endif %}">
                                             <label>{% trans 'Color' %}</label>
-                                            {{ data_form.color }}
-                                            {{ data_form.color.errors }}
+                                            <div id="colors">
+                                            {% for color in colors %}
+                                                <div class="color-pick" id="color_{{ color }}" onclick="setColor('{{ color }}')">
+                                                    <div class="color" style="background-color: #{{ color }};"></div>
+                                                </div>
+                                            {% endfor %}
+                                            </div>
                                         </div>
 
                                         <div
@@ -97,8 +103,6 @@
                                             </span>
                                             </div>
                                         </div>
-                                        {% if editing %} {% trans 'Edit theme' %} {% else %}
-                                            {% trans 'New theme' %} {% endif %}
                                         <a href="javascript:"
                                            onclick="submitForm()"
                                            class="pull-right btn btn-oval btn-new-theme">
@@ -183,8 +187,18 @@
             $('#id_mappers_group').trigger('chosen:updated');
         {% endif %}
 
+        function setColor(color) {
+            $('#id_color').val('#' + color);
+            $('.color-pick').removeClass('color-checked');
+            $('#color_' + color).addClass('color-checked');
+        }
+
         function submitForm() {
             $('#form-theme').submit();
         }
+
+        {% if data_form.color.value %}
+        setColor('{{ data_form.color.value }}');
+        {% endif %}
     </script>
 {% endblock %}
