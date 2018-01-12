@@ -211,6 +211,9 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users'] = MapperUser.objects.all()
+
+        print(context['users'])
+
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
         context['search_form'] = self.form_class(request.GET)

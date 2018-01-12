@@ -35,7 +35,7 @@
                     {% csrf_token %}
                     {{ form_add_user }}
                     <label for="id_theme">{% trans "Themes" %}:</label>
-                    <select name="themes" id="id_themes" multiple="multiple" class="chosen-select form-control"></select>
+                    <select name="themes" id="id_themes" multiple="multiple" required="required" class="chosen-select form-control"></select>
                 </div>
                 <div class="modal-footer">
                     <button

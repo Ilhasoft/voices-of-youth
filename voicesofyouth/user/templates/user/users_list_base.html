@@ -67,24 +67,22 @@
             </tr>
             </thead>
             <tbody>
-            {% block users_list_panel_body %}
-                {% for user in users %}
-                    {% include "./include/user_render.html" %}
-                {% endfor %}
-            {% endblock %}
+                {% block users_list_panel_body %}
+                    {% for user in users %}
+                        {% include "./include/user_render.html" %}
+                    {% endfor %}
+                {% endblock %}
             </tbody>
         </table>
     </div>
 {% endblock %}
 
 {% block users_base_panel_footer %}
-    {% if users.has_next %}
-        <div class="row">
-            <div class="text-right">
-                {% include "voyadmin/paginator.html" with paginator=users %}
-            </div>
+    <div class="row">
+        <div class="text-right">
+            {% include "voyadmin/paginator.html" with paginator=users %}
         </div>
-    {% endif %}
+    </div>
 {% endblock %}
 
 {% block extrajs %}
