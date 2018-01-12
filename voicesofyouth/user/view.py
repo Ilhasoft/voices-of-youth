@@ -115,6 +115,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
         context['search_form_url'] = reverse('voy-admin:users:admins_list')
         context['delete_users_url'] = reverse('voy-admin:users:admins_list')
         context['list_users_url'] = reverse('voy-admin:users:admins_list')
+        context['button_add_new_user'] = True
         return context
 
 
@@ -141,8 +142,6 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
             'username': admin.username,
             'name': admin.get_full_name(),
             'email': admin.email,
-            # 'project': admin.projects.last(),
-            # 'themes': admin.themes.all(),
             'avatars': admin.avatar
         }
         context['user'] = admin
@@ -150,8 +149,10 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
         context['form_edit_user'] = AdminForm(initial=data)
         context['form_add_user'] = AdminForm()
         context['selected_themes'] = admin.themes.values_list('id', flat=True)
+        context['form_edit_user_theme'] = admin.themes.all()
         context['users_list_url'] = reverse('voy-admin:users:admins_list')
         context['post_add_user_url'] = reverse('voy-admin:users:admins_list')
+        context['button_add_new_user'] = False
 
         return context
 
@@ -212,9 +213,6 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users'] = MapperUser.objects.all()
-
-        print(context['users'])
-
         context['projects'] = Project.objects.filter()
         context['filter_form'] = self.form_class(request.GET)
         context['search_form'] = self.form_class(request.GET)
@@ -227,6 +225,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         context['search_form_url'] = reverse('voy-admin:users:mappers_list')
         context['delete_users_url'] = reverse('voy-admin:users:mappers_list')
         context['list_users_url'] = reverse('voy-admin:users:mappers_list')
+        context['button_add_new_user'] = True
         return context
 
 
@@ -288,7 +287,7 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
             'username': mapper.username,
             'name': mapper.get_full_name(),
             'email': mapper.email,
-            'project': mapper.projects.last(),
+            'projects': mapper.projects.all(),
             'themes': mapper.themes.all(),
             'avatars': mapper.avatar
         }
@@ -301,5 +300,6 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:mappers_list')
+        context['button_add_new_user'] = False
 
         return context

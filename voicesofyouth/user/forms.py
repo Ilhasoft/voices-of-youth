@@ -81,18 +81,19 @@ class VoyUserBaseForm(forms.Form):
 
 
 class MapperForm(VoyUserBaseForm):
-    project = forms.ModelChoiceField(queryset=None,
-                                     label=_('Project'),
-                                     required=False,
-                                     widget=forms.Select(
-                                         attrs={
-                                             'class': 'form-control',
-                                         }
-                                     ))
+    projects = forms.ModelMultipleChoiceField(queryset=None,
+                                              label=_('Project'),
+                                              required=False,
+                                              widget=forms.SelectMultiple(
+                                                  attrs={
+                                                      'multiple': True,
+                                                      'class': 'chosen-select form-control',
+                                                  }
+                                              ))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['project'].queryset = Project.objects.all()
+        self.fields['projects'].queryset = Project.objects.all()
 
     def save(self, mapper, themes):
         if super().save(mapper):
@@ -136,12 +137,19 @@ class AdminForm(VoyUserBaseForm):
         if super().save(admin):
             global_admin = self.cleaned_data.pop('global_admin')
             projects = self.cleaned_data.pop('projects')
+
             for field, value in self.cleaned_data.items():
                 setattr(admin, field, value)
             admin.is_superuser = global_admin == 'global'
             admin.save()
+
+            project_model = Project.objects.all()
+            for project in project_model:
+                project.local_admin_group.user_set.remove(admin)
+
             for project in projects:
                 project.local_admin_group.user_set.add(admin)
+
             return True
         else:
             return False

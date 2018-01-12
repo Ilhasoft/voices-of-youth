@@ -9,9 +9,9 @@
 {% endblock %}
 
 {% block extrahtml %}
-    {% block modal_add %}
+    {% if button_add_new_user %}
         {% include "./include/modal_add_user.html" %}
-    {% endblock %}
+    {% endif %}
 {% endblock %}
 
 {% block extrajs %}
@@ -24,25 +24,37 @@
 
     <script type="text/javascript">
         $("select[id='id_theme']").chosen();
-        $("select[id='id_themes']").chosen();
         $("select[id='id_project']").chosen();
 
-        $("select[id='id_project']").change(function (e) {
-            e.preventDefault();
-            const currentFormId = $(e.target.closest("form")).attr('id');
-            var project = e.target.value;
-            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + project).then((response) => {
-                themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
-                themesSelect.empty();
-                themesSelect.trigger('chosen:updated');
+        $("select[id='id_projects']").chosen();
+        $("select[id='id_themes']").chosen();
+    </script>
+
+    <script type="text/javascript">
+    $("select[id='id_projects']").on('change', function(evt, params) {
+        const currentFormId = $(evt.target.closest("form")).attr('id');
+        themesSelect = $('#' + currentFormId + ' select[id=id_themes]');
+
+        if (params.selected !== undefined) {
+            axios.get('{% url "voy-api:themes-list" %}' + '?project=' + params.selected).then((response) => {
+                const projectName = $("#id_projects option[value='" + params.selected + "']").text();
                 response.data.map((item) => {
-                    themesSelect.append('<option value="' + item.id + '">' + item.name + '</option>');
+                    themesSelect.append('<option data-project="' + params.selected + '" value="' + item.id + '">' + item.name + ' (' + projectName + ')</option>');
                     themesSelect.trigger('chosen:updated');
                 });
             }).catch(error => {
                 console.log(error);
             });
-        });
+        } else if (params.deselected !== undefined) {
+            const selectedProjects = $('#id_projects').val();
+            const projectToRemove = params.deselected;
+
+            $('#id_themes option[data-project="' + projectToRemove + '"]').each(function() {
+                $(this).remove();
+                themesSelect.trigger('chosen:updated');
+            });
+        }
+    });
     </script>
 {% endblock %}
 
@@ -57,6 +69,7 @@
                     <div class="input-group margin-bottom-sm col-xs-3">
                         {% include "./include/users_search_form.html" %}
                     </div>
+                    {% if button_add_new_user %}
                     <div class="input-group margin-bottom-sm" style="order: -1; margin-left: 47px;">
                         <button
                                 class="btn btn-default"
@@ -66,6 +79,7 @@
                             new user{% endblock %}
                         </button>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

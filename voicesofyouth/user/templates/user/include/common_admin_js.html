@@ -1,6 +1,9 @@
 <script>
     $("select[id='id_projects']").chosen();
+    $("select[id='id_themes']").chosen();
     $('#id_projects').removeAttr('required');
+    $('#id_themes').removeAttr('required');
+
     {% if user.is_superuser %}
         $('form[id=editUserForm] input[id=id_global_admin_0]').prop('checked', true);
     {% else %}
@@ -9,11 +12,14 @@
 
     function disable_local_admin_fields() {
         $('[id=id_projects_chosen],[for^=id_projects]').removeAttr('required').hide();
+        $('[id=id_themes_chosen],[for^=id_themes],[id=themes_select]').hide();
     }
 
     function enable_local_admin_fields() {
         $('[id=id_projects_chosen],[for^=id_projects]').attr('required', true).show();
+        $('[id=id_themes_chosen],[for^=id_themes],[id=themes_select]').show();
         $('#id_projects').trigger('chosen:updated');
+        $('#id_themes').trigger('chosen:updated');
     }
 
     if ($('input[id^=id_global_admin]:checked').val() === 'local') {
@@ -28,5 +34,5 @@
         } else {
             disable_local_admin_fields();
         }
-    })
+    });
 </script>
