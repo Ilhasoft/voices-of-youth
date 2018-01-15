@@ -1,4 +1,5 @@
 import magic
+import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,7 @@ from django.utils.translation import ugettext as _
 from django.http.response import HttpResponse
 from django.views.generic.base import TemplateView
 from django.core.files.images import ImageFile
+from django.contrib.gis.geos import GEOSGeometry
 
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
@@ -89,6 +91,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
         report_id = kwargs['report']
 
         context['report'] = get_object_or_404(Report, pk=report_id)
+        context['report_location'] = json.loads(GEOSGeometry(context['report'].location).json)['coordinates']
         context['theme'] = context['report'].theme
 
         return context

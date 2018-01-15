@@ -1,9 +1,10 @@
 {% extends "voyadmin/base.html" %}
 
-{% load static i18n sass_tags %}
+{% load static i18n sass_tags leaflet_tags %}
 
 {% block extracss %}
     <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+    {% leaflet_css %}
 {% endblock %}
 
 {% block content %}
@@ -70,6 +71,12 @@
                         {% for url in report.urls.all %}
                             <p>{{ url }}</p>
                         {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-lg">
+                        <div class="col-md-12">
+                            {% leaflet_map "reportmap" %}
                         </div>
                     </div>
 
@@ -168,7 +175,13 @@
 {% endblock %}
 
 {% block extrajs %}
+    {% leaflet_js %}
     <script type="text/javascript">
+        window.addEventListener('map:init', function(e) {
+            const position = {{ report_location }};
+            L.marker([position[1], position[0]]).addTo(e.detail.map);
+        }, false);
+
         $('#openModal').click(function (e) {
             e.preventDefault();
             $('#modal').show();
