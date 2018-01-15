@@ -15,6 +15,7 @@ from voicesofyouth.user.forms import AdminFilterForm
 from voicesofyouth.user.forms import AdminForm
 from voicesofyouth.user.forms import MapperFilterForm
 from voicesofyouth.user.forms import MapperForm
+from voicesofyouth.user.forms import UserResetPasswordForm
 from voicesofyouth.user.models import AVATARS
 from voicesofyouth.user.models import AdminUser
 from voicesofyouth.user.models import DEFAULT_AVATAR
@@ -125,12 +126,19 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
     def post(self, request, admin_id, *args, **kwargs):
         admin = get_object_or_404(AdminUser, pk=admin_id)
 
-        saved, form, error = _add_admin(request, admin)
-        if error or not saved:
-            context = self.get_context_data(admin_id=admin.id)
-            context['form_edit_admin'] = form
-            context['open_modal'] = True
-            return render(request, self.template_name, context)
+        if request.POST.get('reset_password'):
+            form = UserResetPasswordForm(request.POST)
+            if (form.is_valid()):
+                admin.set_password(form.cleaned_data.get('password'))
+                admin.save()
+                messages.success(request, 'Password saved with success!')
+        else:
+            saved, form, error = _add_admin(request, admin)
+            if error or not saved:
+                context = self.get_context_data(admin_id=admin.id)
+                context['form_edit_admin'] = form
+                context['open_modal'] = True
+                return render(request, self.template_name, context)
 
         return self.get(request, admin_id=admin.id)
 
@@ -153,6 +161,7 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
         context['users_list_url'] = reverse('voy-admin:users:admins_list')
         context['post_add_user_url'] = reverse('voy-admin:users:admins_list')
         context['button_add_new_user'] = False
+        context['form_reset_password_user'] = UserResetPasswordForm()
 
         return context
 
@@ -265,17 +274,23 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
 
         if request.POST.get('deleteMapper'):
             return self._delete(request, mapper)
-
-        form = MapperForm(request.POST)
-
-        if form.save(mapper, request.POST.getlist('themes')):
-            messages.success(request, 'Mapper saved with success!')
+        elif request.POST.get('reset_password'):
+            form = UserResetPasswordForm(request.POST)
+            if (form.is_valid()):
+                mapper.set_password(form.cleaned_data.get('password'))
+                mapper.save()
+                messages.success(request, 'Password saved with success!')
         else:
-            messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
-            context = self.get_context_data(request, mapper.id)
-            context['user'] = mapper
-            context['form_edit_user'] = form
-            return render(request, self.template_name, context)
+            form = MapperForm(request.POST)
+
+            if form.save(mapper, request.POST.getlist('themes')):
+                messages.success(request, 'Mapper saved with success!')
+            else:
+                messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
+                context = self.get_context_data(request, mapper.id)
+                context['user'] = mapper
+                context['form_edit_user'] = form
+                return render(request, self.template_name, context)
 
         return self.get(request, *args, **kwargs)
 
@@ -301,5 +316,6 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
         context['users_list_url'] = reverse('voy-admin:users:mappers_list')
         context['button_add_new_user'] = False
+        context['form_reset_password_user'] = UserResetPasswordForm()
 
         return context

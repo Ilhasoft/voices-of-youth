@@ -162,3 +162,23 @@ class AdminForm(VoyUserBaseForm):
             self.add_error('projects', _('You must inform at least one theme for local admin.'))
 
         return self.cleaned_data
+
+
+class UserResetPasswordForm(forms.Form):
+    reset_password = forms.CharField(widget=forms.HiddenInput(
+        attrs={
+            'value': 'reset_password'
+        }
+    ))
+
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ), required=True)
+
+    confirm_password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control'
+        }
+    ), required=True)

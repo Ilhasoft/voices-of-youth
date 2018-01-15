@@ -38,3 +38,11 @@ body {
 .container-column {
     padding-top: 15px;
 }
+
+#modalEditUserPassword, #modalEditUserProfile {
+    z-index: 1051 !important;
+}
+
+.modal-backdrop {
+    z-index: 1050 !important;
+}

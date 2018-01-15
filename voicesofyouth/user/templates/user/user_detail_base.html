@@ -101,6 +101,46 @@
             </div>
         </div>
     </div>
+
+    <div id="modalEditUserPassword"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="modalEditUserPasswordLabel"
+         aria-hidden="true"
+         class="modal fade"
+         style="display: none;">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="container-column">
+                        <div>
+                            <h4 id="modalEditUserPasswordLabel" class="modal-title">{% trans "Reset Password" %}</h4>
+                        </div>
+                    </div>
+                </div>
+                <form action="" id="passwordUserForm" method="post">
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{ form_reset_password_user }}
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            data-dismiss="modal"
+                            class="btn btn-default btn-lg">
+                            {% trans "Close" %}
+                        </button>
+                        <button
+                            id="submitResetPassword"
+                            type="submit"
+                            class="btn btn-info btn-lg">
+                            {% trans "Reset password" %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block extrajs %}
@@ -109,9 +149,9 @@
         $("img[id='current_avatar']").click((evt) => {
             $(evt.target).parents('div').find('#avatars').slideToggle("slow");
         });
+
         $("img[id^='avatar_']").click((evt) => {
             const selected_avatar = $(evt.target);
-            console.log(selected_avatar);
             const avatars = $(evt.target).parents('div').find('#avatars');
             const current_avatar = $(evt.target).parents('div').find('#current_avatar');
             const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
@@ -121,6 +161,29 @@
         });
     </script>
     <script type="text/javascript">
+        $('#reset_password').click(() => {
+            $('#modalEditUserProfile').modal('toggle');
+            $('#modalEditUserPassword').modal('toggle');
+        });
+
+        $('#submitResetPassword').click((e) => {
+            e.preventDefault();
+            const password = $('#id_password').val();
+            const confirm_password = $('#id_confirm_password').val();
+
+            if ((password && confirm_password) && (password === confirm_password)) {
+                $('#passwordUserForm').submit();
+            } else {
+                swal({
+                    title: '{% trans "Password is wrong!" %}',
+                    text: '{% trans "Please, check password." %}',
+                    icon: "error",
+                    buttons: true,
+                    dangerMode: true,
+                });
+            }
+        });
+
         $("#remove_user").click(() => {
             swal({
                 title: '{% trans "You really want to delete this user?" %}',
@@ -138,10 +201,5 @@
                 swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
             })
         });
-    </script>
-    <script type="text/javascript">
-        $("#reset_password").click(() => {
-            swal("Warning", "This feature is not implemented yet!", "warning");
-        })
     </script>
 {% endblock %}
