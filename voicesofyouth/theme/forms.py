@@ -86,6 +86,11 @@ class ThemeForm(forms.Form):
         required=False
     )
 
+    allow_links = forms.BooleanField(
+        label=_('Allow mappers to add links to reports'),
+        required=False
+    )
+
     color = forms.CharField(
         required=True,
         widget=forms.HiddenInput()

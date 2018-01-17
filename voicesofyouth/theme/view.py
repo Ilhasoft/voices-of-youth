@@ -46,6 +46,7 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
                 visible=form.cleaned_data.get('visible'),
                 start_at=form.cleaned_data.get('start_at'),
                 end_at=form.cleaned_data.get('end_at'),
+                allow_links=form.cleaned_data.get('allow_links'),
                 created_by=request.user,
                 modified_by=request.user
             )
@@ -97,6 +98,7 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
             theme.visible = form.cleaned_data.get('visible')
             theme.start_at = form.cleaned_data.get('start_at')
             theme.end_at = form.cleaned_data.get('end_at')
+            theme.allow_links = form.cleaned_data.get('allow_links')
 
             theme.tags.remove(*theme.tags.all())
             theme.tags.add(*form.cleaned_data.get('tags'))
@@ -141,7 +143,8 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
             'end_at': end_at,
             'color': theme.color,
             'tags': theme.tags.names(),
-            'bounds': theme.bounds
+            'bounds': theme.bounds,
+            'allow_links': theme.allow_links
         }
 
         context['editing'] = True

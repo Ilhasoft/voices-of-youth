@@ -63,11 +63,14 @@ class Theme(BaseModel):
         description: Description of theme.
         tags: Tags of the theme.
         color: Color used for this theme in front end.
+        visible: Visible to users.
+        allow_links: Allow mappers to add links to reports.
     """
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='themes')
     bounds = gismodels.PolygonField(blank=True)
     name = CharFieldTranslatable(max_length=256, null=False, blank=False, verbose_name=_('Name'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
+    allow_links = models.BooleanField(default=True, verbose_name=_('Allow mappers to add links to reports'))
     mappers_group = models.OneToOneField(Group,
                                          related_name='theme_mappers',
                                          null=True,
