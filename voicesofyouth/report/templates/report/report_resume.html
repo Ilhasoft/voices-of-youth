@@ -5,7 +5,7 @@
         <div class="badge-image">
             <span class="text">{{ report.files.count }}</span>
             {% if report.images %}
-                <img src="{{ report.images.first.file.url }}" class="img-responsive" alt="">
+                <img src="{{ report.images.first.file.url }}" class="img-responsive img" alt="">
             {% else %}
                 <img src="{% static 'img/video.png' %}" class="img-responsive" alt="">
             {% endif %}
@@ -45,10 +45,6 @@
                 <a href="{% url 'voy-admin:reports:approve' report.pk %}"
                    class="btn btn-oval approve">{% trans 'Approve' %}</a>
             {% endif %}
-
-            <!-- {% if report.status == 3 %}
-                <a class="btn btn-oval btn-danger reject" disabled="disabled">{% trans 'Rejected' %}</a>
-            {% endif %} -->
 
             <p class="comments">{{ report.comments_views.count }} {% trans 'comments' %}</p>
         </div>
