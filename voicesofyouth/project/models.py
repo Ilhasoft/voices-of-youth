@@ -5,7 +5,6 @@ from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.db import models as gismodels
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.query_utils import Q
 from django.db.models.signals import m2m_changed
@@ -77,6 +76,7 @@ class Project(BaseModel):
     bounds = gismodels.PolygonField()
     translations = GenericRelation(Translation)
     tags = TaggableManager(blank=True)
+    enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
 
     class Meta:
         verbose_name = _('Project')

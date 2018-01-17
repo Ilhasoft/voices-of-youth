@@ -57,6 +57,15 @@
                                             {{ data_form.description.errors }}
                                         </div>
 
+                                        <div class="form-group {% if data_form.enabled.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Enabled' %}</label>
+                                            <label class="switch switch-sm pull-right">
+                                                {{ data_form.enabled }}
+                                                <span></span>
+                                            </label>
+                                            {{ data_form.enabled.errors }}
+                                        </div>
+
                                         <div class="form-group {% if data_form.thumbnail.errors %}has-error{% endif %}">
                                             <label>{% trans 'Thumbnail' %}</label>
                                             {{ data_form.thumbnail }}

@@ -15,5 +15,5 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     Return a specific project.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    queryset = Project.objects.all()
+    queryset = Project.objects.all().filter(enabled=True)
     serializer_class = ProjectSerializer

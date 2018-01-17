@@ -96,6 +96,11 @@ class ProjectForm(forms.Form):
         )
     )
 
+    enabled = forms.BooleanField(
+        label=_('Enabled'),
+        required=False
+    )
+
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['local_admin'].queryset = VoyUser.objects.all()
