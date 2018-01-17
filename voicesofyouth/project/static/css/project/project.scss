@@ -17,14 +17,15 @@
             .btn.btn-default {
                 border-color: #00CBFF;
             }
-
-            // a {
-            //     width: 70%;
-            // }
         }
 
         .header {
             background-color: #00CBFF;
+            padding: 30px;
+        }
+
+        .header-disabled {
+            background-color: #929292;
             padding: 30px;
         }
 

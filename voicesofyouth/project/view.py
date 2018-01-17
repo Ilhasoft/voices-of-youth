@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import TemplateView
 from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.utils import timezone
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.project.forms import ProjectForm
@@ -16,10 +19,34 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('query')
 
+        now = timezone.now()
+        start_at = self.request.GET.get('start_at', timezone.datetime(now.year, now.month, 1).strftime('%d/%m/%YT%H:%M:%S'))
+        end_at = self.request.GET.get('end_at', now.strftime('%d/%m/%YT%H:%M:%S'))
+        project_filter = {}
+
+        if start_at and end_at:
+            date_from = datetime.strptime('{0}-{1}-{2}T00:00:00'.format(start_at[6:10],
+                                                                        start_at[3:5],
+                                                                        start_at[0:2]),
+                                          '%Y-%m-%dT%H:%M:%S')
+
+            date_to = datetime.strptime('{0}-{1}-{2}T23:59:59'.format(end_at[6:10],
+                                                                      end_at[3:5],
+                                                                      end_at[0:2]),
+                                        '%Y-%m-%dT%H:%M:%S')
+            project_filter['created_on__gte'] = date_from
+            project_filter['created_on__lte'] = date_to
+
         if query:
-            context['projects'] = Project.objects.filter(name__icontains=query)
+            project_filter['name__icontains'] = query
+
+        if project_filter:
+            context['projects'] = Project.objects.filter(**project_filter).order_by('-created_on')
         else:
             context['projects'] = Project.objects.all().order_by('-created_on')
+
+        context['start_at'] = start_at
+        context['end_at'] = end_at
 
         return context
 

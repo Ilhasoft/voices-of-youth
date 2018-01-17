@@ -4,6 +4,8 @@
 
 {% block extracss %}
     <link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
+    <link rel="stylesheet"
+          href="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -23,6 +25,35 @@
                                 <span class="input-group-addon fa fa-search"></span>
                             </div>
                         </div>
+
+                        <div class="col-lg-6 col-md-6 pull-right">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4">
+                                    <div id="datetimepicker1" class="input-group date">
+                                        <input type="text" name="start_at" class="form-control startdatepicker" id="id_start_at" value="{{ start_at }}">
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-4 col-md-4">
+                                    <div id="datetimepicker2" class="input-group date">
+                                        <input type="text" name="end_at" class="form-control expiredatepicker" id="id_end_at" value="{{ end_at }} ">
+                                        <span class="input-group-addon">
+                                            <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-2 col-md-2">
+                                    <button class="btn btn-default">
+                                        {% trans "Filter" %}
+                                    </button>
+                                </div>
+                            </div>
+                            
+                        </div>
                     </form>
                 </div>
             </div>
@@ -32,7 +63,14 @@
                     {% for project in projects %}
                         <div class="col-md-4">
                             <div class="panel panel-primary box">
-                                <div class="panel-heading header">
+                                <div
+                                    class="panel-heading 
+                                    {% if project.enabled %}
+                                        header
+                                    {% else %}
+                                        header-disabled
+                                    {% endif %}
+                                    ">
                                     <div class="row">
                                         <div class="col-xs-12 text-center">
                                             <div class="text-md">{{ project }}</div>
@@ -70,3 +108,27 @@
         </div>
     </section>
 {% endblock content %}
+
+{% block extrajs %}
+    <script src="{% static 'vendor/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script type="text/javascript">
+    $('#datetimepicker1,#datetimepicker2').datetimepicker({
+        format: 'DD/MM/YYYY',
+        icons: {
+            date: 'fa fa-calendar',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-crosshairs',
+            clear: 'fa fa-trash'
+        }
+    });
+
+    $('#datetimepicker1').on('dp.change', function (e) {
+        $('#datetimepicker2').data('DateTimePicker').minDate(e.date);
+    });
+
+    $('#datetimepicker2').on('dp.change', function (e) {
+        $('#datetimepicker1').data('DateTimePicker').maxDate(e.date);
+    });
+    </script>
+{% endblock %}
