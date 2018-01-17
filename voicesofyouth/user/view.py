@@ -152,7 +152,7 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
             'email': admin.email,
             'avatars': admin.avatar
         }
-        context['user'] = admin
+        context['voy_user'] = admin
         context['user_delete_url'] = reverse('voy-admin:users:admin_detail', args=(admin.id, ))
         context['form_edit_user'] = AdminForm(initial=data)
         context['form_add_user'] = AdminForm()
@@ -308,7 +308,7 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         }
 
         context['filter_form'] = self.form_filter_class(request.GET)
-        context['user'] = mapper
+        context['voy_user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
         context['form_edit_user'] = MapperForm(initial=data)
         context['form_edit_user_theme'] = mapper.themes.all()

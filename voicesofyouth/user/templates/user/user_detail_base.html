@@ -11,13 +11,13 @@
     <div class="container-column">
         <div style="display: flex; align-items: baseline">
             <div class="col-xs-1">
-                <img src="{{ user.get_avatar_display }}" alt="">
+                <img src="{{ voy_user.get_avatar_display }}" alt="">
             </div>
             <div class="col-xs-10">
-                <h4>{{ user.get_full_name }}</h4>
-                <p>{{ user.username }}</p>
-                <p>{{ user.email }}</p>
-                <p>{% trans "Creation date" %}: {{ user.date_joined|date:"d N Y" }}</p>
+                <h4>{{ voy_user.get_full_name }}</h4>
+                <p>{{ voy_user.username }}</p>
+                <p>{{ voy_user.email }}</p>
+                <p>{% trans "Creation date" %}: {{ voy_user.date_joined|date:"d N Y" }}</p>
             </div>
             <div>
                 <button
@@ -54,7 +54,7 @@
                         </div>
                         <div style="padding: 5px;">
                             <div>
-                                <img id="current_avatar" src="{{ user.get_avatar_display }}" alt=""
+                                <img id="current_avatar" src="{{ voy_user.get_avatar_display }}" alt=""
                                      style="cursor: pointer">
                             </div>
                         </div>
