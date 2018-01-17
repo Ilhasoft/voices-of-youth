@@ -14,12 +14,14 @@
     <div class="col-lg-8 col-md-8 m-top">
         <div class="row">
             <div class="col-lg-10 col-md-10">
-                <p>#id-{{ report.id }}</p>
                 <h4 class="text-lg-left block">{{ report.name }}</h4>
                 <small class="text-lg-left"></small>
                 {{ report.created_by.first_name }}
             </div>
-            <div class="col-lg-2 col-md-2 text-right">{{ report.created_on|date:'d M Y' }}</div>
+            <div class="col-lg-2 col-md-2 text-right">
+                <p class="id">#id-{{ report.id }}</p>
+                {{ report.created_on|date:'d M Y' }}
+            </div>
         </div>
 
         <div class="row">
