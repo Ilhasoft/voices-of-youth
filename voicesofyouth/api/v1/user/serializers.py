@@ -23,3 +23,14 @@ class UserSerializer(serializers.ModelSerializer):
                    obj):
         request = self.context['request']
         return request.build_absolute_uri(obj.get_avatar_display())
+
+
+class RegisterUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'first_name',
+            'username',
+            'email',
+            'password',
+        )

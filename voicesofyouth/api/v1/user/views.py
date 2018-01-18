@@ -1,15 +1,24 @@
 from django.contrib.auth.models import AnonymousUser
+
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+# from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import AllowAny
+from rest_framework import mixins
+from rest_framework.response import Response
+from rest_framework import status
 
 from voicesofyouth.api.v1.user.serializers import UserSerializer
+from voicesofyouth.api.v1.user.serializers import RegisterUserSerializer
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import User
 
 
-class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+class UsersEndPoint(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.RetrieveModelMixin,
+                    viewsets.GenericViewSet):
+    permission_classes = (AllowAny,)
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -26,3 +35,14 @@ class UsersEndPoint(viewsets.ReadOnlyModelViewSet):
                     return User.objects.all()
         if token:
             return User.objects.filter(auth_token=token)
+
+    def create(self, request, *args, **kwargs):
+        serializer = RegisterUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.save()
+        user.set_password(serializer.data['password'])
+        user.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
