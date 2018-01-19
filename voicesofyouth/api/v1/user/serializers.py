@@ -19,16 +19,16 @@ class UserSerializer(serializers.ModelSerializer):
             'is_admin'
         )
 
-    def get_avatar(self,
-                   obj):
+    def get_avatar(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(obj.get_avatar_display())
 
 
-class RegisterUserSerializer(serializers.ModelSerializer):
+class UserChangeSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
+            'avatar',
             'first_name',
             'username',
             'email',
