@@ -1,4 +1,6 @@
 from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
+from django.db.models.query_utils import Q
+
 from rest_framework import permissions, viewsets
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
@@ -97,3 +99,22 @@ class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
         if 'report' not in url_query:
             response = Response({}, status=status.HTTP_204_NO_CONTENT)
         return response or super().list(request, *args, **kwargs)
+
+
+class ReportSearchViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+    queryset = Report.objects.all()
+    serializer_class = ReportSerializer
+
+    def list(self, request, *args, **kwargs):
+        query = self.request.query_params.get('query', None)
+
+        if query:
+            queryset = self.get_queryset().filter(Q(theme__name__icontains=query) |
+                                                  Q(name__icontains=query) |
+                                                  Q(tagged_items__tag__name__icontains=query)).distinct()
+
+            if len(queryset) > 0:
+                return Response(self.get_serializer(queryset, many=True).data)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)

@@ -1,8 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.query_utils import Q
 from taggit.managers import _TaggableManager
-from taggit.models import CommonGenericTaggedItemBase, Tag
-from taggit.models import TaggedItemBase
+from taggit.models import Tag
 
 
 class InvalidTag(Exception):
