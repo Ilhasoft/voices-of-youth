@@ -36,11 +36,31 @@ class ReportsViewSet(viewsets.ModelViewSet):
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        urls = None
         try:
-            serializer.save(tags=self.request.data.get('tags', []))
+            urls = request.data.pop('urls')
+        except Exception:
+            pass
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            report = serializer.save(tags=self.request.data.get('tags', []))
+            if urls:
+                for url in urls:
+                    ReportURL.objects.create(
+                        url=url,
+                        report=report,
+                        created_by=self.request.user,
+                        modified_by=self.request.user
+                    )
         except DjangoPermissionDenied as exc:
             raise PermissionDenied(detail=str(exc))
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ReportCommentsViewSet(viewsets.ModelViewSet):
