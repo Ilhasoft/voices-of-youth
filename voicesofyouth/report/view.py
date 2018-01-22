@@ -231,7 +231,6 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 report = get_object_or_404(Report, pk=report_id)
                 mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
 
-                report.name = form.cleaned_data.get('title')
                 report.theme = Theme.objects.get(id=form.cleaned_data.get('theme'))
                 report.name = form.cleaned_data.get('title')
                 report.description = form.cleaned_data.get('description')

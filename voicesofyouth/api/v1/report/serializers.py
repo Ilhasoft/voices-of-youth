@@ -14,6 +14,7 @@ from voicesofyouth.user.models import User
 
 
 class ReportFilesSerializer(VoySerializer):
+    id = serializers.IntegerField(read_only=True)
     created_by = UserSerializer(required=False)
     media_type = serializers.CharField(required=False)
     description = serializers.CharField(required=False)
@@ -23,6 +24,7 @@ class ReportFilesSerializer(VoySerializer):
     class Meta:
         model = ReportFile
         fields = (
+            'id',
             'title',
             'description',
             'media_type',
@@ -97,7 +99,20 @@ class ReportSerializer(VoySerializer):
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save()
+        report.tags.remove(*report.tags.all())
         report.tags.add(*kwargs.get('tags'))
+
+        if kwargs.get('urls') is not None:
+            ReportURL.objects.filter(report=report).delete()
+            request = self.context['request']
+            for url in kwargs.get('urls'):
+                ReportURL.objects.create(
+                    url=url,
+                    report=report,
+                    created_by=request.user,
+                    modified_by=request.user
+                )
+
         return report
 
 

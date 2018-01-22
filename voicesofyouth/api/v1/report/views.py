@@ -1,9 +1,7 @@
-from django.core.exceptions import PermissionDenied as DjangoPermissionDenied
 from django.db.models.query_utils import Q
 
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, mixins
 from rest_framework import status
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -29,7 +27,11 @@ class ReportsPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
 
 
-class ReportsViewSet(viewsets.ModelViewSet):
+class ReportsViewSet(mixins.CreateModelMixin,
+                     mixins.RetrieveModelMixin,
+                     mixins.UpdateModelMixin,
+                     mixins.ListModelMixin,
+                     viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all().prefetch_related('theme', 'created_by', 'files', 'tags').all()
@@ -37,30 +39,27 @@ class ReportsViewSet(viewsets.ModelViewSet):
     pagination_class = ReportsPagination
 
     def create(self, request, *args, **kwargs):
-        urls = None
-        try:
-            urls = request.data.pop('urls')
-        except Exception:
-            pass
-
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        try:
-            report = serializer.save(tags=self.request.data.get('tags', []))
-            if urls:
-                for url in urls:
-                    ReportURL.objects.create(
-                        url=url,
-                        report=report,
-                        created_by=self.request.user,
-                        modified_by=self.request.user
-                    )
-        except DjangoPermissionDenied as exc:
-            raise PermissionDenied(detail=str(exc))
+        serializer.save(
+            tags=self.request.data.get('tags', []),
+            urls=self.request.data.get('urls', []))
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save(
+            tags=self.request.data.get('tags', []),
+            urls=self.request.data.get('urls', []))
+
+        return Response(serializer.data)
 
 
 class ReportCommentsViewSet(viewsets.ModelViewSet):
@@ -77,7 +76,10 @@ class ReportCommentsViewSet(viewsets.ModelViewSet):
         return response or super().list(request, *args, **kwargs)
 
 
-class ReportFilesViewSet(viewsets.ModelViewSet):
+class ReportFilesViewSet(mixins.CreateModelMixin,
+                         mixins.ListModelMixin,
+                         mixins.DestroyModelMixin,
+                         viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('-created_on').all()
@@ -87,8 +89,18 @@ class ReportFilesViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user, modified_by=self.request.user)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.report.created_by == request.user:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ReportURLsViewSet(viewsets.ModelViewSet):
+        return Response('Permission denied', status=status.HTTP_403_FORBIDDEN)
+
+
+class ReportURLsViewSet(mixins.CreateModelMixin,
+                        mixins.ListModelMixin,
+                        viewsets.GenericViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportURLsSerializer
     queryset = ReportURL.objects.all()
