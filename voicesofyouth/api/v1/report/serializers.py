@@ -4,6 +4,7 @@ import magic
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer
+
 from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
@@ -43,7 +44,6 @@ class ReportURLsSerializer(VoySerializer):
     class Meta:
         model = ReportURL
         fields = (
-            'report_id',
             'url',
         )
 
@@ -61,7 +61,9 @@ class ReportSerializer(VoySerializer):
     can_receive_comments = serializers.BooleanField(read_only=True)
     editable = serializers.BooleanField(read_only=True)
     visible = serializers.BooleanField(read_only=True)
-    pin = serializers.SerializerMethodField()
+    pin = serializers.SerializerMethodField(read_only=True)
+    urls = serializers.StringRelatedField(many=True, read_only=True)
+    files = ReportFilesSerializer(many=True, read_only=True)
 
     class Meta:
         model = Report
@@ -80,15 +82,18 @@ class ReportSerializer(VoySerializer):
             'pin',
             'created_by',
             'last_image',
-            'status'
+            'status',
+            'urls',
+            'files'
         )
 
     def get_tags(self, obj):
         return obj.tags.names()
 
     def get_pin(self, obj):
-        request = self.context['request']
-        return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
+        if hasattr(obj, 'theme'):
+            request = self.context['request']
+            return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save()
