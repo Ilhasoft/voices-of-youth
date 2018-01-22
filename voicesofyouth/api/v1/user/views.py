@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import exceptions
 
 from voicesofyouth.api.v1.user.serializers import UserSerializer
 from voicesofyouth.api.v1.user.serializers import UserChangeSetSerializer
@@ -46,20 +47,21 @@ class UsersEndPoint(mixins.CreateModelMixin,
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    '''def update(self, request, *args, **kwargs):
-        print("ATUALIZANDO")
-        print(request.META.get('HTTP_AUTHORIZATION'))
+    def update(self, request, *args, **kwargs):
+        try:
+            token = request.META.get('HTTP_AUTHORIZATION').split()[1]
+        except Exception:
+            msg = 'Invalid token header. Token string should not contain invalid characters.'
+            raise exceptions.AuthenticationFailed(msg)
 
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        instance = get_object_or_404(User, auth_token=token)
+        serializer = UserChangeSetSerializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
 
-        if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
+        user = serializer.save()
 
-        return Response(serializer.data)'''
+        if serializer.data['password']:
+            user.set_password(serializer.data['password'])
+            user.save()
+
+        return Response(serializer.data)
