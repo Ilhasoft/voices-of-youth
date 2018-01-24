@@ -3,9 +3,9 @@ import uuid
 from datetime import datetime
 
 from django.contrib.gis.db import models as gismodels
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import models
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
@@ -14,10 +14,12 @@ from taggit.managers import TaggableManager
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import _ReportTaggableManager
 from voicesofyouth.theme.models import Theme
+from voicesofyouth.user.models import MapperUser
+
 
 REPORT_STATUS_APPROVED = 1
 REPORT_STATUS_PENDING = 2
-REPORT_STATUS_REJECTED = 3
+REPORT_STATUS_NOTAPPROVED = 3
 
 REPORT_COMMENT_STATUS_APPROVED = 1
 REPORT_COMMENT_STATUS_PENDING = 2
@@ -26,13 +28,13 @@ REPORT_COMMENT_STATUS_REJECTED = 3
 REPORT_STATUS_CHOICES = (
     (REPORT_STATUS_APPROVED, _('Approved')),
     (REPORT_STATUS_PENDING, _('Pending')),
-    (REPORT_STATUS_REJECTED, _('Rejected')),
+    (REPORT_STATUS_NOTAPPROVED, _('Not Approved')),
 )
 
 REPORT_COMMENT_STATUS_CHOICES = (
     (REPORT_COMMENT_STATUS_APPROVED, _('Approved')),
     (REPORT_COMMENT_STATUS_PENDING, _('Pending')),
-    (REPORT_COMMENT_STATUS_REJECTED, _('Rejected')),
+    (REPORT_COMMENT_STATUS_REJECTED, _('Not Approved')),
 )
 
 FILE_TYPE_IMAGE = 'image'
@@ -49,6 +51,26 @@ FILE_FORMATS = [
     'image/gif',
     'video/webm',
     'video/mp4'
+]
+
+NOTIFICATION_STATUS_APPROVED = 1
+NOTIFICATION_STATUS_PENDING = 2
+NOTIFICATION_STATUS_NOTAPPROVED = 3
+NOTIFICATION_STATUS_REVALUTION = 4
+
+NOTIFICATION_STATUS = [
+    (NOTIFICATION_STATUS_APPROVED, _('Approved')),
+    (NOTIFICATION_STATUS_PENDING, _('Pending')),
+    (NOTIFICATION_STATUS_NOTAPPROVED, _('Not Approved')),
+    (NOTIFICATION_STATUS_REVALUTION, _('Revaluation')),
+]
+
+NOTIFICATION_ORIGIN_REPORT = 1
+NOTIFICATION_ORIGIN_COMMENT = 2
+
+NOTIFICATION_ORIGIN = [
+    (NOTIFICATION_ORIGIN_REPORT, _('Report')),
+    (NOTIFICATION_ORIGIN_COMMENT, _('Comment'))
 ]
 
 
@@ -70,7 +92,7 @@ class ReportQuerySet(models.QuerySet):
         return self.filter(status=REPORT_STATUS_APPROVED)
 
     def rejected(self):
-        return self.filter(status=REPORT_STATUS_REJECTED)
+        return self.filter(status=REPORT_STATUS_NOTAPPROVED)
 
     def pending(self):
         return self.filter(status=REPORT_STATUS_PENDING)
@@ -199,19 +221,37 @@ class ReportURL(BaseModel):
         return self.url
 
 
+class ReportNotification(BaseModel):
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='notifications')
+    status = models.IntegerField(choices=NOTIFICATION_STATUS, blank=False, null=False, verbose_name=_('Status'))
+    origin = models.IntegerField(choices=NOTIFICATION_ORIGIN, blank=False, null=False, verbose_name=_('Origin'))
+    message = models.TextField(null=True, blank=True, verbose_name=_('Message'))
+    read = models.BooleanField(default=False, verbose_name=_('Readed'))
+
+    class Meta:
+        verbose_name = _('Report Notifications')
+        verbose_name_plural = _('Reports Notifications')
+        db_table = 'report_report_notification'
+
+    def __str__(self):
+        return self.report
+
+
 ###############################################################################
 # Signals handlers
 ###############################################################################
 
-# @receiver(pre_save, sender=Report)
-# def check_user_permission(sender, instance, **kwargs):
-#     """
-#     Mapper cannot create report for a theme that he haven't permission.
-#     """
-#     if instance.theme not in instance.created_by.themes:
-#         msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
-#                 f'"{instance.theme.name}({instance.theme.id})".')
-#         raise PermissionDenied(msg)
+@receiver(pre_save, sender=Report)
+def check_user_permission(sender, instance, **kwargs):
+    """
+    Mapper cannot create report for a theme that he haven't permission.
+    """
+    mapper = MapperUser.objects.get(id=instance.created_by.id)
+    if instance.theme not in mapper.themes:
+        msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
+                f'"{instance.theme.name}({instance.theme.id})".')
+        raise PermissionDenied(msg)
+
 
 @receiver(pre_save, sender=Report)
 def check_report_within_theme_bounds(sender, instance, **kwargs):
@@ -220,4 +260,29 @@ def check_report_within_theme_bounds(sender, instance, **kwargs):
     """
     if not instance.theme.bounds.contains(instance.location):
         msg = _(f'You cannot create a report outside the theme bounds.')
-        raise PermissionDenied(msg)
+        raise ValidationError(msg)
+
+
+@receiver(post_save, sender=Report)
+def send_notification_to_local_admin(sender, instance, **kwargs):
+    if instance.created_by.is_mapper is True:
+        try:
+            notification = ReportNotification.objects.filter(report=instance).first()
+
+            if instance.status == REPORT_COMMENT_STATUS_PENDING:
+                notification.status = NOTIFICATION_STATUS_PENDING
+
+            elif instance.status == REPORT_STATUS_NOTAPPROVED:
+                notification.status = NOTIFICATION_STATUS_REVALUTION
+
+            notification.read = False
+            notification.save()
+        except Exception as e:
+            ReportNotification.objects.create(
+                report=instance,
+                status=NOTIFICATION_STATUS_PENDING,
+                origin=NOTIFICATION_ORIGIN_REPORT,
+                read=False,
+                created_by=instance.created_by,
+                modified_by=instance.modified_by,
+            )
