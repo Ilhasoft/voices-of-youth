@@ -122,7 +122,6 @@ export default {
     ...mapGetters({
       item: 'getReport',
       files: 'getReportFiles',
-      urls: 'getReportUrls',
     }),
   },
 
