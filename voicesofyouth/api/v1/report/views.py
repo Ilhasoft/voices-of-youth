@@ -44,7 +44,7 @@ class ReportsViewSet(mixins.CreateModelMixin,
 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
-    queryset = Report.objects.all().prefetch_related('theme', 'created_by', 'files', 'tags').all()
+    queryset = Report.objects.all().filter(theme__visible=True).prefetch_related('theme', 'created_by', 'files', 'tags').all()
     filter_class = ReportFilter
     pagination_class = ReportsPagination
 
@@ -91,7 +91,7 @@ class ReportCommentsViewSet(viewsets.ModelViewSet):
     """
     permission_classes = [permissions.AllowAny, ]
     serializer_class = ReportCommentsSerializer
-    queryset = ReportComment.objects.approved()
+    queryset = ReportComment.objects.approved().order_by('created_on')
     filter_class = ReportCommentFilter
 
     def list(self, request, *args, **kwargs):

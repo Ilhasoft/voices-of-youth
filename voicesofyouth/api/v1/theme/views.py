@@ -16,7 +16,7 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     Return a specific theme.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    queryset = Theme.objects.all()
+    queryset = Theme.objects.all().filter(visible=True)
     serializer_class = ThemeSerializer
     filter_class = ThemeFilter
 

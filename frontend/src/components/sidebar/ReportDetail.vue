@@ -10,17 +10,17 @@
       <div class="map-box">
         <div class="box-flex">
           <div class="header">
-            <img :src="filePreview" v-if="filePreviewType == 'image'" alt="">
-            <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls>
+            <img :src="filePreview" v-if="filePreviewType == 'image'" alt="" v-cloak>
+            <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls v-cloak>
               <source :src="filePreview" type="video/mp4">
             </video>
 
             <div class="columns">
               <div class="column">
                 <ul class="images">
-                  <li v-for="(file, key) in files" :key="key">
-                    <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="">
-                    <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="">
+                  <li v-for="(file, key) in files" :key="key" v-cloak>
+                    <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="" v-cloak>
+                    <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="" v-cloak>
                   </li>
                 </ul>
               </div>
@@ -29,13 +29,13 @@
 
           <div class="report-content">
             <div class="reports">
-              <h1 :style="formatFontColor()">{{ item.name }}</h1>
-              <small :style="formatFontColor()">{{ formatDate() }}</small>
-              <p v-html="formatDescription()"></p>
+              <h1 :style="formatFontColor()" v-cloak>{{ item.name }}</h1>
+              <small :style="formatFontColor()" v-cloak>{{ formatDate() }}</small>
+              <p v-html="formatDescription()" v-cloak></p>
 
-              <div class="urls" v-if="urls.length > 0">
+              <div class="urls" v-if="item.urls" v-cloak>
                 <strong>External Links</strong>
-                <p v-for="(url, key) in urls" :key="key">
+                <p v-for="(url, key) in item.urls" :key="key">
                   <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
                 </p>
               </div>
@@ -51,7 +51,7 @@
               <div class="column">
                 <a class="button share shared">
                   <span class="icon-icon-share"></span> Share
-                  <social-sharing 
+                  <social-sharing
                     :url="formatURI()"
                     :title="item.name"
                     :description="item.description"
@@ -123,15 +123,14 @@ export default {
       item: 'getReport',
       files: 'getReportFiles',
       urls: 'getReportUrls',
-      preview: 'getReportPreview',
     }),
   },
 
   watch: {
-    preview() {
-      if (this.preview) {
-        this.filePreview = this.preview.file;
-        this.filePreviewType = this.preview.media_type;
+    files() {
+      if (this.files) {
+        this.filePreview = this.files[0].file;
+        this.filePreviewType = this.files[0].media_type;
       }
     },
   },
@@ -234,7 +233,7 @@ export default {
         position: absolute;
       }
     }
-    
+
   &:hover {
     .popover {
       display: block;

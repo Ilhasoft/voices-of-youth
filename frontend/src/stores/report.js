@@ -12,7 +12,6 @@ export default {
     themes: [],
     comments: [],
     files: [],
-    urls: [],
     newReport: {
       themes: [],
       title: '',
@@ -31,7 +30,7 @@ export default {
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
     getReportNewData: state => state.newReport,
-    getReportPreview: state => state.files[0],
+    getReportPreview: state => state.files,
     getReportsPins: (state) => {
       const markers = [];
 
@@ -101,8 +100,7 @@ export default {
     },
 
     [TYPES.SET_REPORT_MEDIAS](state, obj) {
-      state.files = obj.files;
-      state.urls = obj.urls;
+      state.files = obj;
     },
 
     [TYPES.CLEAR_REPORTS_LIST](state) {
@@ -156,8 +154,8 @@ export default {
       axios.get(`/api/reports/${obj}`).then((response) => {
         commit(TYPES.SET_CURRENT_REPORT, response.data);
       }).then(() => {
-        axios.get(`/api/report-medias/?report=${obj}`).then((response) => {
-          commit(TYPES.SET_REPORT_MEDIAS, response.data[0]);
+        axios.get(`/api/report-files/?report=${obj}`).then((response) => {
+          commit(TYPES.SET_REPORT_MEDIAS, response.data.results);
         });
       }).catch((error) => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });

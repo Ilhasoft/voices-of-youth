@@ -1,8 +1,6 @@
 <template>
   <div class="sidebar">
-    <keep-alive>
-      <component v-bind:is="tabActived" />
-    </keep-alive>
+    <component v-bind:is="tabActived" />
   </div>
 </template>
 

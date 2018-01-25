@@ -1,13 +1,13 @@
 <template>
   <div class="columns item">
     <div class="column is-1">
-      <img v-if="comment.created_by.avatar" :src="comment.created_by.avatar" alt=""/>
+      <img v-if="comment.created_by.avatar" :src="comment.created_by.avatar" alt="" v-cloak/>
     </div>
 
     <div class="column text">
-      <h1>{{ comment.created_by.first_name }}</h1>
-      <small>{{ formatDate() }}</small>
-      <p>{{ comment.text }}</p>
+      <h1 v-cloak>{{ comment.created_by.first_name }}</h1>
+      <small v-cloak>{{ formatDate() }}</small>
+      <p v-cloak>{{ comment.text }}</p>
     </div>
 
     <div v-if="isLogged && accessEdit" class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">

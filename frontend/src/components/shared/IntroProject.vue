@@ -1,5 +1,5 @@
 <template>
-  <div v-show="isVisibled">
+  <div v-show="isVisibled" class="div__intro">
     <div class="opacity"></div>
     <div class="intro">
       <div class="header">
@@ -44,9 +44,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.div__intro {
+  position: absolute;
+  top: 10%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
 .opacity {
   opacity: 0.33;
-  z-index: 10000000;
+  z-index: 100000;
   background-color: #000000;
   width: 100%;
   height: 100%;
@@ -56,7 +65,7 @@ export default {
 }
 
 .intro {
-  z-index: 100000000;
+  z-index: 100000;
   position: relative;
   margin: auto;
   width: 553px;
@@ -68,8 +77,8 @@ export default {
     background-color: #00cbff;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
-    display: table-cell; 
-    vertical-align: middle; 
+    display: table-cell;
+    vertical-align: middle;
     text-align: center;
     width: inherit;
   }
@@ -109,7 +118,7 @@ export default {
         height: 49px;
         border-radius: 100px;
         background-color: #6f18bb;
-        
+
         font-size: 17px;
         font-weight: 500;
         letter-spacing: -0.4px;

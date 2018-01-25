@@ -6,11 +6,11 @@
       :closeButton="true"
       backTo="Themes"
       @openComponent="openThemes" />
-  
+
     <div class="map-box">
       <div class="columns">
         <div class="column no-padding">
-          <div class="columns is-mobile header" :style="formatColor(item.color)">
+          <div class="columns is-mobile header" :style="formatColor(item.color)" v-cloak>
             <div class="column is-1 pin">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="31" viewBox="0 0 25 31">
                   <g fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" transform="translate(1.283 1.868)">
@@ -21,34 +21,34 @@
             </div>
 
             <div class="column m-auto">
-              <h1>{{ item.name }}</h1>
+              <h1 v-cloak>{{ item.name }}</h1>
             </div>
           </div>
 
           <div class="columns">
             <div class="column text">
-              <small :style="formatFontColor()">{{ formatDate(item.created_on) }}</small>
-              <p>{{ item.description }}</p>
+              <small :style="formatFontColor()" v-cloak>{{ formatDate(item.created_on) }}</small>
+              <p v-cloak>{{ item.description }}</p>
             </div>
           </div>
 
           <div class="columns">
             <div class="column tags">
-              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags" v-cloak>{{ tag }}</small>
             </div>
           </div>
 
           <div class="columns reports">
             <div class="column">
-              <h1 :style="formatFontColor()">{{ item.reports_count }} Reports</h1>
+              <h1 :style="formatFontColor()" v-cloak>{{ item.reports_count }} Reports</h1>
             </div>
           </div>
 
           <div class="columns medias">
             <div class="column">
               <ul>
-                <li :key="key" v-for="(report, key) in lastReports">
-                  <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="">
+                <li :key="key" v-for="(report, key) in lastReports" v-cloak>
+                  <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="" v-cloak>
                 </li>
               </ul>
             </div>
@@ -147,13 +147,13 @@ export default {
   .medias {
     margin: 15px 0px 0px 7px;
 
-    li { 
+    li {
       display: inline;
     }
 
-    li:nth-child(5):after { 
+    li:nth-child(5):after {
       content: "\A";
-      white-space: pre; 
+      white-space: pre;
     }
 
     img {
