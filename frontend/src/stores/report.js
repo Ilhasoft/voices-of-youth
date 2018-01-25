@@ -151,6 +151,9 @@ export default {
     },
 
     getReport({ commit, dispatch }, obj) {
+      commit(TYPES.SET_CURRENT_REPORT, {});
+      commit(TYPES.SET_REPORT_MEDIAS, {});
+
       axios.get(`/api/reports/${obj}`).then((response) => {
         commit(TYPES.SET_CURRENT_REPORT, response.data);
       }).then(() => {

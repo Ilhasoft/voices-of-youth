@@ -53,6 +53,9 @@ export default {
     },
 
     getTheme({ commit, dispatch }, obj) {
+      commit(TYPES.SET_CURRENT_THEME, {});
+      commit(TYPES.SET_LAST_REPORTS, []);
+
       const project = helper.getItem('project');
       axios.get(`/api/themes/${obj}?project=${project.id}${query}`).then((response) => {
         commit(TYPES.SET_CURRENT_THEME, response.data);
