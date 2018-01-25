@@ -10,10 +10,7 @@ from voicesofyouth.translation.models import Translation
 
 class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    Return a list of themes.
-
-    You can use the querystring to get the translated version of the theme(s). E.g. to get a theme in portuguese
-    brazilian just use: ?lang=pt-br. If the requested translation does not exists you will receive the default language.
+    Return a list of themes. You can filter reports by project, by mapper or by start/end year.
 
     retrieve:
     Return a specific theme.

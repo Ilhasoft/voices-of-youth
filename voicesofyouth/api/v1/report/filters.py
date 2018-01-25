@@ -38,19 +38,3 @@ class ReportCommentFilter(filters.FilterSet):
     class Meta:
         model = ReportComment
         fields = ('report', )
-
-
-class ReportURLFilter(filters.FilterSet):
-    report = filters.NumberFilter(name='report', help_text='Get all URL\'s from the report id.')
-
-    class Meta:
-        model = ReportURL
-        fields = ('report', )
-
-
-class ReportMediaFilter(filters.FilterSet):
-    report = filters.NumberFilter(name='id', help_text='Get all medias(files and URL\'s) from the report id.')
-
-    class Meta:
-        model = Report
-        fields = ('report', )

@@ -6,8 +6,6 @@ from rest_framework.routers import DefaultRouter
 
 from voicesofyouth.api.v1.mapper.views import MappersEndPoint
 from voicesofyouth.api.v1.report.views import ReportCommentsViewSet
-from voicesofyouth.api.v1.report.views import ReportURLsViewSet
-from voicesofyouth.api.v1.report.views import ReportMediasViewSet
 from voicesofyouth.api.v1.report.views import ReportFilesViewSet
 from voicesofyouth.api.v1.report.views import ReportsViewSet
 from voicesofyouth.api.v1.report.views import ReportSearchViewSet
@@ -24,9 +22,7 @@ router.register(r'users', UsersEndPoint, base_name='users')
 router.register(r'mappers', MappersEndPoint, base_name='mappers')
 router.register(r'reports', ReportsViewSet, base_name='reports')
 router.register(r'report-comments', ReportCommentsViewSet, base_name='report-comments')
-router.register(r'report-medias', ReportMediasViewSet, base_name='report-medias')
 router.register(r'report-files', ReportFilesViewSet, base_name='report-files')
-router.register(r'report-urls', ReportURLsViewSet, base_name='report-urls')
 router.register(r'report-search', ReportSearchViewSet, base_name='report-search')
 
 urlpatterns = [
@@ -34,5 +30,4 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^docs/', include_docs_urls(title='Voices of Youth API')),
     url(r'', include(router.urls, namespace='voy-api')),
-    # url(r'^comments/$', CommentsEndPoint.as_view()),
 ]

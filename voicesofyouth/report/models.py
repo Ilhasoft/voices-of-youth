@@ -246,11 +246,12 @@ def check_user_permission(sender, instance, **kwargs):
     """
     Mapper cannot create report for a theme that he haven't permission.
     """
-    mapper = MapperUser.objects.get(id=instance.created_by.id)
-    if instance.theme not in mapper.themes:
-        msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
-                f'"{instance.theme.name}({instance.theme.id})".')
-        raise PermissionDenied(msg)
+    if instance.created_by.is_mapper is True:
+        mapper = MapperUser.objects.get(id=instance.created_by.id)
+        if instance.theme not in mapper.themes:
+            msg = _(f'The user "{instance.created_by}" don\'t have permission to create a report for the theme '
+                    f'"{instance.theme.name}({instance.theme.id})".')
+            raise PermissionDenied(msg)
 
 
 @receiver(pre_save, sender=Report)

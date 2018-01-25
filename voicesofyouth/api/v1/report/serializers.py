@@ -154,12 +154,3 @@ class ReportCommentsSerializer(VoySerializer):
             validated_data['created_by'] = request.user
             validated_data['modified_by'] = request.user
         return ReportComment.objects.create(**validated_data)
-
-
-class ReportMediasSerializer(VoySerializer):
-    urls = serializers.StringRelatedField(many=True)
-    files = ReportFilesSerializer(many=True)
-
-    class Meta:
-        model = Report
-        fields = ('urls', 'files')
