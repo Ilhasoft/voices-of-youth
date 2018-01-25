@@ -19,10 +19,10 @@ class Migration(migrations.Migration):
     dependencies = [
         ('core', '0001_initial'),
         ('translation', '0001_initial'),
-        ('project', '0005_auto_20171122_1712'),
-        ('theme', '0004_auto_20171121_1406'),
+        ('project', '0006_project_enabled'),
+        ('theme', '0006_theme_allow_links'),
         ('tag', '0001_initial'),
-        ('report', '0004_auto_20171110_2008'),
+        ('report', '0011_auto_20180125_1241'),
         ('user', '0004_remove_voyuser_created_on'),
     ]
 
@@ -211,7 +211,8 @@ if settings.DEBUG:
                                      thumbnail=fake_thumbnail,
                                      description=lorem.paragraph(),
                                      created_by=global_admin,
-                                     modified_by=global_admin)
+                                     modified_by=global_admin,
+                                     enabled=True)
                 project.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
                 _generate_themes(project)
 
