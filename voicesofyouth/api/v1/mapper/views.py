@@ -7,6 +7,13 @@ from voicesofyouth.user.models import MapperUser
 
 
 class MappersEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    list:
+    Return a list of mappers by theme.
+
+    retrieve:
+    Return a specific mapper.
+    """
     permission_classes = (IsAuthenticatedOrReadOnly,)
     serializer_class = MapperSerializer
     queryset = MapperUser.objects.all()

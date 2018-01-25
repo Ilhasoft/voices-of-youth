@@ -6,6 +6,7 @@ from .serializers import ProjectSerializer
 
 class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     """
+    list:
     Return a list of projects.
 
     You can use the querystring to get the translated version of the project. E.g. to get a project in portuguese

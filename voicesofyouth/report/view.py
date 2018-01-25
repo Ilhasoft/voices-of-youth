@@ -19,9 +19,12 @@ from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
+from voicesofyouth.report.models import ReportNotification
+from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
-from voicesofyouth.report.models import REPORT_STATUS_REJECTED
+from voicesofyouth.report.models import REPORT_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import FILE_FORMATS
 from voicesofyouth.report.forms import ReportFilterForm
 from voicesofyouth.report.forms import ReportForm
@@ -78,8 +81,17 @@ class ReportView(LoginRequiredMixin, TemplateView):
         if report_id and message:
             try:
                 report = get_object_or_404(Report, pk=report_id)
-                report.status = REPORT_STATUS_REJECTED
+                report.status = REPORT_STATUS_NOTAPPROVED
                 report.save()
+
+                try:
+                    notification = ReportNotification.objects.filter(report=report).first()
+                    notification.status = NOTIFICATION_STATUS_NOTAPPROVED
+                    notification.read = False
+                    notification.message = message
+                    notification.save()
+                except Exception:
+                    pass
 
                 messages.success(request, _('Report rejected'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
@@ -89,6 +101,13 @@ class ReportView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         report_id = kwargs['report']
+
+        try:
+            notification = ReportNotification.objects.filter(report__id=report_id).first()
+            notification.read = True
+            notification.save()
+        except Exception:
+            pass
 
         context['report'] = get_object_or_404(Report, pk=report_id)
         context['report_location'] = json.loads(GEOSGeometry(context['report'].location).json)['coordinates']
@@ -104,6 +123,14 @@ class ApproveReportView(LoginRequiredMixin, TemplateView):
             report = get_object_or_404(Report, pk=report_id)
             report.status = REPORT_STATUS_APPROVED
             report.save()
+
+            try:
+                notification = ReportNotification.objects.filter(report=report).first()
+                notification.status = NOTIFICATION_STATUS_APPROVED
+                notification.read = False
+                notification.save()
+            except Exception:
+                pass
 
             messages.success(request, _('Report approved'))
         return redirect(request.META.get('HTTP_REFERER'))

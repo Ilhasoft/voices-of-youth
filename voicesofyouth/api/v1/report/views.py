@@ -9,15 +9,11 @@ from rest_framework.response import Response
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
 from voicesofyouth.api.v1.report.filters import ReportFileFilter
 from voicesofyouth.api.v1.report.filters import ReportFilter
-from voicesofyouth.api.v1.report.filters import ReportMediaFilter
-from voicesofyouth.api.v1.report.filters import ReportURLFilter
 from voicesofyouth.api.v1.report.paginators import ReportFilesResultsSetPagination
 from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
 from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
-from voicesofyouth.api.v1.report.serializers import ReportMediasSerializer
 from voicesofyouth.api.v1.report.serializers import ReportSerializer
-from voicesofyouth.api.v1.report.serializers import ReportURLsSerializer
-from voicesofyouth.report.models import Report, ReportURL
+from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 
@@ -32,6 +28,20 @@ class ReportsViewSet(mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
                      mixins.ListModelMixin,
                      viewsets.GenericViewSet):
+    """
+    list:
+    Returns a list of reports. You can filter reports by project, by theme, by mapper or by status.
+
+    create:
+    Create a new report. Only Mappers can do that.
+
+    read:
+    Returns a report data.
+
+    update:
+    Update report.
+    """
+
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportSerializer
     queryset = Report.objects.all().prefetch_related('theme', 'created_by', 'files', 'tags').all()
@@ -63,6 +73,22 @@ class ReportsViewSet(mixins.CreateModelMixin,
 
 
 class ReportCommentsViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    Returns a list of approved comments by Report.
+
+    create:
+    Create a comment, the comment is sent to moderation.
+
+    read:
+    Returns a comment data.
+
+    update:
+    Update a comment.
+
+    delete:
+    Delete a comment.
+    """
     permission_classes = [permissions.AllowAny, ]
     serializer_class = ReportCommentsSerializer
     queryset = ReportComment.objects.approved()
@@ -80,6 +106,16 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
                          mixins.ListModelMixin,
                          mixins.DestroyModelMixin,
                          viewsets.GenericViewSet):
+    """
+    list:
+    Returns the list of report files.
+
+    create:
+    Send a file. Image: jpg, png, gif. Video webm, mp4
+
+    delete:
+    Delete file.
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
     queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('-created_on').all()
@@ -98,42 +134,12 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
         return Response('Permission denied', status=status.HTTP_403_FORBIDDEN)
 
 
-class ReportURLsViewSet(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    serializer_class = ReportURLsSerializer
-    queryset = ReportURL.objects.all()
-    filter_class = ReportURLFilter
-
-    def list(self, request, *args, **kwargs):
-        url_query = self.request.query_params
-        response = None
-        if 'report' not in url_query:
-            response = Response({}, status=status.HTTP_404_NOT_FOUND)
-        return response or super().list(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        report_id = self.request.data.get('report', 0)
-        report = get_object_or_404(Report, id=report_id)
-        serializer.save(report=report)
-
-
-class ReportMediasViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    serializer_class = ReportMediasSerializer
-    queryset = Report.objects.all()
-    filter_class = ReportMediaFilter
-
-    def list(self, request, *args, **kwargs):
-        url_query = self.request.query_params
-        response = None
-        if 'report' not in url_query:
-            response = Response({}, status=status.HTTP_204_NO_CONTENT)
-        return response or super().list(request, *args, **kwargs)
-
-
-class ReportSearchViewSet(viewsets.ReadOnlyModelViewSet):
+class ReportSearchViewSet(
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet):
+    """
+    Returns a list of reports that are searched by name, theme, or tags. Example: /report-search/?query=find_it
+    """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     queryset = Report.objects.all()
     serializer_class = ReportSerializer

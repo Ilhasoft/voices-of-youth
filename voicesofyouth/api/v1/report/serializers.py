@@ -1,11 +1,12 @@
+import magic
+
 from django.conf import settings
 from rest_framework import serializers
-import magic
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer
 
-from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO
+from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO, REPORT_COMMENT_STATUS_PENDING
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
@@ -89,6 +90,11 @@ class ReportSerializer(VoySerializer):
             'files'
         )
 
+    def validate(self, data):
+        if not data['theme'].bounds.contains(data['location']):
+            raise serializers.ValidationError('You cannot create a report outside the theme bounds.')
+        return data
+
     def get_tags(self, obj):
         return obj.tags.names()
 
@@ -98,7 +104,7 @@ class ReportSerializer(VoySerializer):
             return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
 
     def save(self, **kwargs):
-        report = super(ReportSerializer, self).save()
+        report = super(ReportSerializer, self).save(status=REPORT_COMMENT_STATUS_PENDING)
         report.tags.remove(*report.tags.all())
         report.tags.add(*kwargs.get('tags'))
 
@@ -148,12 +154,3 @@ class ReportCommentsSerializer(VoySerializer):
             validated_data['created_by'] = request.user
             validated_data['modified_by'] = request.user
         return ReportComment.objects.create(**validated_data)
-
-
-class ReportMediasSerializer(VoySerializer):
-    urls = serializers.StringRelatedField(many=True)
-    files = ReportFilesSerializer(many=True)
-
-    class Meta:
-        model = Report
-        fields = ('urls', 'files')

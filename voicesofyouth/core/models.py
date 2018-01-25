@@ -89,6 +89,7 @@ def check_delete_protected_group(instance, **kwargs):
         msg = _('This is a protected group. You cannot delete a protected group')
         raise ValidationError({'name': msg})
 
+
 @receiver(pre_save, sender=Group)
 def check_add_or_edit_protected_group(instance, sender, **kwargs):
     """
@@ -117,6 +118,7 @@ def check_add_or_edit_protected_group(instance, sender, **kwargs):
     if sender.objects.filter(name__iexact=instance.name).exists() and not instance.id:
         msg = _('This group already exists!')
         raise ValidationError({'name': msg})
+
 
 @receiver(m2m_changed, sender=User.groups.through)
 def group_association(instance, action, model, pk_set, **__):
