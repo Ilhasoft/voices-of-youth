@@ -83,8 +83,11 @@ export default {
     ]),
 
     formatDate() {
-      const date = new Date(this.item.created_on);
-      return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+      if (this.item.created_on) {
+        const date = new Date(this.item.created_on);
+        return `${date.toLocaleString('en-use', { month: 'short' })} ${date.getDay()}, ${date.getFullYear()}`;
+      }
+      return '';
     },
 
     formatColor() {

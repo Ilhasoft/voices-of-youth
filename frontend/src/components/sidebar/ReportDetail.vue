@@ -148,7 +148,10 @@ export default {
     },
 
     formatDate() {
-      return helper.formatDate(this.item.created_on);
+      if (this.item.created_on) {
+        return helper.formatDate(this.item.created_on);
+      }
+      return '';
     },
 
     formatColor() {
