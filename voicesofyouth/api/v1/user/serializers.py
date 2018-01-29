@@ -5,6 +5,7 @@ from voicesofyouth.user.models import User
 
 class UserSerializer(serializers.ModelSerializer):
     avatar = serializers.SerializerMethodField()
+    email = serializers.CharField(read_only=True)
 
     class Meta:
         model = User
@@ -14,6 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'language',
             'avatar',
+            'email',
             'username',
             'is_mapper',
             'is_admin'
