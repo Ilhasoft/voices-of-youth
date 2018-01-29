@@ -3,7 +3,7 @@
     class="column is-2 notification-box" 
     @mouseover.prevent="isVisible = true" 
     @mouseout="isVisible = false"
-    v-if="userIsLogged">
+    v-if="userIsLogged && userIsMapper">
     <a href="">
       <img class="img" src="~@/assets/img/header-bell.png">
     </a>
@@ -84,6 +84,7 @@ export default {
   computed: {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
+      userIsMapper: 'userIsMapper',
     }),
   },
 };

@@ -22,6 +22,7 @@ export default {
 
   getters: {
     getUserData: state => state.userData,
+    userIsMapper: state => state.userData.is_mapper,
     userIsLogged: state => state.isLogged,
     getMyReports: state => state.myReports,
   },
@@ -117,6 +118,28 @@ export default {
         password: obj,
       }, {
         headers: { authorization: `Token ${token}` },
+      });
+    },
+
+    executeRegisterProfile({ commit, dispatch }, obj) {
+      if (!obj.name || !obj.email || !obj.username || !obj.password) {
+        dispatch('notifyOpen', { type: 0, message: 'All fields are required!' });
+        return false;
+      } else if (obj.password && obj.confirmPassword && obj.password !== obj.confirmPassword) {
+        dispatch('notifyOpen', { type: 0, message: 'Password not match!' });
+        return false;
+      }
+
+      return axios.post('/api/users/', {
+        username: obj.username,
+        password: obj.password,
+        email: obj.email,
+        first_name: obj.name,
+        avatar: 1,
+      }).then(() => {
+        dispatch('notifyOpen', { type: 1, message: 'Register successful!' });
+      }).catch(() => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
       });
     },
   },

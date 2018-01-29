@@ -8,11 +8,11 @@
             <div class="content">
               <div class="columns">
                 <div class="column has-text-center">
-                  <img src="./../../assets/img/login-a.png" alt="">
+                  <img src="~@/assets/img/login-a.png" alt="">
                 </div>
               </div>
 
-              <form action="" @submit.prevent="execLogin()">
+              <form action="" @submit.prevent="userLogin()">
                 <div class="columns">
                   <div class="column has-text-center">
                     <h1>Hello, again!</h1>
@@ -38,7 +38,7 @@
                   </div>
 
                   <div class="column has-text-center">
-                    <button type="submit" @click.prevent="execLogin()" class="btn button l-submit">Login</button>
+                    <button type="submit" @click.prevent="userLogin()" class="btn button l-submit">Login</button>
                   </div>
                 </div>
               </form>
@@ -51,7 +51,7 @@
             <div class="content">
               <div class="columns">
                 <div class="column has-text-center">
-                  <img src="./../../assets/img/login-b.png" alt="">
+                  <img src="~@/assets/img/login-b.png" alt="">
                 </div>
               </div>
 
@@ -64,25 +64,31 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="Full name"/>
+                  <input type="text" class="input" v-model="register.name" placeholder="Name"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="E-mail"/>
+                  <input type="text" class="input" v-model="register.username" placeholder="Username"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" name="name" value="" placeholder="Password"/>
+                  <input type="text" class="input" v-model="register.email" placeholder="E-mail"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" name="name" value="" placeholder="Confirm password"/>
+                  <input type="password" class="input" v-model="register.password" placeholder="Password"/>
+                </div>
+              </div>
+
+              <div class="columns">
+                <div class="column has-text-center">
+                  <input type="password" class="input" v-model="register.confirmPassword" placeholder="Confirm password"/>
                 </div>
               </div>
 
@@ -95,7 +101,7 @@
                 </div>
 
                 <div class="column has-text-center">
-                  <button type="submit" class="btn button l-register">Register</button>
+                  <button type="submit" @click.prevent="userRegister" class="btn button l-register">Register</button>
                 </div>
               </div>
             </div>
@@ -109,7 +115,7 @@
       <div class="terms">
         <div class="columns">
           <div class="column">
-            <img src="./../../assets/img/logo.png" class="logo" alt="">
+            <img src="~@/assets/img/logo.png" class="logo" alt="">
           </div>
         </div>
 
@@ -170,6 +176,14 @@ export default {
         username: '',
         password: '',
       },
+
+      register: {
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      },
     };
   },
 
@@ -183,6 +197,7 @@ export default {
     ...mapActions([
       'executeLogin',
       'notifyOpen',
+      'executeRegisterProfile',
     ]),
 
     openTerms() {
@@ -194,7 +209,7 @@ export default {
       this.isAccepted = value;
     },
 
-    execLogin() {
+    userLogin() {
       this.executeLogin({
         username: this.login.username,
         password: this.login.password,
@@ -203,6 +218,20 @@ export default {
           router.push({ name: 'project', params: { path: this.currentProject.path } });
         }
       });
+    },
+
+    userRegister() {
+      if (this.isAccepted) {
+        this.executeRegisterProfile(this.register).then(() => {
+          this.register = {
+            name: '',
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+          };
+        });
+      }
     },
   },
 };

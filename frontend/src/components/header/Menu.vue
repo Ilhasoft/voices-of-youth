@@ -28,13 +28,13 @@
         </div>
       </div>
       
-      <div class="column" v-if="userIsLogged">
+      <div class="column" v-if="userIsLogged && userIsMapper">
         <router-link
           :to="{ name: 'my-reports' }">My reports
         </router-link>
       </div>
       
-      <div class="column new-report">
+      <div class="column new-report" v-if="userIsLogged && userIsMapper">
         <router-link
           class="button btn-report"
           :to="{ name: 'newreport', params: { path: currentProject.path }}">
@@ -65,6 +65,7 @@ export default {
   computed: {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
+      userIsMapper: 'userIsMapper',
       showMenu: 'menuIsVisibled',
       menuTitle: 'menuTitle',
       menuLanguages: 'getProjectLanguages',

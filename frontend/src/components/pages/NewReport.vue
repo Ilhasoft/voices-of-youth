@@ -198,6 +198,8 @@ export default {
   mounted() {
     if (!this.userIsLogged) {
       router.push({ name: 'login' });
+    } else if (this.userIsMapper === false) {
+      router.push({ name: 'project', params: { path: this.currentProject.path } });
     } else {
       if (this.currentUser.is_admin) {
         this.showMappers = true;
@@ -231,6 +233,7 @@ export default {
     ...mapGetters({
       currentUser: 'getUserData',
       userIsLogged: 'userIsLogged',
+      userIsMapper: 'userIsMapper',
       reportData: 'getReportNewData',
       currentProject: 'getCurrentProject',
     }),
