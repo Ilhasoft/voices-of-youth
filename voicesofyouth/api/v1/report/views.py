@@ -135,10 +135,10 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
 
 
 class ReportSearchViewSet(
-    mixins.ListModelMixin,
-    viewsets.GenericViewSet):
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
     """
-    Returns a list of reports that are searched by name, theme, or tags. Example: /report-search/?query=find_it
+    Returns a list of reports that are searched by name, theme, or tags. Example: /report-search/?query=find_it&project=project_id
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     queryset = Report.objects.all()
@@ -146,11 +146,12 @@ class ReportSearchViewSet(
 
     def list(self, request, *args, **kwargs):
         query = self.request.query_params.get('query', None)
+        project = self.request.query_params.get('project', None)
 
-        if query:
-            queryset = self.get_queryset().filter(Q(theme__name__icontains=query) |
-                                                  Q(name__icontains=query) |
-                                                  Q(tagged_items__tag__name__icontains=query)).distinct()
+        if query and project:
+            queryset = self.get_queryset().filter(theme__project__id=project).filter(Q(theme__name__icontains=query) |
+                                                                                     Q(name__icontains=query) |
+                                                                                     Q(tagged_items__tag__name__icontains=query)).distinct()
 
             if len(queryset) > 0:
                 return Response(self.get_serializer(queryset, many=True).data)
