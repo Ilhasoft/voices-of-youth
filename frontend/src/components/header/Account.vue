@@ -23,7 +23,9 @@
 
         <div class="item">
           <div class="item-right">
-            My account
+            <router-link
+              :to="{ name: 'profile' }">My account
+            </router-link>
           </div>
         </div>
 

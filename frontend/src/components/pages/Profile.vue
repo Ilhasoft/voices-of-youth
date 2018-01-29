@@ -8,25 +8,25 @@
             <div class="content">
               <div class="columns">
                 <div class="column has-text-center">
-                  <img src="./../../assets/img/login-a.png" alt="">
+                  <img :src="user.avatar" alt="">
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <h1>Hello, Alex</h1>
+                  <h1>Hello, {{ user.first_name }}</h1>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" name="name" value="" placeholder="Alex Ross"/>
+                  <input type="text" class="input" v-model="name" />
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="email" class="input" name="name" value="" placeholder="ross@gmail.com"/>
+                  <input type="email" class="input" name="name" v-model="email"/>
                 </div>
               </div>
 
@@ -38,19 +38,19 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="Current password"/>
+                  <input type="password" class="input" v-model="password" placeholder="New password"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" name="password" placeholder="New password"/>
+                  <input type="password" class="input" v-model="confirmPassword" placeholder="Confirm password"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-right-desktop">
-                  <button type="submit" class="btn button l-submit">Save</button>
+                  <button type="submit" @click.prevent="update" class="btn button l-submit">Save</button>
                 </div>
               </div>
             </div>
@@ -62,12 +62,59 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
 import HeaderIndex from '../header/Index';
 
 export default {
   name: 'Login',
 
+  data() {
+    return {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+    };
+  },
+
   components: { HeaderIndex },
+
+  computed: {
+    ...mapGetters({
+      user: 'getUserData',
+    }),
+  },
+
+  mounted() {
+    this.name = this.user.first_name;
+    this.email = this.user.email;
+  },
+
+  methods: {
+    ...mapActions([
+      'executeUpdateProfile',
+      'executeUpdatePassword',
+      'notifyOpen',
+    ]),
+
+    updateProfile() {
+      if (this.name) {
+        this.executeUpdateProfile({
+          name: this.name,
+          email: this.email,
+        });
+      }
+    },
+
+    update() {
+      if (this.password && this.confirmPassword && this.password === this.confirmPassword) {
+        this.executeUpdatePassword(this.password);
+        this.updateProfile();
+      } else {
+        this.updateProfile();
+      }
+    },
+  },
 };
 </script>
 

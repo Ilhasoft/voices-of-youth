@@ -4,7 +4,17 @@ import helper from '../helper';
 
 export default {
   state: {
-    userData: {},
+    userData: {
+      id: 0,
+      first_name: '',
+      last_name: '',
+      username: '',
+      avatar: '',
+      email: '',
+      is_admin: false,
+      is_mapper: false,
+      language: '',
+    },
     isLogged: false,
     loginError: {},
     myReports: {},
@@ -78,6 +88,35 @@ export default {
         return response.data;
       }).catch(() => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
+      });
+    },
+
+    executeUpdateProfile({ commit, dispatch }, obj) {
+      const user = helper.getItem('user');
+      const token = helper.getItem('token');
+      return axios.put(`/api/users/${user[0].id}/`, {
+        email: obj.email,
+        first_name: obj.name,
+      }, {
+        headers: { authorization: `Token ${token}` },
+      }).then(() => {
+        axios.get(`/api/users/?auth_token=${token}`).then((response) => {
+          helper.setItem('user', response.data);
+          dispatch('setCurrentUser');
+          dispatch('notifyOpen', { type: 1, message: 'Profile updated!' });
+        });
+      }).catch(() => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
+      });
+    },
+
+    executeUpdatePassword({ commit, dispatch }, obj) {
+      const user = helper.getItem('user');
+      const token = helper.getItem('token');
+      return axios.put(`/api/users/${user[0].id}/`, {
+        password: obj,
+      }, {
+        headers: { authorization: `Token ${token}` },
       });
     },
   },

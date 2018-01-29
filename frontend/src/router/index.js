@@ -99,9 +99,10 @@ export default new Router({
 
     {
       path: '/profile',
-      name: 'Profile',
+      name: 'profile',
       component: ProfilePage,
       beforeEnter: (to, from, next) => {
+        dispatchStores();
         stores.dispatch('updateHeaderConfig', {
           menuTitle: 'My Profile',
           showMenu: false,
