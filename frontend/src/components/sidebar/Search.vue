@@ -1,25 +1,32 @@
 <template>
-  <div class="map-box">
-    <div class="columns">
-      <div class="column scrolling">
-        <div v-if="items.length">
-          <div class="columns is-mobile item" :key="key" v-for="(value, key) in items">
-            <div class="column is-3 m-auto center">
-              <img src="../../assets/img/report-example.png" alt="">
-            </div>
+  <div>
+    <navigation-bar
+      title="Results"
+      :backButton="false"
+      :closeButton="true" />
+  
+    <div class="map-box">
+      <div class="columns">
+        <div class="column scrolling">
+          <div v-if="searchReports.length">
+            <div class="columns is-mobile item" :key="key" v-for="(item, key) in searchReports">
+              <div class="column is-3 m-auto center">
+                <img v-if="item.last_image" :src="item.last_image.file" alt=""/>
+              </div>
 
-            <div class="column m-auto">
-              <h1>Trash</h1>
-              <small>Jonh Stuart</small>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do consectetureiusmod tempor inciddipiscing elit…See more</p>
+              <div class="column m-auto">
+                <h1>{{ item.name }}</h1>
+                <small>{{ item.created_by.first_name }}</small>
+                <p>{{ item.description }} <a href="" @click.prevent="openReport(item)" class="see-more">See more</a></p>
+              </div>
             </div>
           </div>
-        </div>
-        <div v-else>
-          <div class="columns">
-            <div class="column no-result">
-              <img src="../../assets/img/my-report-rejected.png" alt="">
-              <p>No results found</p>
+          <div v-else>
+            <div class="columns">
+              <div class="column no-result">
+                <img src="~@/assets/img/my-report-rejected.png" alt="">
+                <p>No results found</p>
+              </div>
             </div>
           </div>
         </div>
@@ -29,13 +36,34 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex';
+import bus from '../../helper/bus';
+import NavigationBar from './Navigation';
+
 export default {
   name: 'Search',
 
-  data() {
-    return {
-      items: [1, 2, 3],
-    };
+  components: { NavigationBar },
+
+  computed: {
+    ...mapGetters({
+      searchReports: 'getSearchReports',
+    }),
+  },
+
+  methods: {
+    ...mapActions([
+      'setSideBarConfigs',
+    ]),
+
+    openReport(item) {
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      }).then(() => {
+        bus.$emit('openReport', item);
+      });
+    },
   },
 };
 </script>
@@ -69,7 +97,7 @@ export default {
     overflow-y: auto;
     margin-top: 62px;
     margin-left: 20px;
-    width: 97%;
+    width: 96%;
 
     .item {
       margin-top: 15px;

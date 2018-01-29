@@ -1,11 +1,13 @@
 <template>
   <div class="column has-text-right">
-    <img class="is-pulled-right img" src="./../../assets/img/header-search.png" @click.prevent="showInputSearch">
-    <input type="text" v-model="inputQuery" v-show="showInput" ref="search" @blur="showInput = false" />
+    <img class="is-pulled-right img" src="~@/assets/img/header-search.png" @click.prevent="showInputSearch">
+    <input type="text" v-model="inputQuery" v-show="showInput" @keyup.enter="search" ref="search" @blur="showInput = false" />
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'ItemSearch',
 
@@ -18,10 +20,26 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'searchReports',
+      'setSideBarConfigs',
+    ]),
+
     showInputSearch() {
       this.showInput = true;
       this.$nextTick(() => {
         this.$refs.search.focus();
+      });
+    },
+
+    search() {
+      this.searchReports(this.inputQuery).then(() => {
+        this.setSideBarConfigs({
+          title: 'Results',
+          tabActived: 'Search',
+          backButton: false,
+          isActived: true,
+        });
       });
     },
   },

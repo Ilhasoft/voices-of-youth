@@ -12,6 +12,7 @@ export default {
     themes: [],
     comments: [],
     files: [],
+    search: [],
     newReport: {
       themes: [],
       title: '',
@@ -31,6 +32,7 @@ export default {
     getReportUrls: state => state.urls,
     getReportNewData: state => state.newReport,
     getReportPreview: state => state.files,
+    getSearchReports: state => state.search,
     getReportsPins: (state) => {
       const markers = [];
 
@@ -114,6 +116,10 @@ export default {
 
     [TYPES.NEW_REPORT_USER_THEMES](state, obj) {
       state.newReport.themes = obj;
+    },
+
+    [TYPES.SET_REPORTS_SEARCH](state, obj) {
+      state.search = obj;
     },
   },
 
@@ -309,6 +315,16 @@ export default {
         }
         return '';
       }).catch((error) => {
+        throw new Error(error);
+      });
+    },
+
+    searchReports({ commit, dispatch }, obj) {
+      const project = helper.getItem('project');
+      axios.get(`/api/report-search/?query=${obj}&project=${project.id}`).then((response) => {
+        commit(TYPES.SET_REPORTS_SEARCH, response.data);
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
         throw new Error(error);
       });
     },
