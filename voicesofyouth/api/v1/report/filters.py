@@ -3,7 +3,6 @@ from django_filters import rest_framework as filters
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
-from voicesofyouth.report.models import ReportURL
 
 
 class ReportFilter(filters.FilterSet):
