@@ -10,6 +10,7 @@ from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
+from voicesofyouth.report.models import ReportNotification
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import User
 
@@ -154,3 +155,18 @@ class ReportCommentsSerializer(VoySerializer):
             validated_data['created_by'] = request.user
             validated_data['modified_by'] = request.user
         return ReportComment.objects.create(**validated_data)
+
+
+class ReportNotifictionsSerializer(VoySerializer):
+    report = ReportSerializer(read_only=True)
+
+    class Meta:
+        model = ReportNotification
+        fields = (
+            'id',
+            'status',
+            'origin',
+            'read',
+            'message',
+            'report'
+        )

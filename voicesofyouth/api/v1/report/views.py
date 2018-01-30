@@ -2,7 +2,6 @@ from django.db.models.query_utils import Q
 
 from rest_framework import permissions, viewsets, mixins
 from rest_framework import status
-from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -13,9 +12,12 @@ from voicesofyouth.api.v1.report.paginators import ReportFilesResultsSetPaginati
 from voicesofyouth.api.v1.report.serializers import ReportCommentsSerializer
 from voicesofyouth.api.v1.report.serializers import ReportFilesSerializer
 from voicesofyouth.api.v1.report.serializers import ReportSerializer
+from voicesofyouth.api.v1.report.serializers import ReportNotifictionsSerializer
 from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
+from voicesofyouth.report.models import ReportNotification
+from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED, NOTIFICATION_STATUS_NOTAPPROVED
 
 
 class ReportsPagination(PageNumberPagination):
@@ -155,5 +157,23 @@ class ReportSearchViewSet(
 
             if len(queryset) > 0:
                 return Response(self.get_serializer(queryset, many=True).data)
+
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ReportNotificationViewSet(
+        mixins.ListModelMixin,
+        viewsets.GenericViewSet):
+
+    permission_classes = [permissions.IsAuthenticated, ]
+    queryset = ReportNotification.objects.all()
+    serializer_class = ReportNotifictionsSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(report__created_by_id=request.user.id).filter(
+            status__in=[NOTIFICATION_STATUS_APPROVED, NOTIFICATION_STATUS_NOTAPPROVED]).filter(read=False).distinct()
+
+        if len(queryset) > 0:
+            return Response(self.get_serializer(queryset, many=True).data)
 
         return Response(status=status.HTTP_404_NOT_FOUND)

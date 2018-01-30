@@ -9,6 +9,7 @@ from voicesofyouth.api.v1.report.views import ReportCommentsViewSet
 from voicesofyouth.api.v1.report.views import ReportFilesViewSet
 from voicesofyouth.api.v1.report.views import ReportsViewSet
 from voicesofyouth.api.v1.report.views import ReportSearchViewSet
+from voicesofyouth.api.v1.report.views import ReportNotificationViewSet
 from voicesofyouth.api.v1.tag.views import TagsViewSet
 from voicesofyouth.api.v1.user.views import UsersEndPoint
 from .project.views import ProjectsViewSet
@@ -24,6 +25,7 @@ router.register(r'reports', ReportsViewSet, base_name='reports')
 router.register(r'report-comments', ReportCommentsViewSet, base_name='report-comments')
 router.register(r'report-files', ReportFilesViewSet, base_name='report-files')
 router.register(r'report-search', ReportSearchViewSet, base_name='report-search')
+router.register(r'report-notification', ReportNotificationViewSet, base_name='report-notification')
 
 urlpatterns = [
     url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),
