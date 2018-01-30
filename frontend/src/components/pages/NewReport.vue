@@ -256,7 +256,6 @@ export default {
       'getUsersByTheme',
       'saveNewReport',
       'saveFiles',
-      'saveUrls',
       'getGeoLocation',
       'notifyOpen',
     ]),
@@ -355,6 +354,7 @@ export default {
           theme: this.themeSelected.value,
           tags: this.tagsSelected,
           location: this.location,
+          urls: this.urls,
         };
 
         if (this.currentUser.is_admin) {
@@ -362,10 +362,6 @@ export default {
         }
 
         this.saveNewReport(dataToSave).then((data) => {
-          if (this.urls.length) {
-            this.urls.map(link => this.saveUrls({ id: data.id, url: link }));
-          }
-
           if (this.files.length > 0) {
             const promiseAll = this.files.map((file) => {
               const promiseUpload = new Promise((resolve, reject) => {
@@ -386,6 +382,8 @@ export default {
             this.cleanForm();
             this.unlockButtonSend();
           }
+        }).catch(() => {
+          this.unlockButtonSend();
         });
       }
     },

@@ -22,6 +22,7 @@ from voicesofyouth.report.models import ReportURL
 from voicesofyouth.report.models import ReportNotification
 from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
 from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_ORIGIN_COMMENT
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_NOTAPPROVED
@@ -103,7 +104,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
         report_id = kwargs['report']
 
         try:
-            notification = ReportNotification.objects.filter(report__id=report_id).first()
+            notification = ReportNotification.objects.filter(report__id=report_id).filter(status__in=[REPORT_STATUS_PENDING, REPORT_STATUS_NOTAPPROVED]).first()
             notification.read = True
             notification.save()
         except Exception:
@@ -144,6 +145,16 @@ class CommentsReportView(LoginRequiredMixin, TemplateView):
             comment = get_object_or_404(ReportComment, pk=comment_id)
             comment.status = int(status)
             comment.save()
+
+            if int(status) == 1:
+                ReportNotification.objects.create(
+                    report=comment.report,
+                    status=NOTIFICATION_STATUS_APPROVED,
+                    origin=NOTIFICATION_ORIGIN_COMMENT,
+                    read=False,
+                    created_by=comment.report.created_by,
+                    modified_by=comment.report.modified_by,
+                )
 
             messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'rejected')))
         return redirect(reverse('voy-admin:reports:view', kwargs={'report': comment.report.id}))

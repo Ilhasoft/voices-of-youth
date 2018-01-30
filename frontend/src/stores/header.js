@@ -1,4 +1,6 @@
+import axios from 'axios';
 import * as TYPES from './types';
+import helper from '../helper';
 
 export default {
   state: {
@@ -10,6 +12,7 @@ export default {
     showAccount: true,
     showNewReport: true,
     showBackButton: false,
+    notifications: [],
   },
 
   getters: {
@@ -18,6 +21,7 @@ export default {
     menuNewReport: state => state.showNewReport,
     menuProjectsVisibled: state => state.selectProjects,
     menuBackVisibled: state => state.showBackButton,
+    getNotifications: state => state.notifications,
   },
 
   /* eslint-disable no-param-reassign */
@@ -28,11 +32,39 @@ export default {
       if (obj.showProjects !== undefined) state.selectProjects = obj.showProjects;
       if (obj.showBackButton !== undefined) state.showBackButton = obj.showBackButton;
     },
+
+    [TYPES.SET_NOTIFICATIONS](state, obj) {
+      state.notifications = obj;
+    },
   },
 
   actions: {
     updateHeaderConfig({ commit, state }, obj) {
       commit(TYPES.SET_HEADER_CONFIG, obj);
+    },
+
+    getNotifications({ commit, dispatch }) {
+      const token = helper.getItem('token');
+      return axios.get('/api/report-notification', {
+        headers: { authorization: `Token ${token}` },
+      }).then((response) => {
+        commit(TYPES.SET_NOTIFICATIONS, response.data);
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
+        throw new Error(error);
+      });
+    },
+
+    setNotificationRead({ dispatch }, obj) {
+      const token = helper.getItem('token');
+      return axios.put(`/api/report-notification/${obj}/`, {}, {
+        headers: { authorization: `Token ${token}` },
+      }).then(() => {
+        dispatch('getNotifications');
+      }).catch((error) => {
+        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
+        throw new Error(error);
+      });
     },
   },
 };

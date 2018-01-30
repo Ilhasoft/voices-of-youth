@@ -159,6 +159,8 @@ class ReportCommentsSerializer(VoySerializer):
 
 class ReportNotifictionsSerializer(VoySerializer):
     report = ReportSerializer(read_only=True)
+    status = serializers.IntegerField(read_only=True)
+    origin = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = ReportNotification
@@ -168,5 +170,6 @@ class ReportNotifictionsSerializer(VoySerializer):
             'origin',
             'read',
             'message',
-            'report'
+            'report',
+            'modified_on',
         )

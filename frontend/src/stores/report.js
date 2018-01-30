@@ -293,20 +293,6 @@ export default {
         });
     },
 
-    saveUrls({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.post('/api/report-urls/', {
-        url: obj.url,
-        report: obj.id,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      }).then(response => response.data)
-        .catch((error) => {
-          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
-          throw new Error(error);
-        });
-    },
-
     getGeoLocation({ commit }, obj) {
       const urlApi = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`;
       return axios.get(urlApi).then((response) => {

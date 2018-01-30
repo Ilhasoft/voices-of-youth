@@ -163,9 +163,10 @@ class ReportSearchViewSet(
 
 class ReportNotificationViewSet(
         mixins.ListModelMixin,
+        mixins.UpdateModelMixin,
         viewsets.GenericViewSet):
 
-    permission_classes = [permissions.IsAuthenticated, ]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     queryset = ReportNotification.objects.all()
     serializer_class = ReportNotifictionsSerializer
 
@@ -176,4 +177,14 @@ class ReportNotificationViewSet(
         if len(queryset) > 0:
             return Response(self.get_serializer(queryset, many=True).data)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({})
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save(read=True)
+
+        return Response(serializer.data)

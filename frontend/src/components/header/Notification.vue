@@ -14,54 +14,18 @@
       @mouseout="isVisible = false" 
       :class="[isVisible ? 'fade-in' : 'fade-out']">
       <h4>Notifications</h4>
-      <div class="item">
-        <a href="">
+      
+      <div class="item" v-if="notifications.length > 0" :key="key" v-for="(item, key) in notifications">
+        <a href="" @click.prevent="cleanNotification(item)">
           <div class="item-left">
-            <div class="thumbnail" />
+            <div class="thumbnail" v-if="item.report.last_image">
+              <img :src="item.report.last_image.file" alt="">
+            </div>
           </div>
 
           <div class="item-right">
-            Steven commented in the report that you posted.
-            <small>30 min ago</small>
-          </div>
-        </a>
-      </div>
-
-      <div class="item">
-        <a href="">
-          <div class="item-left">
-            <div class="thumbnail" />
-          </div>
-
-          <div class="item-right">
-            Steven commented in the report that you posted.
-            <small>30 min ago</small>
-          </div>
-        </a>
-      </div>
-
-      <div class="item">
-        <a href="">
-          <div class="item-left">
-            <div class="thumbnail" />
-          </div>
-
-          <div class="item-right">
-            Steven commented in the report that you posted.
-            <small>30 min ago</small>
-          </div>
-        </a>
-      </div>
-
-      <div class="item">
-        <a href="">
-          <div class="item-left">
-            <div class="thumbnail" />
-          </div>
-
-          <div class="item-right">
-            Steven commented in the report that you posted.
-            <small>30 min ago</small>
+            <p v-html="formatMessage(item)"></p>
+            <small>{{ formatDate(item.modified_on) }}</small>
           </div>
         </a>
       </div>
@@ -70,7 +34,8 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
+import helper from '../../helper';
 
 export default {
   name: 'Notification',
@@ -81,11 +46,60 @@ export default {
     };
   },
 
+  mounted() {
+    if (this.userIsLogged && this.userIsMapper) {
+      this.getNotifications();
+    }
+  },
+
   computed: {
     ...mapGetters({
       userIsLogged: 'userIsLogged',
       userIsMapper: 'userIsMapper',
+      notifications: 'getNotifications',
+      currentProject: 'getCurrentProject',
     }),
+  },
+
+  methods: {
+    ...mapActions([
+      'getNotifications',
+      'setSideBarConfigs',
+      'setNotificationRead',
+    ]),
+
+    formatDate(value) {
+      if (value) {
+        return helper.formatDate(value);
+      }
+      return '';
+    },
+
+    formatMessage(item) {
+      let message = '';
+      if (item.origin === 1) {
+        switch (item.status) {
+          case 1: message = `${item.report.name} approved`;
+            break;
+          case 3: message = `${item.report.name} not approved<br/>${item.message}`;
+            break;
+          default: message = '';
+            break;
+        }
+      } else if (item.origin === 2) {
+        switch (item.status) {
+          case 1: message = `New comment in ${item.report.name} approved`;
+            break;
+          default: message = '';
+            break;
+        }
+      }
+      return message;
+    },
+
+    cleanNotification(item) {
+      this.setNotificationRead(item.id);
+    },
   },
 };
 </script>
@@ -161,7 +175,6 @@ export default {
       width: 41px;
       height: 41px;
       border-radius: 4px;
-      background-color: #d8d8d8;
       margin-top: 4px;
     }
   }
