@@ -84,7 +84,8 @@ export default {
 
     myReports({ commit, dispatch }, obj) {
       const user = helper.getItem('user');
-      return axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}`).then((response) => {
+      const project = helper.getItem('project');
+      return axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}&project=${project.id}`).then((response) => {
         commit(TYPES.SET_USER_REPORTS, response.data);
         return response.data;
       }).catch(() => {
