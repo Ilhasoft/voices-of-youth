@@ -12,6 +12,7 @@ from django.views.generic.base import TemplateView
 from django.core.files.images import ImageFile
 from django.contrib.gis.geos import GEOSGeometry
 
+from voicesofyouth.core.view import NotificationsView
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
 from voicesofyouth.voyadmin.utils import get_paginator
@@ -362,7 +363,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PendingReportView(LoginRequiredMixin, TemplateView):
+class PendingReportView(LoginRequiredMixin, NotificationsView):
     template_name = 'report/pending.html'
 
     def get_context_data(self, **kwargs):

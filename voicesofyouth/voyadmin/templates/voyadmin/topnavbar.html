@@ -30,6 +30,43 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown dropdown-list">
+                    <a href="#" data-toggle="dropdown" aria-expanded="false">
+                        <em class="icon-bell"></em>
+                        <div class="label label-danger">{{ notifications|length }}</div>
+                    </a>
+                    <ul class="dropdown-menu animated flipInX">
+                        <li>
+                            <div class="list-group">
+                                {% for notification in notifications|slice:":10" %}
+                                <a href="#" class="list-group-item">
+                                    <div class="media-box">
+                                        <div class="pull-left">
+                                            {% if notification.report.last_image %}
+                                                <img src="/media/{{ notification.report.last_image.file }}" width="40" height="40" alt="">
+                                            {% endif %}
+                                        </div>
+                                        <div class="media-box-body clearfix">
+                                            <p class="m0">{{ notification.report.name }}</p>
+                                            <p class="m0 text-muted">
+                                                <small>
+                                                    {% if notification.origin == 1 %}
+                                                        {% trans 'Report to approve' %}
+                                                    {% endif %}
+
+                                                    {% if notification.origin == 2 %}
+                                                        {% trans 'New comment to approve' %}
+                                                    {% endif %}
+                                                </small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                     </ul>
+                  </li>
                 <li>
                     <a href="{% url "voy-admin:logout" %}">
                         <em class="icon-logout"></em> {% trans 'Logout' %}
