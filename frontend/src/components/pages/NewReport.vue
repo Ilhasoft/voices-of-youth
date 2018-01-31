@@ -133,12 +133,12 @@ import vSelect from 'vue-select';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-import markerPixel from '../../assets/img/map-pin.png';
-import router from '../../router/';
 
-import HeaderIndex from '../header/Index';
-import LinkItem from '../new-report/Link';
-import FileItem from '../new-report/File';
+import router from '@/router/';
+import markerPixel from '@/assets/img/map-pin.png';
+import HeaderIndex from '@/components/header/Index';
+import LinkItem from '@/components/new-report/Link';
+import FileItem from '@/components/new-report/File';
 
 export default {
   name: 'NewReport',
@@ -215,14 +215,15 @@ export default {
         .addTo(this.$refs.map.mapObject);
 
       this.marker.on('move', (e) => {
+        this.location = {
+          type: 'Point',
+          coordinates: [e.latlng.lng, e.latlng.lat],
+        };
+
         this.getGeoLocation({
           latitude: e.latlng.lat,
           longitude: e.latlng.lng,
         }).then((address) => {
-          this.location = {
-            type: 'Point',
-            coordinates: [e.latlng.lng, e.latlng.lat],
-          };
           this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
         });
       });

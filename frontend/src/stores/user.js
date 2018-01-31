@@ -1,6 +1,6 @@
 import axios from 'axios';
+import helper from '@/helper';
 import * as TYPES from './types';
-import helper from '../helper';
 
 export default {
   state: {
@@ -54,23 +54,19 @@ export default {
       }
     },
 
-    executeLogin({ commit, dispatch }, obj) {
-      return axios.post('/api/get_auth_token/', {
+    executeLogin: async ({ commit }, obj) => {
+      const data = await axios.post('/api/get_auth_token/', {
         username: obj.username,
         password: obj.password,
-      }).then((response) => {
-        const token = response.data.token;
-        helper.setItem('token', token);
-        return token;
-      }).then((token) => {
-        const user = axios.get(`/api/users/?auth_token=${token}`).then((response) => {
-          helper.setItem('user', response.data);
-          return response.data;
-        });
-        return user;
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: error.response.data.non_field_errors[0] });
       });
+
+      const token = data.token;
+      helper.setItem('token', token);
+
+      const user = await axios.get(`/api/users/?auth_token=${token}`);
+      helper.setItem('user', user);
+
+      return data;
     },
 
     executeLogout({ commit }) {
@@ -82,44 +78,30 @@ export default {
       });
     },
 
-    myReports({ commit, dispatch }, obj) {
+    myReports: async ({ commit, dispatch }, obj) => {
       const user = helper.getItem('user');
       const project = helper.getItem('project');
-      return axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}&project=${project.id}`).then((response) => {
-        commit(TYPES.SET_USER_REPORTS, response.data);
-        return response.data;
-      }).catch(() => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
-      });
+      const data = await axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}&project=${project.id}`);
+      commit(TYPES.SET_USER_REPORTS, data);
+      return data;
     },
 
-    executeUpdateProfile({ commit, dispatch }, obj) {
+    executeUpdateProfile: async ({ commit, dispatch }, obj) => {
       const user = helper.getItem('user');
-      const token = helper.getItem('token');
-      return axios.put(`/api/users/${user[0].id}/`, {
+      await axios.put(`/api/users/${user[0].id}/`, {
         email: obj.email,
         first_name: obj.name,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      }).then(() => {
-        axios.get(`/api/users/?auth_token=${token}`).then((response) => {
-          helper.setItem('user', response.data);
-          dispatch('setCurrentUser');
-          dispatch('notifyOpen', { type: 1, message: 'Profile updated!' });
-        });
-      }).catch(() => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
       });
+
+      const auth = await axios.get(`/api/users/?auth_token=${helper.getItem('token')}`);
+      helper.setItem('user', auth);
+      dispatch('setCurrentUser');
+      dispatch('notifyOpen', { type: 1, message: 'Profile updated!' });
     },
 
-    executeUpdatePassword({ commit, dispatch }, obj) {
+    executeUpdatePassword: async ({ commit, dispatch }, obj) => {
       const user = helper.getItem('user');
-      const token = helper.getItem('token');
-      return axios.put(`/api/users/${user[0].id}/`, {
-        password: obj,
-      }, {
-        headers: { authorization: `Token ${token}` },
-      });
+      await axios.put(`/api/users/${user[0].id}/`, { password: obj });
     },
 
     executeRegisterProfile({ commit, dispatch }, obj) {

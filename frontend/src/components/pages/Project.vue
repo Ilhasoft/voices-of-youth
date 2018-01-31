@@ -16,10 +16,10 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import HeaderIndex from '../header/Index';
-import MapOsm from '../shared/Map';
-import SideBar from '../sidebar/Index';
-import IntroProject from '../shared/IntroProject';
+import HeaderIndex from '@/components/header/Index';
+import MapOsm from '@/components/shared/Map';
+import SideBar from '@/components/sidebar/Index';
+import IntroProject from '@/components/shared/IntroProject';
 
 export default {
   name: 'Project',

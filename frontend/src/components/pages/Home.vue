@@ -36,7 +36,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import router from '../../router/';
+import router from '@/router/';
 
 export default {
   name: 'Home',

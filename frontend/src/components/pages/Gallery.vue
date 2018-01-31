@@ -54,8 +54,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderIndex from '../header/Index';
-import Pagination from '../shared/Pagination';
+import HeaderIndex from '@/components/header/Index';
+import Pagination from '@/components/shared/Pagination';
 
 export default {
   name: 'Gallery',
@@ -82,16 +82,6 @@ export default {
       nextPage: 'galleryNextUrl',
       previousPage: 'galleryPreviousUrl',
     }),
-
-    // checkCssPrevious() {
-    //   this.cssPreviousPage = (this.previousPage !== null ? '' : 'disabled');
-    //   this.colorPrevious = (this.previousPage !== null ? '#00CBFF' : '#9b9fa3');
-    // },
-
-    // checkCssNext() {
-    //   this.cssNextPage = (this.nextPage !== null ? '' : 'disabled');
-    //   this.colorNext = (this.nextPage !== null ? '#00CBFF' : '#9b9fa3');
-    // },
   },
 
   methods: {

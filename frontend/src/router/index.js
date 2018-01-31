@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import HomePage from '../components/pages/Home';
-import ProjectPage from '../components/pages/Project';
-import LoginPage from '../components/pages/Login';
-import ProfilePage from '../components/pages/Profile';
-import MyReportsPage from '../components/pages/MyReports';
-import GalleryPage from '../components/pages/Gallery';
-import NewReportPage from '../components/pages/NewReport';
+import HomePage from '@/components/pages/Home';
+import ProjectPage from '@/components/pages/Project';
+import LoginPage from '@/components/pages/Login';
+import ProfilePage from '@/components/pages/Profile';
+import MyReportsPage from '@/components/pages/MyReports';
+import GalleryPage from '@/components/pages/Gallery';
+import NewReportPage from '@/components/pages/NewReport';
 
-import stores from '../stores';
+import stores from '@/stores';
 
 Vue.use(Router);
 

@@ -42,9 +42,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderIndex from '../header/Index';
-import ReportItem from '../my-reports/Report';
-import EmptyList from '../my-reports/Empty';
+import HeaderIndex from '@/components/header/Index';
+import ReportItem from '@/components/my-reports/Report';
+import EmptyList from '@/components/my-reports/Empty';
 
 export default {
   name: 'MyReports',
@@ -158,7 +158,7 @@ export default {
     height: 38px;
     border-radius: 21px;
     border: solid 1px #e9e9e9;
-    background: url('../../assets/img/header-search.png') #ffffff no-repeat;
+    background: url('~@/assets/img/header-search.png') #ffffff no-repeat;
     background-position: right 15px top 7px;
     padding-right: 42px;
   }

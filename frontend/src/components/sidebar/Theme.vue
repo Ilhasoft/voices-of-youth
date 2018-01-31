@@ -61,7 +61,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import bus from '../../helper/bus';
+import bus from '@/helper/bus';
 import NavigationBar from './Navigation';
 
 export default {

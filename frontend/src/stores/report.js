@@ -3,8 +3,7 @@ import L from 'leaflet';
 import helper from '@/helper';
 import * as TYPES from './types';
 
-
-const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
+// const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
 
 export default {
   state: {
@@ -185,44 +184,26 @@ export default {
       });
     },
 
-    getUserThemes({ commit, dispatch }, obj) {
+    getUserThemes: async ({ commit }, obj) => {
       const project = helper.getItem('project');
       const data = await axios.get(`/api/themes/?user=${obj}&project=${project.id}`);
-      .then((response) => {
-        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      commit(TYPES.NEW_REPORT_USER_THEMES, data);
     },
 
-    getProjectThemes({ commit, dispatch }) {
+    getProjectThemes: async ({ commit }) => {
       const project = helper.getItem('project');
-      axios.get(`/api/themes?project=${project.id}`).then((response) => {
-        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/themes?project=${project.id}`);
+      commit(TYPES.NEW_REPORT_USER_THEMES, data);
     },
 
-    getUsersByTheme({ commit, dispatch }, obj) {
-      return axios.get(`/api/users?theme=${obj}`)
-      .then(response => response.data)
+    getUsersByTheme: async ({ commit }, obj) => {
+      await axios.get(`/api/users?theme=${obj}`);
+    },
+
+    saveNewReport: async ({ commit, dispatch }, obj) => {
+      const data = await axios.post('/api/reports/', obj)
+      .then()
       .catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
-    },
-
-    saveNewReport({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.post('/api/reports/', obj, {
-        headers: { authorization: `Token ${token}` },
-      }).then((response) => {
-        const data = response.data;
-        return data;
-      }).catch((error) => {
         let messageError = '';
         const json = JSON.parse(error.response.request.responseText);
 
@@ -237,51 +218,42 @@ export default {
         dispatch('notifyOpen', { type: 0, message: messageError });
         throw new Error(error);
       });
+
+      return data;
     },
 
-    saveFiles({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      const data = new FormData();
-      data.append('file', obj.file);
-      data.append('title', obj.file.name);
-      data.append('description', obj.file.name);
-      data.append('report_id', obj.id);
+    saveFiles: async ({ commit, dispatch }, obj) => {
+      const form = new FormData();
+      form.append('file', obj.file);
+      form.append('title', obj.file.name);
+      form.append('description', obj.file.name);
+      form.append('report_id', obj.id);
 
-      const config = {
+      const data = await axios.post('/api/report-files/', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          authorization: `Token ${token}`,
         },
-      };
-
-      return axios.post('/api/report-files/', data, config)
-        .then(response => response.data)
-        .catch((error) => {
-          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
-          throw new Error(error);
-        });
-    },
-
-    getGeoLocation({ commit }, obj) {
-      const urlApi = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`;
-      return axios.get(urlApi).then((response) => {
-        if (response.data.results[0]) {
-          return response.data.results[0].formatted_address;
-        }
-        return '';
-      }).catch((error) => {
-        throw new Error(error);
       });
+      return data;
     },
 
-    searchReports({ commit, dispatch }, obj) {
+    // getGeoLocation: async () => {
+      // const instance = axios.create();
+      // instance.defaults.headers.common = {};
+      // const data = await instance.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`);
+
+      // if (data.data.status === 'OK') {
+      //   return data.data.results[0].formatted_address;
+      // }
+      // return mapsKey;
+    // },
+
+    getGeoLocation: async () => '',
+
+    searchReports: async ({ commit, dispatch }, obj) => {
       const project = helper.getItem('project');
-      axios.get(`/api/report-search/?query=${obj}&project=${project.id}`).then((response) => {
-        commit(TYPES.SET_REPORTS_SEARCH, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/report-search/?query=${obj}&project=${project.id}`);
+      commit(TYPES.SET_REPORTS_SEARCH, data);
     },
   },
 };
