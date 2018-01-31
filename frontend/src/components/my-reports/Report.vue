@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import helper from '../../helper';
+import helper from '@/helper';
 
 export default {
   name: 'ReportItem',

@@ -63,7 +63,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import HeaderIndex from '../header/Index';
+import HeaderIndex from '@/components/header/Index';
 
 export default {
   name: 'Login',

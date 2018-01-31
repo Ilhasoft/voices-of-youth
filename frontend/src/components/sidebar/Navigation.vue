@@ -24,7 +24,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import bus from '../../helper/bus';
+import bus from '@/helper/bus';
 
 export default {
   name: 'SidebarNavigation',

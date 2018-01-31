@@ -159,8 +159,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderIndex from '../header/Index';
-import router from '../../router/';
+import router from '@/router/';
+import HeaderIndex from '@/components/header/Index';
 
 export default {
   name: 'Login',
@@ -217,6 +217,8 @@ export default {
         if (response) {
           router.push({ name: 'project', params: { path: this.currentProject.path } });
         }
+      }).catch((error) => {
+        this.notifyOpen({ type: 0, message: error.response.data.non_field_errors[0] });
       });
     },
 

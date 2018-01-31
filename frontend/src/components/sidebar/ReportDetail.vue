@@ -20,7 +20,7 @@
                 <ul class="images">
                   <li v-for="(file, key) in files" :key="key" v-cloak>
                     <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="" v-cloak>
-                    <img v-if="file.media_type == 'video'" src="../../assets/img/video.png" @click.prevent="openFile(file)" alt="" v-cloak>
+                    <img v-if="file.media_type == 'video'" src="~@/assets/img/video.png" @click.prevent="openFile(file)" alt="" v-cloak>
                   </li>
                 </ul>
               </div>
@@ -92,8 +92,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import bus from '../../helper/bus';
-import helper from '../../helper';
+import bus from '@/helper/bus';
+import helper from '@/helper';
 import NavigationBar from './Navigation';
 
 const socialSharing = require('vue-social-sharing');

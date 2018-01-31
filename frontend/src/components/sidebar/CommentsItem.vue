@@ -21,7 +21,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import helper from '../../helper';
+import helper from '@/helper';
 
 export default {
   name: 'CommentItem',
@@ -83,7 +83,7 @@ export default {
 
   .actions {
     width: 83px;
-    height: 79px;
+    height: 40px;
     border-radius: 5px;
     background-color: #fff;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);

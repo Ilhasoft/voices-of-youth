@@ -51,7 +51,7 @@ export default {
   },
 
   actions: {
-    getGalleryImages({ commit, dispatch }, obj) {
+    getGalleryImages: async ({ commit, dispatch }, obj) => {
       let queryString = '';
       let currentPage = 1;
 
@@ -61,13 +61,9 @@ export default {
       }
 
       const project = helper.getItem('project');
-      axios.get(`/api/report-files/?project=${project.id}${queryString}&page_size=20&media_type=image`).then((response) => {
-        commit(TYPES.SET_GALLERY_IMAGES, response.data);
-        commit(TYPES.SET_GALLERY_PAGE, currentPage);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/report-files/?project=${project.id}${queryString}&page_size=20&media_type=image`);
+      commit(TYPES.SET_GALLERY_IMAGES, data);
+      commit(TYPES.SET_GALLERY_PAGE, currentPage);
     },
   },
 };
