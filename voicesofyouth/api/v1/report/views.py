@@ -21,6 +21,7 @@ from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
 from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import NOTIFICATION_STATUS_PENDING
 from voicesofyouth.report.models import NOTIFICATION_ORIGIN_COMMENT
+from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 
 
 class ReportsPagination(PageNumberPagination):
@@ -178,14 +179,15 @@ class ReportSearchViewSet(
         project = self.request.query_params.get('project', None)
 
         if query and project:
-            queryset = self.get_queryset().filter(theme__project__id=project).filter(Q(theme__name__icontains=query) |
-                                                                                     Q(name__icontains=query) |
-                                                                                     Q(tagged_items__tag__name__icontains=query)).distinct()
+            queryset = self.get_queryset() \
+                .filter(status=REPORT_STATUS_APPROVED) \
+                .filter(theme__project__id=project) \
+                .filter(Q(theme__name__icontains=query) | Q(name__icontains=query) | Q(tagged_items__tag__name__icontains=query)).distinct()
 
             if len(queryset) > 0:
                 return Response(self.get_serializer(queryset, many=True).data)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({})
 
 
 class ReportNotificationViewSet(
