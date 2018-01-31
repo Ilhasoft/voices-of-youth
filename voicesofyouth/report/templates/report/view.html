@@ -87,7 +87,7 @@
                         </div>
                     </div>
 
-                    <div class="comments-list">
+                    <div class="comments-list" id="comments">
                         <form action="{% url 'voy-admin:reports:comments-save' report.pk %}" method="post">
                             {% csrf_token %}
                             <div class="row">

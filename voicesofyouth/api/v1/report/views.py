@@ -17,7 +17,10 @@ from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportNotification
-from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED, NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_PENDING
+from voicesofyouth.report.models import NOTIFICATION_ORIGIN_COMMENT
 
 
 class ReportsPagination(PageNumberPagination):
@@ -102,6 +105,30 @@ class ReportCommentsViewSet(viewsets.ModelViewSet):
         if 'report' not in url_query:
             response = Response({}, status=status.HTTP_204_NO_CONTENT)
         return response or super().list(request, *args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        comment = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+
+        notification = ReportNotification.objects.filter(report=comment.report).filter(origin=NOTIFICATION_ORIGIN_COMMENT).first()
+
+        if notification is None:
+            ReportNotification.objects.create(
+                status=NOTIFICATION_STATUS_PENDING,
+                read=False,
+                origin=NOTIFICATION_ORIGIN_COMMENT,
+                report=comment.report,
+                created_by=comment.report.created_by,
+                modified_by=comment.report.modified_by,
+            )
+        else:
+            notification.status = NOTIFICATION_STATUS_PENDING
+            notification.read = False
+            notification.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class ReportFilesViewSet(mixins.CreateModelMixin,
