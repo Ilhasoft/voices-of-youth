@@ -114,6 +114,7 @@ export default {
 
   .language-box {
     z-index: 100000;
+    position: absolute;
     border-radius: 11px;
     background-color: #fff;
     -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);

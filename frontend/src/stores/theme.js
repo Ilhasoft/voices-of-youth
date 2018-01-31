@@ -1,6 +1,6 @@
 import axios from 'axios';
+import helper from '@/helper';
 import * as TYPES from './types';
-import helper from '../helper';
 
 const language = helper.getItem('language');
 const query = language ? `&lang=${language}` : '';
@@ -36,7 +36,7 @@ export default {
   },
 
   actions: {
-    getThemes({ commit, dispatch }, obj) {
+    getThemes: async ({ commit, dispatch }, obj) => {
       const project = helper.getItem('project');
       let queryYear = '';
 
@@ -44,31 +44,20 @@ export default {
         queryYear = `&year-start=${obj.yearStart}&year-end=${obj.yearEnd}`;
       }
 
-      axios.get(`/api/themes?project=${project.id}${query}${queryYear}`).then((response) => {
-        commit(TYPES.SET_THEMES, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/themes?project=${project.id}${query}${queryYear}`);
+      commit(TYPES.SET_THEMES, data);
     },
 
-    getTheme({ commit, dispatch }, obj) {
+    getTheme: async ({ commit, dispatch }, obj) => {
       commit(TYPES.SET_CURRENT_THEME, {});
       commit(TYPES.SET_LAST_REPORTS, []);
 
       const project = helper.getItem('project');
-      axios.get(`/api/themes/${obj}?project=${project.id}${query}`).then((response) => {
-        commit(TYPES.SET_CURRENT_THEME, response.data);
-      }).then(() => {
-        axios.get(`/api/reports/?project=${project.id}&theme=${obj}&page_size=10`).then((response) => {
-          commit(TYPES.SET_LAST_REPORTS, response.data.results);
-        }).catch(() => {
-          dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        });
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/themes/${obj}?project=${project.id}${query}`);
+      commit(TYPES.SET_CURRENT_THEME, data);
+
+      const last = await axios.get(`/api/reports/?project=${project.id}&theme=${obj}&page_size=10`);
+      commit(TYPES.SET_LAST_REPORTS, last.results);
     },
   },
 };
