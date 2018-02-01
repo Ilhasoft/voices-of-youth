@@ -3,6 +3,7 @@ import os
 from PIL import Image
 import numpy as np
 
+
 def change_colors(original_image, dest_image, from_colors, to_color):
     """
     Changes all colors of from_colors by the color of to_color.
@@ -24,6 +25,7 @@ def change_colors(original_image, dest_image, from_colors, to_color):
         if n > 0:
             os.remove(f'step{n-1}.png')
 
+
 def change_color(original_image, dest_image, from_color, to_color):
     """
     Change the color from_color to to_color and save a new image in dest_image.
@@ -42,10 +44,10 @@ def change_color(original_image, dest_image, from_color, to_color):
     im = Image.open(original_image)
 
     data = np.array(im)   # "data" is a height x width x 4 numpy array
-    red, green, blue, alpha = data.T # Temporarily unpack the bands for readability
+    red, green, blue, alpha = data.T  # Temporarily unpack the bands for readability
 
     target_color = (red == from_color[0]) & (blue == from_color[2]) & (green == from_color[1])
-    data[..., :-1][target_color.T] = to_color # Transpose back needed
+    data[..., :-1][target_color.T] = to_color  # Transpose back needed
 
     im2 = Image.fromarray(data)
     im2.save(dest_image)

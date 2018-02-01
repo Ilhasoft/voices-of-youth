@@ -105,7 +105,9 @@ class ReportView(LoginRequiredMixin, TemplateView):
         report_id = kwargs['report']
 
         try:
-            notification = ReportNotification.objects.filter(report__id=report_id).filter(status__in=[REPORT_STATUS_PENDING, REPORT_STATUS_NOTAPPROVED]).filter(origin=NOTIFICATION_ORIGIN_REPORT).first()
+            notification = ReportNotification.objects.filter(report__id=report_id) \
+                .filter(status__in=[REPORT_STATUS_PENDING, REPORT_STATUS_NOTAPPROVED]) \
+                .filter(origin=NOTIFICATION_ORIGIN_REPORT).first()
             notification.read = True
             notification.save()
         except Exception:
@@ -119,6 +121,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
 
 
 class ApproveReportView(LoginRequiredMixin, TemplateView):
+
     def get(self, request, *args, **kwargs):
         report_id = kwargs['report']
         if report_id:
@@ -139,6 +142,7 @@ class ApproveReportView(LoginRequiredMixin, TemplateView):
 
 
 class CommentsReportView(LoginRequiredMixin, TemplateView):
+
     def get(self, request, *args, **kwargs):
         comment_id = kwargs['comment']
         status = kwargs['status']
@@ -161,6 +165,7 @@ class CommentsReportView(LoginRequiredMixin, TemplateView):
 
 
 class CommentsSaveView(LoginRequiredMixin, TemplateView):
+
     def post(self, request, *args, **kwargs):
         comment = request.POST.get('comment')
         report_id = kwargs['report']

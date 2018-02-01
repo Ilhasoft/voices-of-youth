@@ -20,6 +20,7 @@ def create_protected_groups(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     Group.objects.using(db_alias).bulk_create(groups)
 
+
 def create_super_user(apps, schema_editor):
     User.objects.create_superuser('admin', 'fake@email.com', 'Un1c3f@@', first_name='Global', last_name='Admin')
 
@@ -40,4 +41,3 @@ class Migration(migrations.Migration):
         migrations.RunPython(create_super_user),
         migrations.RunPython(create_guest_user)
     ]
-
