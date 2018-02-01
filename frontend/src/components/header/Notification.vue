@@ -17,8 +17,8 @@
       
       <div class="item" v-if="notifications.length > 0" :key="key" v-for="(item, key) in notifications">
         <a href="" @click.prevent="cleanNotification(item)">
-          <div class="item-left">
-            <div class="thumbnail" v-if="item.report.last_image">
+          <div class="item-left" v-if="item.report.last_image">
+            <div class="thumbnail">
               <img :src="item.report.last_image.file" alt="">
             </div>
           </div>
@@ -123,7 +123,7 @@ export default {
     right: 0;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
     border-radius: 10px;
-    margin: 15px 10px 0px 0px;
+    margin: 15px 90px 0px 0px;
 
     h4 {
       background: #fff;
@@ -153,11 +153,11 @@ export default {
       }
 
       .item-right {
-        width: 80%;
+        width: 100%;
         font-size: 13px;
         text-align: left;
         padding: 6px 0px 0px 0px;
-        margin-left: 56px;
+        margin-left: 10px;
         
         .title {
           color: #4a4a4a;
