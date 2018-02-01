@@ -24,6 +24,7 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
 
         if token:
             user = MapperUser.objects.filter(auth_token=token).first()
-            return user.projects.all()
+            if hasattr(user, 'projects'):
+                return user.projects.all()
 
         return Project.objects.all().filter(enabled=True)
