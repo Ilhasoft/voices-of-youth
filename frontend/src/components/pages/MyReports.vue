@@ -16,7 +16,7 @@
             </div>
 
             <div class="column is-4">
-              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Rejected</button>
+              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Not Approved</button>
             </div>
           </div>
 

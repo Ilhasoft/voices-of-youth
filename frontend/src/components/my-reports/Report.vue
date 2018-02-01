@@ -8,6 +8,7 @@
       <h4 class="is-marginless">{{ report.name }}</h4>
       <small>{{ formatDate() }}</small>
       <p>{{ report.description }}</p>
+      <p v-show="report.last_notification">Admin feedback: <i>{{ report.last_notification }}</i></p>
     </div>
 
     <div class="column is-2 m-auto">
