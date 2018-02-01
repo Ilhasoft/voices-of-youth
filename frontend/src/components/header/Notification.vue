@@ -38,6 +38,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import helper from '@/helper';
+import router from '@/router/';
 
 export default {
   name: 'Notification',
@@ -101,6 +102,9 @@ export default {
 
     cleanNotification(item) {
       this.setNotificationRead(item.id);
+      if (item.origin === 1) {
+        router.push({ name: 'my-reports' });
+      }
     },
   },
 };
