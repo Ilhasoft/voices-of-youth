@@ -4,7 +4,9 @@
     @mouseover.prevent="isVisible = true" 
     @mouseout="isVisible = false"
     v-if="userIsLogged && userIsMapper">
+    
     <a href="">
+      <div class="label" v-if="notifications.length > 0"></div>
       <img class="img" src="~@/assets/img/header-bell.png">
     </a>
 
@@ -114,6 +116,16 @@ export default {
   height: 66px;
   margin-top: 5px;
   z-index: 1;
+
+  .label {
+    width: 10px;
+    height: 10px;
+    background-color: #de486b;
+    border-radius: 50%;
+    position: absolute;
+    padding: 2px 4px;
+    margin-left: 23px;
+  }
 
   .notification-item {
     position: absolute;
