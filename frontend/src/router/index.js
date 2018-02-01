@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import axios from 'axios';
 
 import HomePage from '@/components/pages/Home';
 import ProjectPage from '@/components/pages/Project';
@@ -10,6 +11,7 @@ import GalleryPage from '@/components/pages/Gallery';
 import NewReportPage from '@/components/pages/NewReport';
 
 import stores from '@/stores';
+import helper from '@/helper';
 
 Vue.use(Router);
 
@@ -17,6 +19,13 @@ const dispatchStores = () => {
   stores.dispatch('setProjects');
   stores.dispatch('setCurrentProject');
   stores.dispatch('setCurrentUser');
+
+  const token = helper.getItem('token');
+
+  if (token) {
+    const authorization = 'Authorization';
+    axios.defaults.headers.common[authorization] = `Token ${token}`;
+  }
 };
 
 export default new Router({
