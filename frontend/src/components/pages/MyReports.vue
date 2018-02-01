@@ -7,20 +7,16 @@
           <div class="column content-report">
             
           <div class="columns">
-            <div class="column is-2">
+            <div class="column is-4">
               <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
             </div>
             
-            <div class="column is-2">
+            <div class="column is-4">
               <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
             </div>
 
-            <div class="column is-2">
+            <div class="column is-4">
               <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Rejected</button>
-            </div>
-            
-            <div class="column">
-              <!-- <input type="text" class="input" placeholder="Search for report" /> -->
             </div>
           </div>
 
@@ -107,6 +103,10 @@ export default {
 
 .m-top {
   margin-top: 15px;
+}
+
+.container {
+  height: 100vh;
 }
 
 .content-report {

@@ -95,7 +95,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
                 except Exception:
                     pass
 
-                messages.success(request, _('Report rejected'))
+                messages.success(request, _('Report not approved'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
             except Exception:
                 return HttpResponse(status=500)
@@ -156,7 +156,7 @@ class CommentsReportView(LoginRequiredMixin, TemplateView):
                 except Exception:
                     pass
 
-            messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'rejected')))
+            messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'not approved')))
         return redirect(reverse('voy-admin:reports:view', kwargs={'report': comment.report.id}))
 
 

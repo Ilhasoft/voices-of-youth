@@ -184,7 +184,7 @@ export default {
         iconUrl: markerPixel,
         shadowUrl: '',
         iconSize: [36, 54],
-        iconAnchor: [18, 92],
+        iconAnchor: [16, 54],
         popupAnchor: [-0, -90],
         shadowSize: [0, 0],
         shadowAnchor: [22, 94],
@@ -224,7 +224,9 @@ export default {
           latitude: e.latlng.lat,
           longitude: e.latlng.lng,
         }).then((address) => {
-          this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+          if (address) {
+            this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
+          }
         });
       });
     }

@@ -215,6 +215,10 @@ export default {
           messageError = json.detail;
         }
 
+        if (json.non_field_errors) {
+          messageError = json.non_field_errors[0];
+        }
+
         dispatch('notifyOpen', { type: 0, message: messageError });
         throw new Error(error);
       });
