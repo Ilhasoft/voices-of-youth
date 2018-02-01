@@ -64,4 +64,7 @@ class UsersEndPoint(mixins.CreateModelMixin,
             user.set_password(serializer.data['password'])
             user.save()
 
-        return Response(serializer.data)
+        response = serializer.data
+        response.pop('password')
+
+        return Response(response)
