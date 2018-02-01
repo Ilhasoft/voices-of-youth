@@ -192,6 +192,7 @@ export default {
 
       btnSendName: 'Send report',
       btnSendDisabled: '',
+      polygonMap: null,
     };
   },
 
@@ -327,23 +328,39 @@ export default {
       this.urls.splice(this.urls.indexOf(url), 1);
     },
 
-    loadTagsAndUsers(theme) {
-      this.tagsSelected = [];
-      const tags = this.reportData.themes.filter(item => item.id === theme.value);
-      if (tags.length > 0) {
-        this.tagsOptions = tags[0].tags.map(tag => tag);
-      }
+    loadTagsAndUsers(select) {
+      if (select) {
+        this.tagsSelected = [];
+        const data = this.reportData.themes.filter(item => item.id === select.value);
 
-      if (this.currentUser.is_admin && this.themeSelected.value > 0) {
-        this.getUsersByTheme(this.themeSelected.value).then((users) => {
-          this.mappersOptions = users.map((user) => {
-            const option = {
-              label: user.username,
-              value: user.id,
-            };
-            return option;
+        if (data.length > 0) {
+          const theme = data[0];
+          this.tagsOptions = theme.tags.map(tag => tag);
+
+          if (this.polygonMap) {
+            this.$refs.map.mapObject.removeLayer(this.polygonMap);
+          }
+
+          if (theme) {
+            this.polygonMap = new L.Polygon(theme.bounds);
+            this.polygonMap.setStyle({ color: '#ff7800' });
+            this.$refs.map.mapObject.addLayer(this.polygonMap);
+            this.$refs.map.mapObject.fitBounds(this.polygonMap.getBounds());
+            this.marker.setLatLng(this.polygonMap.getBounds().getCenter());
+          }
+        }
+
+        if (this.currentUser.is_admin && this.themeSelected.value > 0) {
+          this.getUsersByTheme(this.themeSelected.value).then((users) => {
+            this.mappersOptions = users.map((user) => {
+              const option = {
+                label: user.username,
+                value: user.id,
+              };
+              return option;
+            });
           });
-        });
+        }
       }
     },
 
