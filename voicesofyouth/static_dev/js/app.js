@@ -897,6 +897,8 @@
 
 (function ($){
     function TranslateInput($input, $translate_form, $language_input) {
+        var self = this;
+
         this.$input = $input;
         this.$translate_form = $translate_form;
         this.$language_input = $language_input;
@@ -904,17 +906,17 @@
         this.value = this.$input.val() ? JSON.parse(this.val()) : {};
         this.updateVal();
 
-        $language_input.change(function () {
-            var language = this.$language_input.val();
-            var language_data = this.value[language];
+        this.$language_input.change(function () {
+            var language = self.$language_input.val();
+            var language_data = self.value[language];
 
             if (!language_data) {
-                this.$translate_form.trigger('reset');
-                this.$language_input.val(language);
+                self.$translate_form.trigger('reset');
+                self.$language_input.val(language);
             }
 
             (language_data || []).forEach(function (field) {
-                this.$translate_form.find('[name=' + field.name + ']').val(field.value);
+                self.$translate_form.find('[name=' + field.name + ']').val(field.value);
             });
         });
         this.$language_input.change();
