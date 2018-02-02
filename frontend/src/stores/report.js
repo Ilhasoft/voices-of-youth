@@ -13,15 +13,15 @@ export default {
     comments: [],
     files: [],
     search: [],
-    newReport: {
-      themes: [],
-      title: '',
-      description: '',
-      tags: [],
-      files: [],
-      urls: [],
-      location: {},
-    },
+    // newReport: {
+    //   themes: [],
+    //   title: '',
+    //   description: '',
+    //   tags: [],
+    //   files: [],
+    //   urls: [],
+    //   location: {},
+    // },
   },
 
   getters: {
@@ -30,7 +30,8 @@ export default {
     getComments: state => state.comments,
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
-    getReportNewData: state => state.newReport,
+    // getReportNewData: state => state.newReport,
+    getUserThemes: state => state.themes,
     getReportPreview: state => state.files,
     getSearchReports: state => state.search,
     getReportsPins: (state) => {
@@ -115,7 +116,7 @@ export default {
     },
 
     [TYPES.NEW_REPORT_USER_THEMES](state, obj) {
-      state.newReport.themes = obj;
+      state.themes = obj;
     },
 
     [TYPES.SET_REPORTS_SEARCH](state, obj) {
@@ -226,7 +227,33 @@ export default {
       return data;
     },
 
-    saveFiles: async ({ commit, dispatch }, obj) => {
+    saveEditReport: async ({ commit, dispatch }, obj) => {
+      const data = await axios.put(`/api/reports/${obj.id}/`, obj)
+      .then()
+      .catch((error) => {
+        let messageError = '';
+        const json = JSON.parse(error.response.request.responseText);
+
+        if (json.location) {
+          messageError = json.location[0];
+        }
+
+        if (json.detail) {
+          messageError = json.detail;
+        }
+
+        if (json.non_field_errors) {
+          messageError = json.non_field_errors[0];
+        }
+
+        dispatch('notifyOpen', { type: 0, message: messageError });
+        throw new Error(error);
+      });
+
+      return data;
+    },
+
+    saveFiles: async ({ commit }, obj) => {
       const form = new FormData();
       form.append('file', obj.file);
       form.append('title', obj.file.name);
@@ -239,6 +266,10 @@ export default {
         },
       });
       return data;
+    },
+
+    removeFiles: async ({ commit }, obj) => {
+      await axios.delete(`/api/report-files/${obj}/`);
     },
 
     // getGeoLocation: async () => {

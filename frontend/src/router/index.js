@@ -9,6 +9,7 @@ import ProfilePage from '@/components/pages/Profile';
 import MyReportsPage from '@/components/pages/MyReports';
 import GalleryPage from '@/components/pages/Gallery';
 import NewReportPage from '@/components/pages/NewReport';
+import EditReportPage from '@/components/pages/EditReport';
 
 import stores from '@/stores';
 import helper from '@/helper';
@@ -74,6 +75,24 @@ export default new Router({
       path: '/project/:path/new-report',
       name: 'newreport',
       component: NewReportPage,
+      beforeEnter: (to, from, next) => {
+        dispatchStores();
+        stores.dispatch('updateHeaderConfig', {
+          menuTitle: '',
+          showMenu: true,
+          showProjects: true,
+          showBackButton: false,
+        }).then(() => {
+          next();
+        });
+      },
+    },
+
+    {
+      path: '/project/:path/edit-report/:id',
+      name: 'editreport',
+      component: EditReportPage,
+      props: true,
       beforeEnter: (to, from, next) => {
         dispatchStores();
         stores.dispatch('updateHeaderConfig', {

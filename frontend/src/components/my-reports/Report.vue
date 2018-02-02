@@ -12,13 +12,15 @@
     </div>
 
     <div class="column is-2 m-auto">
-      <!-- <button class="button btn-edit">Edit</button> -->
+      <button class="button btn-edit" @click.prevent="editReport" v-if="report.status == 3">Edit</button>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import helper from '@/helper';
+import router from '@/router/';
 
 export default {
   name: 'ReportItem',
@@ -30,9 +32,17 @@ export default {
     },
   },
 
+  computed: mapGetters({
+    currentProject: 'getCurrentProject',
+  }),
+
   methods: {
     formatDate() {
       return helper.formatDate(this.report.created_on);
+    },
+
+    editReport() {
+      router.push({ name: 'editreport', params: { path: this.currentProject.path, id: this.report.id } });
     },
   },
 };
@@ -77,7 +87,7 @@ export default {
 
     h4 {
       font-size: 20px;
-      font-weight: 500;  
+      font-weight: 500;
     }
 
     small {
