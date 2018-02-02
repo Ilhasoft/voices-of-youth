@@ -206,7 +206,7 @@ class ReportNotificationViewSet(
         if len(queryset) > 0:
             return Response(self.get_serializer(queryset, many=True).data)
 
-        return Response({})
+        return Response([])
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
