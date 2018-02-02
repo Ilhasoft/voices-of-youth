@@ -37,8 +37,6 @@ export default new Router({
       component: HomePage,
     },
 
-    // project selected
-    // TODO: Refactor routes
     {
       path: '/project/:path',
       name: 'project',
