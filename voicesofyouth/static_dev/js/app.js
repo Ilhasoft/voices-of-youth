@@ -902,6 +902,11 @@
         this.$input = $input;
         this.$translate_form = $translate_form;
         this.$language_input = $language_input;
+        this.onClick = null;
+
+        this.$input.hide();
+        this.$itemsList = $('<div class="bootstrap-tagsinput"></div>');
+        this.$input.after(this.$itemsList);
 
         this.value = this.$input.val() ? JSON.parse(this.val()) : {};
         this.updateVal();
@@ -921,8 +926,35 @@
         });
         this.$language_input.change();
     }
+    TranslateInput.prototype.createItems = function () {
+        var self = this;
+
+        return Object.keys(this.value).map(function (language) {
+            var val = self.value[language];
+            var $item = $('<span class="tag label label-info">' + language + '</span>');
+            var $remove = $('<span data-role="remove"></span>');
+            $item.append($remove);
+
+            $item.click(function () {
+                self.$language_input.val(language).change();
+                if (self.onItemClick) self.onItemClick();
+            });
+
+            $remove.click(function () {
+                delete self.value[language];
+                self.updateVal();
+                return false;
+            });
+
+            return $item;
+        });
+    };
     TranslateInput.prototype.updateVal = function () {
         this.$input.val(JSON.stringify(this.value));
+        this.$itemsList.html(this.createItems());
+    };
+    TranslateInput.prototype.itemClick = function (fn) {
+        this.onItemClick = fn;
     };
     TranslateInput.prototype.save = function () {
         var language = this.$language_input.val();
