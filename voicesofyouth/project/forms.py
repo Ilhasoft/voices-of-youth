@@ -101,6 +101,17 @@ class ProjectForm(forms.Form):
         required=False
     )
 
+    translations = forms.CharField(
+        label=_('Languages'),
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['local_admin'].queryset = VoyUser.objects.all()
@@ -111,3 +122,40 @@ class ProjectForm(forms.Form):
 
         if bounds is None:
             raise forms.ValidationError(_('Bounds is empty'))
+
+
+class ProjectTranslationForm(forms.Form):
+    language = forms.ChoiceField(
+        choices=django_settings.LANGUAGES,
+        label=_('Language'),
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    name = forms.CharField(
+        label=_('Name'),
+        required=True,
+        max_length=255,
+        widget=forms.TextInput(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )
+
+    description = forms.CharField(
+        label=_('Description'),
+        required=True,
+        widget=forms.Textarea(
+            attrs={
+                'required': True,
+                'class': 'form-control',
+            }
+        )
+    )

@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.project.forms import ProjectForm
+from voicesofyouth.project.forms import ProjectTranslationForm
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
@@ -146,5 +147,6 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
         context['selected_tags'] = project.all_tags
         context['selected_local_admins'] = project.local_admin_group.user_set.all().values_list('id', 'username')
         context['data_form'] = ProjectForm(initial=data)
+        context['translate_data_form'] = ProjectTranslationForm(prefix='translate')
 
         return context
