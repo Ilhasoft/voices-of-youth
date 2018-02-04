@@ -908,7 +908,7 @@
         this.$itemsList = $('<div class="bootstrap-tagsinput"></div>');
         this.$input.after(this.$itemsList);
 
-        this.value = this.$input.val() ? JSON.parse(this.val()) : {};
+        this.value = this.$input.val() ? JSON.parse(this.$input.val()) : {};
         this.updateVal();
 
         this.$language_input.change(function () {
