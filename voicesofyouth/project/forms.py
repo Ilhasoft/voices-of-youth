@@ -4,8 +4,11 @@ from django.utils.translation import ugettext as _
 
 from leaflet.forms.fields import PolygonField
 
+from .models import Project
+
 from voicesofyouth.user.models import VoyUser
 
+from voicesofyouth.translation.forms import TranslationsField
 
 class ProjectForm(forms.Form):
     name = forms.CharField(
@@ -101,7 +104,8 @@ class ProjectForm(forms.Form):
         required=False
     )
 
-    translations = forms.CharField(
+    translations = TranslationsField(
+        Project,
         label=_('Languages'),
         required=True,
         widget=forms.TextInput(

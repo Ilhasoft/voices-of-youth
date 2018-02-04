@@ -117,22 +117,22 @@
     <div id="translate-modal">
         <div class="opacity"></div>
         <div class="content-modal">
-            <form action="" id="translate_form">
-                <fieldset>
-                    <div class="row">
-                        <div class="col-md-12 text-center pt-10">
-                            <h4>{% trans 'Translate to' %}</h4>
-                        </div>
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-12 text-center pt-10">
+                        <h4>{% trans 'Translate to' %}</h4>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group {% if translate_data_form.language.errors %}has-error{% endif %}">
-                                <label>{% trans 'Language' %}</label>
-                                {{ translate_data_form.language }}
-                                {{ translate_data_form.language.errors }}
-                            </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {% if translate_data_form.language.errors %}has-error{% endif %}">
+                            <label>{% trans 'Language' %}</label>
+                            {{ translate_data_form.language }}
+                            {{ translate_data_form.language.errors }}
+                        </div>
 
+                        <form action="" id="translate_form">
                             <div class="form-group {% if translate_data_form.name.errors %}has-error{% endif %}">
                                 <label>{% trans 'Name' %}</label>
                                 {{ translate_data_form.name }}
@@ -144,18 +144,18 @@
                                 {{ translate_data_form.description }}
                                 {{ translate_data_form.description.errors }}
                             </div>
-                        </div>
+                        </form>
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-12 buttons text-right">
-                            <a href="javascript:;" class="btn btn-default cancel"
-                                id="close_translate_modal">{% trans 'Cancel' %}</a>
-                            <a href="javascript:;" id="translate_save" class="btn btn-default save">{% trans 'Save' %}</a>
-                        </div>
+                <div class="row">
+                    <div class="col-md-12 buttons text-right">
+                        <a href="javascript:;" class="btn btn-default cancel"
+                            id="close_translate_modal">{% trans 'Cancel' %}</a>
+                        <a href="javascript:;" id="translate_save" class="btn btn-default save">{% trans 'Save' %}</a>
                     </div>
-                </fieldset>
-            </form>
+                </div>
+            </fieldset>
         </div>
     </div>
 {% endblock content %}
