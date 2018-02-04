@@ -920,7 +920,7 @@
                 self.$language_input.val(language);
             }
 
-            (language_data || []).forEach(function (field) {
+            (language_data || { fields: [] }).fields.forEach(function (field) {
                 self.$translate_form.find('[name=' + field.name + ']').val(field.value);
             });
         });
@@ -930,8 +930,8 @@
         var self = this;
 
         return Object.keys(this.value).map(function (language) {
-            var val = self.value[language];
-            var $item = $('<span class="tag label label-info">' + language + '</span>');
+            var data = self.value[language];
+            var $item = $('<span class="tag label label-info">' + (data.label || language) + '</span>');
             var $remove = $('<span data-role="remove"></span>');
             $item.append($remove);
 
@@ -960,7 +960,10 @@
         var language = this.$language_input.val();
         var language_data = this.$translate_form.serializeArray();
 
-        this.value[language] = language_data;
+        this.value[language] = {
+            label: this.$language_input.find(":selected").text(),
+            fields: language_data,
+        };
         this.updateVal();
     };
 
