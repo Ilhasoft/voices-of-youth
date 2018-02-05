@@ -164,12 +164,12 @@
             $('#link_' + item).empty();
         }
 
-        $('#id_project').change(function (e) {
+        $('#id_project').change(function(e) {
             e.preventDefault();
             loadThemes(e.target.value);
         });
 
-        $('#id_theme').change(function (e) {
+        $('#id_theme').change(function(e) {
             e.preventDefault();
             loadMappers(e.target.value);
             loadThemeBounds(e.target.value);
@@ -207,11 +207,11 @@
                     });
                 }).then(() => {
                     if (selected) {
-                        $('#id_theme').val(selected);
-                        loadMappers(selected, {{ data_form.mapper.value }});
-                        setTimeout(() => {
+                        window.addEventListener('map:init', function(e) {
+                            $('#id_theme').val(selected);
+                            loadMappers(selected, {{ data_form.mapper.value }});
                             loadThemeBounds(selected);
-                        }, 2000);
+                        });
                     }
                 });
             }).then(() => {
