@@ -18,6 +18,7 @@ class ReportForm(forms.Form):
     project = MyModelChoiceField(
         queryset=None,
         label=_('Project'),
+        empty_label=_('Select a project'),
         required=True,
         widget=forms.Select(
             attrs={
@@ -33,7 +34,7 @@ class ReportForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(
             attrs={
-                'placeholder': _('Title'),
+                'placeholder': _('Define a title'),
                 'required': True,
                 'class': 'form-control',
             }
@@ -41,7 +42,7 @@ class ReportForm(forms.Form):
     )
 
     description = forms.CharField(
-        label=_('Search'),
+        label=_('Description'),
         required=True,
         widget=forms.Textarea(
             attrs={
@@ -49,6 +50,7 @@ class ReportForm(forms.Form):
                 'rows': 5,
                 'required': True,
                 'class': 'form-control',
+                'placeholder': _('Describe your report freely'),
             }
         )
     )
@@ -62,6 +64,7 @@ class ReportForm(forms.Form):
                 'required': True,
                 'multiple': True,
                 'class': 'chosen-select form-control',
+                'data-placeholder': _('Select one or more Tags to compose this report'),
             }
         )
     )
@@ -97,6 +100,7 @@ class ReportForm(forms.Form):
         required=False,
         widget=forms.TextInput(
             attrs={
+                'placeholder': _('Type or paste some valid url to this report'),
                 'required': False,
                 'class': 'form-control',
             }
