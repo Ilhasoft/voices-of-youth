@@ -209,7 +209,9 @@
                     if (selected) {
                         $('#id_theme').val(selected);
                         loadMappers(selected, {{ data_form.mapper.value }});
-                        loadThemeBounds(selected);
+                        setTimeout(() => {
+                            loadThemeBounds(selected);
+                        }, 2000);
                     }
                 });
             }).then(() => {
