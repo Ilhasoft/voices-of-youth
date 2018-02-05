@@ -931,7 +931,7 @@
 
         return Object.keys(this.value).map(function (language) {
             var data = self.value[language];
-            var $item = $('<span class="tag label label-info">' + (data.label || language) + '</span>');
+            var $item = $('<span class="tag clickable label label-info">' + (data.label || language) + '</span>');
             var $remove = $('<span data-role="remove"></span>');
             $item.append($remove);
 
