@@ -149,7 +149,8 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             'language': project.language,
             'bounds': project.bounds,
             'thumbnail': project.thumbnail,
-            'enabled': project.enabled
+            'enabled': project.enabled,
+            'translations': project.translations.all()
         }
 
         context['editing'] = True
