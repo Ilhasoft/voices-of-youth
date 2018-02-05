@@ -137,7 +137,7 @@ class ReportFilterForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(
             attrs={
-                'placeholder': _('Search for report'),
+                'placeholder': _('Start type to find some project'),
                 'required': False,
                 'class': 'form-control ',
             }

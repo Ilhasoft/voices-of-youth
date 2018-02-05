@@ -56,7 +56,7 @@ export default {
       descriptions: {
         approved: 'Ups! You have not created any report yet',
         pending: 'Great! All your reports has been approved',
-        rejected: 'Good job! You have no rejected reports',
+        rejected: 'Good job! You have no approved reports',
       },
     };
   },
