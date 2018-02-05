@@ -35,6 +35,9 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="form-group text-right">
+                                            <button id="new_translate_btn" type="button" class="btn btn-oval btn-translate">{% trans 'Translate' %}</button>
+                                        </div>
                                         <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
                                             <label>{% trans 'Name' %}</label>
                                             {{ data_form.name }}
@@ -92,8 +95,7 @@
                                         </div>
 
                                         <div class="form-group {% if data_form.translations.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Language' %}</label>
-                                            <p><button id="new_translate_btn" type="button" class="btn btn-primary">{% trans 'Translate' %}</button></p>
+                                            <label>{% trans 'Languages' %}</label>
                                             {{ data_form.translations }}
                                             {{ data_form.translations.errors }}
                                         </div>
