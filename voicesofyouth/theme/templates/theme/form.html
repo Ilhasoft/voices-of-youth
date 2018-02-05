@@ -48,7 +48,7 @@
                                             <label>{% trans 'Color' %}</label>
                                             <div id="colors">
                                             {% for color in colors %}
-                                                <div class="color-pick" id="color_{{ color }}" onclick="setColor('{{ color }}')">
+                                                <div class="color-pick" id="color_{{ color }}" onclick="setColor('{{ color }}')" data-toggle="tooltip" data-placement="top" title="{% trans 'Choose one color to associate this theme. It\'ll reflects on Pin at the front-end and the list of themes in the Mappers App.' %}">
                                                     <div class="color" style="background-color: #{{ color }};"></div>
                                                 </div>
                                             {% endfor %}
@@ -145,6 +145,7 @@
         $('#id_mappers_group').chosen();
         $('#id_tags').chosen();
         $('.demo-colorpicker').colorpicker();
+        $('[data-toggle="tooltip"]').tooltip();
 
         window.addEventListener('map:init', function(e) {
             var detail = e.detail;
