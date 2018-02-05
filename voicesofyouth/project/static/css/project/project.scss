@@ -87,6 +87,10 @@ $color_delete: #DE486B;
             content: 'x';
             padding: 4px;
         }
+
+        input[type="text"] {
+            min-width: 245px;
+        }
     }
 }
 

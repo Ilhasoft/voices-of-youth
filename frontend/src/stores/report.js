@@ -1,9 +1,9 @@
 import axios from 'axios';
 import L from 'leaflet';
+import helper from '@/helper';
 import * as TYPES from './types';
-import helper from '../helper';
 
-const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
+// const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
 
 export default {
   state: {
@@ -13,15 +13,15 @@ export default {
     comments: [],
     files: [],
     search: [],
-    newReport: {
-      themes: [],
-      title: '',
-      description: '',
-      tags: [],
-      files: [],
-      urls: [],
-      location: {},
-    },
+    // newReport: {
+    //   themes: [],
+    //   title: '',
+    //   description: '',
+    //   tags: [],
+    //   files: [],
+    //   urls: [],
+    //   location: {},
+    // },
   },
 
   getters: {
@@ -30,7 +30,8 @@ export default {
     getComments: state => state.comments,
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
-    getReportNewData: state => state.newReport,
+    // getReportNewData: state => state.newReport,
+    getUserThemes: state => state.themes,
     getReportPreview: state => state.files,
     getSearchReports: state => state.search,
     getReportsPins: (state) => {
@@ -78,10 +79,10 @@ export default {
     [TYPES.ADD_REPORTS_LIST](state, obj) {
       if (state.themes.length === 0) {
         state.all = [];
-        state.all = obj.data;
+        state.all = obj.reports;
       } else if (state.themes.indexOf(obj.theme) === -1) {
-        Object.keys(obj.data).map((key, index) => {
-          state.all.push(obj.data[index]);
+        Object.keys(obj.reports).map((key, index) => {
+          state.all.push(obj.reports[index]);
           return true;
         });
       }
@@ -115,7 +116,7 @@ export default {
     },
 
     [TYPES.NEW_REPORT_USER_THEMES](state, obj) {
-      state.newReport.themes = obj;
+      state.themes = obj;
     },
 
     [TYPES.SET_REPORTS_SEARCH](state, obj) {
@@ -124,31 +125,18 @@ export default {
   },
 
   actions: {
-    getReports({ commit, dispatch }) {
+    getReports: async ({ commit }) => {
       const project = helper.getItem('project');
-      axios.get(`/api/reports?project=${project.id}&status=1`).then((response) => {
-        commit(TYPES.SET_REPORTS, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/reports?project=${project.id}&status=1`);
+      commit(TYPES.SET_REPORTS, data);
     },
 
-    getReportsByTheme({ dispatch, commit, state }, obj) {
+    getReportsByTheme: async ({ dispatch, commit, state }, obj) => {
       if (obj.isChecked) {
-        axios.get(`/api/reports?theme=${obj.themeId}&status=1`).then((response) => {
-          commit(TYPES.ADD_REPORTS_LIST, {
-            data: response.data,
-            theme: obj.themeId,
-          });
-        }).catch((error) => {
-          dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-          throw new Error(error);
-        });
+        const data = await axios.get(`/api/reports?theme=${obj.themeId}&status=1`);
+        commit(TYPES.ADD_REPORTS_LIST, { reports: data, theme: obj.themeId });
       } else {
-        commit(TYPES.REMOVE_REPORTS_LIST, {
-          theme: obj.themeId,
-        });
+        commit(TYPES.REMOVE_REPORTS_LIST, { theme: obj.themeId });
 
         if (state.themes.length === 0) {
           dispatch('getReports');
@@ -156,59 +144,39 @@ export default {
       }
     },
 
-    getReport({ commit, dispatch }, obj) {
+    getReport: async ({ commit, dispatch }, obj) => {
       commit(TYPES.SET_CURRENT_REPORT, {});
       commit(TYPES.SET_REPORT_MEDIAS, {});
 
-      axios.get(`/api/reports/${obj}`).then((response) => {
-        commit(TYPES.SET_CURRENT_REPORT, response.data);
-      }).then(() => {
-        axios.get(`/api/report-files/?report=${obj}`).then((response) => {
-          commit(TYPES.SET_REPORT_MEDIAS, response.data.results);
-        });
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/reports/${obj}`);
+      commit(TYPES.SET_CURRENT_REPORT, data);
+
+      const files = await axios.get(`/api/report-files/?report=${obj}`);
+      commit(TYPES.SET_REPORT_MEDIAS, files.results);
     },
 
-    getComments({ commit, dispatch }, obj) {
-      axios.get(`/api/report-comments/?report=${obj}`).then((response) => {
-        commit(TYPES.SET_REPORT_COMMENTS, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+    getComments: async ({ commit, dispatch }, obj) => {
+      const data = await axios.get(`/api/report-comments/?report=${obj}`);
+      commit(TYPES.SET_REPORT_COMMENTS, data);
     },
 
     clearReports({ commit }) {
       commit(TYPES.CLEAR_REPORTS_LIST);
     },
 
-    saveNewComment({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      const options = {};
-
-      if (token) {
-        options.headers = { authorization: `Token ${token}` };
-      }
-
-      return axios.post('/api/report-comments/', {
+    saveNewComment: async ({ commit, dispatch }, obj) => {
+      await axios.post('/api/report-comments/', {
         text: obj.text,
         report: obj.report,
-      }, options).then(() => {
+      }).then(() => {
         dispatch('notifyOpen', { type: 1, message: 'Comment Sent!' });
-      }).catch((error) => {
+      }).catch(() => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
       });
     },
 
-    deleteComment({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.delete(`/api/report-comments/${obj}/`, {}, {
-        headers: { authorization: `Token ${token}` },
-      }).then(() => {
+    deleteComment: async ({ commit, dispatch }, obj) => {
+      await axios.delete(`/api/report-comments/${obj}/`).then(() => {
         commit(TYPES.REMOVE_COMMENT, obj);
         dispatch('notifyOpen', { type: 1, message: 'Comment Removed!' });
       }).catch((error) => {
@@ -217,43 +185,26 @@ export default {
       });
     },
 
-    getUserThemes({ commit, dispatch }, obj) {
+    getUserThemes: async ({ commit }, obj) => {
       const project = helper.getItem('project');
-      axios.get(`/api/themes/?user=${obj}&project=${project.id}`).then((response) => {
-        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/themes/?user=${obj}&project=${project.id}`);
+      commit(TYPES.NEW_REPORT_USER_THEMES, data);
     },
 
-    getProjectThemes({ commit, dispatch }) {
+    getProjectThemes: async ({ commit }) => {
       const project = helper.getItem('project');
-      axios.get(`/api/themes?project=${project.id}`).then((response) => {
-        commit(TYPES.NEW_REPORT_USER_THEMES, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/themes?project=${project.id}`);
+      commit(TYPES.NEW_REPORT_USER_THEMES, data);
     },
 
-    getUsersByTheme({ commit, dispatch }, obj) {
-      return axios.get(`/api/users?theme=${obj}`)
-      .then(response => response.data)
+    getUsersByTheme: async ({ commit }, obj) => {
+      await axios.get(`/api/users?theme=${obj}`);
+    },
+
+    saveNewReport: async ({ commit, dispatch }, obj) => {
+      const data = await axios.post('/api/reports/', obj)
+      .then()
       .catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
-    },
-
-    saveNewReport({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.post('/api/reports/', obj, {
-        headers: { authorization: `Token ${token}` },
-      }).then((response) => {
-        const data = response.data;
-        return data;
-      }).catch((error) => {
         let messageError = '';
         const json = JSON.parse(error.response.request.responseText);
 
@@ -265,54 +216,79 @@ export default {
           messageError = json.detail;
         }
 
+        if (json.non_field_errors) {
+          messageError = json.non_field_errors[0];
+        }
+
         dispatch('notifyOpen', { type: 0, message: messageError });
         throw new Error(error);
       });
+
+      return data;
     },
 
-    saveFiles({ commit, dispatch }, obj) {
-      const token = helper.getItem('token');
-      const data = new FormData();
-      data.append('file', obj.file);
-      data.append('title', obj.file.name);
-      data.append('description', obj.file.name);
-      data.append('report_id', obj.id);
+    saveEditReport: async ({ commit, dispatch }, obj) => {
+      const data = await axios.put(`/api/reports/${obj.id}/`, obj)
+      .then()
+      .catch((error) => {
+        let messageError = '';
+        const json = JSON.parse(error.response.request.responseText);
 
-      const config = {
+        if (json.location) {
+          messageError = json.location[0];
+        }
+
+        if (json.detail) {
+          messageError = json.detail;
+        }
+
+        if (json.non_field_errors) {
+          messageError = json.non_field_errors[0];
+        }
+
+        dispatch('notifyOpen', { type: 0, message: messageError });
+        throw new Error(error);
+      });
+
+      return data;
+    },
+
+    saveFiles: async ({ commit }, obj) => {
+      const form = new FormData();
+      form.append('file', obj.file);
+      form.append('title', obj.file.name);
+      form.append('description', obj.file.name);
+      form.append('report_id', obj.id);
+
+      const data = await axios.post('/api/report-files/', form, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          authorization: `Token ${token}`,
         },
-      };
-
-      return axios.post('/api/report-files/', data, config)
-        .then(response => response.data)
-        .catch((error) => {
-          dispatch('notifyOpen', { type: 0, message: 'Error on send file.' });
-          throw new Error(error);
-        });
-    },
-
-    getGeoLocation({ commit }, obj) {
-      const urlApi = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`;
-      return axios.get(urlApi).then((response) => {
-        if (response.data.results[0]) {
-          return response.data.results[0].formatted_address;
-        }
-        return '';
-      }).catch((error) => {
-        throw new Error(error);
       });
+      return data;
     },
 
-    searchReports({ commit, dispatch }, obj) {
+    removeFiles: async ({ commit }, obj) => {
+      await axios.delete(`/api/report-files/${obj}/`);
+    },
+
+    // getGeoLocation: async () => {
+      // const instance = axios.create();
+      // instance.defaults.headers.common = {};
+      // const data = await instance.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`);
+
+      // if (data.data.status === 'OK') {
+      //   return data.data.results[0].formatted_address;
+      // }
+      // return mapsKey;
+    // },
+
+    getGeoLocation: async () => '',
+
+    searchReports: async ({ commit, dispatch }, obj) => {
       const project = helper.getItem('project');
-      axios.get(`/api/report-search/?query=${obj}&project=${project.id}`).then((response) => {
-        commit(TYPES.SET_REPORTS_SEARCH, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+      const data = await axios.get(`/api/report-search/?query=${obj}&project=${project.id}`);
+      commit(TYPES.SET_REPORTS_SEARCH, data);
     },
   },
 };

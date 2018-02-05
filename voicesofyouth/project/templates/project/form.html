@@ -13,13 +13,6 @@
 {% block content %}
     <section>
         <div class="content-wrapper">
-            <div class="content-heading">
-                {% if editing %} {% trans 'Edit project' %} {% else %} {% trans 'New project' %} {% endif %}
-                <a href="javascript:;" onclick="submitForm()" class="pull-right btn btn-oval btn-new-project">
-                    {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
-                </a>
-            </div>
-
             <form action="" enctype="multipart/form-data" method="post" role="form" id="form-project">
                 {% csrf_token %}
                 <div class="row">
@@ -99,6 +92,12 @@
                                             {{ data_form.translations }}
                                             {{ data_form.translations.errors }}
                                         </div>
+
+                                        <a href="javascript:"
+                                           onclick="submitForm()"
+                                           class="pull-right btn btn-oval btn-new-project">
+                                            {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+                                        </a>
                                     </div>
                                 </div>
                             </div>

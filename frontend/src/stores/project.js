@@ -1,6 +1,6 @@
 import axios from 'axios';
+import helper from '@/helper';
 import * as TYPES from './types';
-import helper from '../helper';
 
 export default {
   state: {
@@ -39,13 +39,9 @@ export default {
   },
 
   actions: {
-    setProjects({ commit, dispatch }) {
-      axios.get('/api/projects').then((response) => {
-        commit(TYPES.SET_PROJECTS_LIST, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+    setProjects: async ({ commit }) => {
+      const data = await axios.get('/api/projects');
+      commit(TYPES.SET_PROJECTS_LIST, data);
     },
 
     setCurrentProject({ commit, state }, obj) {
@@ -66,17 +62,13 @@ export default {
       commit(TYPES.SET_DISCLAIMER_PROJECT, obj);
     },
 
-    setCurrentLanguage({ commit, state, dispatch }, obj) {
+    setCurrentLanguage: async ({ commit, state, dispatch }, obj) => {
       if (obj) {
         const project = helper.getItem('project');
-        axios.get(`/api/projects/${project.id}/?lang=${obj}`).then((response) => {
-          localStorage.setItem('project', JSON.stringify(response.data));
-          localStorage.setItem('language', JSON.stringify(obj));
-          window.location.reload();
-        }).catch((error) => {
-          dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-          throw new Error(error);
-        });
+        const data = await axios.get(`/api/projects/${project.id}/?lang=${obj}`);
+        localStorage.setItem('project', JSON.stringify(data));
+        localStorage.setItem('language', JSON.stringify(obj));
+        window.location.reload();
       }
     },
   },

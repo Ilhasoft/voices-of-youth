@@ -71,6 +71,7 @@ class ProjectForm(forms.Form):
             attrs={
                 'required': True,
                 'class': 'form-control',
+                'placeholder': _('Type and press enter to create Tags'),
             }
         )
     )
@@ -84,6 +85,7 @@ class ProjectForm(forms.Form):
                 'required': True,
                 'multiple': True,
                 'class': 'form-control',
+                'data-placeholder': _('Select one or more local admins to this project'),
             }
         )
     )

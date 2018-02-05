@@ -10,10 +10,12 @@ from voicesofyouth.user.models import DEFAULT_AVATAR
 class MapperFilterForm(forms.Form):
     project = forms.ModelChoiceField(queryset=None,
                                      required=False,
-                                     widget=forms.Select())
+                                     widget=forms.Select(),
+                                     empty_label=_('Select a project'))
     theme = forms.ModelChoiceField(queryset=None,
                                    required=False,
-                                   widget=forms.Select())
+                                   widget=forms.Select(),
+                                   empty_label=_('Select a theme'))
     search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _('Search for mappers'),
                                                            'class': 'form-control'}),
                              required=False)
@@ -37,14 +39,16 @@ class VoyUserBaseForm(forms.Form):
                                label=_('Username'),
                                widget=forms.TextInput(
                                    attrs={
-                                       'class': 'form-control'
+                                       'class': 'form-control',
+                                       'placeholder': _('Set the username that will use to Log in to the Voy project.'),
                                    },
                                ))
     name = forms.CharField(max_length=255,
                            label=_('Name'),
                            widget=forms.TextInput(
                                attrs={
-                                   'class': 'form-control'
+                                   'class': 'form-control',
+                                   'placeholder': _('Set the User full name'),
                                },
                            ))
     email = forms.EmailField(required=False,
@@ -88,6 +92,7 @@ class MapperForm(VoyUserBaseForm):
                                                   attrs={
                                                       'multiple': True,
                                                       'class': 'chosen-select form-control',
+                                                      'data-placeholder': _('Select one or more projects'),
                                                   }
                                               ))
 

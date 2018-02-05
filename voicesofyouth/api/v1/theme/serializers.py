@@ -18,6 +18,7 @@ class ThemeSerializer(VoySerializer):
     name = serializers.SerializerMethodField()
     pin = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    bounds = serializers.SerializerMethodField()
 
     class Meta:
         model = Theme
@@ -50,3 +51,6 @@ class ThemeSerializer(VoySerializer):
     def get_pin(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(f'{settings.PIN_URL}{obj.color}.png')
+
+    def get_bounds(self, obj):
+        return obj.coordinates

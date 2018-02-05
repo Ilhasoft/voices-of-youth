@@ -12,7 +12,6 @@ from django.views.generic.base import TemplateView
 from django.core.files.images import ImageFile
 from django.contrib.gis.geos import GEOSGeometry
 
-from voicesofyouth.core.view import NotificationsView
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import VoyUser
 from voicesofyouth.voyadmin.utils import get_paginator
@@ -24,6 +23,7 @@ from voicesofyouth.report.models import ReportNotification
 from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
 from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import NOTIFICATION_ORIGIN_COMMENT
+from voicesofyouth.report.models import NOTIFICATION_ORIGIN_REPORT
 from voicesofyouth.report.models import REPORT_STATUS_PENDING
 from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 from voicesofyouth.report.models import REPORT_STATUS_NOTAPPROVED
@@ -95,7 +95,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
                 except Exception:
                     pass
 
-                messages.success(request, _('Report rejected'))
+                messages.success(request, _('Report not approved'))
                 return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
             except Exception:
                 return HttpResponse(status=500)
@@ -105,7 +105,9 @@ class ReportView(LoginRequiredMixin, TemplateView):
         report_id = kwargs['report']
 
         try:
-            notification = ReportNotification.objects.filter(report__id=report_id).filter(status__in=[REPORT_STATUS_PENDING, REPORT_STATUS_NOTAPPROVED]).first()
+            notification = ReportNotification.objects.filter(report__id=report_id) \
+                .filter(status__in=[REPORT_STATUS_PENDING, REPORT_STATUS_NOTAPPROVED]) \
+                .filter(origin=NOTIFICATION_ORIGIN_REPORT).first()
             notification.read = True
             notification.save()
         except Exception:
@@ -119,6 +121,7 @@ class ReportView(LoginRequiredMixin, TemplateView):
 
 
 class ApproveReportView(LoginRequiredMixin, TemplateView):
+
     def get(self, request, *args, **kwargs):
         report_id = kwargs['report']
         if report_id:
@@ -139,6 +142,7 @@ class ApproveReportView(LoginRequiredMixin, TemplateView):
 
 
 class CommentsReportView(LoginRequiredMixin, TemplateView):
+
     def get(self, request, *args, **kwargs):
         comment_id = kwargs['comment']
         status = kwargs['status']
@@ -148,20 +152,20 @@ class CommentsReportView(LoginRequiredMixin, TemplateView):
             comment.save()
 
             if int(status) == 1:
-                ReportNotification.objects.create(
-                    report=comment.report,
-                    status=NOTIFICATION_STATUS_APPROVED,
-                    origin=NOTIFICATION_ORIGIN_COMMENT,
-                    read=False,
-                    created_by=comment.report.created_by,
-                    modified_by=comment.report.modified_by,
-                )
+                try:
+                    notification = ReportNotification.objects.filter(report=comment.report).filter(origin=NOTIFICATION_ORIGIN_COMMENT).first()
+                    notification.status = NOTIFICATION_STATUS_APPROVED
+                    notification.read = False
+                    notification.save()
+                except Exception:
+                    pass
 
-            messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'rejected')))
+            messages.success(request, _('Comment {0}'.format('approved' if status == '1' else 'not approved')))
         return redirect(reverse('voy-admin:reports:view', kwargs={'report': comment.report.id}))
 
 
 class CommentsSaveView(LoginRequiredMixin, TemplateView):
+
     def post(self, request, *args, **kwargs):
         comment = request.POST.get('comment')
         report_id = kwargs['report']
@@ -363,7 +367,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PendingReportView(LoginRequiredMixin, NotificationsView):
+class PendingReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/pending.html'
 
     def get_context_data(self, **kwargs):

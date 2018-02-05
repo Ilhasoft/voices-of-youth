@@ -20,13 +20,13 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" v-model="name" />
+                  <input type="text" class="input" v-model="name" readonly="readonly" />
                 </div>
               </div>
 
-              <div class="columns">
+              <div class="columns" v-if="email">
                 <div class="column has-text-center">
-                  <input type="email" class="input" name="name" v-model="email"/>
+                  <input type="email" class="input" v-model="email" readonly="readonly" />
                 </div>
               </div>
 
@@ -63,7 +63,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import HeaderIndex from '../header/Index';
+import router from '@/router/';
+import HeaderIndex from '@/components/header/Index';
 
 export default {
   name: 'Login',
@@ -82,10 +83,15 @@ export default {
   computed: {
     ...mapGetters({
       user: 'getUserData',
+      userIsLogged: 'userIsLogged',
+      currentProject: 'getCurrentProject',
     }),
   },
 
   mounted() {
+    if (!this.userIsLogged) {
+      router.push({ name: 'project', params: { path: this.currentProject.path } });
+    }
     this.name = this.user.first_name;
     this.email = this.user.email;
   },

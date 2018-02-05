@@ -26,7 +26,7 @@ class ThemeForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(
             attrs={
-                'placeholder': _('Name'),
+                'placeholder': _('Enter the theme\'s name belonging to this project.'),
                 'required': True,
                 'class': 'form-control',
             }
@@ -55,6 +55,7 @@ class ThemeForm(forms.Form):
                 'required': True,
                 'multiple': True,
                 'class': 'chosen-select form-control',
+                'data-placeholder': _('Select one or more Tags for Mappers to use.'),
             }
         )
     )
@@ -109,6 +110,7 @@ class ThemeForm(forms.Form):
                 'required': True,
                 'multiple': True,
                 'class': 'form-control',
+                'data-placeholder': _('Select one or more mappers who will create reports here.'),
             }
         )
     )

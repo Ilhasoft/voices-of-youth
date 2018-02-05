@@ -4,7 +4,9 @@
     @mouseover.prevent="isVisible = true" 
     @mouseout="isVisible = false"
     v-if="userIsLogged && userIsMapper">
+    
     <a href="">
+      <div class="label" v-if="notifications.length > 0"></div>
       <img class="img" src="~@/assets/img/header-bell.png">
     </a>
 
@@ -17,8 +19,8 @@
       
       <div class="item" v-if="notifications.length > 0" :key="key" v-for="(item, key) in notifications">
         <a href="" @click.prevent="cleanNotification(item)">
-          <div class="item-left">
-            <div class="thumbnail" v-if="item.report.last_image">
+          <div class="item-left" v-if="item.report.last_image">
+            <div class="thumbnail">
               <img :src="item.report.last_image.file" alt="">
             </div>
           </div>
@@ -35,7 +37,8 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import helper from '../../helper';
+import helper from '@/helper';
+import router from '@/router/';
 
 export default {
   name: 'Notification',
@@ -99,6 +102,9 @@ export default {
 
     cleanNotification(item) {
       this.setNotificationRead(item.id);
+      if (item.origin === 1) {
+        router.push({ name: 'my-reports' });
+      }
     },
   },
 };
@@ -115,6 +121,16 @@ export default {
   margin-top: 5px;
   z-index: 1;
 
+  .label {
+    width: 10px;
+    height: 10px;
+    background-color: #de486b;
+    border-radius: 50%;
+    position: absolute;
+    padding: 2px 4px;
+    margin-left: 23px;
+  }
+
   .notification-item {
     position: absolute;
     background-color: #fff;
@@ -123,7 +139,7 @@ export default {
     right: 0;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
     border-radius: 10px;
-    margin: 15px 10px 0px 0px;
+    margin: 15px 90px 0px 0px;
 
     h4 {
       background: #fff;
@@ -153,11 +169,11 @@ export default {
       }
 
       .item-right {
-        width: 80%;
+        width: 100%;
         font-size: 13px;
         text-align: left;
         padding: 6px 0px 0px 0px;
-        margin-left: 56px;
+        margin-left: 10px;
         
         .title {
           color: #4a4a4a;

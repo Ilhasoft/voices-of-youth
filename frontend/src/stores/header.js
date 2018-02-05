@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as TYPES from './types';
-import helper from '../helper';
 
 export default {
   state: {
@@ -43,28 +42,14 @@ export default {
       commit(TYPES.SET_HEADER_CONFIG, obj);
     },
 
-    getNotifications({ commit, dispatch }) {
-      const token = helper.getItem('token');
-      return axios.get('/api/report-notification', {
-        headers: { authorization: `Token ${token}` },
-      }).then((response) => {
-        commit(TYPES.SET_NOTIFICATIONS, response.data);
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+    getNotifications: async ({ commit }) => {
+      const data = await axios.get('/api/report-notification');
+      commit(TYPES.SET_NOTIFICATIONS, data);
     },
 
-    setNotificationRead({ dispatch }, obj) {
-      const token = helper.getItem('token');
-      return axios.put(`/api/report-notification/${obj}/`, {}, {
-        headers: { authorization: `Token ${token}` },
-      }).then(() => {
-        dispatch('getNotifications');
-      }).catch((error) => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again.' });
-        throw new Error(error);
-      });
+    setNotificationRead: async ({ dispatch }, obj) => {
+      await axios.put(`/api/report-notification/${obj}/`);
+      dispatch('getNotifications');
     },
   },
 };

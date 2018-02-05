@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import axios from 'axios';
 
 import HeaderStore from './header';
 import UserStore from './user';
@@ -11,6 +12,11 @@ import GalleryStore from './gallery';
 import NotifyStore from './notify';
 
 Vue.use(Vuex);
+
+axios.interceptors.response.use(
+  ({ data }) => data,
+  error => Promise.reject(error),
+);
 
 export default new Vuex.Store({
   modules: {

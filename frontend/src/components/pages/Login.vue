@@ -34,10 +34,6 @@
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    <a href="" class="forgot">Forgot password?</a>
-                  </div>
-
-                  <div class="column has-text-center">
                     <button type="submit" @click.prevent="userLogin()" class="btn button l-submit">Login</button>
                   </div>
                 </div>
@@ -95,13 +91,13 @@
               <div class="columns">
                 <div class="column has-text-center">
                   <label class="checkbox">
-                    <input type="checkbox" @change.prevent="openTerms" v-model="isAccepted">
+                    <input type="checkbox" v-model="isAccepted">
                     Terms and conditions
                   </label>
                 </div>
 
                 <div class="column has-text-center">
-                  <button type="submit" @click.prevent="userRegister" class="btn button l-register">Register</button>
+                  <button type="submit" @click.prevent="openTerms" class="btn button l-register">Register</button>
                 </div>
               </div>
             </div>
@@ -159,8 +155,8 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderIndex from '../header/Index';
-import router from '../../router/';
+import router from '@/router/';
+import HeaderIndex from '@/components/header/Index';
 
 export default {
   name: 'Login',
@@ -170,7 +166,7 @@ export default {
   data() {
     return {
       isOpened: false,
-      isAccepted: false,
+      isAccepted: true,
 
       login: {
         username: '',
@@ -207,6 +203,10 @@ export default {
     closeTerms(value) {
       this.isOpened = false;
       this.isAccepted = value;
+
+      if (value) {
+        this.userRegister();
+      }
     },
 
     userLogin() {
@@ -217,6 +217,8 @@ export default {
         if (response) {
           router.push({ name: 'project', params: { path: this.currentProject.path } });
         }
+      }).catch((error) => {
+        this.notifyOpen({ type: 0, message: error.response.data.non_field_errors[0] });
       });
     },
 

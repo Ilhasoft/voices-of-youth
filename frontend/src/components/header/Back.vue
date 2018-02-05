@@ -11,15 +11,26 @@
         </a>
       </div>
       <div class="column t-align is-hidden-touch">
-        <a href="#" onclick="window.history.back();">Back to map</a>
+        <router-link
+          :to="{ name: 'project', params: { path: currentProject.path }}">
+          Back to map
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'BackButton',
+
+  computed: {
+    ...mapGetters({
+      currentProject: 'getCurrentProject',
+    }),
+  },
 };
 </script>
 

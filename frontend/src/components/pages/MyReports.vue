@@ -5,22 +5,18 @@
       <div class="container">
         <div class="columns t-center m-top">
           <div class="column content-report">
-            
+
           <div class="columns">
-            <div class="column is-2">
+            <div class="column is-4">
               <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
             </div>
-            
-            <div class="column is-2">
+
+            <div class="column is-4">
               <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
             </div>
 
-            <div class="column is-2">
-              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Rejected</button>
-            </div>
-            
-            <div class="column">
-              <!-- <input type="text" class="input" placeholder="Search for report" /> -->
+            <div class="column is-4">
+              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Not Approved</button>
             </div>
           </div>
 
@@ -42,9 +38,10 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import HeaderIndex from '../header/Index';
-import ReportItem from '../my-reports/Report';
-import EmptyList from '../my-reports/Empty';
+import router from '@/router/';
+import HeaderIndex from '@/components/header/Index';
+import ReportItem from '@/components/my-reports/Report';
+import EmptyList from '@/components/my-reports/Empty';
 
 export default {
   name: 'MyReports',
@@ -59,7 +56,7 @@ export default {
       descriptions: {
         approved: 'Ups! You have not created any report yet',
         pending: 'Great! All your reports has been approved',
-        rejected: 'Good job! You have no rejected reports',
+        rejected: 'Good job! You have no approved reports',
       },
     };
   },
@@ -73,11 +70,18 @@ export default {
   },
 
   mounted() {
-    this.getReports('approved', 1);
+    if (!this.userIsLogged || !this.userIsMapper) {
+      router.push({ name: 'project', params: { path: this.currentProject.path } });
+    } else {
+      this.getReports('approved', 1);
+    }
   },
 
   computed: mapGetters({
     reports: 'getMyReports',
+    userIsLogged: 'userIsLogged',
+    userIsMapper: 'userIsMapper',
+    currentProject: 'getCurrentProject',
   }),
 
   methods: {
@@ -107,6 +111,10 @@ export default {
 
 .m-top {
   margin-top: 15px;
+}
+
+.container {
+  height: 100vh;
 }
 
 .content-report {
@@ -158,7 +166,7 @@ export default {
     height: 38px;
     border-radius: 21px;
     border: solid 1px #e9e9e9;
-    background: url('../../assets/img/header-search.png') #ffffff no-repeat;
+    background: url('~@/assets/img/header-search.png') #ffffff no-repeat;
     background-position: right 15px top 7px;
     padding-right: 42px;
   }

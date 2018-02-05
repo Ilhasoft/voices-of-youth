@@ -17,7 +17,11 @@ from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportNotification
-from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED, NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_APPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_STATUS_PENDING
+from voicesofyouth.report.models import NOTIFICATION_ORIGIN_COMMENT
+from voicesofyouth.report.models import REPORT_STATUS_APPROVED
 
 
 class ReportsPagination(PageNumberPagination):
@@ -103,6 +107,30 @@ class ReportCommentsViewSet(viewsets.ModelViewSet):
             response = Response({}, status=status.HTTP_204_NO_CONTENT)
         return response or super().list(request, *args, **kwargs)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        comment = serializer.save()
+        headers = self.get_success_headers(serializer.data)
+
+        notification = ReportNotification.objects.filter(report=comment.report).filter(origin=NOTIFICATION_ORIGIN_COMMENT).first()
+
+        if notification is None:
+            ReportNotification.objects.create(
+                status=NOTIFICATION_STATUS_PENDING,
+                read=False,
+                origin=NOTIFICATION_ORIGIN_COMMENT,
+                report=comment.report,
+                created_by=comment.report.created_by,
+                modified_by=comment.report.modified_by,
+            )
+        else:
+            notification.status = NOTIFICATION_STATUS_PENDING
+            notification.read = False
+            notification.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class ReportFilesViewSet(mixins.CreateModelMixin,
                          mixins.ListModelMixin,
@@ -151,14 +179,15 @@ class ReportSearchViewSet(
         project = self.request.query_params.get('project', None)
 
         if query and project:
-            queryset = self.get_queryset().filter(theme__project__id=project).filter(Q(theme__name__icontains=query) |
-                                                                                     Q(name__icontains=query) |
-                                                                                     Q(tagged_items__tag__name__icontains=query)).distinct()
+            queryset = self.get_queryset() \
+                .filter(status=REPORT_STATUS_APPROVED) \
+                .filter(theme__project__id=project) \
+                .filter(Q(theme__name__icontains=query) | Q(name__icontains=query) | Q(tagged_items__tag__name__icontains=query)).distinct()
 
             if len(queryset) > 0:
                 return Response(self.get_serializer(queryset, many=True).data)
 
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({})
 
 
 class ReportNotificationViewSet(
@@ -177,7 +206,7 @@ class ReportNotificationViewSet(
         if len(queryset) > 0:
             return Response(self.get_serializer(queryset, many=True).data)
 
-        return Response({})
+        return Response([])
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)

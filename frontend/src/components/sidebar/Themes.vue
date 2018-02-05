@@ -64,9 +64,9 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import bus from '../../helper/bus';
+import bus from '@/helper/bus';
+import CheckboxItem from '@/components/shared/Checkbox';
 import NavigationBar from './Navigation';
-import CheckboxItem from '../shared/Checkbox';
 
 export default {
   name: 'Themes',

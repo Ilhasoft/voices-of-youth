@@ -27,6 +27,7 @@
                     </div>
                     <div style="padding: 5px;">
                         <img id="current_avatar" src="{{ default_avatar }}" alt="" style="cursor: pointer">
+                        <p><small>{% trans 'Click on the Avatar to choose another' %}</small></p>
                     </div>
                 </div>
             </div>
@@ -37,7 +38,7 @@
 
                     <div id="themes_select">
                         <label for="id_theme">{% trans "Themes" %}:</label>
-                        <select name="themes" id="id_themes" multiple="multiple" required="required" class="chosen-select form-control"></select>
+                        <select name="themes" id="id_themes" multiple="multiple" required="required" class="chosen-select form-control" data-placeholder="{% trans 'Select one or more themes' %}"></select>
                     </div>
                 </div>
                 <div class="modal-footer">

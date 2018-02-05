@@ -106,18 +106,6 @@
                                     </div>
 
                                     <div id="links">
-                                        <!--<div class="form-group">
-                                            <div class="input-group">
-                                                <input type="hidden" name="links[]" value="google.com" id="link_1">
-                                                <input type="text" value="google.com" disabled class="form-control">
-
-                                                <span class="input-group-btn">
-                                                    <button type="button" class="btn btn-default">
-                                                        <em class="fa fa-remove"></em>
-                                                    </button>
-                                                </span>
-                                            </div>
-                                        </div>-->
                                     </div>
                                 </fieldset>
                                 <a href="javascript:" onclick="submitForm()" class="pull-right btn btn-default create">
@@ -143,10 +131,10 @@
     {% leaflet_js plugins="forms" %}
 
     <script type="text/javascript">
-        var linksCount = 0;
-        var mapObject = null;
-        var themeMaps = [];
-        var polygonMap = null;
+        let linksCount = 0;
+        let mapObject = null;
+        const themeMaps = [];
+        let polygonMap = null;
 
         axios.defaults.headers.post = {'X-CSRFToken': '{{ csrf_token }}'};
 
@@ -157,7 +145,7 @@
         $('#id_tags').chosen();
 
         $('#btnAddLink').click(function(e) {
-            var link = $('#id_link').val();
+            const link = $('#id_link').val();
             if (link) {
                 $('#links').append('<div class="form-group" id="link_' + linksCount + '"><div class="input-group"><input type="hidden" name="links[]" value="' + link + '" id="link_check_' + linksCount + '"><input type="text" value="' + link + '" disabled class="form-control"><span class="input-group-btn"><button type="button" onclick="removeLink(' + linksCount + ')" class="btn btn-default"><em class="fa fa-remove"></em></button></span></div></div>');
                 linksCount += 1;
@@ -176,12 +164,12 @@
             $('#link_' + item).empty();
         }
 
-        $('#id_project').change(function (e) {
+        $('#id_project').change(function(e) {
             e.preventDefault();
             loadThemes(e.target.value);
         });
 
-        $('#id_theme').change(function (e) {
+        $('#id_theme').change(function(e) {
             e.preventDefault();
             loadMappers(e.target.value);
             loadThemeBounds(e.target.value);
@@ -198,7 +186,7 @@
 
                 $('#id_theme').empty();
                 $('#id_theme').trigger('chosen:updated');
-                $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
+                $('#id_theme').append('<option value="">{% trans 'Select one theme' %}</option>');
 
                 $('#id_mapper').empty();
                 $('#id_mapper').trigger('chosen:updated');
@@ -211,7 +199,7 @@
                 axios.get('{% url "voy-api:themes-list" %}?project=' + project).then((response) => {
                     $('#id_theme').empty();
                     $('#id_theme').trigger('chosen:updated');
-                    $('#id_theme').append('<option value="">{% trans 'Theme' %}</option>');
+                    $('#id_theme').append('<option value="">{% trans 'Select one theme' %}</option>');
                     response.data.map((item) => {
                         $('#id_theme').append('<option value="' + item.id + '">' + item.name + '</option>');
                         $('#id_theme').trigger('chosen:updated');
@@ -219,14 +207,16 @@
                     });
                 }).then(() => {
                     if (selected) {
-                        $('#id_theme').val(selected);
-                        loadMappers(selected, {{ data_form.mapper.value }});
-                        loadThemeBounds(selected);
+                        window.addEventListener('map:init', function(e) {
+                            $('#id_theme').val(selected);
+                            loadMappers(selected, {{ data_form.mapper.value }});
+                            loadThemeBounds(selected);
+                        });
                     }
                 });
             }).then(() => {
                 {% if selected_tags %}
-                    var tags = [];
+                    const tags = [];
                     {% for tag in selected_tags %}
                         tags.push('{{ tag }}');
                     {% endfor %}
@@ -253,11 +243,7 @@
 
         function loadThemeBounds(themeId) {
             if (themeId) {
-                var theme = themeMaps[themeId];
-                var theme_bounds = theme['coordinates'][0];
-                var bounds = theme_bounds.map((item) => {
-                    return [item[1], item[0]];
-                });
+                const bounds = themeMaps[themeId];
 
                 if (polygonMap) {
                     mapObject.removeLayer(polygonMap);

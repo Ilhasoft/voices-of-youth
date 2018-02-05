@@ -39,7 +39,7 @@
                         <li>
                             <div class="list-group">
                                 {% for notification in notifications|slice:":10" %}
-                                <a href="#" class="list-group-item">
+                                <a href="{% url 'voy-admin:reports:view' notification.report.pk %}{% if notification.origin == 2 %}#comments{% endif %}" class="list-group-item">
                                     <div class="media-box">
                                         <div class="pull-left">
                                             {% if notification.report.last_image %}
@@ -51,14 +51,22 @@
                                             <p class="m0 text-muted">
                                                 <small>
                                                     {% if notification.origin == 1 %}
-                                                        {% trans 'Report to approve' %}
+                                                        {% trans 'New report to evaluate' %}
                                                     {% endif %}
 
                                                     {% if notification.origin == 2 %}
-                                                        {% trans 'New comment to approve' %}
+                                                        {% trans 'New comment to evaluate' %}
                                                     {% endif %}
                                                 </small>
                                             </p>
+                                        </div>
+                                    </div>
+                                </a>
+                                {% empty %}
+                                <a href="#" class="list-group-item">
+                                    <div class="media-box">
+                                        <div class="media-box-body clearfix">
+                                            <p class="m0">{% trans 'Empty notifications' %}</p>
                                         </div>
                                     </div>
                                 </a>

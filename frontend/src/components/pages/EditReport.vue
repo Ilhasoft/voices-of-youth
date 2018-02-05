@@ -5,26 +5,11 @@
     <div class="columns is-marginless">
       <div class="column is-5 sidebar is-paddingless">
         <div class="header">
-          <h1>Add new report</h1>
-          <small>Drag the pin to mark your report</small>
+          <h1>Edit report</h1>
         </div>
 
         <div class="box-form">
           <div class="form">
-            <div class="columns">
-              <div class="column">
-                <label for="select-theme">Select theme</label>
-                <v-select v-model="themeSelected" @input="loadTagsAndUsers" :options="themeOptions"></v-select>
-              </div>
-            </div>
-
-            <div class="columns" v-if="showMappers">
-              <div class="column">
-                <label for="select-mapper">Mapper</label>
-                <v-select v-model="mapperSelected" :options="mappersOptions"></v-select>
-              </div>
-            </div>
-
             <div class="columns">
               <div class="column">
                 <label for="title">Title</label>
@@ -155,6 +140,13 @@ export default {
     'v-marker-cluster': Vue2LeafletMarkerCluster,
   },
 
+  props: {
+    id: {
+      type: Number || String,
+      required: true,
+    },
+  },
+
   data() {
     return {
       selected: null,
@@ -164,14 +156,11 @@ export default {
       description: '',
       link: '',
       location: {},
-      themeSelected: 0,
-      mapperSelected: 0,
-      mappersOptions: [],
       tagsSelected: [],
       tagsOptions: [],
       files: [],
+      filesToRemove: [],
       urls: [],
-      showMappers: false,
 
       marker: null,
       options: { noWrap: true },
@@ -190,7 +179,7 @@ export default {
         shadowAnchor: [22, 94],
       }),
 
-      btnSendName: 'Send report',
+      btnSendName: 'Edit report',
       btnSendDisabled: '',
       polygonMap: null,
     };
@@ -202,33 +191,27 @@ export default {
     } else if (this.userIsMapper === false) {
       router.push({ name: 'project', params: { path: this.currentProject.path } });
     } else {
-      if (this.currentUser.is_admin) {
-        this.showMappers = true;
-        this.getProjectThemes();
-      } else if (this.currentUser.is_mapper) {
-        this.getUserThemes(this.currentUser.id);
-      }
-
       this.$refs.map.mapObject.zoomControl.remove();
       L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
-      this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
-        .addTo(this.$refs.map.mapObject);
-
-      this.marker.on('move', (e) => {
-        this.location = {
-          type: 'Point',
-          coordinates: [e.latlng.lng, e.latlng.lat],
-        };
-
-        this.getGeoLocation({
-          latitude: e.latlng.lat,
-          longitude: e.latlng.lng,
-        }).then((address) => {
-          if (address) {
-            this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
-          }
-        });
+      this.getReport(this.id).then(() => {
+        if (this.report.status !== 3 || this.report.created_by.id !== this.currentUser.id) {
+          router.push({ name: 'my-reports' });
+        } else {
+          this.marker = L.marker(this.report.location.coordinates.reverse(), {
+            icon: this.icon,
+            draggable: false,
+          }).addTo(this.$refs.map.mapObject);
+          this.loadThemeData();
+          this.name = this.report.name;
+          this.description = this.report.description;
+          this.tagsSelected = this.report.tags.map(tag => tag);
+          this.urls = this.report.urls.map(url => url);
+          this.files = this.report.files.map((item) => {
+            const res = { ...item, edit: true };
+            return res;
+          });
+        }
       });
     }
   },
@@ -238,32 +221,33 @@ export default {
       currentUser: 'getUserData',
       userIsLogged: 'userIsLogged',
       userIsMapper: 'userIsMapper',
-      themes: 'getUserThemes',
       currentProject: 'getCurrentProject',
-
+      report: 'getReport',
+      themes: 'getUserThemes',
     }),
-
-    themeOptions() {
-      return this.themes.map((theme) => {
-        const option = {
-          label: theme.name,
-          value: theme.id,
-        };
-        return option;
-      });
-    },
   },
 
   methods: {
     ...mapActions([
-      'getUserThemes',
-      'getProjectThemes',
-      'getUsersByTheme',
-      'saveNewReport',
+      'saveEditReport',
       'saveFiles',
+      'removeFiles',
       'getGeoLocation',
       'notifyOpen',
+      'getReport',
+      'getUserThemes',
     ]),
+
+    loadThemeData() {
+      this.getUserThemes(this.currentUser.id).then(() => {
+        const theme = this.themes.filter(item => item.id === this.report.theme)[0];
+        this.polygonMap = new L.Polygon(theme.bounds);
+        this.polygonMap.setStyle({ color: `#${theme.color}` });
+        this.$refs.map.mapObject.addLayer(this.polygonMap);
+        this.$refs.map.mapObject.fitBounds(this.polygonMap.getBounds());
+        this.tagsOptions = theme.tags.map(tag => tag);
+      });
+    },
 
     openFile() {
       this.$refs.fileInput.click();
@@ -275,20 +259,20 @@ export default {
     },
 
     unlockButtonSend() {
-      this.btnSendName = 'Send report';
+      this.btnSendName = 'Edit report';
       this.btnSendDisabled = false;
     },
 
     cleanForm() {
       this.name = '';
       this.description = '';
-      this.themeSelected = '';
-      this.mapperSelected = '';
       this.tagsSelected = [];
       this.tagsOptions = [];
       this.files = [];
+      this.filesToRemove = [];
       this.urls = [];
       this.notifyOpen({ type: 1, message: 'Report Sent!' });
+      router.push({ name: 'my-reports' });
     },
 
     uploadPreventDefault(e) {
@@ -297,6 +281,9 @@ export default {
     },
 
     removeFile(file) {
+      if (file.edit) {
+        this.filesToRemove.push(file.id);
+      }
       this.files.splice(this.files.indexOf(file), 1);
     },
 
@@ -329,73 +316,48 @@ export default {
       this.urls.splice(this.urls.indexOf(url), 1);
     },
 
-    loadTagsAndUsers(select) {
-      if (select) {
-        this.tagsSelected = [];
-        const data = this.themes.filter(item => item.id === select.value);
-
-        if (data.length > 0) {
-          const theme = data[0];
-          this.tagsOptions = theme.tags.map(tag => tag);
-
-          if (this.polygonMap) {
-            this.$refs.map.mapObject.removeLayer(this.polygonMap);
-          }
-
-          if (theme) {
-            this.polygonMap = new L.Polygon(theme.bounds);
-            this.polygonMap.setStyle({ color: `#${theme.color}` });
-            this.$refs.map.mapObject.addLayer(this.polygonMap);
-            this.$refs.map.mapObject.fitBounds(this.polygonMap.getBounds());
-            this.marker.setLatLng(this.polygonMap.getBounds().getCenter());
-          }
-        }
-
-        if (this.currentUser.is_admin && this.themeSelected.value > 0) {
-          this.getUsersByTheme(this.themeSelected.value).then((users) => {
-            this.mappersOptions = users.map((user) => {
-              const option = {
-                label: user.username,
-                value: user.id,
-              };
-              return option;
-            });
-          });
-        }
-      }
-    },
-
     saveReport() {
-      if (this.name && this.description && this.themeSelected && this.location) {
+      if (this.name && this.description) {
         this.lockButtonSend();
 
         const dataToSave = {
+          id: this.report.id,
           name: this.name,
           description: this.description,
-          theme: this.themeSelected.value,
+          theme: this.report.theme,
+          location: {
+            type: 'Point',
+            coordinates: this.report.location.coordinates.reverse(),
+          },
           tags: this.tagsSelected,
-          location: this.location,
           urls: this.urls,
         };
 
-        if (this.currentUser.is_admin) {
-          dataToSave.mapper_id = this.mapperSelected.value;
-        }
-
-        this.saveNewReport(dataToSave).then((data) => {
-          if (this.files.length > 0) {
-            const promiseAll = this.files.map((file) => {
+        this.saveEditReport(dataToSave).then((data) => {
+          if (this.files.length > 0 || this.filesToRemove.length > 0) {
+            const promiseFiles = this.files.map((file) => {
               const promiseUpload = new Promise((resolve, reject) => {
-                this.saveFiles({
-                  id: data.id,
-                  file: file.item[0],
-                }).then(() => resolve(),
-                ).catch(() => reject());
+                if (file.item !== undefined) {
+                  this.saveFiles({
+                    id: data.id,
+                    file: file.item[0],
+                  }).then(() => resolve(),
+                  ).catch(() => reject());
+                }
               });
               return promiseUpload;
             });
 
-            Promise.all(promiseAll).then(() => {
+            const promiseFilesToRemove = this.filesToRemove.map((fileId) => {
+              const promiseRemove = new Promise((resolve, reject) => {
+                this.removeFiles(fileId)
+                .then(() => resolve())
+                .catch(() => reject());
+              });
+              return promiseRemove;
+            });
+
+            Promise.all([promiseFiles, promiseFilesToRemove]).then(() => {
               this.cleanForm();
               this.unlockButtonSend();
             });
@@ -410,7 +372,7 @@ export default {
     },
 
     closeForm() {
-      router.push({ name: 'project', params: { path: this.currentProject.path } });
+      router.push({ name: 'my-reports' });
     },
   },
 };

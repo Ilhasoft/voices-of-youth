@@ -4,7 +4,6 @@
 {% block extracss %}
     {{ block.super }}
     <link rel="stylesheet" href="{% sass_src 'css/user/user_base.scss' %}" type="text/css">
-    <!-- <link rel="stylesheet" href="{% static 'vendor/chosen/1.8.2/chosen.min.css' %}"> -->
     <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
 {% endblock %}
 
@@ -16,7 +15,6 @@
 
 {% block extrajs %}
     {{ block.super }}
-    <!-- <script src="{% static 'vendor/chosen/1.8.2/chosen.jquery.min.js' %}"></script> -->
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script>
         axios.defaults.headers.common = {'X-CSRFToken': '{{ csrf_token }}'};

@@ -6,11 +6,16 @@ from rest_framework import serializers
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer
 
-from voicesofyouth.report.models import Report, FILE_TYPE_IMAGE, FILE_TYPE_VIDEO, REPORT_COMMENT_STATUS_PENDING
+from voicesofyouth.report.models import Report
 from voicesofyouth.report.models import ReportComment
 from voicesofyouth.report.models import ReportFile
 from voicesofyouth.report.models import ReportURL
 from voicesofyouth.report.models import ReportNotification
+from voicesofyouth.report.models import FILE_TYPE_IMAGE
+from voicesofyouth.report.models import FILE_TYPE_VIDEO
+from voicesofyouth.report.models import REPORT_COMMENT_STATUS_PENDING
+from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
+from voicesofyouth.report.models import NOTIFICATION_ORIGIN_REPORT
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import User
 
@@ -68,6 +73,7 @@ class ReportSerializer(VoySerializer):
     pin = serializers.SerializerMethodField(read_only=True)
     urls = serializers.StringRelatedField(many=True, read_only=True)
     files = ReportFilesSerializer(many=True, read_only=True)
+    last_notification = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Report
@@ -88,7 +94,8 @@ class ReportSerializer(VoySerializer):
             'last_image',
             'status',
             'urls',
-            'files'
+            'files',
+            'last_notification',
         )
 
     def validate(self, data):
@@ -103,6 +110,16 @@ class ReportSerializer(VoySerializer):
         if hasattr(obj, 'theme'):
             request = self.context['request']
             return request.build_absolute_uri(f'{settings.PIN_URL}{obj.theme.color}.png')
+
+    def get_last_notification(self, obj):
+        notification = ReportNotification.objects.filter(**{
+            'report': obj,
+            'status': NOTIFICATION_STATUS_NOTAPPROVED,
+            'origin': NOTIFICATION_ORIGIN_REPORT
+        }).first()
+        if hasattr(notification, 'message'):
+            return notification.message
+        return ''
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save(status=REPORT_COMMENT_STATUS_PENDING)

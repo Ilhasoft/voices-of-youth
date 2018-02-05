@@ -249,5 +249,4 @@ else:
     def noop(*args, **kwargs):
         pass
 
-
     Migration.operations.append(migrations.RunPython(noop))
