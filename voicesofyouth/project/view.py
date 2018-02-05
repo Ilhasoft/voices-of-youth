@@ -121,6 +121,7 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             project.local_admin_group.user_set.add(*form.cleaned_data.get('local_admin'))
             project.save()
 
+            project.translations.all().delete()
             for translation in form.cleaned_data.get('translations'):
                 translation.object_id = project.id
                 translation.save()
