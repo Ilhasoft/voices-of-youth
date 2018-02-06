@@ -51,6 +51,7 @@ class TranslationsField(forms.CharField):
 
     def prepare_value(self, value):
         if not value: return json.dumps({})
+        if isinstance(value, str): return value
 
         r = {}
         for language, in value.values_list('language').distinct():
