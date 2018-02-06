@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 voicesofyouth/media/*
 !voicesofyouth/media/users/avatars/
 !voicesofyouth/media/pins/pin_base.png
@@ -150,6 +151,10 @@ fabric.properties
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
+=======
+# Byte-compiled / optimized / DLL files
+__pycache__/
+>>>>>>> 318816aa0b3713a4da7ca261f358dda6ff96f21d
 *.py[cod]
 *$py.class
 
@@ -158,6 +163,10 @@ fabric.properties
 
 # Distribution / packaging
 .Python
+<<<<<<< HEAD
+=======
+env/
+>>>>>>> 318816aa0b3713a4da7ca261f358dda6ff96f21d
 build/
 develop-eggs/
 dist/
@@ -197,8 +206,11 @@ coverage.xml
 
 # Translations
 *.mo
+*.pot
 
 # Django stuff:
+*.log
+local_settings.py
 
 # Flask stuff:
 instance/
@@ -225,6 +237,7 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
+<<<<<<< HEAD
 # Environments
 .venv
 env/
@@ -232,6 +245,15 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+=======
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+>>>>>>> 318816aa0b3713a4da7ca261f358dda6ff96f21d
 
 # Spyder project settings
 .spyderproject
@@ -245,6 +267,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+<<<<<<< HEAD
 
 # End of https://www.gitignore.io/api/git,node,python,django,pycharm
 *.out
@@ -265,3 +288,5 @@ venv.bak/
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
 dev_watcher.sh
+=======
+>>>>>>> 318816aa0b3713a4da7ca261f358dda6ff96f21d

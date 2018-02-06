@@ -10,6 +10,7 @@ from django.utils import timezone
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.project.forms import ProjectForm
+from voicesofyouth.project.forms import ProjectTranslationForm
 
 
 class ProjectView(LoginRequiredMixin, TemplateView):
@@ -75,6 +76,10 @@ class AddProjectView(LoginRequiredMixin, TemplateView):
             project.tags.add(*form.cleaned_data.get('tags').split(','))
             project.local_admin_group.user_set.add(*form.cleaned_data.get('local_admin'))
 
+            for translation in form.cleaned_data.get('translations'):
+                translation.object_id = project.id
+                translation.save()
+
             messages.success(request, _('Project created'))
             return redirect(reverse('voy-admin:projects:index'))
         else:
@@ -98,6 +103,7 @@ class AddProjectView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['data_form'] = ProjectForm()
+        context['translate_data_form'] = ProjectTranslationForm(prefix='translate')
         return context
 
 
@@ -125,6 +131,11 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             project.local_admin_group.user_set.remove(*project.local_admin_group.user_set.all())
             project.local_admin_group.user_set.add(*form.cleaned_data.get('local_admin'))
             project.save()
+
+            project.translations.all().delete()
+            for translation in form.cleaned_data.get('translations'):
+                translation.object_id = project.id
+                translation.save()
 
             messages.success(request, _('Project edited'))
             return redirect(reverse('voy-admin:projects:index'))
@@ -159,13 +170,16 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             'language': project.language,
             'bounds': project.bounds,
             'thumbnail': project.thumbnail,
-            'enabled': project.enabled
+            'enabled': project.enabled,
+            'translations': project.translations.all()
         }
 
         context['editing'] = True
         context['selected_tags'] = project.all_tags
         context['selected_local_admins'] = project.local_admin_group.user_set.all().values_list('id', 'username')
         context['data_form'] = ProjectForm(initial=data)
+
+        context['translate_data_form'] = ProjectTranslationForm(prefix='translate')
         context['project'] = project
 
         return context

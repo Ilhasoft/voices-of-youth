@@ -38,7 +38,7 @@
 })(window, document, window.jQuery);
 
 // CLASSYLOADER
-// ----------------------------------- 
+// -----------------------------------
 
 (function(window, document, $, undefined){
 
@@ -48,12 +48,12 @@
         inViewFlagClass = 'js-is-in-view'; // a classname to detect when a chart has been triggered after scroll
 
     $('[data-classyloader]').each(initClassyLoader);
-    
+
     function initClassyLoader() {
-    
+
       var $element = $(this),
           options  = $element.data();
-      
+
       // At lease we need a data-percentage attribute
       if(options) {
         if( options.triggerInView ) {
@@ -84,7 +84,7 @@
 })(window, document, window.jQuery);
 
 // GLOBAL CONSTANTS
-// ----------------------------------- 
+// -----------------------------------
 
 
 (function(window, document, $, undefined){
@@ -107,7 +107,7 @@
     'gray-light':             '#e4eaec',
     'gray-lighter':           '#edf1f2'
   };
-  
+
   window.APP_MEDIAQUERY = {
     'desktopLG':             1200,
     'desktop':                992,
@@ -133,7 +133,7 @@
 
       updateTime();
       setInterval(updateTime, 1000);
-    
+
     });
   });
 
@@ -148,13 +148,13 @@
  =========================================================*/
 (function($, window, document){
   'use strict';
-  
+
   var panelSelector = '[data-tool="panel-dismiss"]',
       removeEvent   = 'panel.remove',
       removedEvent  = 'panel.removed';
 
   $(document).on('click', panelSelector, function () {
-    
+
     // find the first parent panel
     var parent = $(this).closest('.panel');
     var deferred = new $.Deferred();
@@ -173,7 +173,7 @@
 
     function destroyPanel() {
       var col = parent.parent();
-      
+
       $.when(parent.trigger(removedEvent, [parent]))
        .done(function(){
           parent.remove();
@@ -186,7 +186,7 @@
           }).remove();
        });
 
-      
+
 
     }
 
@@ -216,7 +216,7 @@
         collapseOpts = {toggle: false},
         iconElement  = $this.children('em'),
         panelId      = parent.attr('id');
-    
+
     // if wrapper not added, add it
     // we need a wrapper to avoid jumping due to the paddings
     if( ! wrapper.length) {
@@ -253,7 +253,7 @@
 
   // finally catch clicks to toggle panel collapse
   $(document).on('click', panelSelector, function () {
-    
+
     var parent = $(this).closest('.panel');
     var wrapper = parent.find('.panel-wrapper');
 
@@ -537,7 +537,7 @@
 })(window, document, window.jQuery);
 
 // SLIMSCROLL
-// ----------------------------------- 
+// -----------------------------------
 
 (function(window, document, $, undefined){
 
@@ -547,18 +547,18 @@
 
       var element = $(this),
           defaultHeight = 250;
-      
+
       element.slimScroll({
           height: (element.data('height') || defaultHeight)
       });
-      
+
     });
   });
 
 })(window, document, window.jQuery);
 
 // Custom jQuery
-// ----------------------------------- 
+// -----------------------------------
 
 
 (function(window, document, $, undefined){
@@ -724,7 +724,7 @@
 
       if(!message)
         $.error('Notify: No message specified');
-     
+
       $.notify(message, options || {});
   }
 
@@ -732,20 +732,20 @@
 }(jQuery, window, document));
 
 (function($, window, document){
-  
+
       var containers = {},
           messages   = {},
-  
+
           notify     =  function(options){
-  
+
               if ($.type(options) == 'string') {
                   options = { message: options };
               }
-  
+
               if (arguments[1]) {
                   options = $.extend(options, $.type(arguments[1]) == 'string' ? {status:arguments[1]} : arguments[1]);
               }
-  
+
               return (new Message(options)).show();
           },
           closeAll  = function(group, instantly){
@@ -755,13 +755,13 @@
                   for(var id in messages) { messages[id].close(instantly); }
               }
           };
-  
+
       var Message = function(options){
-  
+
           var $this = this;
-  
+
           this.options = $.extend({}, Message.defaults, options);
-  
+
           this.uuid    = "ID"+(new Date().getTime())+"RAND"+(Math.ceil(Math.random() * 100000));
           this.element = $([
               // alert-dismissable enables bs close icon
@@ -769,79 +769,79 @@
                   '<a class="close">&times;</a>',
                   '<div>'+this.options.message+'</div>',
               '</div>'
-  
+
           ].join('')).data("notifyMessage", this);
-  
+
           // status
           if (this.options.status) {
               this.element.addClass('alert alert-'+this.options.status);
               this.currentstatus = this.options.status;
           }
-  
+
           this.group = this.options.group;
-  
+
           messages[this.uuid] = this;
-  
+
           if(!containers[this.options.pos]) {
               containers[this.options.pos] = $('<div class="uk-notify uk-notify-'+this.options.pos+'"></div>').appendTo('body').on("click", ".uk-notify-message", function(){
                   $(this).data("notifyMessage").close();
               });
           }
       };
-  
-  
+
+
       $.extend(Message.prototype, {
-  
+
           uuid: false,
           element: false,
           timout: false,
           currentstatus: "",
           group: false,
-  
+
           show: function() {
-  
+
               if (this.element.is(":visible")) return;
-  
+
               var $this = this;
-  
+
               containers[this.options.pos].show().prepend(this.element);
-  
+
               var marginbottom = parseInt(this.element.css("margin-bottom"), 10);
-  
+
               this.element.css({"opacity":0, "margin-top": -1*this.element.outerHeight(), "margin-bottom":0}).animate({"opacity":1, "margin-top": 0, "margin-bottom":marginbottom}, function(){
-  
+
                   if ($this.options.timeout) {
-  
+
                       var closefn = function(){ $this.close(); };
-  
+
                       $this.timeout = setTimeout(closefn, $this.options.timeout);
-  
+
                       $this.element.hover(
                           function() { clearTimeout($this.timeout); },
                           function() { $this.timeout = setTimeout(closefn, $this.options.timeout);  }
                       );
                   }
-  
+
               });
-  
+
               return this;
           },
-  
+
           close: function(instantly) {
-  
+
               var $this    = this,
                   finalize = function(){
                       $this.element.remove();
-  
+
                       if(!containers[$this.options.pos].children().length) {
                           containers[$this.options.pos].hide();
                       }
-  
+
                       delete messages[$this.uuid];
                   };
-  
+
               if(this.timeout) clearTimeout(this.timeout);
-  
+
               if(instantly) {
                   finalize();
               } else {
@@ -850,34 +850,34 @@
                   });
               }
           },
-  
+
           content: function(html){
-  
+
               var container = this.element.find(">div");
-  
+
               if(!html) {
                   return container.html();
               }
-  
+
               container.html(html);
-  
+
               return this;
           },
-  
+
           status: function(status) {
-  
+
               if(!status) {
                   return this.currentstatus;
               }
-  
+
               this.element.removeClass('alert alert-'+this.currentstatus).addClass('alert alert-'+status);
-  
+
               this.currentstatus = status;
-  
+
               return this;
           }
       });
-  
+
       Message.defaults = {
           message: "",
           status: "normal",
@@ -885,15 +885,99 @@
           group: null,
           pos: 'top-center'
       };
-  
-  
+
+
       $["notify"]          = notify;
       $["notify"].message  = Message;
       $["notify"].closeAll = closeAll;
-  
+
       return notify;
-  
+
   }(jQuery, window, document));
+
+(function ($){
+    function TranslateInput($input, $translate_form, $language_input) {
+        var self = this;
+
+        this.$input = $input;
+        this.$translate_form = $translate_form;
+        this.$language_input = $language_input;
+        this.onClick = null;
+
+        this.$input.hide();
+        this.$itemsList = $('<div class="bootstrap-tagsinput"></div>');
+        this.$input.after(this.$itemsList);
+
+        this.value = this.$input.val() ? JSON.parse(this.$input.val()) : {};
+        this.updateVal();
+
+        this.$language_input.change(function () {
+            var language = self.$language_input.val();
+            var language_data = self.value[language];
+
+            if (!language_data) {
+                self.$translate_form.trigger('reset');
+                self.$language_input.val(language);
+            }
+
+            (language_data || { fields: [] }).fields.forEach(function (field) {
+                self.$translate_form.find('[name=' + field.name + ']').val(field.value);
+            });
+        });
+        this.$language_input.change();
+    }
+    TranslateInput.prototype.createItems = function () {
+        var self = this;
+
+        return Object.keys(this.value).map(function (language) {
+            var data = self.value[language];
+            var $item = $('<span class="tag clickable label label-info">' + (data.label || language) + '</span>');
+            var $remove = $('<span data-role="remove"></span>');
+            $item.append($remove);
+
+            $item.click(function () {
+                self.$language_input.val(language).change();
+                if (self.onItemClick) self.onItemClick();
+            });
+
+            $remove.click(function () {
+                delete self.value[language];
+                self.updateVal();
+                return false;
+            });
+
+            return $item;
+        });
+    };
+    TranslateInput.prototype.updateVal = function () {
+        this.$input.val(JSON.stringify(this.value));
+        this.$itemsList.html(this.createItems());
+    };
+    TranslateInput.prototype.itemClick = function (fn) {
+        this.onItemClick = fn;
+    };
+    TranslateInput.prototype.save = function () {
+        var language = this.$language_input.val();
+        var language_data = this.$translate_form.serializeArray();
+
+        this.value[language] = {
+            label: this.$language_input.find(":selected").text(),
+            fields: language_data,
+        };
+        this.updateVal();
+    };
+
+    $.fn.translateinput = function (arg1, arg2) {
+        var translateinput = $(this).data('translateinput');
+
+        if (!translateinput) {
+            translateinput = new TranslateInput(this, arg1, arg2);
+            $(this).data('translateinput', translateinput);
+        } else {
+            translateinput[arg1](arg2);
+        }
+    }
+})(jQuery);
 
 (function(window, document, $, undefined){
 

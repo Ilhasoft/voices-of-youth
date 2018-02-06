@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% sass_src 'css/project/project.scss' %}">
     <link rel="stylesheet" href="{% static 'vendor/chosen_v1.2.0/chosen.min.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/select2/dist/css/select2.css' %}">
     {% leaflet_css plugins="forms" %}
 {% endblock %}
 
@@ -27,6 +28,9 @@
 
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <div class="form-group text-right">
+                                            <button id="new_translate_btn" type="button" class="btn btn-oval btn-translate">{% trans 'Translate' %}</button>
+                                        </div>
                                         <div class="form-group {% if data_form.name.errors %}has-error{% endif %}">
                                             <label>{% trans 'Name' %}</label>
                                             {{ data_form.name }}
@@ -83,6 +87,12 @@
                                             {{ data_form.local_admin.errors }}
                                         </div>
 
+                                        <div class="form-group {% if data_form.translations.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Languages' %}</label>
+                                            {{ data_form.translations }}
+                                            {{ data_form.translations.errors }}
+                                        </div>
+
                                         <a href="javascript:"
                                            onclick="submitForm()"
                                            class="pull-right btn btn-oval btn-new-project">
@@ -103,11 +113,58 @@
             </form>
         </div>
     </section>
+
+    <!-- translate-modal -->
+    <div id="translate-modal">
+        <div class="opacity"></div>
+        <div class="content-modal">
+            <fieldset>
+                <div class="row">
+                    <div class="col-md-12 text-center pt-10">
+                        <h4>{% trans 'Translate to' %}</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group {% if translate_data_form.language.errors %}has-error{% endif %}">
+                            <label>{% trans 'Language' %}</label>
+                            {{ translate_data_form.language }}
+                            {{ translate_data_form.language.errors }}
+                        </div>
+
+                        <form action="" id="translate_form">
+                            <div class="form-group {% if translate_data_form.name.errors %}has-error{% endif %}">
+                                <label>{% trans 'Name' %}</label>
+                                {{ translate_data_form.name }}
+                                {{ translate_data_form.name.errors }}
+                            </div>
+
+                            <div class="form-group {% if translate_data_form.description.errors %}has-error{% endif %}">
+                                <label>{% trans 'Description' %}</label>
+                                {{ translate_data_form.description }}
+                                {{ translate_data_form.description.errors }}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 buttons text-right">
+                        <a href="javascript:;" class="btn btn-default cancel"
+                            id="close_translate_modal">{% trans 'Cancel' %}</a>
+                        <a href="javascript:;" id="translate_save" class="btn btn-default save">{% trans 'Save' %}</a>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block extrajs %}
     <script src="{% static 'vendor/chosen_v1.2.0/chosen.jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
+    <script src="{% static 'vendor/select2/dist/js/select2.js' %}"></script>
     {% leaflet_js plugins="forms" %}
 
     <script type="text/javascript">
@@ -134,5 +191,32 @@
         function submitForm() {
             $('#form-project').submit();
         }
+
+        $('#id_language').select2();
+
+        $('#id_translations').translateinput(
+            $('#translate_form'),
+            $('#id_translate-language'),
+        );
+        $('#id_translations').translateinput('itemClick', function () {
+            $('#translate-modal').show();
+        });
+
+        $('#translate_save').click(function () {
+            $('#id_translations').translateinput('save');
+            $('#translate-modal').hide();
+        });
+
+        $('#close_translate_modal').click(function () {
+            $('#translate-modal').hide();
+        });
+
+        $('#new_translate_btn').click(function () {
+            $('#translate-modal').show();
+            $('#id_translate-language')
+                .select2()
+                .val($("#id_translate-language option:first").val())
+                .change();
+        });
     </script>
 {% endblock %}
