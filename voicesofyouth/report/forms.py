@@ -116,8 +116,14 @@ class ReportForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
         super(ReportForm, self).__init__(*args, **kwargs)
-        self.fields['project'].queryset = Project.objects.all()
+
+        if self.user.is_global_admin:
+            self.fields['project'].queryset = Project.objects.all()
+        else:
+            self.fields['project'].queryset = self.user.projects.all()
+
         self.fields['tags'].choices = Tag.objects.all().values_list('name', 'name')
 
     def clean_location(self):
@@ -127,7 +133,7 @@ class ReportForm(forms.Form):
             msg = _(f'You cannot create a report outside the theme bounds.')
             raise forms.ValidationError(msg)
 
-        return self.cleaned_data
+        return self.cleaned_data['location']
 
 
 class ReportFilterForm(forms.Form):
