@@ -338,7 +338,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             context['remove_files'] = request.POST.getlist('remove_files[]')
             context['selected_links'] = request.POST.getlist('links[]')
 
-            messages.error(request, form.non_field_errors())
+            messages.error(request, form.errors.get('location'))
             return render(request, self.template_name, context)
 
         return self.get(request)

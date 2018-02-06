@@ -5,6 +5,7 @@ from leaflet.forms.fields import PointField
 
 from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 from voicesofyouth.project.models import Project
+from voicesofyouth.theme.models import Theme
 from voicesofyouth.tag.models import Tag
 
 
@@ -118,6 +119,15 @@ class ReportForm(forms.Form):
         super(ReportForm, self).__init__(*args, **kwargs)
         self.fields['project'].queryset = Project.objects.all()
         self.fields['tags'].choices = Tag.objects.all().values_list('name', 'name')
+
+    def clean_location(self):
+        theme_id = self.cleaned_data['theme']
+        theme = Theme.objects.get(id=theme_id)
+        if not theme.bounds.contains(self.cleaned_data['location']):
+            msg = _(f'You cannot create a report outside the theme bounds.')
+            raise forms.ValidationError(msg)
+
+        return self.cleaned_data
 
 
 class ReportFilterForm(forms.Form):
