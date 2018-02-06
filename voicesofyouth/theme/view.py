@@ -12,6 +12,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.theme.models import THEMES_COLORS
 from voicesofyouth.theme.forms import ThemeForm
+from voicesofyouth.theme.forms import ThemeTranslationForm
 
 
 class ThemeView(LoginRequiredMixin, TemplateView):
@@ -54,6 +55,10 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
             theme.tags.add(*form.cleaned_data.get('tags'))
             theme.mappers_group.user_set.add(*form.cleaned_data.get('mappers_group'))
 
+            for translation in form.cleaned_data.get('translations'):
+                translation.object_id = theme.id
+                translation.save()
+
             messages.success(request, _('Theme created'))
             return redirect(reverse('voy-admin:themes:index', kwargs={'project': theme.project.id}))
         else:
@@ -75,6 +80,7 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
         context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(project=context['project'])
         context['colors'] = THEMES_COLORS
+        context['translate_data_form'] = ThemeTranslationForm(prefix='translate')
 
         return context
 
@@ -106,6 +112,11 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
             theme.mappers_group.user_set.remove(*theme.mappers_group.user_set.all())
             theme.mappers_group.user_set.add(*form.cleaned_data.get('mappers_group'))
             theme.save()
+
+            theme.translations.all().delete()
+            for translation in form.cleaned_data.get('translations'):
+                translation.object_id = theme.id
+                translation.save()
 
             messages.success(request, _('Theme edited'))
             return redirect(reverse('voy-admin:themes:index', kwargs={'project': theme.project.id}))
@@ -154,5 +165,6 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
         context['project_bounds'] = json.loads(GEOSGeometry(context['project'].bounds).json)['coordinates']
         context['data_form'] = ThemeForm(initial=data, project=context['project'])
         context['colors'] = THEMES_COLORS
+        context['translate_data_form'] = ThemeTranslationForm(prefix='translate')
 
         return context
