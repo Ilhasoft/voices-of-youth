@@ -251,7 +251,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
             context['selected_tags'] = request.POST.getlist('tags')
             context['selected_links'] = request.POST.getlist('links[]')
 
-            messages.error(request, form.non_field_errors())
+            messages.error(request, form.errors.get('location'))
             return render(request, self.template_name, context)
 
         return self.get(request)
