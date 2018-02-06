@@ -18,6 +18,16 @@ from voicesofyouth.theme.forms import ThemeTranslationForm
 class ThemeView(LoginRequiredMixin, TemplateView):
     template_name = 'theme/index.html'
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        user = self.request.user
+
+        if user.is_local_admin and context['project'] not in user.projects:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project_id = kwargs['project']
@@ -71,6 +81,15 @@ class AddThemeView(LoginRequiredMixin, TemplateView):
             return render(request, self.template_name, context)
 
         return self.get(request)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        user = self.request.user
+        if user.is_local_admin and context['project'] not in user.projects:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -130,6 +149,15 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
             return render(request, self.template_name, context)
 
         return self.get(request)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        user = self.request.user
+        if user.is_local_admin and context['project'] not in user.projects:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

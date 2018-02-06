@@ -5,7 +5,7 @@ from django.db.utils import IntegrityError
 from django.http.response import HttpResponse
 from django.http.response import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls.base import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic.base import TemplateView
@@ -88,6 +88,12 @@ class AdminListView(LoginRequiredMixin, TemplateView):
 
     def get(self, request):
         context = self.get_context_data(request=request)
+
+        user = self.request.user
+        if user.is_local_admin:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:dashboard'))
+
         qs = AdminUser.objects.all()
         page = request.GET.get('page')
         search = request.GET.get('search')

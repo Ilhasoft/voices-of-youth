@@ -35,6 +35,15 @@ from voicesofyouth.report.forms import ReportForm
 class ReportListView(LoginRequiredMixin, TemplateView):
     template_name = 'report/index.html'
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        user = self.request.user
+        if user.is_local_admin and context['theme'].project not in user.projects:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         theme_id = kwargs['theme']
@@ -189,7 +198,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        form = ReportForm(data=request.POST)
+        form = ReportForm(data=request.POST, user=request.user)
 
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
@@ -251,14 +260,19 @@ class AddReportView(LoginRequiredMixin, TemplateView):
             context['selected_tags'] = request.POST.getlist('tags')
             context['selected_links'] = request.POST.getlist('links[]')
 
-            messages.error(request, form.non_field_errors())
+            messages.error(request, form.errors.get('location'))
             return render(request, self.template_name, context)
 
         return self.get(request)
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['data_form'] = ReportForm(data=None, user=self.request.user)
+
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['data_form'] = ReportForm()
         return context
 
 
@@ -266,7 +280,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        form = ReportForm(data=request.POST)
+        form = ReportForm(data=request.POST, user=self.request.user)
 
         if form.is_valid():
             try:
@@ -338,17 +352,23 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             context['remove_files'] = request.POST.getlist('remove_files[]')
             context['selected_links'] = request.POST.getlist('links[]')
 
-            messages.error(request, form.non_field_errors())
+            messages.error(request, form.errors.get('location'))
             return render(request, self.template_name, context)
 
         return self.get(request)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        context['data_form'] = ReportForm(initial=context['data'], user=self.request.user)
+
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         report_id = self.kwargs['report']
         report = get_object_or_404(Report, pk=report_id)
 
-        data = {
+        context['data'] = {
             'title': report.name,
             'description': report.description,
             'project': report.theme.project.id,
@@ -361,9 +381,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         context['editing'] = True
         context['selected_tags'] = report.tags.names()
         context['selected_links'] = report.urls.all()
-
         context['files_list'] = report.files.all()
-        context['data_form'] = ReportForm(initial=data)
         return context
 
 
@@ -373,6 +391,15 @@ class PendingReportView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         page = self.request.GET.get('page')
-        context['reports'] = get_paginator(Report.objects.filter(status=REPORT_STATUS_PENDING), page)
+
+        user = self.request.user
+        reports = None
+
+        if user.is_global_admin:
+            reports = Report.objects.filter(status=REPORT_STATUS_PENDING)
+        else:
+            reports = Report.objects.filter(status=REPORT_STATUS_PENDING).filter(theme__in=user.themes)
+
+        context['reports'] = get_paginator(reports, page)
 
         return context

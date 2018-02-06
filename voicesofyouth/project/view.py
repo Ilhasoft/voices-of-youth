@@ -44,10 +44,12 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         if query:
             project_filter['name__icontains'] = query
 
-        if project_filter:
+        user = self.request.user
+
+        if user.is_global_admin:
             context['projects'] = Project.objects.filter(**project_filter).order_by('-created_on')
         else:
-            context['projects'] = Project.objects.all().order_by('-created_on')
+            context['projects'] = user.projects.filter(**project_filter).order_by('-created_on')
 
         return context
 
@@ -88,6 +90,15 @@ class AddProjectView(LoginRequiredMixin, TemplateView):
             return render(request, self.template_name, context)
 
         return self.get(request)
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        user = self.request.user
+        if user.is_local_admin:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -137,6 +148,15 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
 
         return self.get(request)
 
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        user = self.request.user
+        if user.is_local_admin and context['project'] not in user.projects:
+            messages.error(request, _('Access denied'))
+            return redirect(reverse('voy-admin:projects:index'))
+
+        return render(request, self.template_name, context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -158,6 +178,8 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
         context['selected_tags'] = project.all_tags
         context['selected_local_admins'] = project.local_admin_group.user_set.all().values_list('id', 'username')
         context['data_form'] = ProjectForm(initial=data)
+
         context['translate_data_form'] = ProjectTranslationForm(prefix='translate')
+        context['project'] = project
 
         return context
