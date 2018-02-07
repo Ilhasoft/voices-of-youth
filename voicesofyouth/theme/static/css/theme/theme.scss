@@ -31,7 +31,7 @@ $color_delete: #DE486B;
             padding: 28px 0px 28px;
 
             a {
-                width: 70%;
+                width: 100%;
             }
 
             .btn.btn-default {
@@ -71,10 +71,9 @@ $color_delete: #DE486B;
         }
 
         #colors {
-            padding-right: 15px;
-            padding-left: 15px;
             display: flex;
             flex-direction: row;
+            flex-flow: wrap;
 
             .color {
                 height: 24px;
