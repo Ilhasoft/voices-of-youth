@@ -41,7 +41,8 @@
         <div class="text-center">
             <a href="{% url 'voy-admin:reports:view' report.pk %}"
                class="btn btn-oval btn-default view">{% trans 'View' %}</a>
-            <p class="comments">{{ report.comments_views.count }} {% trans 'comments' %}</p>
+            <p class="comments-total">{{ report.comments_views.count }} {% trans 'comments' %}</p>
+            <p class="comments">{{ report.comments.pending.count }} {% trans 'pending comments' %}</p>
         </div>
     </div>
 </div>
