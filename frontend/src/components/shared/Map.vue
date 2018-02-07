@@ -12,7 +12,7 @@ import { mapGetters, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-import bus from '@/helper/bus';
+// import bus from '@/helper/bus';
 
 export default {
   name: 'Map',
@@ -47,24 +47,31 @@ export default {
   mounted() {
     this.$refs.map.mapObject.zoomControl.remove();
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
-
-    bus.$on('openReport', (item) => {
-      this.$refs.map.mapObject.setView({
-        lat: item.location.coordinates[1],
-        lng: item.location.coordinates[0],
-      });
-      this.getReport(item.id);
-    });
   },
 
-  computed: mapGetters({
-    reports: 'getReportsPins',
-  }),
+  computed: {
+    ...mapGetters({
+      reports: 'getReportsPins',
+      report: 'getReport',
+    }),
+  },
+
+  // watch: {
+  //   reports() {
+  //     const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
+  //     this.$refs.map.mapObject.flyToBounds(bounds);
+  //   },
+  // },
 
   watch: {
-    reports() {
-      const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
-      this.$refs.map.mapObject.flyToBounds(bounds);
+    report() {
+      if (this.report && this.report.location) {
+        const moveTo = L.latLng(
+          this.report.location.coordinates[1],
+          this.report.location.coordinates[0],
+        );
+        this.$refs.map.mapObject.flyTo(moveTo, this.$refs.map.mapObject.getZoom());
+      }
     },
   },
 
@@ -79,9 +86,7 @@ export default {
         tabActived: 'ReportDetail',
         isActived: true,
       }).then(() => {
-        const marker = JSON.parse(JSON.stringify(item));
         if (this.$refs.map) {
-          this.$refs.map.mapObject.setView(marker.latlng);
           this.getReport(item.id);
         }
       });

@@ -61,7 +61,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import bus from '@/helper/bus';
 import NavigationBar from './Navigation';
 
 export default {
@@ -110,7 +109,7 @@ export default {
         tabActived: 'ReportDetail',
         isActived: true,
       }).then(() => {
-        bus.$emit('openReport', item);
+        this.getReport(item.id);
       });
     },
   },

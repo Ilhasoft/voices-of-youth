@@ -6486,14 +6486,24 @@ vue2-leaflet-markercluster@^1.2.0:
     leaflet.markercluster "^1.1.0"
     vue2-leaflet "^0.0.55"
 
-vue2-leaflet@0.0.55, vue2-leaflet@^0.0.55:
+vue2-leaflet@0.0.58:
+  version "0.0.58"
+  resolved "https://registry.yarnpkg.com/vue2-leaflet/-/vue2-leaflet-0.0.58.tgz#acfd0f7530292c60893a0b5b3cf648f06de530d1"
+  dependencies:
+    leaflet "^1.2.0"
+
+vue2-leaflet@^0.0.55:
   version "0.0.55"
   resolved "https://registry.yarnpkg.com/vue2-leaflet/-/vue2-leaflet-0.0.55.tgz#1a5b134ac0b7849f80513400290c9901fa3ba3b4"
   dependencies:
     leaflet "^1.2.0"
     vue "^2.0.0-rc.8"
 
-vue@^2.0.0-rc.8, vue@^2.4.4:
+vue@^2.0.0-rc.8:
+  version "2.5.13"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
+
+vue@^2.4.4:
   version "2.5.9"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.9.tgz#b2380cd040915dca69881dafd121d760952e65f7"
 
