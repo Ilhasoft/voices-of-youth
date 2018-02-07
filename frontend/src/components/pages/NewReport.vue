@@ -118,7 +118,7 @@
       </div>
 
       <div class="column is-paddingless map-report">
-        <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map">
+        <v-map :zoom="3" :minZoom="3" :maxZoom="18" :options="optionsMap" :center="center" ref="map">
           <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
         </v-map>
       </div>

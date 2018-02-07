@@ -1,5 +1,5 @@
 <template>
-  <v-map :zoom="3" :minZoom="3" :maxZoom="20" :options="optionsMap" :center="center" ref="map">
+  <v-map :zoom="3" :minZoom="3" :maxZoom="18" :options="optionsMap" :center="center" ref="map">
     <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
     <v-marker-cluster :options="optionsCluster">
       <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in reports" :lat-lng="item.latlng" :icon="item.icon" />
@@ -60,6 +60,13 @@ export default {
   computed: mapGetters({
     reports: 'getReportsPins',
   }),
+
+  watch: {
+    reports() {
+      const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
+      this.$refs.map.mapObject.flyToBounds(bounds);
+    },
+  },
 
   methods: {
     ...mapActions([
