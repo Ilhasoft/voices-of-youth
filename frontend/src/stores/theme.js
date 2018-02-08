@@ -56,8 +56,8 @@ export default {
       const data = await axios.get(`/api/themes/${obj}?project=${project.id}${query}`);
       commit(TYPES.SET_CURRENT_THEME, data);
 
-      const last = await axios.get(`/api/reports/?project=${project.id}&theme=${obj}&page_size=10`);
-      commit(TYPES.SET_LAST_REPORTS, last.results);
+      const last = await axios.get(`/api/reports/?project=${project.id}&theme=${obj}&status=1`);
+      commit(TYPES.SET_LAST_REPORTS, last);
     },
   },
 };

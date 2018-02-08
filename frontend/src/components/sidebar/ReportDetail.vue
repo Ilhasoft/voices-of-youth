@@ -130,6 +130,9 @@ export default {
       if (this.files.length > 0) {
         this.filePreview = this.files[0].file;
         this.filePreviewType = this.files[0].media_type;
+      } else {
+        this.filePreview = '';
+        this.filePreviewType = '';
       }
     },
   },

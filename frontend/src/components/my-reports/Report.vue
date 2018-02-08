@@ -12,14 +12,16 @@
     </div>
 
     <div class="column is-2 m-auto">
+      <button class="button btn-edit" @click.prevent="openReport(report)" v-if="report.status == 1">View</button>
       <button class="button btn-edit" @click.prevent="editReport" v-if="report.status == 3">Edit</button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import helper from '@/helper';
+// import bus from '@/helper/bus';
 import router from '@/router/';
 
 export default {
@@ -37,12 +39,28 @@ export default {
   }),
 
   methods: {
+    ...mapActions([
+      'setSideBarConfigs',
+      'getReport',
+    ]),
+
     formatDate() {
       return helper.formatDate(this.report.created_on);
     },
 
     editReport() {
       router.push({ name: 'editreport', params: { path: this.currentProject.path, id: this.report.id } });
+    },
+
+    openReport(item) {
+      router.replace({ name: 'project', params: { path: this.currentProject.path } });
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      }).then(() => {
+        this.getReport(item.id);
+        // bus.$emit('openReport', item);
+      });
     },
   },
 };
