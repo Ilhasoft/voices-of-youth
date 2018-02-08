@@ -123,6 +123,13 @@ body {
   color: #00cbff;
 }
 
+.select {
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+  max-width: 117%;
+}
+
 .select.is-info select {
   border-color: #e9e9e9;
 }

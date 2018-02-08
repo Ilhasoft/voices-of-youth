@@ -12,7 +12,7 @@
       {{ title }}
     </div>
 
-    <div class="column is-1 m-auto">
+    <div class="column is-paddingless is-1 m-auto">
       <svg v-show="closeButton" @click.prevent="closeSideBar" xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 23 23">
         <g fill="none" fill-rule="evenodd" stroke="#9B9FA3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
           <path d="M20.475 2.46L2.49 20.444M2.49 2.46l17.985 17.985"/>
@@ -70,6 +70,7 @@ export default {
       });
 
       bus.$emit('clearFields', {});
+      bus.$emit('resetMap', {});
     },
   },
 };

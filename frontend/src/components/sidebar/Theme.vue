@@ -8,10 +8,10 @@
       @openComponent="openThemes" />
 
     <div class="map-box">
-      <div class="columns">
-        <div class="column no-padding">
-          <div class="columns is-mobile header" :style="formatColor(item.color)" v-cloak>
-            <div class="column is-1 pin">
+      <div class="columns is-marginless">
+        <div class="column is-paddingless">
+          <div class="columns is-mobile is-marginless header" :style="formatColor(item.color)" v-cloak>
+            <div class="column is-2 pin">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="31" viewBox="0 0 25 31">
                   <g fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" transform="translate(1.283 1.868)">
                     <path d="M22.371 11.194c0 8.707-11.185 16.17-11.185 16.17S0 19.901 0 11.194C0 5.012 5.008 0 11.186 0 17.363 0 22.37 5.012 22.37 11.194z"/>
@@ -25,34 +25,39 @@
             </div>
           </div>
 
-          <div class="columns">
-            <div class="column text">
-              <small :style="formatFontColor()" v-cloak>{{ formatDate(item.created_on) }}</small>
-              <p v-cloak>{{ item.description }}</p>
+          <div class="scroll">
+
+            <div class="columns">
+              <div class="column text">
+                <small :style="formatFontColor()" v-cloak>{{ formatDate(item.created_on) }}</small>
+                <p v-cloak>{{ item.description }}</p>
+              </div>
             </div>
+
+            <div class="columns">
+              <div class="column tags">
+                <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags" v-cloak>{{ tag }}</small>
+              </div>
+            </div>
+
+            <div class="columns reports">
+              <div class="column">
+                <h1 :style="formatFontColor()" v-cloak>{{ item.reports_count }} Reports</h1>
+              </div>
+            </div>
+
+            <div class="columns medias">
+              <div class="column">
+                <ul>
+                  <li :key="key" v-for="(report, key) in lastReports" v-cloak>
+                    <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="" v-cloak>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
           </div>
 
-          <div class="columns">
-            <div class="column tags">
-              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags" v-cloak>{{ tag }}</small>
-            </div>
-          </div>
-
-          <div class="columns reports">
-            <div class="column">
-              <h1 :style="formatFontColor()" v-cloak>{{ item.reports_count }} Reports</h1>
-            </div>
-          </div>
-
-          <div class="columns medias">
-            <div class="column">
-              <ul>
-                <li :key="key" v-for="(report, key) in lastReports" v-cloak>
-                  <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="" v-cloak>
-                </li>
-              </ul>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -124,8 +129,11 @@ export default {
     margin-left: 15px;
   }
 
-  .no-padding {
-    padding-right: 0px !important;
+  .scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 266px);
+    position: relative;
   }
 
   .header {

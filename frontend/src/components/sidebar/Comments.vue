@@ -14,16 +14,16 @@
           :key="index" 
           :comment="data"/>
       </div>
+    </div>
 
-      <div class="form">
-        <div class="columns is-marginless fields">
-          <div class="column m-auto">
-            <textarea name="" id="" cols="30" rows="10" v-model="comment"></textarea>
-          </div>
+    <div class="form">
+      <div class="columns is-marginless fields">
+        <div class="column m-auto">
+          <textarea name="" id="" cols="30" rows="10" v-model="comment"></textarea>
+        </div>
 
-          <div class="column send is-2">
-            <a href="" @click.prevent="saveComment()">Send</a>
-          </div>
+        <div class="column send is-2">
+          <a href="" @click.prevent="saveComment()">Send</a>
         </div>
       </div>
     </div>
@@ -85,7 +85,6 @@ export default {
 
 <style lang="scss" scoped>
 .comments-box {
-  height: 90%;
   position: relative;
 
   .m-auto {
@@ -94,46 +93,40 @@ export default {
 
   .comments {
     width: 100%;
-		height: 627px;
+		height: calc(100vh - 244px);
 		background-color:#cfcfcf;
     margin: 0 auto;
     overflow: auto;
     padding-top: 10px;
+    position: relative;
   }
+}
 
-  .form {
+.form {
+  background-color:#fff;
+
+  textarea {
     width: 100%;
-		height: 120px;
-		background-color:#fff;
-    margin: 0 auto;
+    height: 79px;
+    border-radius: 16px;
+    border: solid 2px #f0f0f0;
+    outline: none;
+    resize: none;
+    padding-left: 7px;
+  }
+  
+  .send {
+    width: 95.5px;
+    height: 51.7px;
+    border-radius: 100px;
+    border: solid 2px #00cbff;
+    text-align: center;
+    margin: auto;
+    margin-right: 22px;
+    background-color: #fff;
 
-    .fields {
-      height: 100%;
-    }
-
-    textarea {
-      width: 460px;
-      height: 79px;
-      border-radius: 16px;
-      border: solid 2px #f0f0f0;
-      outline: none;
-      resize: none;
-      padding-left: 7px;
-    }
-    
-    .send {
-      width: 95.5px;
-      height: 51.7px;
-      border-radius: 100px;
-      border: solid 2px #00cbff;
-      text-align: center;
+    a {
       margin: auto;
-      margin-right: 22px;
-      background-color: #fff;
-
-      a {
-        margin: auto;
-      }
     }
   }
 }

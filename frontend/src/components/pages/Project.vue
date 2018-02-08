@@ -3,7 +3,7 @@
     <header-index />
     <intro-project />
     <div class="columns is-marginless">
-      <div class="column is-4 is-paddingless" v-show="sideBarActived">
+      <div class="column is-4 is-paddingless sidebar" v-show="sideBarActived">
         <side-bar />
       </div>
 
@@ -52,6 +52,10 @@ export default {
 <style lang="scss" scoped>
 .map-osm {
   z-index: 0;
-  height: 91vh;
+  height: calc(100vh - 78px);
+}
+
+.sidebar {
+  height: calc(100vh - 78px);
 }
 </style>

@@ -27,14 +27,14 @@ export default {
 
 <style lang="scss" scoped>
 .sidebar {
-  width: 622px;
+  width: 100%;
   box-shadow: 0 9px 10px 0 rgba(0, 0, 0, 0.16);
-  position: absolute;
+  position: relative;
   margin: auto;
   left: 0;
   bottom: 0;
   background-color: #fbfbfb;
   z-index: 10000;
-  height: calc(100vh - 78px);
+  height: 100%;
 }
 </style>

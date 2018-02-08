@@ -12,6 +12,7 @@ import { mapGetters, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
+// import bus from '@/helper/bus';
 
 export default {
   name: 'Map',
@@ -52,6 +53,7 @@ export default {
     ...mapGetters({
       reports: 'getReportsPins',
       report: 'getReport',
+      sideBarActived: 'getSideBarIsActived',
     }),
   },
 
@@ -71,6 +73,13 @@ export default {
       if (!this.report.name) {
         const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
         this.$refs.map.mapObject.flyToBounds(bounds);
+      }
+    },
+
+    sideBarActived() {
+      if (!this.sideBarActived) {
+        console.log('AAA');
+        this.$refs.map.mapObject.invalidateSize();
       }
     },
   },

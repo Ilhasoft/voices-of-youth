@@ -43,7 +43,7 @@
           </div>
 
           <div class="columns is-mobile item" :key="key" v-for="(item, key) in themesList">
-            <div class="column is-1 m-auto center">
+            <div class="column is-2 m-auto center">
               <span class="icon-pin pin" :style="getPinColor(item.color)"></span>
             </div>
 
@@ -52,7 +52,7 @@
               <p v-cloak>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
             </div>
 
-            <div class="column is-1 m-auto">
+            <div class="column is-paddingless is-1 m-auto">
               <checkbox-item :theme-id="item.id" />
             </div>
           </div>
@@ -181,8 +181,9 @@ export default {
     left: 0;
     overflow-y: scroll;
     margin-top: 62px;
-    margin-left: 20px;
-    min-width: 602px;
+    margin-left: 0px;
+    width: 100%;
+    padding-left: 30px;
   }
 
   .m-auto {

@@ -8,7 +8,7 @@
       @openComponent="openTheme" />
 
       <div class="map-box">
-        <div class="box-flex">
+        <div class="box-flex scroll">
           <div class="header">
             <img :src="filePreview" v-if="filePreviewType == 'image'" alt="" v-cloak>
             <video v-if="filePreviewType == 'video'" width="622" height="200" autoplay controls v-cloak>
@@ -27,62 +27,58 @@
             </div>
           </div>
 
-          <div class="report-content">
-            <div class="reports">
-              <h1 :style="formatFontColor()" v-cloak>{{ item.name }}</h1>
-              <small :style="formatFontColor()" v-cloak>{{ formatDate() }}</small>
-              <p v-html="formatDescription()" v-cloak></p>
+          <div class="reports">
+            <h1 :style="formatFontColor()" v-cloak>{{ item.name }}</h1>
+            <small :style="formatFontColor()" v-cloak>{{ formatDate() }}</small>
+            <p v-html="formatDescription()" v-cloak></p>
 
-              <div class="urls" v-if="item.urls" v-cloak>
-                <strong>External Links</strong>
-                <p v-for="(url, key) in item.urls" :key="key">
-                  <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
-                </p>
-              </div>
+            <div class="urls" v-if="item.urls" v-cloak>
+              <strong>External Links</strong>
+              <p v-for="(url, key) in item.urls" :key="key">
+                <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
+              </p>
+            </div>
 
-              <div class="tags">
-                <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
-              </div>
+            <div class="tags">
+              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
             </div>
           </div>
 
-          <div class="buttons-size">
-            <div class="columns buttons">
-              <div class="column">
-                <a class="button share shared">
-                  <span class="icon-icon-share"></span> Share
-                  <social-sharing
-                    :url="formatURI()"
-                    :title="item.name"
-                    :description="item.description"
-                    :quote="item.description"
-                    :hashtags="formatTags()"
-                    v-cloak
-                    class="popover"
-                    inline-template>
-                    <div>
-                      <div class="columns">
-                        <div class="column">
-                          <network network="facebook">
-                            <i class="social-facebook"></i>
-                          </network>
-                        </div>
-                        <div class="column">
-                          <network network="twitter">
-                            <i class="social-twitter"></i>
-                          </network>
-                        </div>
+          <div class="columns is-mobile buttons">
+            <div class="column">
+              <a class="button share shared">
+                <span class="icon-icon-share"></span> Share
+                <social-sharing
+                  :url="formatURI()"
+                  :title="item.name"
+                  :description="item.description"
+                  :quote="item.description"
+                  :hashtags="formatTags()"
+                  v-cloak
+                  class="popover"
+                  inline-template>
+                  <div>
+                    <div class="columns">
+                      <div class="column">
+                        <network network="facebook">
+                          <i class="social-facebook"></i>
+                        </network>
+                      </div>
+                      <div class="column">
+                        <network network="twitter">
+                          <i class="social-twitter"></i>
+                        </network>
                       </div>
                     </div>
-                  </social-sharing>
-                </a>
-              </div>
+                  </div>
+                </social-sharing>
+              </a>
+            </div>
 
-              <div class="column">
-                <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
-                  <span class="icon-icon-comment"></span> Comment
-                </a>
-              </div>
+            <div class="column">
+              <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
+                <span class="icon-icon-comment"></span> Comment
+              </a>
             </div>
           </div>
         </div>
@@ -116,6 +112,8 @@ export default {
       this.filePreview = '';
       this.filePreviewType = '';
     });
+
+    this.checkPreview();
   },
 
   computed: {
@@ -127,13 +125,7 @@ export default {
 
   watch: {
     files() {
-      if (this.files.length > 0) {
-        this.filePreview = this.files[0].file;
-        this.filePreviewType = this.files[0].media_type;
-      } else {
-        this.filePreview = '';
-        this.filePreviewType = '';
-      }
+      this.checkPreview();
     },
   },
 
@@ -143,6 +135,16 @@ export default {
       'getTheme',
       'setSideBarConfigs',
     ]),
+
+    checkPreview() {
+      if (this.files.length > 0) {
+        this.filePreview = this.files[0].file;
+        this.filePreviewType = this.files[0].media_type;
+      } else {
+        this.filePreview = '';
+        this.filePreviewType = '';
+      }
+    },
 
     openFile(item) {
       this.filePreview = item.file;
@@ -287,19 +289,15 @@ export default {
     padding-right: 0px !important;
   }
 
-  .buttons-size {
-    height: 64px;
-  }
-
   .buttons {
+    width: 100%;
     height: 64px;
-    margin-left: 7px;
+    margin-left: 0px;
     position: absolute;
     bottom: 12px;
-    left: 0;
 
     .share {
-      width: 267.8px;
+      width: 100%;
       height: 50px;
       border-radius: 10px;
       background-color: #ffffff;
@@ -326,9 +324,7 @@ export default {
   }
 
   ul.images {
-    width: 622px;
-    margin: 0;
-    padding: 0;
+    margin: 0 10px 0px 10px;
     white-space: nowrap;
     overflow-x: auto;
   }
@@ -344,9 +340,10 @@ export default {
     cursor: pointer;
   }
 
-  .report-content {
-    flex: 1;
+  .scroll {
     overflow-y: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 197px);
   }
 
   .reports {

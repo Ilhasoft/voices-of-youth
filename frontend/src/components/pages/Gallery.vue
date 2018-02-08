@@ -18,7 +18,7 @@
           <div class="card">
             <div class="card-image">
               <figure class="image">
-                <img :src="image.file" alt="">
+                <img :src="image.file" alt="" @click.prevent="openReport(image.report_id)">
               </figure>
             </div>
             
@@ -54,6 +54,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import router from '@/router/';
 import HeaderIndex from '@/components/header/Index';
 import Pagination from '@/components/shared/Pagination';
 
@@ -81,12 +82,15 @@ export default {
       currentPage: 'galleyCurrentPage',
       nextPage: 'galleryNextUrl',
       previousPage: 'galleryPreviousUrl',
+      currentProject: 'getCurrentProject',
     }),
   },
 
   methods: {
     ...mapActions([
       'getGalleryImages',
+      'setSideBarConfigs',
+      'getReport',
     ]),
 
     moreImages(nextPage) {
@@ -103,6 +107,16 @@ export default {
       if (this.nextPage) {
         this.getGalleryImages({ page: this.currentPage + 1 });
       }
+    },
+
+    openReport(id) {
+      router.push({ name: 'project', params: { path: this.currentProject.path } });
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      }).then(() => {
+        this.getReport(id);
+      });
     },
   },
 };
@@ -125,6 +139,7 @@ export default {
 
   .image img {
     max-width: 100%;
+    cursor: pointer;
   }
 
   .title {
