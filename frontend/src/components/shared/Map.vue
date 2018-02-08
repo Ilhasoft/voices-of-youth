@@ -78,7 +78,6 @@ export default {
 
     sideBarActived() {
       if (!this.sideBarActived) {
-        console.log('AAA');
         this.$refs.map.mapObject.invalidateSize();
       }
     },
