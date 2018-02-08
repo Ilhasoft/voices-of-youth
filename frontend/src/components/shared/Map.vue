@@ -70,7 +70,7 @@ export default {
           this.report.location.coordinates[1],
           this.report.location.coordinates[0],
         );
-        this.$refs.map.mapObject.flyTo(moveTo, this.$refs.map.mapObject.getZoom());
+        this.$refs.map.mapObject.flyTo(moveTo, 8);
       }
     },
   },
