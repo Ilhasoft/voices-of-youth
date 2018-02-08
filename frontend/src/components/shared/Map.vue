@@ -12,7 +12,6 @@ import { mapGetters, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-// import bus from '@/helper/bus';
 
 export default {
   name: 'Map',

@@ -21,7 +21,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import helper from '@/helper';
-// import bus from '@/helper/bus';
 import router from '@/router/';
 
 export default {
@@ -59,7 +58,6 @@ export default {
         isActived: true,
       }).then(() => {
         this.getReport(item.id);
-        // bus.$emit('openReport', item);
       });
     },
   },
