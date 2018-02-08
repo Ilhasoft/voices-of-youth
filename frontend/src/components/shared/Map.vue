@@ -56,13 +56,6 @@ export default {
     }),
   },
 
-  // watch: {
-  //   reports() {
-  //     const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
-  //     this.$refs.map.mapObject.flyToBounds(bounds);
-  //   },
-  // },
-
   watch: {
     report() {
       if (this.report && this.report.location) {
@@ -70,7 +63,15 @@ export default {
           this.report.location.coordinates[1],
           this.report.location.coordinates[0],
         );
-        this.$refs.map.mapObject.flyTo(moveTo, 8);
+        const zoom = this.$refs.map.mapObject.getZoom();
+        this.$refs.map.mapObject.flyTo(moveTo, (zoom < 5 ? 11 : zoom));
+      }
+    },
+
+    reports() {
+      if (!this.report.name) {
+        const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
+        this.$refs.map.mapObject.flyToBounds(bounds);
       }
     },
   },
