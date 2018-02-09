@@ -26,15 +26,15 @@
             </div>
         </div>
     </td>
-    {% if user.is_mapper == True %}
     <td>
+        {% if user.is_mapper == True %}
         <div>
             {% for theme in user.themes|slice:":5" %}
                 <div class="badge badge-info">{{ theme }}</div>
             {% endfor %}
         </div>
+        {% endif %}
     </td>
-    {% endif %}
     <td class="text-center">
         <a class="btn btn-default btn-lg btn-oval"
            href="{{ user.get_absolute_url }}">{% trans "Profile" %}</a>
