@@ -183,7 +183,8 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
             'color': theme.color,
             'tags': theme.tags.names(),
             'bounds': theme.bounds,
-            'allow_links': theme.allow_links
+            'allow_links': theme.allow_links,
+            'translations': theme.translations.all()
         }
 
         context['editing'] = True
