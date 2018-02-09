@@ -18,6 +18,7 @@ export default {
     isLogged: false,
     loginError: {},
     myReports: {},
+    myThemes: {},
   },
 
   getters: {
@@ -25,6 +26,7 @@ export default {
     userIsMapper: state => state.userData.is_mapper,
     userIsLogged: state => state.isLogged,
     getMyReports: state => state.myReports,
+    getMyThemes: state => state.myThemes,
   },
 
   /* eslint-disable no-param-reassign */
@@ -40,6 +42,10 @@ export default {
 
     [TYPES.SET_USER_REPORTS](state, obj) {
       state.myReports = obj;
+    },
+
+    [TYPES.SET_USER_THEMES](state, obj) {
+      state.myThemes = obj;
     },
   },
 
@@ -124,6 +130,13 @@ export default {
       }).catch(() => {
         dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
       });
+    },
+
+    getMyThemesByProject: async ({ commit }) => {
+      const project = helper.getItem('project');
+      const user = helper.getItem('user');
+      const data = await axios.get(`/api/themes/?user=${user[0].id}&project=${project.id}`);
+      commit(TYPES.SET_USER_THEMES, data);
     },
   },
 };

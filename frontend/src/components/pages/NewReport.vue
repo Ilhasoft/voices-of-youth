@@ -240,7 +240,6 @@ export default {
       userIsMapper: 'userIsMapper',
       themes: 'getUserThemes',
       currentProject: 'getCurrentProject',
-
     }),
 
     themeOptions() {

@@ -34,7 +34,7 @@
         </router-link>
       </div>
       
-      <div class="column new-report" v-if="userIsLogged && userIsMapper">
+      <div class="column new-report" v-if="userIsLogged && userIsMapper && themes.length > 0">
         <router-link
           class="button btn-report"
           :to="{ name: 'newreport', params: { path: currentProject.path }}">
@@ -70,13 +70,20 @@ export default {
       menuTitle: 'menuTitle',
       menuLanguages: 'getProjectLanguages',
       currentProject: 'getCurrentProject',
+      currentUser: 'getUserData',
+      themes: 'getMyThemes',
     }),
+  },
+
+  mounted() {
+    this.getMyThemesByProject();
   },
 
   methods: {
     ...mapActions([
       'setSideBarConfigs',
       'setCurrentLanguage',
+      'getMyThemesByProject',
     ]),
 
     openThemes() {
