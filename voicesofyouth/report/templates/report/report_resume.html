@@ -31,6 +31,14 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-lg-12 col-md-12 m-top">
+                {% for tag in report.tags.all %}
+                    <div class="badge badge-tags">{{ tag.name }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
         <div class="row m-t-10">
             <div class="col-lg-12 col-md-12">
                 {{ report.description|truncatewords:25 }}

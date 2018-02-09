@@ -13,15 +13,6 @@ export default {
     comments: [],
     files: [],
     search: [],
-    // newReport: {
-    //   themes: [],
-    //   title: '',
-    //   description: '',
-    //   tags: [],
-    //   files: [],
-    //   urls: [],
-    //   location: {},
-    // },
   },
 
   getters: {
@@ -30,7 +21,6 @@ export default {
     getComments: state => state.comments,
     getReportFiles: state => state.files,
     getReportUrls: state => state.urls,
-    // getReportNewData: state => state.newReport,
     getUserThemes: state => state.themes,
     getReportPreview: state => state.files,
     getSearchReports: state => state.search,
