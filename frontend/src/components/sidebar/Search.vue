@@ -8,8 +8,8 @@
     <div class="map-box">
       <div class="columns">
         <div class="column scrolling">
-          <div v-if="searchReports.length">
-            <div class="columns is-mobile item" :key="key" v-for="(item, key) in searchReports">
+          <div v-if="reports.length">
+            <div class="columns is-mobile item" :key="key" v-for="(item, key) in reports">
               <div class="column is-3 m-auto center">
                 <img v-if="item.last_image" :src="item.last_image.file" alt=""/>
               </div>
@@ -17,6 +17,13 @@
               <div class="column m-auto">
                 <h1>{{ item.name }}</h1>
                 <small>{{ item.created_by.first_name }}</small>
+
+                <div class="tags">
+                  <small :style="formatColor(item.theme_color)" :key="key" v-for="(tag, key) in item.tags">
+                    <a href="" @click.prevent="search(tag)">{{ tag }}</a>
+                  </small>
+                </div>
+
                 <p>{{ item.description }} <a href="" @click.prevent="openReport(item)" class="see-more">See more</a></p>
               </div>
             </div>
@@ -46,7 +53,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      searchReports: 'getSearchReports',
+      reports: 'getSearchReports',
     }),
   },
 
@@ -54,6 +61,7 @@ export default {
     ...mapActions([
       'setSideBarConfigs',
       'getReport',
+      'searchReports',
     ]),
 
     openReport(item) {
@@ -64,6 +72,21 @@ export default {
         this.getReport(item.id);
       });
     },
+
+    formatColor(color) {
+      return `background-color: #${color} !important;`;
+    },
+
+    search(tag) {
+      this.searchReports(tag).then(() => {
+        this.setSideBarConfigs({
+          title: 'Results',
+          tabActived: 'Search',
+          backButton: false,
+          isActived: true,
+        });
+      });
+    },
   },
 };
 </script>
@@ -72,6 +95,23 @@ export default {
 .map-box {
   margin: auto;
   padding-left: 25px;
+
+  .tags {
+    margin-top: 5px;
+
+    small {
+      margin-right: 3px;
+      letter-spacing: -0.3px;
+      text-align: center;
+      padding: 5px;
+      border-radius: 100px;
+
+      a {
+        font-size: 13px;
+        color: #fff;
+      }
+    }
+  }
 
   .no-result {
     text-align: center;
@@ -87,6 +127,10 @@ export default {
       font-size: 20px;
       color: #000000;
     }
+  }
+
+  .see-more {
+    color: #00cbff;
   }
 
   .scrolling {

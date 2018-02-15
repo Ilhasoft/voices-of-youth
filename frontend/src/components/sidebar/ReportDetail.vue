@@ -40,7 +40,9 @@
             </div>
 
             <div class="tags">
-              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">{{ tag }}</small>
+              <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags">
+                <a href="" @click.prevent="search(tag)">{{ tag }}</a>
+              </small>
             </div>
           </div>
 
@@ -134,6 +136,7 @@ export default {
       'getComments',
       'getTheme',
       'setSideBarConfigs',
+      'searchReports',
     ]),
 
     checkPreview() {
@@ -203,6 +206,17 @@ export default {
       this.getComments(this.item.id).then(() => {
         this.setSideBarConfigs({
           tabActived: 'Comments',
+          isActived: true,
+        });
+      });
+    },
+
+    search(tag) {
+      this.searchReports(tag).then(() => {
+        this.setSideBarConfigs({
+          title: 'Results',
+          tabActived: 'Search',
+          backButton: false,
           isActived: true,
         });
       });
@@ -384,13 +398,16 @@ export default {
 
     small {
       margin-right: 3px;
-      font-size: 13px;
       letter-spacing: -0.3px;
       text-align: center;
-      color: #fff;
       padding: 5px;
       border-radius: 100px;
       background-color: #9012fe;
+
+      a {
+        font-size: 13px;
+        color: #fff;
+      }
     }
   }
 
