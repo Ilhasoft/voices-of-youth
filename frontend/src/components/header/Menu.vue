@@ -120,6 +120,7 @@ export default {
   }
 
   .language-box {
+    margin-left: 33px;
     z-index: 100000;
     position: absolute;
     border-radius: 11px;

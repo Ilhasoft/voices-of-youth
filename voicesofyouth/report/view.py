@@ -267,7 +267,9 @@ class AddReportView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['data_form'] = ReportForm(data=None, user=self.request.user)
+        context['data_form'] = ReportForm(initial={
+            'location': 'SRID=4326;POINT (0 0)'
+        }, user=self.request.user)
 
         return render(request, self.template_name, context)
 

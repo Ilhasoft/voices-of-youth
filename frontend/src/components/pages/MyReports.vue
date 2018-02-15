@@ -23,12 +23,6 @@
           <report-item :key="key" :report="report" v-for="(report, key) in reports" />
 
           <empty-list :status="status" :text="text" v-show="isEmpty" />
-
-          <!-- <div class="columns" v-show="status == ''">
-            <div class="column">
-              <p class="more-oldest"><a href="">More oldest</a></p>
-            </div>
-          </div> -->
           </div>
         </div>
       </div>
@@ -54,9 +48,9 @@ export default {
       text: '',
       isEmpty: false,
       descriptions: {
-        approved: 'Ups! You have not created any report yet',
-        pending: 'Great! All your reports has been approved',
-        rejected: 'Good job! You have no approved reports',
+        approved: 'Ups! You have not created any reports yet',
+        pending: 'Great! All your reports have been approved',
+        rejected: 'Good job! You have no unapproved reports',
       },
     };
   },

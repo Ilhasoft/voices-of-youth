@@ -270,12 +270,12 @@
 
         function searchAddress(e) {
             if (e.which == 13 || e.keyCode == 13) {
-                console.log(e.target.value);
                 axios.get('https://nominatim.openstreetmap.org/search?q=' + e.target.value + '&format=json&addressdetails=0&polygon=0&limit=1').then((response) => {
                     mapObject.eachLayer(function(layer) {
                         if (layer._latlng) {
                             const newLatLng = new L.LatLng(response.data[0].lat, response.data[0].lon);
                             layer.setLatLng(newLatLng).update();
+                            mapObject.flyTo(newLatLng);
 
                             $('#id_location').html('{"type": "Point", "coordinates": [' + response.data[0].lon + ', ' + response.data[0].lat + ']}');
                             $('#address').val('');
