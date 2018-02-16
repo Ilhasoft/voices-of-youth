@@ -38,6 +38,8 @@ AVATARS = (
     (21, f'{settings.MEDIA_URL}users/avatars/group-21{AVATAR_FILE_EXTENSION}'),
     (22, f'{settings.MEDIA_URL}users/avatars/group-22{AVATAR_FILE_EXTENSION}'),
     (23, f'{settings.MEDIA_URL}users/avatars/group-23{AVATAR_FILE_EXTENSION}'),
+    (24, f'{settings.MEDIA_URL}users/avatars/group-24{AVATAR_FILE_EXTENSION}'),
+    (25, f'{settings.MEDIA_URL}users/avatars/group-25{AVATAR_FILE_EXTENSION}'),
 )
 
 
