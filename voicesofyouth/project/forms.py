@@ -120,7 +120,7 @@ class ProjectForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(ProjectForm, self).__init__(*args, **kwargs)
-        self.fields['local_admin'].queryset = VoyUser.objects.all()
+        self.fields['local_admin'].queryset = VoyUser.objects.filter(groups__name__contains='- local admin').distinct()
 
     def clean(self):
         cleaned_data = super(ProjectForm, self).clean()
