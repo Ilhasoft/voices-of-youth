@@ -28,14 +28,16 @@ $color_delete: #DE486B;
         }
 
         .buttons {
-            padding: 28px 0px 28px;
-
             a {
                 width: 100%;
             }
 
             .btn.btn-default {
                 border-color: #00CBFF;
+            }
+
+            .m-t-10 {
+                margin-top: 10px;
             }
         }
     }
