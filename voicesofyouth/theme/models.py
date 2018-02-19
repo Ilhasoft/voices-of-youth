@@ -91,7 +91,7 @@ class Theme(BaseModel):
         unique_together = ('project', 'name')
 
     def __str__(self):
-        return f'{self.name}({self.project})'
+        return f'{self.name} ({self.project})'
 
     @property
     def all_tags(self):
