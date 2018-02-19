@@ -22,7 +22,7 @@
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    <input type="text" class="input" name="name" value="" placeholder="Name" v-model="login.username"/>
+                    <input type="text" class="input" name="name" value="" placeholder="Username" v-model="login.username"/>
                   </div>
                 </div>
 

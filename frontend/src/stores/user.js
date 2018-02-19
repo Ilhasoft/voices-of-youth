@@ -135,8 +135,10 @@ export default {
     getMyThemesByProject: async ({ commit }) => {
       const project = helper.getItem('project');
       const user = helper.getItem('user');
-      const data = await axios.get(`/api/themes/?user=${user[0].id}&project=${project.id}`);
-      commit(TYPES.SET_USER_THEMES, data);
+      if (project && user) {
+        const data = await axios.get(`/api/themes/?user=${user[0].id}&project=${project.id}`);
+        commit(TYPES.SET_USER_THEMES, data);
+      }
     },
   },
 };

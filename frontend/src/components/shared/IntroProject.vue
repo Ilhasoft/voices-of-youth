@@ -69,27 +69,22 @@ export default {
   position: relative;
   margin: auto;
   width: 553px;
-  height: 708px;
 
   .header {
-    width: 100%;
-    height: 249px;
+    padding: 20px;
     background-color: #00cbff;
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     display: table-cell;
-    vertical-align: middle;
     text-align: center;
     width: inherit;
   }
 
   .body {
-    width: 100%;
-    height: 459px;
     background-color: #fff;
     border-bottom-left-radius: 30px;
     border-bottom-right-radius: 30px;
-    padding: 41px;
+    padding: 20px;
 
     h3 {
       font-size: 32px;
