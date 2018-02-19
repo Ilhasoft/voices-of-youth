@@ -79,10 +79,10 @@ class ProjectForm(forms.Form):
     local_admin = forms.ModelMultipleChoiceField(
         queryset=None,
         label=_('Local Admin'),
-        required=True,
+        required=False,
         widget=forms.SelectMultiple(
             attrs={
-                'required': True,
+                'required': False,
                 'multiple': True,
                 'class': 'form-control',
                 'data-placeholder': _('Select one or more local admins to this project'),
