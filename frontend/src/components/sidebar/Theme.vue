@@ -36,7 +36,9 @@
 
             <div class="columns">
               <div class="column tags">
-                <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags" v-cloak>{{ tag }}</small>
+                <small :style="formatColor()" :key="key" v-for="(tag, key) in item.tags" v-cloak>
+                  <a href="" @click.prevent="search(tag)">{{ tag }}</a>
+                </small>
               </div>
             </div>
 
@@ -55,9 +57,7 @@
                 </ul>
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </div>
@@ -84,6 +84,7 @@ export default {
     ...mapActions([
       'setSideBarConfigs',
       'getReport',
+      'searchReports',
     ]),
 
     formatDate() {
@@ -115,6 +116,17 @@ export default {
         isActived: true,
       }).then(() => {
         this.getReport(item.id);
+      });
+    },
+
+    search(tag) {
+      this.searchReports(tag).then(() => {
+        this.setSideBarConfigs({
+          title: 'Results',
+          tabActived: 'Search',
+          backButton: false,
+          isActived: true,
+        });
       });
     },
   },
@@ -191,12 +203,15 @@ export default {
 
     small {
       margin-right: 3px;
-      font-size: 13px;
       letter-spacing: -0.3px;
       text-align: center;
-      color: #fff;
       padding: 5px;
       border-radius: 100px;
+
+      a {
+        font-size: 13px;
+        color: #fff;
+      }
     }
   }
 
