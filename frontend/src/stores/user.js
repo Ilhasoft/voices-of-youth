@@ -119,16 +119,30 @@ export default {
         return false;
       }
 
-      return axios.post('/api/users/', {
-        username: obj.username,
-        password: obj.password,
-        email: obj.email,
-        first_name: obj.name,
-        avatar: 1,
-      }).then(() => {
-        dispatch('notifyOpen', { type: 1, message: 'Register successful!' });
-      }).catch(() => {
-        dispatch('notifyOpen', { type: 0, message: 'Error, try again' });
+      return new Promise((resolve, reject) => {
+        axios.post('/api/users/', {
+          username: obj.username,
+          password: obj.password,
+          email: obj.email,
+          first_name: obj.name,
+          avatar: 1,
+        }).then(() => {
+          dispatch('notifyOpen', { type: 1, message: 'Register successful!' });
+          resolve();
+        }).catch((error) => {
+          let msg = '';
+
+          if (error.response.data.non_field_errors) {
+            msg = error.response.data.non_field_errors[0];
+          }
+
+          if (error.response.data.email) {
+            msg = error.response.data.email[0];
+          }
+
+          dispatch('notifyOpen', { type: 0, message: msg });
+          reject();
+        });
       });
     },
 

@@ -72,7 +72,7 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" v-model="register.email" placeholder="E-mail"/>
+                  <input type="email" class="input" v-model="register.email" placeholder="E-mail"/>
                 </div>
               </div>
 
@@ -232,7 +232,7 @@ export default {
             password: '',
             confirmPassword: '',
           };
-        });
+        }).catch(() => {});
       }
     },
   },
