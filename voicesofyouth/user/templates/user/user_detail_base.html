@@ -201,5 +201,11 @@
                 swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
             })
         });
+
+        {% if user.id %}
+            $('[for=password-form],[id=password-form]').hide();
+        {% else %}
+            $('[id=password-form]').attr('required', true);
+        {% endif %}
     </script>
 {% endblock %}

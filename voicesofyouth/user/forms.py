@@ -41,6 +41,7 @@ class VoyUserBaseForm(forms.Form):
                                    attrs={
                                        'class': 'form-control',
                                        'placeholder': _('Set the username that will use to Log in to the Voy project.'),
+                                       'autocomplete': 'off'
                                    },
                                ))
     name = forms.CharField(max_length=255,
@@ -49,15 +50,24 @@ class VoyUserBaseForm(forms.Form):
                                attrs={
                                    'class': 'form-control',
                                    'placeholder': _('Set the User full name'),
+                                   'autocomplete': 'off'
                                },
                            ))
     email = forms.EmailField(required=False,
                              label=_('E-mail'),
                              widget=forms.EmailInput(
                                  attrs={
-                                     'class': 'form-control'
+                                     'class': 'form-control',
+                                     'autocomplete': 'off'
                                  }
                              ))
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'password-form',
+            'autocomplete': 'off'
+        }
+    ), required=False)
     avatars = forms.ChoiceField(choices=AVATARS,
                                 initial=DEFAULT_AVATAR,
                                 widget=forms.HiddenInput())
@@ -69,6 +79,7 @@ class VoyUserBaseForm(forms.Form):
             email = cleaned_data.get('email')
             username = cleaned_data.get('username')
             avatar = cleaned_data.get('avatars')
+            password = cleaned_data.get('password')
 
             if len(name.split()) > 1:
                 user.first_name, user.last_name = name.split(maxsplit=1)
@@ -78,6 +89,8 @@ class VoyUserBaseForm(forms.Form):
             user.email = email
             user.username = username
             user.avatar = avatar
+            if password is not None and password is not '':
+                user.set_password(password)
             user.save()
             return True
         else:
@@ -142,10 +155,15 @@ class AdminForm(VoyUserBaseForm):
         if super().save(admin):
             global_admin = self.cleaned_data.pop('global_admin')
             projects = self.cleaned_data.pop('projects')
+            password = self.cleaned_data.pop('password')
 
             for field, value in self.cleaned_data.items():
                 setattr(admin, field, value)
             admin.is_superuser = global_admin == 'global'
+
+            if password is not None and password is not '':
+                admin.set_password(password)
+
             admin.save()
 
             project_model = Project.objects.all()
