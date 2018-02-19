@@ -190,6 +190,8 @@ class MappersListView(LoginRequiredMixin, TemplateView):
                 mapper = MapperUser()
                 form.save(mapper, request.POST.getlist('themes'))
                 messages.success(request, 'Mapper saved with success!')
+            else:
+                messages.error(request, form.errors)
 
         return self.get(request)
 

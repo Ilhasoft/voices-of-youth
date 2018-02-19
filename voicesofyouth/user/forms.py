@@ -5,6 +5,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.user.models import AVATARS
 from voicesofyouth.user.models import DEFAULT_AVATAR
+from voicesofyouth.user.models import VoyUser
 
 
 class MapperFilterForm(forms.Form):
@@ -95,6 +96,17 @@ class VoyUserBaseForm(forms.Form):
             return True
         else:
             return False
+
+    def clean_username(self):
+        try:
+            user = VoyUser.objects.get(username=self.cleaned_data['username'])
+            if user is not None:
+                msg = _(f'Username already exists')
+                raise forms.ValidationError(msg)
+        except VoyUser.DoesNotExist:
+            pass
+
+        return self.cleaned_data['username']
 
 
 class MapperForm(VoyUserBaseForm):
