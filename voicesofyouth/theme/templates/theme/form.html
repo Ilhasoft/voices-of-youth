@@ -76,7 +76,7 @@
 
                                         <div
                                             class="form-group {% if data_form.mappers_group.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Mappers' %}</label>
+                                            <label>{% trans 'Mappers' %} (<a href="javascript:;" id="select_all_mappers">Select all</a>) (<a href="javascript:;" id="deselect_all_mappers">Deselect all</a>)</label>
                                             {{ data_form.mappers_group }}
                                             {{ data_form.mappers_group.errors }}
                                         </div>
@@ -232,11 +232,11 @@
             }
         });
 
-        $('#datetimepicker1').on('dp.change', function (e) {
+        $('#datetimepicker1').on('dp.change', function(e) {
             $('#datetimepicker2').data('DateTimePicker').minDate(e.date);
         });
 
-        $('#datetimepicker2').on('dp.change', function (e) {
+        $('#datetimepicker2').on('dp.change', function(e) {
             $('#datetimepicker1').data('DateTimePicker').maxDate(e.date);
         });
 
@@ -276,25 +276,36 @@
             $('#translate_form'),
             $('#id_translate-language'),
         );
-        $('#id_translations').translateinput('itemClick', function () {
+
+        $('#id_translations').translateinput('itemClick', function() {
             $('#translate-modal').show();
         });
 
-        $('#translate_save').click(function () {
+        $('#translate_save').click(function() {
             $('#id_translations').translateinput('save');
             $('#translate-modal').hide();
         });
 
-        $('#close_translate_modal').click(function () {
+        $('#close_translate_modal').click(function() {
             $('#translate-modal').hide();
         });
 
-        $('#new_translate_btn').click(function () {
+        $('#new_translate_btn').click(function() {
             $('#translate-modal').show();
             $('#id_translate-language')
                 .select2()
                 .val($("#id_translate-language option:first").val())
                 .change();
+        });
+
+        $('#select_all_mappers').click(function() {
+            $('#id_mappers_group option').prop('selected', true);
+            $('#id_mappers_group').trigger('chosen:updated');
+        });
+
+        $('#deselect_all_mappers').click(function() {
+            $('#id_mappers_group option:selected').removeAttr('selected');
+            $('#id_mappers_group').trigger('chosen:updated');
         });
     </script>
 {% endblock %}
