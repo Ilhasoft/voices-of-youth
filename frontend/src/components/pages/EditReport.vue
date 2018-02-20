@@ -195,7 +195,7 @@ export default {
       L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
       this.getReport(this.id).then(() => {
-        if (this.report.status !== 3 || this.report.created_by.id !== this.currentUser.id) {
+        if (this.report.status === 1 || this.report.created_by.id !== this.currentUser.id) {
           router.push({ name: 'my-reports' });
         } else {
           this.marker = L.marker(this.report.location.coordinates.reverse(), {

@@ -13,7 +13,7 @@
 
     <div class="column is-2 m-auto">
       <button class="button btn-edit" @click.prevent="openReport(report)" v-if="report.status == 1">View</button>
-      <button class="button btn-edit" @click.prevent="editReport" v-if="report.status == 3">Edit</button>
+      <button class="button btn-edit" @click.prevent="editReport" v-if="report.status == 2 || report.status == 3">Edit</button>
     </div>
   </div>
 </template>
