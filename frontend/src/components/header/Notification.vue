@@ -17,7 +17,7 @@
       :class="[isVisible ? 'fade-in' : 'fade-out']">
       <h4>Notifications</h4>
       
-      <div class="item" v-if="notifications.length > 0" :key="key" v-for="(item, key) in notifications">
+      <div class="item" v-if="notifications.length" :key="key" v-for="(item, key) in notifications">
         <a href="" @click.prevent="cleanNotification(item)">
           <div class="item-left" v-if="item.report.last_image">
             <div class="thumbnail">
@@ -30,6 +30,9 @@
             <small>{{ formatDate(item.modified_on) }}</small>
           </div>
         </a>
+      </div>
+      <div v-if="notifications.length === 0">
+        You have no notifications.
       </div>
     </div>
   </div>

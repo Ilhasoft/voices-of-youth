@@ -44,8 +44,8 @@ export default {
       commit(TYPES.SET_PROJECTS_LIST, data);
     },
 
-    setCurrentProject({ commit, state }, obj) {
-      if (obj) {
+    setCurrentProject: async ({ commit, state }, obj) => {
+      if (obj.id !== undefined) {
         commit(TYPES.SET_CURRENT_PROJECT, obj);
         localStorage.setItem('project', JSON.stringify(obj));
       } else {
@@ -53,7 +53,11 @@ export default {
         if (project) {
           commit(TYPES.SET_CURRENT_PROJECT, JSON.parse(localStorage.getItem('project')));
         } else {
-          window.location = '/';
+          const data = await axios.get('/api/projects');
+          const response = data.filter(item => item.path === obj.path)[0];
+
+          localStorage.setItem('project', JSON.stringify(response));
+          commit(TYPES.SET_CURRENT_PROJECT, response);
         }
       }
     },

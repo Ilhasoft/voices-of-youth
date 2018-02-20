@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { mapGetters } from 'vuex';
 import HeaderIndex from '@/components/header/Index';
 import MapOsm from '@/components/shared/Map';
 import SideBar from '@/components/sidebar/Index';
@@ -31,20 +31,10 @@ export default {
     MapOsm,
   },
 
-  mounted() {
-    this.getReports();
-  },
-
   computed: {
     ...mapGetters({
       sideBarActived: 'getSideBarIsActived',
     }),
-  },
-
-  methods: {
-    ...mapActions([
-      'getReports',
-    ]),
   },
 };
 </script>

@@ -77,6 +77,7 @@ export default {
     ...mapGetters({
       item: 'getTheme',
       lastReports: 'getLastReports',
+      currentProject: 'getCurrentProject',
     }),
   },
 

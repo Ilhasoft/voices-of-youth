@@ -122,6 +122,7 @@ export default {
     ...mapGetters({
       item: 'getReport',
       files: 'getReportFiles',
+      currentProject: 'getCurrentProject',
     }),
   },
 
@@ -137,7 +138,17 @@ export default {
       'getTheme',
       'setSideBarConfigs',
       'searchReports',
+      'getReport',
     ]),
+
+    routeChange() {
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      }).then(() => {
+        this.getReport(this.$route.params.id);
+      });
+    },
 
     checkPreview() {
       if (this.files.length > 0) {
@@ -190,7 +201,7 @@ export default {
     },
 
     formatURI() {
-      return window.location.href;
+      return `${window.location}/report/${this.item.id}`;
     },
 
     openTheme() {
@@ -198,6 +209,8 @@ export default {
         this.setSideBarConfigs({
           tabActived: 'Theme',
           isActived: true,
+        }).then(() => {
+          this.$router.push({ name: 'project', params: { path: this.currentProject.path } });
         });
       });
     },

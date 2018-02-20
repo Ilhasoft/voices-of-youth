@@ -12,7 +12,6 @@ import { mapGetters, mapActions } from 'vuex';
 import L from 'leaflet';
 import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
-// import bus from '@/helper/bus';
 
 export default {
   name: 'Map',
@@ -47,6 +46,9 @@ export default {
   mounted() {
     this.$refs.map.mapObject.zoomControl.remove();
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
+
+    const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
+    this.$refs.map.mapObject.fitBounds(bounds);
   },
 
   computed: {
@@ -54,6 +56,7 @@ export default {
       reports: 'getReportsPins',
       report: 'getReport',
       sideBarActived: 'getSideBarIsActived',
+      currentProject: 'getCurrentProject',
     }),
   },
 
@@ -66,13 +69,6 @@ export default {
         );
         const zoom = this.$refs.map.mapObject.getZoom();
         this.$refs.map.mapObject.flyTo(moveTo, (zoom < 5 ? 11 : zoom));
-      }
-    },
-
-    reports() {
-      if (!this.report.name) {
-        const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
-        this.$refs.map.mapObject.flyToBounds(bounds);
       }
     },
 
