@@ -200,6 +200,7 @@ export default {
   .tags {
     margin-left: 18px;
     margin-right: 35px;
+    display: inline-flex;
 
     small {
       margin-right: 3px;
