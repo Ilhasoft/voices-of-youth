@@ -10,16 +10,10 @@
 
 .item {
     margin: auto;
-    //align-self: center;
 }
 
 .no-bullets {
     list-style-type: none
-}
-
-#remove_user {
-    background-color: white;
-    color: black;
 }
 
 #reset_password {
@@ -46,3 +40,10 @@ body {
 .modal-backdrop {
     z-index: 1050 !important;
 }
+
+.btn-danger {
+    color: #fff;
+    background-color: #DE486B;
+    border-color: #DE486B;
+}
+

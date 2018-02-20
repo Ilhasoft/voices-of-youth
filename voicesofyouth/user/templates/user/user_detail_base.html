@@ -19,12 +19,19 @@
                 <p>{{ voy_user.email }}</p>
                 <p>{% trans "Creation date" %}: {{ voy_user.date_joined|date:"d N Y" }}</p>
             </div>
-            <div>
+            <div class="col-xs-1">
                 <button
                     type="button"
                     data-toggle="modal"
                     data-target="#modalEditUserProfile"
                     class="btn btn-info btn-lg btn-oval">{% trans "Edit profile" %}
+                </button>
+            </div>
+            <div class="col-xs-1">
+                <button
+                    id="remove_user"
+                    type="button"
+                    class="btn btn-danger btn-lg btn-oval">{% trans "Remove" %}
                 </button>
             </div>
         </div>

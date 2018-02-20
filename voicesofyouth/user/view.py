@@ -304,8 +304,8 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, request, mapper_id, **kwargs):
         context = super().get_context_data(**kwargs)
-
         mapper = get_object_or_404(MapperUser, pk=mapper_id)
+
         data = {
             'username': mapper.username,
             'name': mapper.get_full_name(),
