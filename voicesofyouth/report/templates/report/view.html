@@ -30,7 +30,7 @@
                         {% endif %}
 
                         {% if report.status == 1 %}
-                            <a class="btn btn-danger delete">{% trans 'Delete' %}</a>
+                            <a href="{% url 'voy-admin:reports:remove' report.pk %}" class="btn btn-danger delete">{% trans 'Delete' %}</a>
                         {% endif %}
 
                         {% if report.status == 2 %}

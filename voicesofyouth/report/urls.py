@@ -6,6 +6,7 @@ from voicesofyouth.report.view import ReportListView
 from voicesofyouth.report.view import ReportView
 from voicesofyouth.report.view import ApproveReportView
 from voicesofyouth.report.view import PendingReportView
+from voicesofyouth.report.view import RemoveReportView
 from voicesofyouth.report.view import CommentsReportView
 from voicesofyouth.report.view import CommentsSaveView
 
@@ -14,6 +15,7 @@ urlpatterns = [
     url(r'^$', ReportListView.as_view(), name='filter'),
     url(r'^new/', AddReportView.as_view(), name='new'),
     url(r'^edit/(?P<report>[0-9]+)', EditReportView.as_view(), name='edit'),
+    url(r'^remove/(?P<report>[0-9]+)', RemoveReportView.as_view(), name='remove'),
     url(r'^view/(?P<report>[0-9]+)', ReportView.as_view(), name='view'),
     url(r'^approve/(?P<report>[0-9]+)', ApproveReportView.as_view(), name='approve'),
     url(r'^pending/', PendingReportView.as_view(), name='pending'),

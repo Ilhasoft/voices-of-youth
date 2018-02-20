@@ -405,3 +405,15 @@ class PendingReportView(LoginRequiredMixin, TemplateView):
         context['reports'] = get_paginator(reports, page)
 
         return context
+
+
+class RemoveReportView(LoginRequiredMixin, TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        report_id = kwargs['report']
+        if report_id:
+            report = get_object_or_404(Report, pk=report_id)
+            report.delete()
+
+            messages.success(request, _('Report removed'))
+        return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
