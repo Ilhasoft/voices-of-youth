@@ -42,9 +42,10 @@ class UserChangeSetSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         try:
-            user = User.objects.get(username=data['username'])
-            if user is not None:
-                raise serializers.ValidationError('Username already exists.')
+            if 'username' in data:
+                user = User.objects.get(username=data['username'])
+                if user is not None:
+                    raise serializers.ValidationError('Username already exists.')
         except User.DoesNotExist:
             pass
 
