@@ -48,7 +48,7 @@
             </div>
 
             <div class="column m-auto">
-              <h1 v-cloak>{{ item.name }}</h1>
+              <a href="" @click.prevent="openTheme(item)"><h1 v-cloak>{{ item.name }}</h1></a>
               <p v-cloak>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
             </div>
 

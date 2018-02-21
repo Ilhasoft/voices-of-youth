@@ -16,7 +16,7 @@
                 <div class="columns">
                   <div class="column has-text-center">
                     <h1>Hello, again!</h1>
-                    <small>Login to your account</small>
+                    <small>Log in to your account</small>
                   </div>
                 </div>
 

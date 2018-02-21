@@ -53,7 +53,7 @@ export default {
       text: '',
       isEmpty: false,
       descriptions: {
-        approved: 'Ups! You have not created any reports yet',
+        approved: 'Oops! You have not created any reports yet',
         pending: 'Great! All your reports have been approved',
         rejected: 'Good job! You have no unapproved reports',
       },
