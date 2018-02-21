@@ -148,7 +148,7 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ReportFilesSerializer
-    queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('-created_on').all()
+    queryset = ReportFile.objects.prefetch_related('report', 'created_by').order_by('-created_on').all().filter(report__status=REPORT_STATUS_APPROVED)
     filter_class = ReportFileFilter
     pagination_class = ReportFilesResultsSetPagination
 
