@@ -5,24 +5,29 @@
       <div class="container">
         <div class="columns t-center m-top">
           <div class="column content-report">
+            <div class="columns">
+              <div class="column is-4">
+                <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
+              </div>
 
-          <div class="columns">
-            <div class="column is-4">
-              <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
+              <div class="column is-4">
+                <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
+              </div>
+
+              <div class="column is-4">
+                <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Not Approved</button>
+              </div>
             </div>
 
-            <div class="column is-4">
-              <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
-            </div>
-
-            <div class="column is-4">
-              <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Not Approved</button>
-            </div>
-          </div>
-
-          <report-item :key="key" :report="report" v-for="(report, key) in reports" />
-
-          <empty-list :status="status" :text="text" v-show="isEmpty" />
+            <report-item
+              :key="key"
+              :report="report"
+              v-for="(report, key) in reports" />
+            
+            <empty-list
+              :avatar="user.avatar"
+              :text="text"
+              v-show="isEmpty" />
           </div>
         </div>
       </div>
@@ -76,6 +81,7 @@ export default {
     userIsLogged: 'userIsLogged',
     userIsMapper: 'userIsMapper',
     currentProject: 'getCurrentProject',
+    user: 'getUserData',
   }),
 
   methods: {

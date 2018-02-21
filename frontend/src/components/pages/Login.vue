@@ -34,6 +34,12 @@
 
                 <div class="columns">
                   <div class="column has-text-center">
+                    If you forgot your password contact your local admin or email info@voicesofyouth.org
+                  </div>
+                </div>
+
+                <div class="columns">
+                  <div class="column has-text-center">
                     <button type="submit" @click.prevent="userLogin()" class="btn button l-submit">Login</button>
                   </div>
                 </div>

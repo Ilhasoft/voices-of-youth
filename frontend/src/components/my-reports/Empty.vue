@@ -2,9 +2,7 @@
   <div class="empty">
     <div class="columns">
       <div class="column">
-        <img src="~@/assets/img/my-report-approved.png" alt="" v-show="status === 'approved'" />
-        <img src="~@/assets/img/my-report-pending.png" alt="" v-show="status === 'pending'" />
-        <img src="~@/assets/img/my-report-rejected.png" alt="" v-show="status === 'rejected'" />
+        <img :src="avatar" alt="" />
       </div>
     </div>
 
@@ -27,7 +25,7 @@ export default {
       default: '',
     },
 
-    status: {
+    avatar: {
       type: String,
       required: true,
     },
