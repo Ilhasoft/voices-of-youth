@@ -49,4 +49,7 @@ class UserChangeSetSerializer(serializers.ModelSerializer):
         except User.DoesNotExist:
             pass
 
+        if 'password' in data and len(data['password']) < 6:
+            raise serializers.ValidationError('Password required 6 characters.')
+
         return data

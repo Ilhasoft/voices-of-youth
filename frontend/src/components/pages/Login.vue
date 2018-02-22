@@ -84,13 +84,13 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" v-model="register.password" placeholder="Password"/>
+                  <input type="password" minlength="6" class="input" v-model="register.password" placeholder="Password"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" class="input" v-model="register.confirmPassword" placeholder="Confirm password"/>
+                  <input type="password" minlength="6" class="input" v-model="register.confirmPassword" placeholder="Confirm password"/>
                 </div>
               </div>
 

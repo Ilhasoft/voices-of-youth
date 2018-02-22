@@ -62,7 +62,7 @@ class VoyUserBaseForm(forms.Form):
                                      'autocomplete': 'off'
                                  }
                              ))
-    password = forms.CharField(widget=forms.PasswordInput(
+    password = forms.CharField(min_length=6, widget=forms.PasswordInput(
         attrs={
             'class': 'form-control',
             'id': 'password-form',
@@ -206,13 +206,13 @@ class UserResetPasswordForm(forms.Form):
         }
     ))
 
-    password = forms.CharField(widget=forms.PasswordInput(
+    password = forms.CharField(min_length=6, widget=forms.PasswordInput(
         attrs={
             'class': 'form-control'
         }
     ), required=True)
 
-    confirm_password = forms.CharField(widget=forms.PasswordInput(
+    confirm_password = forms.CharField(min_length=6, widget=forms.PasswordInput(
         attrs={
             'class': 'form-control'
         }

@@ -147,6 +147,7 @@
         $("img[id='current_avatar']").click((evt) => {
             $(evt.target).parents('div').find('#avatars').slideToggle("slow");
         });
+        $('[id=password-form]').attr('required', true);
         $("img[id^='avatar_']").click((evt) => {
             const selected_avatar = $(evt.target);
             const avatars = $(evt.target).parents('div').find('#avatars');
