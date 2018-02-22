@@ -25,8 +25,7 @@
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  <p class="title">{{ image.title }}</p>
-                  <p class="subtitle">{{ image.description }}</p>
+                  <p class="title">{{ image.report }}</p>
                 </div>
             </div>
 

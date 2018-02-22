@@ -27,6 +27,7 @@ class ReportFilesSerializer(VoySerializer):
     description = serializers.CharField(required=False)
     report_id = serializers.IntegerField()
     file = serializers.FileField()
+    report = serializers.SerializerMethodField()
 
     class Meta:
         model = ReportFile
@@ -37,8 +38,12 @@ class ReportFilesSerializer(VoySerializer):
             'media_type',
             'file',
             'created_by',
-            'report_id'
+            'report_id',
+            'report'
         )
+
+    def get_report(self, obj):
+        return obj.report.name
 
     def create(self, validated_data):
         mime_type = magic.from_buffer(validated_data['file'].read(), mime=True)
