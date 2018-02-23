@@ -215,20 +215,15 @@ export default {
       this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
         .addTo(this.$refs.map.mapObject);
 
-      this.marker.on('move', (e) => {
+      this.marker.on('move', (event) => {
         this.location = {
           type: 'Point',
-          coordinates: [e.latlng.lng, e.latlng.lat],
+          coordinates: [event.latlng.lng, event.latlng.lat],
         };
+      });
 
-        this.getGeoLocation({
-          latitude: e.latlng.lat,
-          longitude: e.latlng.lng,
-        }).then((address) => {
-          if (address) {
-            this.marker.bindPopup(`<strong>${address}</strong>`).openPopup();
-          }
-        });
+      this.$refs.map.mapObject.on('click', (event) => {
+        this.marker.setLatLng(event.latlng).update();
       });
     }
   },
