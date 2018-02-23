@@ -25,7 +25,7 @@
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
-                  <p class="title">{{ image.report }}</p>
+                  <p class="title"><a href="" @click.prevent="openReport(image.report_id)">{{ image.report }}</a></p>
                 </div>
             </div>
 
