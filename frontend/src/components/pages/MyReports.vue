@@ -2,7 +2,7 @@
   <div>
     <header-index/>
     <div class="internal-page-color">
-      <div class="container">
+      <div class="container-reports">
         <div class="columns t-center is-marginless">
           <div class="column content-report">
             <div class="columns">
@@ -101,72 +101,75 @@ html {
   background-color: #f6f6f6;
 }
 
-.t-center {
-  text-align: center;
-}
+.internal-page-color {
 
-.container {
-  height: 100vh;
-}
-
-.content-report {
-  margin: auto;
-  max-width: 800px;
-
-  .more-oldest {
-    border-top: solid 1px #d2d2d2;
-    padding-top: 10px;
-
-    a {
-      margin-top: 5px;
-      font-size: 16px;
-      letter-spacing: -0.4px;
-      color: #00cbff;
-    }
-  }
-
-  .btn {
-    border-radius: 100px;
-    background-color: #00cbff;
-    font-size: 15px;
-    letter-spacing: -0.4px;
+  .t-center {
     text-align: center;
-    color: #ffffff;
-    border-color: #00cbff;
-    outline: none;
   }
 
-  .btn:focus {
-    border-color: #00cbff;
-    -webkit-box-shadow: 0 0 0 0.125em rgba(0,203,255, 0.2);
-    box-shadow: 0 0 0 0.125em rgba(0,203,255, 0.2);
+  .container-reports {
+    height: 100vh;
   }
 
-  .btn-clear {
-    background-color: #f6f6f6;
-    border-color: #f6f6f6;
-  }
+  .content-report {
+    margin: auto;
+    max-width: 800px;
 
-  .btn-clear:focus {
-    border-color: #f6f6f6;
-    -webkit-box-shadow: 0 0 0 0.125em rgba(246, 246, 246, 0.2);
-    box-shadow: #f6f6f6;
-  }
+    .more-oldest {
+      border-top: solid 1px #d2d2d2;
+      padding-top: 10px;
 
-  .input {
-    width: 326px;
-    height: 38px;
-    border-radius: 21px;
-    border: solid 1px #e9e9e9;
-    background: url('~@/assets/img/header-search.png') #ffffff no-repeat;
-    background-position: right 15px top 7px;
-    padding-right: 42px;
-  }
+      a {
+        margin-top: 5px;
+        font-size: 16px;
+        letter-spacing: -0.4px;
+        color: #00cbff;
+      }
+    }
 
-  .input:focus {
-    border-color: #e9e9e9;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    .btn {
+      border-radius: 100px;
+      background-color: #00cbff;
+      font-size: 15px;
+      letter-spacing: -0.4px;
+      text-align: center;
+      color: #ffffff;
+      border-color: #00cbff;
+      outline: none;
+    }
+
+    .btn:focus {
+      border-color: #00cbff;
+      -webkit-box-shadow: 0 0 0 0.125em rgba(0,203,255, 0.2);
+      box-shadow: 0 0 0 0.125em rgba(0,203,255, 0.2);
+    }
+
+    .btn-clear {
+      background-color: #f6f6f6;
+      border-color: #f6f6f6;
+    }
+
+    .btn-clear:focus {
+      border-color: #f6f6f6;
+      -webkit-box-shadow: 0 0 0 0.125em rgba(246, 246, 246, 0.2);
+      box-shadow: #f6f6f6;
+    }
+
+    .input {
+      width: 326px;
+      height: 38px;
+      border-radius: 21px;
+      border: solid 1px #e9e9e9;
+      background: url('~@/assets/img/header-search.png') #ffffff no-repeat;
+      background-position: right 15px top 7px;
+      padding-right: 42px;
+    }
+
+    .input:focus {
+      border-color: #e9e9e9;
+      -webkit-box-shadow: none;
+      box-shadow: none;
+    }
   }
 }
 </style>
