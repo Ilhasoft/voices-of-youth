@@ -3,7 +3,7 @@
     <header-index/>
     <div class="internal-page-color">
       <div class="container">
-        <div class="columns t-center m-top">
+        <div class="columns t-center is-marginless">
           <div class="column content-report">
             <div class="columns">
               <div class="column is-4">
@@ -60,14 +60,6 @@ export default {
     };
   },
 
-  beforeCreate: () => {
-    document.body.className = 'grey';
-  },
-
-  beforeDestroy: () => {
-    document.body.className = 'white';
-  },
-
   mounted() {
     if (!this.userIsLogged || !this.userIsMapper) {
       router.push({ name: 'project', params: { path: this.currentProject.path } });
@@ -104,13 +96,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.t-center {
-  text-align: center;
+<style lang="scss">
+html {
+  background-color: #f6f6f6;
 }
 
-.m-top {
-  margin-top: 15px;
+.t-center {
+  text-align: center;
 }
 
 .container {
