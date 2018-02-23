@@ -27,6 +27,7 @@ class ReportFilesSerializer(VoySerializer):
     description = serializers.CharField(required=False)
     report_id = serializers.IntegerField()
     file = serializers.FileField()
+    thumbnail = serializers.FileField(required=False)
     report = serializers.SerializerMethodField()
 
     class Meta:
@@ -37,6 +38,7 @@ class ReportFilesSerializer(VoySerializer):
             'description',
             'media_type',
             'file',
+            'thumbnail',
             'created_by',
             'report_id',
             'report'

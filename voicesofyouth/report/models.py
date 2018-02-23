@@ -201,6 +201,7 @@ class ReportFile(BaseModel):
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
     file = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('File'))
     media_type = models.CharField(max_length=5, choices=FILE_TYPES, verbose_name=_('Type'))
+    thumbnail = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('Thumbnail'))
 
     class Meta:
         verbose_name = _('Report file')
