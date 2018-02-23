@@ -196,7 +196,7 @@ export default {
 
       this.getReport(this.id).then(() => {
         if (this.report.status === 1 || this.report.created_by.id !== this.currentUser.id) {
-          router.push({ name: 'my-reports' });
+          router.push({ name: 'project', params: { path: this.currentProject.path } });
         } else {
           this.marker = L.marker(this.report.location.coordinates.reverse(), {
             icon: this.icon,
