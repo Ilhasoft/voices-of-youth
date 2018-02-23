@@ -96,13 +96,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-html {
-  background-color: #f6f6f6;
-}
-
+<style lang="scss" scoped>
 .internal-page-color {
-
   .t-center {
     text-align: center;
   }
