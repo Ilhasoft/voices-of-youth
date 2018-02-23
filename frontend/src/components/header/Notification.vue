@@ -6,7 +6,7 @@
     v-if="userIsLogged && userIsMapper">
     
     <a href="">
-      <div class="label" v-if="notifications.length > 0"></div>
+      <div class="label" v-if="notifications.length"></div>
       <img class="img" src="~@/assets/img/header-bell.png">
     </a>
 
@@ -72,6 +72,7 @@ export default {
       'getNotifications',
       'setSideBarConfigs',
       'setNotificationRead',
+      'getReport',
     ]),
 
     formatDate(value) {
@@ -104,10 +105,35 @@ export default {
     },
 
     cleanNotification(item) {
-      this.setNotificationRead(item.id);
-      if (item.origin === 1) {
-        router.push({ name: 'my-reports' });
-      }
+      this.setNotificationRead(item.id).then(() => {
+        if (item.origin === 1) {
+          if (item.status === 1) {
+            this.openReport(item.id);
+          } else if (item.status === 3) {
+            router.push({ name: 'my-reports' });
+          }
+        }
+
+        if (item.status === 3 && item.origin === 2) {
+          this.openReport(item.id);
+        }
+      });
+    },
+
+    openReport(id) {
+      router.push({
+        name: 'project',
+        params: {
+          path: this.currentProject.path,
+        },
+      });
+
+      this.setSideBarConfigs({
+        tabActived: 'ReportDetail',
+        isActived: true,
+      }).then(() => {
+        this.getReport(id);
+      });
     },
   },
 };

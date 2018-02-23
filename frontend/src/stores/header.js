@@ -1,4 +1,5 @@
 import axios from 'axios';
+import helper from '@/helper';
 import * as TYPES from './types';
 
 export default {
@@ -43,7 +44,8 @@ export default {
     },
 
     getNotifications: async ({ commit }) => {
-      const data = await axios.get('/api/report-notification');
+      const project = helper.getItem('project');
+      const data = await axios.get(`/api/report-notification/?project=${project.id}`);
       commit(TYPES.SET_NOTIFICATIONS, data);
     },
 

@@ -62,6 +62,7 @@ export default new Router({
       component: GalleryPage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Gallery',
           showMenu: false,
@@ -78,6 +79,7 @@ export default new Router({
       component: NewReportPage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
           menuTitle: '',
           showMenu: true,
@@ -93,8 +95,9 @@ export default new Router({
       name: 'editreport',
       component: EditReportPage,
       props: true,
-      beforeEnter: (to, from, next) => {
-        dispatchStores();
+      beforeEnter: async (to, from, next) => {
+        await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         stores.dispatch('updateHeaderConfig', {
           menuTitle: '',
           showMenu: true,
@@ -113,9 +116,16 @@ export default new Router({
       props: true,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('setSideBarConfigs', {
           tabActived: 'ReportDetail',
           isActived: true,
+        });
+        await stores.dispatch('updateHeaderConfig', {
+          menuTitle: '',
+          showMenu: true,
+          showProjects: true,
+          showBackButton: false,
         });
         await stores.dispatch('getReports');
         await stores.dispatch('getReport', to.params.id);
@@ -129,6 +139,7 @@ export default new Router({
       component: LoginPage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
           menuTitle: 'Login',
           showMenu: false,
@@ -145,6 +156,7 @@ export default new Router({
       component: ProfilePage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
           menuTitle: 'My Profile',
           showMenu: false,
@@ -161,6 +173,7 @@ export default new Router({
       component: MyReportsPage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
+        await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
           menuTitle: 'My Reports',
           showMenu: false,

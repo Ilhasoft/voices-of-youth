@@ -141,15 +141,6 @@ export default {
       'getReport',
     ]),
 
-    routeChange() {
-      this.setSideBarConfigs({
-        tabActived: 'ReportDetail',
-        isActived: true,
-      }).then(() => {
-        this.getReport(this.$route.params.id);
-      });
-    },
-
     checkPreview() {
       if (this.files.length > 0) {
         this.filePreview = this.files[0].file;
