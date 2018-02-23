@@ -153,7 +153,7 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
     pagination_class = ReportFilesResultsSetPagination
 
     def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(report__status=REPORT_STATUS_APPROVED)
+        queryset = self.filter_queryset(self.get_queryset().filter(report__status=REPORT_STATUS_APPROVED))
 
         page = self.paginate_queryset(queryset)
         if page is not None:
