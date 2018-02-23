@@ -108,14 +108,14 @@ export default {
       this.setNotificationRead(item.id).then(() => {
         if (item.origin === 1) {
           if (item.status === 1) {
-            this.openReport(item.id);
+            this.openReport(item.report.id);
           } else if (item.status === 3) {
             router.push({ name: 'my-reports' });
           }
         }
 
         if (item.status === 3 && item.origin === 2) {
-          this.openReport(item.id);
+          this.openReport(item.report.id);
         }
       });
     },
