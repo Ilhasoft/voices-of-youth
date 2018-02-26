@@ -41,7 +41,7 @@
                   @goPreviousPage="goPreviousPage"
                   @goNextPage="goNextPage"
                   @loadItens="moreReports"
-                  v-show="isEmpty"
+                  v-show="!isEmpty"
                 />
               </div>
             </div>
@@ -66,7 +66,7 @@
                   @goPreviousPage="goPreviousPage"
                   @goNextPage="goNextPage"
                   @loadItens="moreReports"
-                  v-show="isEmpty"
+                  v-show="!isEmpty"
                 />
               </div>
             </div>
