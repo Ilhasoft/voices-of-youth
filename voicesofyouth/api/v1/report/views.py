@@ -1,9 +1,11 @@
 from django.db.models.query_utils import Q
+from django.shortcuts import get_object_or_404
 
 from rest_framework import permissions, viewsets, mixins
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.decorators import list_route
 
 from voicesofyouth.api.v1.report.filters import ReportCommentFilter
 from voicesofyouth.api.v1.report.filters import ReportFileFilter
@@ -173,6 +175,18 @@ class ReportFilesViewSet(mixins.CreateModelMixin,
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response('Permission denied', status=status.HTTP_403_FORBIDDEN)
+
+    @list_route(methods=['post'])
+    def delete(self, request, *arg, **kwarg):
+        ids = self.request.query_params.get('ids', None)
+        if ids:
+            ids = ids.split(',')
+            for media_id in ids:
+                obj = get_object_or_404(ReportFile, id=media_id)
+                if obj and obj.report.created_by == request.user:
+                    obj.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ReportSearchViewSet(
