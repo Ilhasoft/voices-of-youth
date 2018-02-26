@@ -114,7 +114,7 @@ export default {
           }
         }
 
-        if (item.status === 3 && item.origin === 2) {
+        if (item.status === 1 && item.origin === 2) {
           this.openReport(item.report.id);
         }
       });
