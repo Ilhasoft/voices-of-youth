@@ -117,7 +117,7 @@ export default {
       const data = await axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj.status}&project=${project.id}&page_size=10${queryString}`);
       commit(TYPES.SET_USER_REPORTS, data);
       commit(TYPES.SET_USER_REPORTS_PAGE, currentPage);
-      return data;
+      return data.results;
     },
 
     executeUpdateProfile: async ({ commit, dispatch }, obj) => {
