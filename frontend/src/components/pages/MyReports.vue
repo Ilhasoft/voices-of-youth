@@ -7,15 +7,41 @@
           <div class="column content-report">
             <div class="columns">
               <div class="column is-4">
-                <button class="button" :class="[status == 'approved' ? 'btn' : 'btn-clear']" @click.prevent="getReports('approved', '1')">Approved</button>
+                <button
+                  class="button"
+                  :class="[status == 'approved' ? 'btn' : 'btn-clear']"
+                  @click.prevent="getReports('approved', '1')">
+                Approved</button>
               </div>
 
               <div class="column is-4">
-                <button class="button" :class="[status == 'pending' ? 'btn' : 'btn-clear']" @click.prevent="getReports('pending', '2')">Pending</button>
+                <button
+                  class="button"
+                  :class="[status == 'pending' ? 'btn' : 'btn-clear']"
+                  @click.prevent="getReports('pending', '2')">
+                Pending</button>
               </div>
 
               <div class="column is-4">
-                <button class="button" :class="[status == 'rejected' ? 'btn' : 'btn-clear']" @click.prevent="getReports('rejected', '3')">Not Approved</button>
+                <button
+                  class="button"
+                  :class="[status == 'rejected' ? 'btn' : 'btn-clear']"
+                  @click.prevent="getReports('rejected', '3')">
+                Not Approved</button>
+              </div>
+            </div>
+
+            <div class="columns">
+              <div class="column">
+                <pagination
+                  :pagination="pagination"
+                  :currentPage="currentPage"
+                  :nextPage="nextPage"
+                  :previousPage="previousPage"
+                  @goPreviousPage="goPreviousPage"
+                  @goNextPage="goNextPage"
+                  @loadItens="moreReports"
+                />
               </div>
             </div>
 
@@ -28,6 +54,20 @@
               :avatar="user.avatar"
               :text="text"
               v-show="isEmpty" />
+
+            <div class="columns">
+              <div class="column">
+                <pagination
+                  :pagination="pagination"
+                  :currentPage="currentPage"
+                  :nextPage="nextPage"
+                  :previousPage="previousPage"
+                  @goPreviousPage="goPreviousPage"
+                  @goNextPage="goNextPage"
+                  @loadItens="moreReports"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -41,14 +81,16 @@ import router from '@/router/';
 import HeaderIndex from '@/components/header/Index';
 import ReportItem from '@/components/my-reports/Report';
 import EmptyList from '@/components/my-reports/Empty';
+import Pagination from '@/components/shared/Pagination';
 
 export default {
   name: 'MyReports',
 
-  components: { HeaderIndex, ReportItem, EmptyList },
+  components: { HeaderIndex, ReportItem, EmptyList, Pagination },
 
   data() {
     return {
+      type: '',
       status: '',
       text: '',
       isEmpty: false,
@@ -64,7 +106,7 @@ export default {
     if (!this.userIsLogged || !this.userIsMapper) {
       router.push({ name: 'project', params: { path: this.currentProject.path } });
     } else {
-      this.getReports('approved', 1);
+      this.getReports('approved', 1, 1);
     }
   },
 
@@ -74,6 +116,10 @@ export default {
     userIsMapper: 'userIsMapper',
     currentProject: 'getCurrentProject',
     user: 'getUserData',
+    pagination: 'myReportsPagination',
+    currentPage: 'myReportsCurrentPage',
+    nextPage: 'myReportsNextUrl',
+    previousPage: 'myReportsPreviousUrl',
   }),
 
   methods: {
@@ -81,9 +127,15 @@ export default {
       'myReports',
     ]),
 
-    getReports(status, type) {
+    moreReports(nextPage) {
+      this.getReports(this.status, this.type, nextPage);
+    },
+
+    getReports(status, type, nextPage) {
       this.status = status;
-      this.myReports(type).then((response) => {
+      this.type = type;
+
+      this.myReports({ status: this.type, page: nextPage }).then((response) => {
         if (response.length === 0) {
           this.text = this.descriptions[status];
           this.isEmpty = true;
@@ -91,6 +143,18 @@ export default {
           this.isEmpty = false;
         }
       });
+    },
+
+    goPreviousPage() {
+      if (this.previousPage) {
+        this.getReports(this.status, this.type, this.currentPage - 1);
+      }
+    },
+
+    goNextPage() {
+      if (this.nextPage) {
+        this.getReports(this.status, this.type, this.currentPage + 1);
+      }
     },
   },
 };
@@ -100,6 +164,7 @@ export default {
 .internal-page-color {
   .t-center {
     text-align: center;
+    background-color: #f6f6f6;
   }
 
   .container-reports {

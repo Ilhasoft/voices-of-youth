@@ -17,7 +17,13 @@ export default {
     },
     isLogged: false,
     loginError: {},
-    myReports: {},
+    myReports: {
+      all: [],
+      total: 0,
+      page: 0,
+      next: '',
+      previous: '',
+    },
     myThemes: {},
   },
 
@@ -25,8 +31,13 @@ export default {
     getUserData: state => state.userData,
     userIsMapper: state => state.userData.is_mapper,
     userIsLogged: state => state.isLogged,
-    getMyReports: state => state.myReports,
+    getMyReports: state => state.myReports.all,
     getMyThemes: state => state.myThemes,
+    myReportsTotal: state => state.myReports.total,
+    myReportsPagination: state => Math.ceil(state.myReports.total / 10),
+    myReportsNextUrl: state => state.myReports.next,
+    myReportsPreviousUrl: state => state.myReports.previous,
+    myReportsCurrentPage: state => state.myReports.page,
   },
 
   /* eslint-disable no-param-reassign */
@@ -41,11 +52,18 @@ export default {
     },
 
     [TYPES.SET_USER_REPORTS](state, obj) {
-      state.myReports = obj;
+      state.myReports.all = obj.results;
+      state.myReports.total = obj.count;
+      state.myReports.next = (obj.next ? obj.next : '');
+      state.myReports.previous = (obj.previous ? obj.previous : '');
     },
 
     [TYPES.SET_USER_THEMES](state, obj) {
       state.myThemes = obj;
+    },
+
+    [TYPES.SET_USER_REPORTS_PAGE](state, obj) {
+      state.myReports.page = obj;
     },
   },
 
@@ -87,8 +105,18 @@ export default {
     myReports: async ({ commit, dispatch }, obj) => {
       const user = helper.getItem('user');
       const project = helper.getItem('project');
-      const data = await axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj}&project=${project.id}`);
+
+      let queryString = '';
+      let currentPage = 1;
+
+      if (obj && obj.page) {
+        queryString = `&page=${obj.page}`;
+        currentPage = obj.page;
+      }
+
+      const data = await axios.get(`/api/reports/?mapper=${user[0].id}&status=${obj.status}&project=${project.id}&page_size=10${queryString}`);
       commit(TYPES.SET_USER_REPORTS, data);
+      commit(TYPES.SET_USER_REPORTS_PAGE, currentPage);
       return data;
     },
 

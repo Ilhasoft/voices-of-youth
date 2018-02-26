@@ -33,7 +33,7 @@ export default {
     galleryPagination: state => Math.ceil(state.total / 20),
     galleryNextUrl: state => state.next,
     galleryPreviousUrl: state => state.previous,
-    galleyCurrentPage: state => state.page,
+    galleryCurrentPage: state => state.page,
   },
 
   /* eslint-disable no-param-reassign */

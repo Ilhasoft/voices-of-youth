@@ -78,7 +78,7 @@ export default {
     ...mapGetters({
       imagesList: 'galleryImages',
       pagination: 'galleryPagination',
-      currentPage: 'galleyCurrentPage',
+      currentPage: 'galleryCurrentPage',
       nextPage: 'galleryNextUrl',
       previousPage: 'galleryPreviousUrl',
       currentProject: 'getCurrentProject',
