@@ -255,7 +255,6 @@ export default {
       'getUsersByTheme',
       'saveNewReport',
       'saveFiles',
-      'getGeoLocation',
       'notifyOpen',
     ]),
 

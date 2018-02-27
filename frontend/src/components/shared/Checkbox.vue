@@ -28,7 +28,7 @@ export default {
 
   data() {
     return {
-      isChecked: false,
+      isChecked: true,
     };
   },
 

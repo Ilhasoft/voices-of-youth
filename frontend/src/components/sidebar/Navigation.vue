@@ -71,6 +71,7 @@ export default {
 
       bus.$emit('clearFields', {});
       bus.$emit('resetMap', {});
+      this.$emit('closeSideBar');
     },
   },
 };

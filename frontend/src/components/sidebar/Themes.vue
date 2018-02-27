@@ -2,7 +2,8 @@
   <div>
     <navigation-bar
       title="Themes"
-      :closeButton="true" />
+      :closeButton="true"
+      @closeSideBar="closeThemes" />
 
     <div class="map-box">
       <div class="columns">
@@ -145,6 +146,10 @@ export default {
           yearEnd: this.yearEnd,
         });
       }
+    },
+
+    closeThemes() {
+      this.setCheckAll(true);
     },
   },
 };

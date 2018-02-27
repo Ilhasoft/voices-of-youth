@@ -232,7 +232,6 @@ export default {
       'saveEditReport',
       'saveFiles',
       'removeFiles',
-      'getGeoLocation',
       'notifyOpen',
       'getReport',
       'getUserThemes',

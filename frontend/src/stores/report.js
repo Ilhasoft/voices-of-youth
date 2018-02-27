@@ -3,8 +3,6 @@ import L from 'leaflet';
 import helper from '@/helper';
 import * as TYPES from './types';
 
-// const mapsKey = 'AIzaSyColv5Z7Xf-YiEPRO-eX4RSLzakAGYGNkw';
-
 export default {
   state: {
     all: [],
@@ -67,25 +65,14 @@ export default {
     },
 
     [TYPES.ADD_REPORTS_LIST](state, obj) {
-      if (state.themes.length === 0) {
-        state.all = [];
-        state.all = obj.reports;
-      } else if (state.themes.indexOf(obj.theme) === -1) {
-        Object.keys(obj.reports).map((key, index) => {
-          state.all.push(obj.reports[index]);
-          return true;
-        });
-      }
-
-      state.themes.push(obj.theme);
+      Object.keys(obj.reports).map((key, index) => {
+        state.all.push(obj.reports[index]);
+        return true;
+      });
     },
 
     [TYPES.REMOVE_REPORTS_LIST](state, obj) {
-      const index = state.themes.indexOf(obj.theme);
-      if (index !== -1) {
-        state.themes.splice(index, 1);
-        state.all = state.all.filter(item => item.theme !== obj.theme);
-      }
+      state.all = state.all.filter(item => item.theme !== obj.theme);
     },
 
     [TYPES.SET_REPORT_COMMENTS](state, obj) {
@@ -127,10 +114,6 @@ export default {
         commit(TYPES.ADD_REPORTS_LIST, { reports: data, theme: obj.themeId });
       } else {
         commit(TYPES.REMOVE_REPORTS_LIST, { theme: obj.themeId });
-
-        if (state.themes.length === 0) {
-          dispatch('getReports');
-        }
       }
     },
 
@@ -261,19 +244,6 @@ export default {
     removeFiles: async ({ commit }, obj) => {
       await axios.delete(`/api/report-files/${obj}/`);
     },
-
-    // getGeoLocation: async () => {
-      // const instance = axios.create();
-      // instance.defaults.headers.common = {};
-      // const data = await instance.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${obj.latitude},${obj.longitude}&key=${mapsKey}`);
-
-      // if (data.data.status === 'OK') {
-      //   return data.data.results[0].formatted_address;
-      // }
-      // return mapsKey;
-    // },
-
-    getGeoLocation: async () => '',
 
     searchReports: async ({ commit, dispatch }, obj) => {
       const project = helper.getItem('project');
