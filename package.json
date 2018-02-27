@@ -17,6 +17,7 @@
     "bulma": "^0.5.3",
     "leaflet": "^1.2.0",
     "vue": "^2.4.4",
+    "vue-i18n": "^7.4.2",
     "vue-router": "^2.7.0",
     "vue-select": "github:sagalbot/vue-select",
     "vue-social-sharing": "^2.2.10",

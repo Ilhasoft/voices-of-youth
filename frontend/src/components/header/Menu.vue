@@ -4,20 +4,20 @@
       <div class="column">
         <router-link
           :to="{ name: 'project', params: { path: currentProject.path }}"
-          @click.native="openThemes">Themes
+          @click.native="openThemes">{{ $t('message.header.themes') }}
         </router-link>
       </div>
       
       <div class="column">
         <router-link
           :to="{ name: 'gallery', params: { path: currentProject.path }}">
-          Gallery
+          {{ $t('message.header.gallery') }}
         </router-link>
       </div>
       
       <div class="column language">
         <p class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
-          Language
+          {{ $t('message.header.language') }}
           <span class="icon-header-more"></span>
         </p>
 
@@ -30,7 +30,7 @@
       
       <div class="column" v-if="userIsLogged && userIsMapper">
         <router-link
-          :to="{ name: 'my-reports' }">My reports
+          :to="{ name: 'my-reports' }">{{ $t('message.header.myreports') }}
         </router-link>
       </div>
       
@@ -39,7 +39,7 @@
           class="button btn-report"
           :to="{ name: 'newreport', params: { path: currentProject.path }}">
           <span class="icon-header-plus"></span>
-          <span> Add report</span>
+          <span> {{ $t('message.header.btnAddReport') }}</span>
         </router-link>
       </div>
     </div>

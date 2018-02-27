@@ -13,7 +13,7 @@
       <div class="column t-align is-hidden-touch">
         <router-link
           :to="{ name: 'project', params: { path: currentProject.path }}">
-          Back to map
+          {{ $t('message.header.back.title') }}
         </router-link>
       </div>
     </div>
