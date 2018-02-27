@@ -47,6 +47,12 @@ const messages = {
           },
         },
       },
+      navigator: {
+        login: 'Login',
+        myreports: 'My Reports',
+        myprofile: 'My Account',
+        gallery: 'Gallery',
+      },
     },
   },
 };

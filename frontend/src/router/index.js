@@ -13,6 +13,7 @@ import EditReportPage from '@/components/pages/EditReport';
 
 import stores from '@/stores';
 import helper from '@/helper';
+import i18n from '@/translate';
 
 Vue.use(Router);
 
@@ -64,7 +65,7 @@ export default new Router({
         await dispatchStores({ path: to.params.path });
         await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
-          menuTitle: 'Gallery',
+          menuTitle: i18n.t('message.navigator.gallery'),
           showMenu: false,
           showProjects: false,
           showBackButton: true,
@@ -141,7 +142,7 @@ export default new Router({
         await dispatchStores({ path: to.params.path });
         await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
-          menuTitle: 'Login',
+          menuTitle: i18n.t('message.navigator.login'),
           showMenu: false,
           showProjects: false,
           showBackButton: true,
@@ -158,7 +159,7 @@ export default new Router({
         await dispatchStores({ path: to.params.path });
         await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
-          menuTitle: 'My Profile',
+          menuTitle: i18n.t('message.navigator.myprofile'),
           showMenu: false,
           showProjects: false,
           showBackButton: true,
@@ -175,7 +176,7 @@ export default new Router({
         await dispatchStores({ path: to.params.path });
         await stores.dispatch('showDisclaimerProject', false);
         await stores.dispatch('updateHeaderConfig', {
-          menuTitle: 'My Reports',
+          menuTitle: i18n.t('message.navigator.myreports'),
           showMenu: false,
           showProjects: false,
           showBackButton: true,
