@@ -16,16 +16,15 @@
       </div>
       
       <div class="column language">
-        <p class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
+        <a href="" class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           {{ $t('message.header.language') }}
           <span class="icon-header-more"></span>
-        </p>
-
-        <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
-          <div class="item" :key="key" v-for="(language, key) in menuLanguages">
-            <a href="" @click.prevent="setLanguage(language[0])">{{ language[1] }}</a>
+          <div class="language-box" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false" :class="[isVisible ? 'fade-in' : 'fade-out']">
+            <div class="item" :key="key" v-for="(language, key) in menuLanguages">
+              <a href="" @click.prevent="setLanguage(language[0])">{{ language[1] }}</a>
+            </div>
           </div>
-        </div>
+        </a>
       </div>
       
       <div class="column" v-if="userIsLogged && userIsMapper">
@@ -59,6 +58,13 @@ export default {
   data() {
     return {
       isVisible: false,
+      defaultLang: [
+        ['en', 'English'],
+        ['fr', 'French'],
+        ['es', 'Spanish'],
+        ['pt-br', 'Portuguese'],
+        ['ar', 'Arabic'],
+      ],
     };
   },
 
@@ -68,11 +74,17 @@ export default {
       userIsMapper: 'userIsMapper',
       showMenu: 'menuIsVisibled',
       menuTitle: 'menuTitle',
-      menuLanguages: 'getProjectLanguages',
       currentProject: 'getCurrentProject',
       currentUser: 'getUserData',
       themes: 'getMyThemes',
     }),
+
+    menuLanguages() {
+      const languages = [...this.defaultLang, ...this.$store.getters.getProjectLanguages];
+      return languages.filter(
+        (elem, pos, arr) => arr.map(
+          mapObj => mapObj[0]).indexOf(elem[0]) === pos);
+    },
   },
 
   mounted() {
@@ -120,14 +132,13 @@ export default {
   }
 
   .language-box {
-    margin-left: 33px;
     z-index: 100000;
-    position: absolute;
     border-radius: 11px;
     background-color: #fff;
     -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
     padding: 1px 0px 1px 0px;
+    margin-top: 20px;
 
     .item {
       height: 38px;
