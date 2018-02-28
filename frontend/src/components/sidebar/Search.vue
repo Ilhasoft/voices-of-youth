@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar
-      title="Results"
+      :title="$t('message.sidebar.search.title')"
       :backButton="false"
       :closeButton="true" />
   
@@ -24,15 +24,15 @@
                   </small>
                 </div>
 
-                <p>{{ item.description }} <a href="" @click.prevent="openReport(item)" class="see-more">See more</a></p>
+                <p>{{ item.description }} <a href="" @click.prevent="openReport(item)" class="see-more">{{ $t('message.sidebar.search.more') }}</a></p>
               </div>
             </div>
           </div>
           <div v-else>
             <div class="columns">
               <div class="column no-result">
-                <img src="~@/assets/img/my-report-rejected.png" alt="">
-                <p>No results found</p>
+                <img :src="user.avatar" alt="">
+                <p>{{ $t('message.sidebar.search.empty') }}</p>
               </div>
             </div>
           </div>
@@ -54,6 +54,7 @@ export default {
   computed: {
     ...mapGetters({
       reports: 'getSearchReports',
+      user: 'getUserData',
     }),
   },
 

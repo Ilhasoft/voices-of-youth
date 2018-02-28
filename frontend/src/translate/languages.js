@@ -72,6 +72,11 @@ const messages = {
           btnSend: 'Send',
           remove: 'Remove',
         },
+        search: {
+          title: 'Results',
+          more: 'See more',
+          empty: 'No results found',
+        },
       },
     },
   },
