@@ -46,6 +46,21 @@ const messages = {
             accept: 'Accept',
           },
         },
+        myreports: {
+          approved: 'Approved',
+          pending: 'Pending',
+          notapproved: 'Not Approved',
+          descriptions: {
+            approved: 'Oops! You have not created any reports yet',
+            pending: 'Great! All your reports have been approved',
+            rejected: 'Good job! You have no unapproved reports',
+          },
+          report: {
+            admin: 'Admin feedback',
+            btnView: 'View',
+            btnEdit: 'Edit',
+          },
+        },
       },
       navigator: {
         login: 'Login',

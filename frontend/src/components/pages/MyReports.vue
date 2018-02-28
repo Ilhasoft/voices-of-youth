@@ -11,7 +11,7 @@
                   class="button"
                   :class="[status == 'approved' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('approved', '1')">
-                Approved</button>
+                  {{ $t('message.pages.myreports.approved') }}</button>
               </div>
 
               <div class="column is-4">
@@ -19,7 +19,7 @@
                   class="button"
                   :class="[status == 'pending' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('pending', '2')">
-                Pending</button>
+                  {{ $t('message.pages.myreports.pending') }}</button>
               </div>
 
               <div class="column is-4">
@@ -27,7 +27,7 @@
                   class="button"
                   :class="[status == 'rejected' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('rejected', '3')">
-                Not Approved</button>
+                  {{ $t('message.pages.myreports.notapproved') }}</button>
               </div>
             </div>
 
@@ -53,7 +53,7 @@
             
             <empty-list
               :avatar="user.avatar"
-              :text="text"
+              :text="$t(`message.pages.myreports.descriptions.${status}`)"
               v-show="isEmpty" />
 
             <div class="columns">
@@ -96,11 +96,6 @@ export default {
       status: '',
       text: '',
       isEmpty: false,
-      descriptions: {
-        approved: 'Oops! You have not created any reports yet',
-        pending: 'Great! All your reports have been approved',
-        rejected: 'Good job! You have no unapproved reports',
-      },
     };
   },
 
@@ -139,7 +134,6 @@ export default {
 
       this.myReports({ status: this.type, page: nextPage }).then((response) => {
         if (response.length === 0) {
-          this.text = this.descriptions[status];
           this.isEmpty = true;
         } else {
           this.isEmpty = false;
