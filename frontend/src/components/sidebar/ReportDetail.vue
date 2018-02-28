@@ -33,7 +33,7 @@
             <p v-html="formatDescription()" v-cloak></p>
 
             <div class="urls" v-if="item.urls" v-cloak>
-              <strong>External Links</strong>
+              <strong>{{ $t('message.sidebar.report.links') }}</strong>
               <p v-for="(url, key) in item.urls" :key="key">
                 <a :href="formatUrl(url)" target="_blank">{{ formatUrl(url) }}</a>
               </p>
@@ -49,7 +49,7 @@
           <div class="columns is-mobile buttons">
             <div class="column">
               <a class="button share shared">
-                <span class="icon-icon-share"></span> Share
+                <span class="icon-icon-share"></span> {{ $t('message.sidebar.report.share') }}
                 <social-sharing
                   :url="formatURI()"
                   :title="item.name"
@@ -79,7 +79,7 @@
 
             <div class="column">
               <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
-                <span class="icon-icon-comment"></span> Comment
+                <span class="icon-icon-comment"></span> {{ $t('message.sidebar.report.comment') }}
               </a>
             </div>
           </div>

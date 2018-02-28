@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar
-      title="Comments"
+      :title="$t('message.sidebar.comments.title')"
       :backButton="true"
       :closeButton="true"
       backTo="ReportDetail"
@@ -23,7 +23,7 @@
         </div>
 
         <div class="column send is-2">
-          <a href="" @click.prevent="saveComment()">Send</a>
+          <a href="" @click.prevent="saveComment()">{{ $t('message.sidebar.comments.btnSend') }}</a>
         </div>
       </div>
     </div>

@@ -53,6 +53,26 @@ const messages = {
         myprofile: 'My Account',
         gallery: 'Gallery',
       },
+      sidebar: {
+        themes: {
+          title: 'Themes',
+          more: 'See more',
+          to: 'to',
+        },
+        theme: {
+          reports: 'Reports',
+        },
+        report: {
+          links: 'External Links',
+          share: 'Share',
+          comment: 'Comment',
+        },
+        comments: {
+          title: 'Comments',
+          btnSend: 'Send',
+          remove: 'Remove',
+        },
+      },
     },
   },
 };

@@ -13,7 +13,7 @@
     <div v-if="isLogged && accessEdit" class="column is-1 t-center" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more"></span>
       <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
-        <p><a @click.prevent="removeComment()">Remove</a></p>
+        <p><a @click.prevent="removeComment()">{{ $t('message.sidebar.comments.remove') }}</a></p>
       </div>
     </div>
   </div>

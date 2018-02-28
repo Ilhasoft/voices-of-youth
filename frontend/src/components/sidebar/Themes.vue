@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar
-      title="Themes"
+      :title="$t('message.sidebar.themes.title')"
       :closeButton="true"
       @closeSideBar="closeThemes" />
 
@@ -22,7 +22,7 @@
             </div>
 
             <div class="column is-1 m-auto">
-              <p>to</p>
+              <p>{{ $t('message.sidebar.themes.to') }}</p>
             </div>
 
             <div class="column is-2 filter">
@@ -50,7 +50,7 @@
 
             <div class="column m-auto">
               <a href="" @click.prevent="openTheme(item)"><h1 v-cloak>{{ item.name }}</h1></a>
-              <p v-cloak>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">See more</a></p>
+              <p v-cloak>{{ getDescription(item.description) }}... <a href="" @click.prevent="openTheme(item)" class="see-more">{{ $t('message.sidebar.themes.more') }}</a></p>
             </div>
 
             <div class="column is-paddingless is-1 m-auto">
