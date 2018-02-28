@@ -1,39 +1,38 @@
 <template>
   <div>
     <header-index />
-
     <div class="columns is-marginless">
       <div class="column is-5 sidebar is-paddingless">
         <div class="header">
-          <h1>Edit report</h1>
+          <h1>{{ $t('message.pages.editreport.title') }}</h1>
         </div>
 
         <div class="box-form">
           <div class="form">
             <div class="columns">
               <div class="column">
-                <label for="title">Title</label>
+                <label for="title">{{ $t('message.pages.editreport.name') }}</label>
                 <input class="input" type="text" placeholder="" v-model="name">
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="description">Description</label>
+                <label for="description">{{ $t('message.pages.editreport.description') }}</label>
                 <textarea name="" id="" cols="30" rows="10" v-model="description"></textarea>
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="select-theme">Tags</label>
+                <label for="select-theme">{{ $t('message.pages.editreport.tags') }}</label>
                 <v-select v-model="tagsSelected" multiple :value.sync="selected" :options="tagsOptions"></v-select>
               </div>
             </div>
 
             <div class="columns">
               <div class="column size">
-                <label for="select-theme">Add photos and videos</label>
+                <label for="select-theme">{{ $t('message.pages.editreport.photos') }}</label>
                 <ul class="images">
                   <li>
                     <button class="new-file" @click.prevent="openFile" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
@@ -58,15 +57,14 @@
               <div class="point"></div>
               <div class="content">
                 <p>
-                  Remember, use only your own photos or photos that you are allowed to use
+                  {{ $t('message.pages.editreport.info') }}
                 </p>
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="select-theme">Add link from website</label>
-
+                <label for="select-theme">{{ $t('message.pages.editreport.links') }}</label>
                 <div class="columns">
                   <div class="column is-10"><input class="input" value="link" type="text" v-model="link"></div>
                   <div class="column t-center">
@@ -91,11 +89,19 @@
           <div class="buttons">
             <div class="columns is-mobile">
               <div class="column">
-                <button class="cancel" @click.prevent="closeForm">Cancel</button>
+                <button
+                  class="cancel"
+                  @click.prevent="closeForm">
+                  {{ $t('message.pages.editreport.btnCancel') }}
+                </button>
               </div>
 
               <div class="column">
-                <button class="send" @click.prevent="saveReport()">{{ btnSendName }}</button>
+                <button
+                  class="send"
+                  @click.prevent="saveReport()">
+                  {{ btnSendName }}
+                </button>
               </div>
             </div>
           </div>
@@ -120,13 +126,14 @@ import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
 
 import router from '@/router/';
+import i18n from '@/translate/';
 import markerPixel from '@/assets/img/map-pin.png';
 import HeaderIndex from '@/components/header/Index';
 import LinkItem from '@/components/new-report/Link';
 import FileItem from '@/components/new-report/File';
 
 export default {
-  name: 'NewReport',
+  name: 'EditReport',
 
   components: {
     HeaderIndex,
@@ -142,7 +149,7 @@ export default {
 
   props: {
     id: {
-      type: Number || String,
+      type: [Number, String],
       required: true,
     },
   },
@@ -253,12 +260,12 @@ export default {
     },
 
     lockButtonSend() {
-      this.btnSendName = 'Wait please';
+      this.btnSendName = i18n.t('message.pages.editreport.btnWait');
       this.btnSendDisabled = true;
     },
 
     unlockButtonSend() {
-      this.btnSendName = 'Edit report';
+      this.btnSendName = i18n.t('message.pages.newreport.btnEdit');
       this.btnSendDisabled = false;
     },
 

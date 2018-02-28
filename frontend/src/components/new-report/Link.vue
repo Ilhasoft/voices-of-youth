@@ -7,7 +7,7 @@
     <div class="column right" @mouseover="isVisible = true" @mouseout="isVisible = false">
       <span class="icon-icon-more more">
         <div class="actions" :class="[isVisible ? 'fade-in' : 'fade-out']">
-          <p><a href="" @click.prevent="$emit('remove-url')">Remove</a></p>
+          <p><a href="" @click.prevent="$emit('remove-url')">{{ $t('message.pages.newreport.remove') }}</a></p>
         </div>
       </span>
     </div>

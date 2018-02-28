@@ -11,7 +11,7 @@
                   class="button"
                   :class="[status == 'approved' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('approved', '1')">
-                  {{ $t('message.pages.myreports.approved') }}</button>
+                  {{ $t('message.pages.myreports.btnApproved') }}</button>
               </div>
 
               <div class="column is-4">
@@ -19,7 +19,7 @@
                   class="button"
                   :class="[status == 'pending' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('pending', '2')">
-                  {{ $t('message.pages.myreports.pending') }}</button>
+                  {{ $t('message.pages.myreports.btnPending') }}</button>
               </div>
 
               <div class="column is-4">
@@ -27,7 +27,7 @@
                   class="button"
                   :class="[status == 'rejected' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('rejected', '3')">
-                  {{ $t('message.pages.myreports.notapproved') }}</button>
+                  {{ $t('message.pages.myreports.btnNotApproved') }}</button>
               </div>
             </div>
 
@@ -53,7 +53,7 @@
             
             <empty-list
               :avatar="user.avatar"
-              :text="$t(`message.pages.myreports.descriptions.${status}`)"
+              :text="text"
               v-show="isEmpty" />
 
             <div class="columns">
@@ -80,6 +80,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import router from '@/router/';
+import i18n from '@/translate/';
 import HeaderIndex from '@/components/header/Index';
 import ReportItem from '@/components/my-reports/Report';
 import EmptyList from '@/components/my-reports/Empty';
@@ -134,6 +135,7 @@ export default {
 
       this.myReports({ status: this.type, page: nextPage }).then((response) => {
         if (response.length === 0) {
+          this.text = i18n.t(`message.pages.myreports.${status}`);
           this.isEmpty = true;
         } else {
           this.isEmpty = false;

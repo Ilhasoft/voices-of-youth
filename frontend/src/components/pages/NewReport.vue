@@ -1,54 +1,53 @@
 <template>
   <div>
     <header-index />
-
     <div class="columns is-marginless">
       <div class="column is-5 sidebar is-paddingless">
         <div class="header">
-          <h1>Add new report</h1>
-          <small>Drag the pin to mark your report</small>
+          <h1>{{ $t('message.pages.newreport.title') }}</h1>
+          <small>{{ $t('message.pages.newreport.subtitle') }}</small>
         </div>
 
         <div class="box-form">
           <div class="form">
             <div class="columns">
               <div class="column">
-                <label for="select-theme">Select theme</label>
+                <label for="select-theme">{{ $t('message.pages.newreport.theme') }}</label>
                 <v-select v-model="themeSelected" @input="loadTagsAndUsers" :options="themeOptions"></v-select>
               </div>
             </div>
 
             <div class="columns" v-if="showMappers">
               <div class="column">
-                <label for="select-mapper">Mapper</label>
+                <label for="select-mapper">{{ $t('message.pages.newreport.mapper') }}</label>
                 <v-select v-model="mapperSelected" :options="mappersOptions"></v-select>
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="title">Title</label>
+                <label for="name">{{ $t('message.pages.newreport.name') }}</label>
                 <input class="input" type="text" placeholder="" v-model="name">
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="description">Description</label>
+                <label for="description">{{ $t('message.pages.newreport.description') }}</label>
                 <textarea name="" id="" cols="30" rows="10" v-model="description"></textarea>
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="select-theme">Tags</label>
+                <label for="select-theme">{{ $t('message.pages.newreport.tags') }}</label>
                 <v-select v-model="tagsSelected" multiple :value.sync="selected" :options="tagsOptions"></v-select>
               </div>
             </div>
 
             <div class="columns">
               <div class="column size">
-                <label for="select-theme">Add photos and videos</label>
+                <label for="select-theme">{{ $t('message.pages.newreport.photos') }}</label>
                 <ul class="images">
                   <li>
                     <button class="new-file" @click.prevent="openFile" @mouseover="isWarningVisible = true" @mouseout="isWarningVisible = false">
@@ -73,14 +72,14 @@
               <div class="point"></div>
               <div class="content">
                 <p>
-                  Remember, use only your own photos or photos that you are allowed to use
+                  {{ $t('message.pages.newreport.info') }}
                 </p>
               </div>
             </div>
 
             <div class="columns">
               <div class="column">
-                <label for="select-theme">Add link from website</label>
+                <label for="select-theme">{{ $t('message.pages.newreport.links') }}</label>
 
                 <div class="columns">
                   <div class="column is-10"><input class="input" value="link" type="text" v-model="link"></div>
@@ -135,6 +134,7 @@ import Vue2Leaflet from 'vue2-leaflet';
 import Vue2LeafletMarkerCluster from 'vue2-leaflet-markercluster';
 
 import router from '@/router/';
+import i18n from '@/translate/';
 import markerPixel from '@/assets/img/map-pin.png';
 import HeaderIndex from '@/components/header/Index';
 import LinkItem from '@/components/new-report/Link';
@@ -263,12 +263,12 @@ export default {
     },
 
     lockButtonSend() {
-      this.btnSendName = 'Wait please';
+      this.btnSendName = i18n.t('message.pages.newreport.btnWait');
       this.btnSendDisabled = true;
     },
 
     unlockButtonSend() {
-      this.btnSendName = 'Send report';
+      this.btnSendName = i18n.t('message.pages.newreport.btnSend');
       this.btnSendDisabled = false;
     },
 
@@ -281,7 +281,7 @@ export default {
       this.tagsOptions = [];
       this.files = [];
       this.urls = [];
-      this.notifyOpen({ type: 1, message: 'Report Sent!' });
+      this.notifyOpen({ type: 1, message: i18n.t('message.pages.newreport.success') });
     },
 
     uploadPreventDefault(e) {
