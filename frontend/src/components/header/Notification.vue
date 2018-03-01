@@ -15,7 +15,7 @@
       @mouseover.prevent="isVisible = true" 
       @mouseout="isVisible = false" 
       :class="[isVisible ? 'fade-in' : 'fade-out']">
-      <h4>Notifications</h4>
+      <h4>{{ $t('message.header.notifications.title') }}</h4>
       
       <div class="item" v-if="notifications.length" :key="key" v-for="(item, key) in notifications">
         <a href="" @click.prevent="cleanNotification(item)">
@@ -32,7 +32,7 @@
         </a>
       </div>
       <div v-if="notifications.length === 0">
-        You have no notifications.
+        {{ $t('message.header.notifications.empty') }}
       </div>
     </div>
   </div>

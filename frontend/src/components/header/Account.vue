@@ -24,14 +24,17 @@
         <div class="item">
           <div class="item-right">
             <router-link
-              :to="{ name: 'profile' }">My account
+              :to="{ name: 'profile' }">
+              {{ $t('message.header.account.title') }}
             </router-link>
           </div>
         </div>
 
         <div class="item logout">
           <div class="item-right">
-            <a href="" @click.prevent="logout()">Logout</a>
+            <a href="" @click.prevent="logout()">
+              {{ $t('message.header.account.logout') }}
+            </a>
           </div>
         </div>
       </div>
@@ -40,7 +43,8 @@
     <div v-else>
       <router-link
         :to="{ name: 'login' }"
-        class="button btn-login">Login
+        class="button btn-login">
+        {{ $t('message.header.account.login') }}
       </router-link>
     </div>
   </div>

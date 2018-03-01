@@ -26,7 +26,6 @@
           </div>
 
           <div class="scroll">
-
             <div class="columns">
               <div class="column text">
                 <small :style="formatFontColor()" v-cloak>{{ formatDate(item.created_on) }}</small>
@@ -44,7 +43,7 @@
 
             <div class="columns reports">
               <div class="column">
-                <h1 :style="formatFontColor()" v-cloak>{{ item.reports_count }} Reports</h1>
+                <h1 :style="formatFontColor()" v-cloak>{{ item.reports_count }} {{ $t('message.sidebar.theme.reports') }}</h1>
               </div>
             </div>
 

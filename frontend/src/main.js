@@ -3,6 +3,7 @@ import { sync } from 'vuex-router-sync';
 import App from './App';
 import router from './router';
 import store from './stores';
+import i18n from './translate';
 
 Vue.config.productionTip = false;
 
@@ -13,6 +14,7 @@ new Vue({
   el: '#app',
   router,
   store,
+  i18n,
   template: '<App/>',
   components: { App },
 });

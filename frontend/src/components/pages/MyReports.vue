@@ -11,7 +11,7 @@
                   class="button"
                   :class="[status == 'approved' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('approved', '1')">
-                Approved</button>
+                  {{ $t('message.pages.myreports.btnApproved') }}</button>
               </div>
 
               <div class="column is-4">
@@ -19,7 +19,7 @@
                   class="button"
                   :class="[status == 'pending' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('pending', '2')">
-                Pending</button>
+                  {{ $t('message.pages.myreports.btnPending') }}</button>
               </div>
 
               <div class="column is-4">
@@ -27,7 +27,7 @@
                   class="button"
                   :class="[status == 'rejected' ? 'btn' : 'btn-clear']"
                   @click.prevent="getReports('rejected', '3')">
-                Not Approved</button>
+                  {{ $t('message.pages.myreports.btnNotApproved') }}</button>
               </div>
             </div>
 
@@ -80,6 +80,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import router from '@/router/';
+import i18n from '@/translate/';
 import HeaderIndex from '@/components/header/Index';
 import ReportItem from '@/components/my-reports/Report';
 import EmptyList from '@/components/my-reports/Empty';
@@ -96,11 +97,6 @@ export default {
       status: '',
       text: '',
       isEmpty: false,
-      descriptions: {
-        approved: 'Oops! You have not created any reports yet',
-        pending: 'Great! All your reports have been approved',
-        rejected: 'Good job! You have no unapproved reports',
-      },
     };
   },
 
@@ -139,7 +135,7 @@ export default {
 
       this.myReports({ status: this.type, page: nextPage }).then((response) => {
         if (response.length === 0) {
-          this.text = this.descriptions[status];
+          this.text = i18n.t(`message.pages.myreports.${status}`);
           this.isEmpty = true;
         } else {
           this.isEmpty = false;

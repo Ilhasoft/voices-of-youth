@@ -8,12 +8,23 @@
       <h4 class="is-marginless">{{ report.name }}</h4>
       <small>{{ formatDate() }}</small>
       <p>{{ report.description }}</p>
-      <p v-show="report.last_notification">Admin feedback: <i>{{ report.last_notification }}</i></p>
+      <p v-show="report.last_notification">{{ $t('message.pages.myreports.report.admin') }}: <i>{{ report.last_notification }}</i></p>
     </div>
 
     <div class="column is-2 m-auto">
-      <button class="button btn-edit" @click.prevent="openReport(report)" v-if="report.status == 1">View</button>
-      <button class="button btn-edit" @click.prevent="editReport" v-if="report.status == 2 || report.status == 3">Edit</button>
+      <button
+        class="button btn-edit"
+        @click.prevent="openReport(report)"
+        v-if="report.status == 1">
+        {{ $t('message.pages.myreports.report.btnView') }}
+      </button>
+
+      <button
+        class="button btn-edit"
+        @click.prevent="editReport"
+        v-if="report.status == 2 || report.status == 3">
+        {{ $t('message.pages.myreports.report.btnEdit') }}
+      </button>
     </div>
   </div>
 </template>

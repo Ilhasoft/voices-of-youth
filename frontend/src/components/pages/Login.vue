@@ -15,32 +15,32 @@
               <form action="" @submit.prevent="userLogin()">
                 <div class="columns">
                   <div class="column has-text-center">
-                    <h1>Hello, again!</h1>
-                    <small>Log in to your account</small>
+                    <h1>{{ $t('message.pages.login.title') }}</h1>
+                    <small>{{ $t('message.pages.login.subtitle') }}</small>
                   </div>
                 </div>
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    <input type="text" class="input" name="name" value="" placeholder="Username" v-model="login.username"/>
+                    <input type="text" class="input" name="name" value="" :placeholder="$t('message.pages.login.username')" v-model="login.username"/>
                   </div>
                 </div>
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    <input type="password" class="input" name="password" placeholder="Password" v-model="login.password"/>
+                    <input type="password" class="input" name="password" :placeholder="$t('message.pages.login.password')" v-model="login.password"/>
                   </div>
                 </div>
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    If you forgot your password contact your local admin or email info@voicesofyouth.org
+                    {{ $t('message.pages.login.remember') }}
                   </div>
                 </div>
 
                 <div class="columns">
                   <div class="column has-text-center">
-                    <button type="submit" @click.prevent="userLogin()" class="btn button l-submit">Login</button>
+                    <button type="submit" @click.prevent="userLogin()" class="btn button l-submit">{{ $t('message.pages.login.btnLogin') }}</button>
                   </div>
                 </div>
               </form>
@@ -59,38 +59,38 @@
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <h1>I'm new here</h1>
-                  <small>Create a new account</small>
+                  <h1>{{ $t('message.pages.register.title') }}</h1>
+                  <small>{{ $t('message.pages.register.subtitle') }}</small>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" v-model="register.name" placeholder="Name"/>
+                  <input type="text" class="input" v-model="register.name" :placeholder="$t('message.pages.register.name')"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="text" class="input" v-model="register.username" placeholder="Username"/>
+                  <input type="text" class="input" v-model="register.username" :placeholder="$t('message.pages.register.username')"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="email" class="input" v-model="register.email" placeholder="E-mail"/>
+                  <input type="email" class="input" v-model="register.email" :placeholder="$t('message.pages.register.email')"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" minlength="6" class="input" v-model="register.password" placeholder="Password"/>
+                  <input type="password" minlength="6" class="input" v-model="register.password" :placeholder="$t('message.pages.register.password')"/>
                 </div>
               </div>
 
               <div class="columns">
                 <div class="column has-text-center">
-                  <input type="password" minlength="6" class="input" v-model="register.confirmPassword" placeholder="Confirm password"/>
+                  <input type="password" minlength="6" class="input" v-model="register.confirmPassword" :placeholder="$t('message.pages.register.confirmPassword')"/>
                 </div>
               </div>
 
@@ -98,12 +98,17 @@
                 <div class="column has-text-center">
                   <label class="checkbox">
                     <input type="checkbox" v-model="isAccepted">
-                    Terms and conditions
+                    {{ $t('message.pages.register.terms') }}
                   </label>
                 </div>
 
                 <div class="column has-text-center">
-                  <button type="submit" @click.prevent="openTerms" class="btn button l-register">Register</button>
+                  <button
+                    type="submit"
+                    @click.prevent="openTerms"
+                    class="btn button l-register">
+                    {{ $t('message.pages.register.btnRegister') }}
+                  </button>
                 </div>
               </div>
             </div>
@@ -123,35 +128,33 @@
 
         <div class="columns">
           <div class="column is-paddingless">
-            <h1>Terms and Conditions</h1>
+            <h1>{{ $t('message.pages.register.termsBox.title') }}</h1>
           </div>
         </div>
 
         <div class="columns">
           <div class="column">
             <div class="terms-text">
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <br/>
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <br/>
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <br/>
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <br/>
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              <br/>
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <p>{{ $t('message.pages.register.termsBox.description') }}</p>
             </div>
           </div>
         </div>
 
         <div class="columns">
           <div class="column has-text-center">
-            <button class="btn button l-refuse" @click.prevent="closeTerms(false)">Refuse</button>
+            <button
+              class="btn button l-refuse"
+              @click.prevent="closeTerms(false)">
+              {{ $t('message.pages.register.termsBox.refuse') }}
+            </button>
           </div>
 
           <div class="column has-text-center">
-            <button class="btn button l-accept" @click.prevent="closeTerms(true)">Accept</button>
+            <button
+              class="btn button l-accept"
+              @click.prevent="closeTerms(true)">
+              {{ $t('message.pages.register.termsBox.accept') }}
+            </button>
           </div>
         </div>
       </div>
