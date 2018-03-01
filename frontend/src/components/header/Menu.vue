@@ -60,10 +60,10 @@ export default {
       isVisible: false,
       defaultLang: [
         ['en', 'English'],
-        ['fr', 'French'],
-        ['es', 'Spanish'],
-        ['pt-br', 'Portuguese'],
-        ['ar', 'Arabic'],
+        // ['fr', 'French'],
+        // ['es', 'Spanish'],
+        // ['pt-br', 'Portuguese'],
+        // ['ar', 'Arabic'],
       ],
     };
   },
