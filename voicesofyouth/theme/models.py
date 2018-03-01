@@ -1,5 +1,3 @@
-import random
-
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -19,33 +17,31 @@ from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
-from voicesofyouth.theme.utils import generate_pin
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
 
 
 THEMES_COLORS = [
-    'ce6c9e',
+    'ce6c9d',
     'f08ea5',
-    'f3c154',
-    '569ee5',
-    '5cc0e5',
-    '82d8c5',
+    'fea954',
+    '559ee6',
+    '5bc0e5',
+    '72c3b1',
     'ae74e1',
     '9f7de3',
-    '8979e8',
-    'd164e8',
-    '72c691',
-    'b4e186',
-    'b8c978',
+    '8978e9',
+    'd163e9',
+    '62ae7e',
+    '9fcb73',
+    'b8ca77',
     'c29267',
     'ea8064',
-    'd6bc7d',
-    '616b76',
+    'd6bd7d',
+    '606b76',
     '8f9aa8',
-    '8dbdb2',
-    '9bb6da'
+    '9bb7da'
 ]
 
 
@@ -148,13 +144,6 @@ def validate_theme_area(sender, instance, **kwargs):
     """
     if not instance.project.bounds.contains(instance.bounds):
         raise ValidationError(_('You cannot create a theme outside of project bounds.'))
-
-
-@receiver(pre_save, sender=Theme)
-def generate_color(sender, instance, **kwargs):
-    if not instance.color:
-        instance.color = '%06x' % random.randint(0, 0xFFFFFF)
-    generate_pin(instance.color)
 
 
 @receiver(post_save, sender=Theme)

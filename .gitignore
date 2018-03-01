@@ -1,6 +1,6 @@
 voicesofyouth/media/*
 !voicesofyouth/media/users/avatars/
-!voicesofyouth/media/pins/pin_base.png
+!voicesofyouth/media/pins/
 voicesofyouth/static/
 !voicesofyouth/static_dev/
 
