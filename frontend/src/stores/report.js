@@ -29,8 +29,8 @@ export default {
         const LeafIcon = L.Icon.extend({
           options: {
             shadowUrl: '',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
+            iconSize: [20, 30],
+            iconAnchor: [12, 30],
           },
         });
 
