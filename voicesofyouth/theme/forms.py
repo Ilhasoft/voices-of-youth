@@ -134,11 +134,12 @@ class ThemeForm(forms.Form):
     def __init__(self, *args, **kwargs):
         project = kwargs.pop('project')
         super(ThemeForm, self).__init__(*args, **kwargs)
-        self.fields['tags'].choices = project.all_tags.values_list('name', 'name')
+        self.fields['tags'].choices = project.all_tags.order_by('name').values_list('name', 'name')
 
         groups_ids = project.themes.values_list('mappers_group__id')
         qs = MapperUser.objects.filter(groups__id__in=groups_ids)
         self.fields['mappers_group'].queryset = qs
+
 
 class ThemeTranslationForm(forms.Form):
     language = forms.ChoiceField(
