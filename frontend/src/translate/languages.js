@@ -107,6 +107,7 @@ const messages = {
           links: 'External Links',
           share: 'Share',
           comment: 'Comment',
+          by: 'By',
         },
         comments: {
           title: 'Comments',

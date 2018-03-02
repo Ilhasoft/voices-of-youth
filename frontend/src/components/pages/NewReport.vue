@@ -213,7 +213,7 @@ export default {
       L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
       this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
-        .addTo(this.$refs.map.mapObject);
+        .addTo(this.$refs.map.mapObject).bindPopup('Drag or click on map to start a position').openPopup();
 
       this.marker.on('move', (event) => {
         this.location = {
