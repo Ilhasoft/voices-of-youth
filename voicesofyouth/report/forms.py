@@ -124,7 +124,7 @@ class ReportForm(forms.Form):
         else:
             self.fields['project'].queryset = self.user.projects.all()
 
-        self.fields['tags'].choices = Tag.objects.all().values_list('name', 'name')
+        self.fields['tags'].choices = Tag.objects.all().order_by('name').values_list('name', 'name')
 
     def clean_location(self):
         theme_id = self.cleaned_data['theme']
@@ -157,7 +157,7 @@ class ReportFilterForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(
             attrs={
-                'placeholder': _('Start type to find some project'),
+                'placeholder': _('Project name'),
                 'required': False,
                 'class': 'form-control ',
             }
