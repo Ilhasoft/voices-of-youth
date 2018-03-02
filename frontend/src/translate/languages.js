@@ -106,7 +106,7 @@ const messages = {
         report: {
           links: 'External Links',
           share: 'Share',
-          comment: 'Comment',
+          comment: 'Comments',
           by: 'By',
         },
         comments: {
