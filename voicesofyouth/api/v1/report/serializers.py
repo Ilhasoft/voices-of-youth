@@ -14,6 +14,7 @@ from voicesofyouth.report.models import ReportNotification
 from voicesofyouth.report.models import FILE_TYPE_IMAGE
 from voicesofyouth.report.models import FILE_TYPE_VIDEO
 from voicesofyouth.report.models import REPORT_COMMENT_STATUS_PENDING
+from voicesofyouth.report.models import REPORT_COMMENT_STATUS_APPROVED
 from voicesofyouth.report.models import NOTIFICATION_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import NOTIFICATION_ORIGIN_REPORT
 from voicesofyouth.theme.models import Theme
@@ -81,6 +82,7 @@ class ReportSerializer(VoySerializer):
     urls = serializers.StringRelatedField(many=True, read_only=True)
     files = ReportFilesSerializer(many=True, read_only=True)
     last_notification = serializers.SerializerMethodField(read_only=True)
+    comments = serializers.SerializerMethodField()
 
     class Meta:
         model = Report
@@ -103,6 +105,7 @@ class ReportSerializer(VoySerializer):
             'urls',
             'files',
             'last_notification',
+            'comments',
         )
 
     def validate(self, data):
@@ -127,6 +130,9 @@ class ReportSerializer(VoySerializer):
         if hasattr(notification, 'message'):
             return notification.message
         return ''
+
+    def get_comments(self, obj):
+        return obj.comments.filter(status=REPORT_COMMENT_STATUS_APPROVED).count()
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save(status=REPORT_COMMENT_STATUS_PENDING)

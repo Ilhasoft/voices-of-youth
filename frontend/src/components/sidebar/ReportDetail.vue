@@ -79,7 +79,7 @@
 
             <div class="column">
               <a class="button share" @click.prevent="openComments" v-if="item.can_receive_comments">
-                <span class="icon-icon-comment"></span> {{ $t('message.sidebar.report.comment') }}
+                <span class="icon-icon-comment"></span> {{ $t('message.sidebar.report.comment') }} ({{ item.comments }})
               </a>
             </div>
           </div>
