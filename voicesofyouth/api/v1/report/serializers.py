@@ -98,6 +98,7 @@ class ReportSerializer(VoySerializer):
             'name',
             'tags',
             'theme_color',
+            'theme_name',
             'pin',
             'created_by',
             'last_image',

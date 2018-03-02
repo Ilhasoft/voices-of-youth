@@ -168,6 +168,10 @@ class Report(BaseModel):
         return self.theme.color
 
     @cached_property
+    def theme_name(self):
+        return self.theme.name
+
+    @cached_property
     def comments_views(self):
         return self.comments.filter(status__in=[REPORT_COMMENT_STATUS_APPROVED, REPORT_COMMENT_STATUS_PENDING])
 

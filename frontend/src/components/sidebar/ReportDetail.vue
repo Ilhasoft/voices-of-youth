@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar
-      :title="item.name"
+      :title="item.theme_name"
       :backButton="backButton"
       :closeButton="true"
       backTo="Theme"
@@ -30,7 +30,7 @@
           <div class="reports">
             <h1 :style="formatFontColor()" v-cloak>{{ item.name }}</h1>
             <small :style="formatFontColor()" v-cloak>{{ formatDate() }}</small><br/>
-            <small :style="formatFontColor()" v-cloak>{{ $t('message.sidebar.report.by') }} {{ item.created_by.username }}</small>
+            <small :style="formatFontColor()" v-cloak>{{ $t('message.sidebar.report.by') }} {{ formatUsername() }}</small>
             <p v-html="formatDescription()" v-cloak></p>
 
             <div class="urls" v-if="item.urls" v-cloak>
@@ -194,6 +194,13 @@ export default {
 
     formatURI() {
       return `${window.location}/report/${this.item.id}`;
+    },
+
+    formatUsername() {
+      if (this.item.created_by) {
+        return this.item.created_by.username;
+      }
+      return '';
     },
 
     openTheme() {
