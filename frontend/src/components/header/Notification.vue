@@ -5,11 +5,9 @@
     @mouseout="isVisible = false"
     v-if="userIsLogged && userIsMapper">
     
-    <a href="">
-      <div class="label" v-if="notifications.length"></div>
-      <img class="img" src="~@/assets/img/header-bell.png">
-    </a>
-
+    <div class="label" v-if="notifications.length"></div>
+    <img class="img" src="~@/assets/img/header-bell.png">
+    
     <div 
       class="notification-item" 
       @mouseover.prevent="isVisible = true" 
@@ -143,6 +141,7 @@ export default {
 .img {
   width: 20px;
   height: 20px;
+  cursor: pointer;
 }
 
 .notification-box {
