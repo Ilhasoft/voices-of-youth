@@ -1,9 +1,12 @@
 import graphene
 
-from voicesofyouth.project import schema
+from voicesofyouth.project import schema as project_schema
+from voicesofyouth.theme import schema as theme_schema
 
 
-class Query(schema.Query, graphene.ObjectType):
+class Query(project_schema.Query,
+            theme_schema.Query,
+            graphene.ObjectType):
     pass
 
 
