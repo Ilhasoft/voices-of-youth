@@ -68,7 +68,12 @@ INSTALLED_APPS = [
     'voicesofyouth.api',
     'voicesofyouth.translation',
     'voicesofyouth.voyadmin',
+    'graphene_django'
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'voicesofyouth.schema.schema'
+}
 
 if DEBUG:
     from voicesofyouth.core.model_mommy import MOMMY_SPATIAL_FIELDS
