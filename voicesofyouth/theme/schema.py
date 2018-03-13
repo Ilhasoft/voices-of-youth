@@ -23,7 +23,11 @@ def tags_to_graphene(field, registry=None):
 class ThemeNode(DjangoObjectType):
     class Meta:
         model = Theme
-        filter_fields = ['name', 'project']
+        filter_fields = {
+            'id': ['exact',],
+            'name': ['exact', 'icontains', 'istartswith'],
+            'project': ['exact', ]
+        }
         interfaces = (relay.Node, )
 
 
