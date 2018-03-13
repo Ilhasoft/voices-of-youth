@@ -26,3 +26,4 @@ libsass
 django-docs
 python-magic
 graphene_django
+django-filter
