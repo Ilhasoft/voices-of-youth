@@ -26,6 +26,21 @@ class ProjectType(DjangoObjectType):
 
 class Query():
     all_projects = graphene.List(ProjectType)
+    project = graphene.Field(ProjectType,
+                             id=graphene.Int(),
+                             name=graphene.String())
 
     def resolve_all_projects(self, info, **kwargs):
         return Project.objects.all()
+
+    def resolve_project(self, info, **kwargs):
+        id = kwargs.get('id')
+        name = kwargs.get('name')
+
+        if id is not None:
+            return Project.objects.get(pk=id)
+
+        if name is not None:
+            return Project.objects.get(name=name)
+        
+        return None
