@@ -16,8 +16,11 @@ class TranslationsField(forms.CharField):
     def __init__(self, model, *args, prefix='translate', **kwargs):
         super(TranslationsField, self).__init__(*args, **kwargs)
         self.model = model
-        self.model_ct = ContentType.objects.get_for_model(self.model)
         self._prefix = prefix
+
+    @property
+    def model_ct(self):
+        return ContentType.objects.get_for_model(self.model)
 
     @property
     def prefix(self):
