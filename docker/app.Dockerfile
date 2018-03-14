@@ -18,18 +18,19 @@
 ###############################################################################
 FROM python:3.6-alpine
 
-WORKDIR /home/app
+ENV WORKDIR /home/app
+WORKDIR $WORKDIR
 RUN apk update && apk add alpine-sdk postgresql-dev libffi-dev \
 libxml2-dev libxslt-dev jpeg-dev && \
 apk add gdal gdal-dev --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 RUN apk add libpq libxml2 libxslt libmagic nodejs jpeg
 RUN curl -o- -L https://yarnpkg.com/install.sh | sh
 ENV PATH /root/.yarn/bin:$PATH
-RUN apk add gdal --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
+RUN apk add geos gdal --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 RUN pip install gunicorn
 COPY . .
 RUN yarn install
-RUN pip install -r development.txt && pip install -U psycopg2
+RUN pip install --exists-action w -r development.txt && pip install -U psycopg2
 RUN python manage.py collectstatic --noinput
 RUN apk del alpine-sdk postgresql-dev libffi-dev libxml2-dev libxslt-dev jpeg-dev gdal-dev
 RUN ls -l docker

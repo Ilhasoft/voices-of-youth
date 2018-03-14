@@ -26,3 +26,5 @@ services:
       - 8000:8000
     environment:
       - DEBUG=True
+      - DATABASE_URL=postgis://postgres:development@voy-database/voydev
+      - ALLOWED_HOSTS=*
