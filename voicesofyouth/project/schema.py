@@ -5,14 +5,17 @@ from django.contrib.gis.db.models.fields import PolygonField
 from graphene_django.types import DjangoObjectType
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.converter import convert_django_field
+from graphene_django.rest_framework.mutation import SerializerMutation
 from taggit.managers import TaggableManager
 
+from voicesofyouth.api.v1.project.serializers import ProjectSerializer
 from voicesofyouth.project.models import Project
 
 
 @convert_django_field.register(PolygonField)
 def polygon_to_graphene(field, registry=None):
     return graphene.JSONString()
+
 
 @convert_django_field.register(TaggableManager)
 def tags_to_graphene(field, registry=None):
@@ -26,6 +29,11 @@ class ProjectNode(DjangoObjectType):
         interfaces = (relay.Node, )
 
 
-class Query(object):
+class ProjectQuery(object):
     all_projects = DjangoFilterConnectionField(ProjectNode)
     project = relay.Node.Field(ProjectNode)
+
+
+class ProjectMutation(SerializerMutation):
+    class Meta:
+        serializer_class = ProjectSerializer
