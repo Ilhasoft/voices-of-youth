@@ -72,7 +72,10 @@ INSTALLED_APPS = [
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'voicesofyouth.schema.schema'
+    'SCHEMA': 'voicesofyouth.schema.schema',
+    'MIDDLEWARE': [
+        'graphene_django.debug.DjangoDebugMiddleware',
+    ]
 }
 
 if DEBUG:

@@ -1,5 +1,5 @@
 import graphene
-from graphene import relay, ObjectType, AbstractType
+from graphene import relay, ObjectType
 
 from django.contrib.gis.db.models.fields import PolygonField
 from graphene_django.types import DjangoObjectType
@@ -31,6 +31,6 @@ class ThemeNode(DjangoObjectType):
         interfaces = (relay.Node, )
 
 
-class Query(AbstractType):
+class Query(object):
     all_themes = DjangoFilterConnectionField(ThemeNode)
     theme = relay.Node.Field(ThemeNode)
