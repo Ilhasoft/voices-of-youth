@@ -6,4 +6,7 @@ from voicesofyouth.api.graphql.schema import schema
 from .v1.urls import urlpatterns
 
 
-urlpatterns.append(url(r'^graphql/', GraphQLView.as_view(graphiql=True, schema=schema)))
+urlpatterns += [
+    url(r'^graphiql/', GraphQLView.as_view(graphiql=True, schema=schema)),
+    url(r'^graphql/', GraphQLView.as_view(schema=schema))
+]
