@@ -3,6 +3,28 @@ Voices of Youth
 
 This project is a new version of [UNICEF](www.unicef.org) initiative called [voices of youth](http://www.voicesofyouth.org/).
 
+Development database
+--------------------
+
+The commands bellow starts 2 containers, one for database and other for pgadmin4. The database container port 5432 is binded to your host port 5432, and the pgadmin port 80 is binded to your host port 8080.
+
+```
+cd docker && docker-compose up -d
+```
+
+Authentication data for pgadmin:
+
+**Username:** dba@unicef.com
+**Password:** SuperSecret
+
+When you will add a new connection on pgadmin, the server address are: 
+```
+server-address: voy-database
+username: postgres
+password: development
+database: voydev
+```
+
 Running project
 ---------------
 
