@@ -23,6 +23,9 @@ def tags_to_graphene(field, registry=None):
 
 
 class ThemeNode(DjangoObjectType):
+    """
+    Theme node.
+    """
     class Meta:
         model = Theme
         filter_fields = {
@@ -34,10 +37,16 @@ class ThemeNode(DjangoObjectType):
 
 
 class ThemeQuery(object):
+    """
+    Theme query.
+    """
     all_themes = DjangoFilterConnectionField(ThemeNode)
     theme = relay.Node.Field(ThemeNode)
 
 
 class ThemeMutation(SerializerMutation):
+    """
+    Theme mutation.
+    """
     class Meta:
         serializer_class = ThemeSerializer
