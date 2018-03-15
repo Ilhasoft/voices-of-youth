@@ -42,3 +42,17 @@ Paginação
   }
 }
 ```
+
+Mutation com erro
+```
+mutation teste {
+  project(input: {name: "Project X", description: "description teste", bounds: "Point", thumbnail: ""}) {
+    id
+    name
+    errors {
+      field
+      messages
+    }
+  }
+}
+```
