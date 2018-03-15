@@ -277,7 +277,7 @@ def check_report_within_theme_date_period(sender, instance, **kwargs):
     """
     if instance.theme.start_at and instance.theme.end_at:
         if instance.theme.start_at > timezone.localdate() or instance.theme.end_at < timezone.localdate():
-            msg = _(f'You cannot create a report outside the theme period.')
+            msg = _(f'You cannot create a report out of the theme period.')
             raise ValidationError(msg)
 
 

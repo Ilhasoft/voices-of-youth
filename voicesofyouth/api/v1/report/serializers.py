@@ -119,7 +119,7 @@ class ReportSerializer(VoySerializer):
 
         if data['theme'].start_at and data['theme'].end_at:
             if data['theme'].start_at > timezone.localdate() or data['theme'].end_at < timezone.localdate():
-                raise serializers.ValidationError('You cannot create a report outside the theme period.')
+                raise serializers.ValidationError('You cannot create a report out of the theme period.')
 
         return data
 
