@@ -1,5 +1,6 @@
 import magic
 
+from unipath import Path
 from django.conf import settings
 from rest_framework import serializers
 
@@ -83,6 +84,7 @@ class ReportSerializer(VoySerializer):
     files = ReportFilesSerializer(many=True, read_only=True)
     last_notification = serializers.SerializerMethodField(read_only=True)
     comments = serializers.SerializerMethodField()
+    share = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Report
@@ -107,6 +109,7 @@ class ReportSerializer(VoySerializer):
             'files',
             'last_notification',
             'comments',
+            'share',
         )
 
     def validate(self, data):
@@ -134,6 +137,11 @@ class ReportSerializer(VoySerializer):
 
     def get_comments(self, obj):
         return obj.comments.filter(status=REPORT_COMMENT_STATUS_APPROVED).count()
+
+    def get_share(self, obj):
+        request = self.context['request']
+        path = Path('/project/')
+        return request.build_absolute_uri(f'{path}{obj.theme.project.path}/report/{obj.id}')
 
     def save(self, **kwargs):
         report = super(ReportSerializer, self).save(status=REPORT_COMMENT_STATUS_PENDING)
