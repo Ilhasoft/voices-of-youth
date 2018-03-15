@@ -236,7 +236,7 @@ class ReportNotificationViewSet(
             queryset = queryset.filter(report__theme__project__id=project)
 
         if count:
-            return Response({ 'count': queryset.count() })
+            return Response({'count': queryset.count()})
 
         if len(queryset) > 0:
             return Response(self.get_serializer(queryset, many=True).data)

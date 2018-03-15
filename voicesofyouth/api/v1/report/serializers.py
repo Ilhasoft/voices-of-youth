@@ -1,6 +1,7 @@
 import magic
 
 from unipath import Path
+from django.utils import timezone
 from django.conf import settings
 from rest_framework import serializers
 
@@ -115,6 +116,11 @@ class ReportSerializer(VoySerializer):
     def validate(self, data):
         if not data['theme'].bounds.contains(data['location']):
             raise serializers.ValidationError('You cannot create a report outside the theme bounds.')
+
+        if data['theme'].start_at and data['theme'].end_at:
+            if data['theme'].start_at > timezone.localdate() or data['theme'].end_at < timezone.localdate():
+                raise serializers.ValidationError('You cannot create a report outside the theme period.')
+
         return data
 
     def get_tags(self, obj):

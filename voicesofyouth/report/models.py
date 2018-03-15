@@ -2,6 +2,7 @@ import os
 import uuid
 from datetime import datetime
 
+from django.utils import timezone
 from django.contrib.gis.db import models as gismodels
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db import models
@@ -267,6 +268,17 @@ def check_report_within_theme_bounds(sender, instance, **kwargs):
     if not instance.theme.bounds.contains(instance.location):
         msg = _(f'You cannot create a report outside the theme bounds.')
         raise ValidationError(msg)
+
+
+@receiver(pre_save, sender=Report)
+def check_report_within_theme_date_period(sender, instance, **kwargs):
+    """
+    Report can only be created on theme date period.
+    """
+    if instance.theme.start_at and instance.theme.end_at:
+        if instance.theme.start_at > timezone.localdate() or instance.theme.end_at < timezone.localdate():
+            msg = _(f'You cannot create a report outside the theme period.')
+            raise ValidationError(msg)
 
 
 @receiver(post_save, sender=Report)

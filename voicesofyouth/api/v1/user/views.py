@@ -18,22 +18,27 @@ class UsersEndPoint(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
                     mixins.UpdateModelMixin,
                     viewsets.GenericViewSet):
+    """
+    list:
+    Returns a current user data, just use: /users/?me=1. AuthToken is required in Headers.
+    """
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
 
     def get_queryset(self):
-        token = self.request.query_params.get('auth_token')
+        me = self.request.query_params.get('me')
         theme = self.request.query_params.get('theme')
         user = self.request.user
 
         if not isinstance(user, AnonymousUser):
-            if user.is_admin and not token:
+            if user.is_admin and not me:
                 if theme:
                     theme = get_object_or_404(Theme, id=theme)
                     return theme.mappers_group.user_set.all()
                 else:
                     return User.objects.all()
-        if token:
+        if me:
+            token = self.request.META.get('HTTP_AUTHORIZATION').split()[1]
             return User.objects.filter(auth_token=token)
 
     def create(self, request, *args, **kwargs):

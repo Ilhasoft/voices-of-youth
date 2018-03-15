@@ -168,10 +168,10 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
         end_at = None
 
         if theme.start_at is not None:
-            start_at = theme.start_at.strftime('%d/%m/%Y')
+            start_at = theme.start_at.strftime('%m/%d/%Y')
 
         if theme.end_at is not None:
-            end_at = theme.end_at.strftime('%d/%m/%Y')
+            end_at = theme.end_at.strftime('%m/%d/%Y')
 
         data = {
             'name': theme.name,
