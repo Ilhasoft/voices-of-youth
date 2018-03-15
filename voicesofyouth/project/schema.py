@@ -25,7 +25,10 @@ def tags_to_graphene(field, registry=None):
 class ProjectNode(DjangoObjectType):
     class Meta:
         model = Project
-        filter_fields = ['name', 'themes']
+        filter_fields = {
+            'name': ['exact', 'icontains', 'startswith', 'istartswith'],
+            'themes': ['exact', ]
+            }
         interfaces = (relay.Node, )
 
 
@@ -37,3 +40,12 @@ class ProjectQuery(object):
 class ProjectMutation(SerializerMutation):
     class Meta:
         serializer_class = ProjectSerializer
+
+    # @classmethod
+    # def mutate_and_get_payload(cls, input, context, **kwargs):
+    #     print(input)
+    #     print('-' * 80)
+    #     print(context)
+    #     print('-' * 80)
+    #     print(kwargs)
+    #     return super(SerializerMutation, cls).mutate_and_get_payload(input, context, **kwargs)
