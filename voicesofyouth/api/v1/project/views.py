@@ -1,6 +1,8 @@
 from rest_framework import permissions, viewsets
+from rest_framework.response import Response
 
 from voicesofyouth.project.models import Project
+from voicesofyouth.user.models import MapperUser
 from .serializers import ProjectSerializer
 
 
@@ -18,5 +20,15 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ProjectSerializer
 
-    def get_queryset(self):
-        return Project.objects.all().filter(enabled=True)
+    def list(self, request, *args, **kwargs):
+        queryset = Project.objects.all().filter(enabled=True)
+
+        try:
+            token = request.META.get('HTTP_AUTHORIZATION').split()[1]
+            user = MapperUser.objects.filter(auth_token=token).first()
+            queryset = user.projects.all()
+        except Exception:
+            pass
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
