@@ -34,6 +34,8 @@ class ThemeSerializer(VoySerializer):
             'reports_count',
             'created_on',
             'allow_links',
+            'start_at',
+            'end_at'
         )
 
     def get_name(self, obj):
