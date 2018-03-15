@@ -82,7 +82,7 @@
                                         </div>
 
                                         <div class="form-group {% if data_form.visible.errors %}has-error{% endif %}">
-                                            <label>{% trans 'Visible' %}</label>
+                                            <label>{% trans 'Visible on all platforms (portal and app)' %}</label>
                                             <label class="switch switch-sm pull-right">
                                                 {{ data_form.visible }}
                                                 <span></span>
@@ -98,6 +98,8 @@
                                             </label>
                                             {{ data_form.allow_links.errors }}
                                         </div>
+
+                                        <label>{% trans 'Period to receipt reports to evaluating (if is empty the system will consider available to receive)' %}</label>
 
                                         <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
                                             <label>{% trans 'Start At' %}</label>
