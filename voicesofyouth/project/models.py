@@ -72,10 +72,10 @@ class Project(BaseModel):
                                          blank=True,
                                          verbose_name=_('Window Title'))
     local_admin_group = models.OneToOneField(Group, related_name='project_local_admin', null=True, blank=True)
-    thumbnail = models.ImageField(upload_to=upload_to)
-    bounds = gismodels.PolygonField()
-    translations = GenericRelation(Translation)
-    tags = TaggableManager(blank=True)
+    thumbnail = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    bounds = gismodels.PolygonField(blank=True, null=True)
+    translations = GenericRelation(Translation, blank=True, null=True)
+    tags = TaggableManager()
     enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
 
     class Meta:
