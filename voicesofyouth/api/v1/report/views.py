@@ -226,6 +226,7 @@ class ReportNotificationViewSet(
 
     def list(self, request, *args, **kwargs):
         project = self.request.query_params.get('project', None)
+        count = self.request.query_params.get('count', None)
         queryset = self.get_queryset() \
             .filter(report__created_by_id=request.user.id) \
             .filter(status__in=[NOTIFICATION_STATUS_APPROVED, NOTIFICATION_STATUS_NOTAPPROVED]) \
@@ -233,6 +234,9 @@ class ReportNotificationViewSet(
 
         if project:
             queryset = queryset.filter(report__theme__project__id=project)
+
+        if count:
+            return Response({ 'count': queryset.count() })
 
         if len(queryset) > 0:
             return Response(self.get_serializer(queryset, many=True).data)
