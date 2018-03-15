@@ -1,8 +1,6 @@
 from rest_framework import permissions, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from django.utils import timezone
-from django.db.models import Q
 
 from voicesofyouth.api.v1.theme.filters import ThemeFilter
 from voicesofyouth.api.v1.theme.serializers import ThemeSerializer
@@ -18,10 +16,7 @@ class ThemesViewSet(viewsets.ReadOnlyModelViewSet):
     Return a specific theme.
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
-    queryset = Theme.objects.all().filter(
-                                          Q(start_at__lte=timezone.now()) &
-                                          Q(end_at__gte=timezone.now()) | Q(end_at__isnull=True),
-                                          visible=True)
+    queryset = Theme.objects.all().filter(visible=True)
     serializer_class = ThemeSerializer
     filter_class = ThemeFilter
 
