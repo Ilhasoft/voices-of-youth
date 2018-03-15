@@ -87,7 +87,9 @@ export default {
       const token = data.token;
       helper.setItem('token', token);
 
-      const user = await axios.get(`/api/users/?auth_token=${token}`);
+      const user = await axios.get('/api/users/?me=1', {
+        headers: { Authorization: `Token ${token}` },
+      });
       helper.setItem('user', user);
 
       return data;
@@ -127,7 +129,7 @@ export default {
         first_name: obj.name,
       });
 
-      const auth = await axios.get(`/api/users/?auth_token=${helper.getItem('token')}`);
+      const auth = await axios.get('/api/users/?me=1');
       helper.setItem('user', auth);
       dispatch('setCurrentUser');
       dispatch('notifyOpen', { type: 1, message: 'Profile updated!' });

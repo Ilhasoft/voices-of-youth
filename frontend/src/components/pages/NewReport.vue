@@ -238,11 +238,23 @@ export default {
     }),
 
     themeOptions() {
+      const date = new Date();
+      const currentDate = date.toISOString().split('T')[0];
       return this.themes.map((theme) => {
-        const option = {
-          label: theme.name,
-          value: theme.id,
-        };
+        let option = {};
+        if (theme.start_at && theme.end_at) {
+          if (theme.start_at < currentDate && theme.end_at > currentDate) {
+            option = {
+              label: theme.name,
+              value: theme.id,
+            };
+          }
+        } else {
+          option = {
+            label: theme.name,
+            value: theme.id,
+          };
+        }
         return option;
       });
     },
