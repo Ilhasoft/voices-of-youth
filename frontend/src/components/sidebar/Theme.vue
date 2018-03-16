@@ -51,7 +51,7 @@
               <div class="column">
                 <ul>
                   <li :key="key" v-for="(report, key) in lastReports" v-cloak>
-                    <img :src="report.last_image.file" @click.prevent="openReport(report)" alt="" v-cloak>
+                    <img :src="report.thumbnail" @click.prevent="openReport(report)" alt="" v-cloak>
                   </li>
                 </ul>
               </div>

@@ -124,16 +124,16 @@ class ReportSerializer(VoySerializer):
         return data
 
     def get_thumbnail(self, obj):
-        if hasattr(obj.file_thumbnail, 'thumbnail'):
-            request = self.context['request']
-            media_url = None
+        request = self.context['request']
 
-            if obj.file_thumbnail.media_type == FILE_TYPE_VIDEO:
-                media_url = obj.file_thumbnail.thumbnail.url
-            else:
-                media_url = obj.file_thumbnail.url
+        if obj.file_thumbnail is not None:
+            path = Path('/media/')
+            if hasattr(obj.file_thumbnail, 'thumbnail') and obj.file_thumbnail.media_type == FILE_TYPE_VIDEO:
+                return request.build_absolute_uri(f'{path}{obj.file_thumbnail.thumbnail}')
 
-            return request.build_absolute_uri(f'{media_url}')
+            if hasattr(obj.file_thumbnail, 'file'):
+                return request.build_absolute_uri(f'{obj.file_thumbnail.file.url}')
+
         return ''
 
     def get_tags(self, obj):
