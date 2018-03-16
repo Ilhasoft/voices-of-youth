@@ -165,6 +165,10 @@ class Report(BaseModel):
         return self.files.filter(media_type=FILE_TYPE_IMAGE).last()
 
     @cached_property
+    def file_thumbnail(self):
+        return self.files.last()
+
+    @cached_property
     def theme_color(self):
         return self.theme.color
 

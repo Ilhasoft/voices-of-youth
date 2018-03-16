@@ -75,7 +75,7 @@ class ReportURLsSerializer(VoySerializer):
 class ReportSerializer(VoySerializer):
     tags = serializers.SerializerMethodField()
     theme = serializers.PrimaryKeyRelatedField(queryset=Theme.objects.all(), required=True)
-    last_image = ReportFilesSerializer(required=False, read_only=True)
+    thumbnail = serializers.SerializerMethodField(read_only=True)
     created_by = UserSerializer(read_only=True)
     can_receive_comments = serializers.BooleanField(read_only=True)
     editable = serializers.BooleanField(read_only=True)
@@ -104,7 +104,7 @@ class ReportSerializer(VoySerializer):
             'theme_name',
             'pin',
             'created_by',
-            'last_image',
+            'thumbnail',
             'status',
             'urls',
             'files',
@@ -122,6 +122,19 @@ class ReportSerializer(VoySerializer):
                 raise serializers.ValidationError('You cannot create a report out of the theme period.')
 
         return data
+
+    def get_thumbnail(self, obj):
+        if hasattr(obj.file_thumbnail, 'thumbnail'):
+            request = self.context['request']
+            media_url = None
+
+            if obj.file_thumbnail.media_type == FILE_TYPE_VIDEO:
+                media_url = obj.file_thumbnail.thumbnail.url
+            else:
+                media_url = obj.file_thumbnail.url
+
+            return request.build_absolute_uri(f'{media_url}')
+        return ''
 
     def get_tags(self, obj):
         return obj.tags.names()
