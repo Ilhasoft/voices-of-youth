@@ -38,7 +38,7 @@ class LoginView(TemplateView):
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
-            if user is not None:
+            if user is not None and user.is_mapper is False:
                 login(request, user)
                 url = self._redirect_url
                 return redirect(url)
