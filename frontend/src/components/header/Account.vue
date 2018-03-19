@@ -5,9 +5,7 @@
     @mouseout="isVisible = false">
     
     <div v-if="userIsLogged">
-      <a href="">
-        <img class="avatar" :src="user.avatar">
-      </a>
+      <img class="avatar" :src="user.avatar" />
 
       <div class="profile-item" :class="[isVisible ? 'fade-in' : 'fade-out']">
         <div class="item">
@@ -94,6 +92,7 @@ export default {
   .avatar {
     width: 43px;
     height: 43px;
+    cursor: pointer;
   }
 
   .btn-login {
