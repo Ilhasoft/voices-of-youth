@@ -139,8 +139,19 @@
                     </div>
 
                     <div class="col-lg-8">
-                        <div id="map">
-                            {{ data_form.bounds }}
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div role="alert" class="alert alert-info">
+                                    {% trans 'You can set the subject area by drawing the boundaries of the project, represented in the orange color on the map.' %}
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div id="map">
+                                    {{ data_form.bounds }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
