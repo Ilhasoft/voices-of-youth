@@ -201,9 +201,9 @@ export default {
     margin-left: 18px;
     margin-right: 35px;
     display: inline-flex;
-    margin-bottom: 5px;
-
+    
     small {
+      margin-bottom: 5px;
       margin-right: 3px;
       letter-spacing: -0.3px;
       text-align: center;
