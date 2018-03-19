@@ -555,6 +555,7 @@ export default {
         border-radius: 4px;
         background-color: #fff;
         border: 1px solid rgba(60,60,60,.26);
+        padding: calc(.375em - 1px) calc(.625em - 1px);
       }
     }
 
