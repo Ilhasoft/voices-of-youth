@@ -78,6 +78,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <p class="panel-footer clearfix btn-block">
+                                    <span class="pull-left">Themes</span>
+                                    <span class="pull-right">{{ project.themes.count }}</span>
+                                </p>
+                                <p class="panel-footer clearfix btn-block">
+                                    <span class="pull-left">Admins</span>
+                                    <span class="pull-right">{{ project.local_admin_group.user_set.count }}</span>
+                                </p>
                                 <div class="row buttons">
                                     <div class="col-xs-6 text-center">
                                         <a href="{% url 'voy-admin:projects:edit' project.pk %}"
