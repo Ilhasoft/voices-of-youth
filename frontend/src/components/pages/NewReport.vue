@@ -213,7 +213,7 @@ export default {
       L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
       this.marker = L.marker(this.center, { icon: this.icon, draggable: true })
-        .addTo(this.$refs.map.mapObject).bindPopup('Select a theme on the left to get started.').openPopup();
+        .addTo(this.$refs.map.mapObject).bindPopup('Get started: select a theme on the left first, then drag the pin.').openPopup();
 
       this.marker.on('move', (event) => {
         this.location = {
