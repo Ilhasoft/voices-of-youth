@@ -99,7 +99,7 @@
                                             {{ data_form.allow_links.errors }}
                                         </div>
 
-                                        <label>{% trans 'Period to receipt reports to evaluating (if is empty the system will consider available to receive)' %}</label>
+                                        <label>{% trans 'Select an active period for the theme. If you leave it blank the theme will remain active indefinitely' %}</label>
 
                                         <div class="form-group {% if data_form.start_at.errors %}has-error{% endif %}">
                                             <label>{% trans 'Start At' %}</label>
@@ -142,7 +142,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div role="alert" class="alert alert-info">
-                                    {% trans 'You can set the theme area by drawing the boundaries of the project, represented in the orange color on the map.' %}
+                                    {% trans 'The theme will automatically adopt the boundary of the project, or you can set the boundary within the orange lines.' %}
                                 </div>                                
                             </div>
                         </div>
