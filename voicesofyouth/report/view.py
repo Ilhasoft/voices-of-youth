@@ -73,6 +73,9 @@ class ReportListView(LoginRequiredMixin, TemplateView):
 
             if cleaned_data['status'] is not '':
                 qs_filter['status'] = int(cleaned_data['status'])
+            else:
+                qs_filter['status'] = REPORT_STATUS_APPROVED
+                data['status'] = REPORT_STATUS_APPROVED
 
             if cleaned_data['search'] is not None:
                 qs_filter['name__icontains'] = cleaned_data['search']
