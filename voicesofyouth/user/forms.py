@@ -97,16 +97,17 @@ class VoyUserBaseForm(forms.Form):
         else:
             return False
 
-    def clean_username(self):
-        try:
-            user = VoyUser.objects.get(username=self.cleaned_data['username'])
-            if user is not None:
-                msg = _(f'Username already exists')
-                raise forms.ValidationError(msg)
-        except VoyUser.DoesNotExist:
-            pass
+    # TODO: Username validation
+    # def clean_username(self):
+    #     try:
+    #         user = VoyUser.objects.get(username=self.cleaned_data['username'])
+    #         if user is not None:
+    #             msg = _(f'Username already exists')
+    #             raise forms.ValidationError(msg)
+    #     except VoyUser.DoesNotExist:
+    #         pass
 
-        return self.cleaned_data['username']
+    #     return self.cleaned_data['username']
 
 
 class MapperForm(VoyUserBaseForm):

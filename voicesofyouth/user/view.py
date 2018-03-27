@@ -289,12 +289,12 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
                 mapper.save()
                 messages.success(request, 'Password saved with success!')
         else:
-            form = MapperForm(request.POST)
+            form = MapperForm(data=request.POST)
 
             if form.save(mapper, request.POST.getlist('themes')):
                 messages.success(request, 'Mapper saved with success!')
             else:
-                messages.error(request, 'Somethings wrong happened when save the mapper. Please try again!')
+                messages.error(request, 'Something went wrong when we tried to save the mapper. Please try again!')
                 context = self.get_context_data(request, mapper.id)
                 context['user'] = mapper
                 context['form_edit_user'] = form
