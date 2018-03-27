@@ -231,8 +231,8 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['users'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
-        context['filter_form'] = self.form_class(request.GET)
-        context['search_form'] = self.form_class(request.GET)
+        context['filter_form'] = self.form_class(initial=request.GET)
+        context['search_form'] = self.form_class(initial=request.GET)
         context['form_add_user'] = MapperForm()
         context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         context['modal_add_title'] = "Add mapper"

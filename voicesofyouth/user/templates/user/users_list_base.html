@@ -157,6 +157,25 @@
             hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
             avatars.slideUp("slow");
         });
+
+        $("select[class='select_project_id']").on('change', function(evt, params) {
+            const currentFormId = $(evt.target.closest("form")).attr('id');
+            themesSelect = $('#' + currentFormId + ' select[class=select_themes_id]');
+
+            themesSelect.empty();
+            themesSelect.trigger('chosen:updated');
+
+            if (params.selected !== undefined) {
+                axios.get('{% url "voy-api:themes-list" %}' + '?project=' + params.selected).then((response) => {
+                    response.data.map((item) => {
+                        themesSelect.append('<option data-project="' + params.selected + '" value="' + item.id + '" selected="selected">' + item.name + '</option>');
+                        themesSelect.trigger('chosen:updated');
+                    });
+                }).catch(error => {
+                    console.log(error);
+                });
+            }
+        });
     </script>
 
     <script type="text/javascript">

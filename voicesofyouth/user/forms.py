@@ -11,12 +11,15 @@ from voicesofyouth.user.models import VoyUser
 class MapperFilterForm(forms.Form):
     project = forms.ModelChoiceField(queryset=None,
                                      required=False,
-                                     widget=forms.Select(),
+                                     widget=forms.Select(
+                                         attrs={'class': 'select_project_id'}
+                                     ),
                                      empty_label=_('Select a project'))
-    theme = forms.ModelChoiceField(queryset=None,
-                                   required=False,
-                                   widget=forms.Select(),
-                                   empty_label=_('Select a theme'))
+    theme = forms.ModelChoiceField(required=False,
+                                   queryset=None,
+                                   widget=forms.Select(choices=[],
+                                                       attrs={'class': 'select_themes_id'}
+                                                       ))
     search = forms.CharField(widget=forms.TextInput(attrs={'placeholder': _('Search for mappers'),
                                                            'class': 'form-control'}),
                              required=False)
@@ -24,9 +27,14 @@ class MapperFilterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         project_qs = Project.objects.filter(themes__reports__isnull=False).distinct()
-        theme_qs = Theme.objects.filter(project__in=project_qs).distinct()
         self.fields['project'].queryset = project_qs
-        self.fields['theme'].queryset = theme_qs
+
+        if 'project' in kwargs.get('initial'):
+            project_id = kwargs.get('initial')['project']
+            theme_qs = Theme.objects.filter(project__id=project_id).distinct()
+            self.fields['theme'].queryset = theme_qs
+        else:
+            self.fields['theme'].queryset = Theme.objects.none()
 
 
 class AdminFilterForm(forms.Form):
