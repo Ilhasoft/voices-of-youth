@@ -91,7 +91,7 @@
               <div class="column">
                 <button
                   class="cancel"
-                  @click.prevent="closeForm">
+                  @click.prevent="confirmCancel()">
                   {{ $t('message.pages.editreport.btnCancel') }}
                 </button>
               </div>
@@ -114,6 +114,12 @@
         </v-map>
       </div>
     </div>
+
+    <confirm-exit
+      @cancel="confirmCancel"
+      @confirm="confirmClose"
+      :isVisible="confirmIsVisible"
+    />
   </div>
 </template>
 
@@ -131,6 +137,7 @@ import markerPixel from '@/assets/img/map-pin.png';
 import HeaderIndex from '@/components/header/Index';
 import LinkItem from '@/components/new-report/Link';
 import FileItem from '@/components/new-report/File';
+import ConfirmExit from '@/components/shared/ConfirmExit';
 
 export default {
   name: 'EditReport',
@@ -140,6 +147,7 @@ export default {
     LinkItem,
     FileItem,
     vSelect,
+    ConfirmExit,
     'v-map': Vue2Leaflet.Map,
     'v-tilelayer': Vue2Leaflet.TileLayer,
     'v-marker': Vue2Leaflet.Marker,
@@ -159,6 +167,7 @@ export default {
       selected: null,
 
       isWarningVisible: false,
+      confirmIsVisible: false,
       name: '',
       description: '',
       link: '',
@@ -247,11 +256,13 @@ export default {
     loadThemeData() {
       this.getUserThemes(this.currentUser.id).then(() => {
         const theme = this.themes.filter(item => item.id === this.report.theme)[0];
-        this.polygonMap = new L.Polygon(theme.bounds);
-        this.polygonMap.setStyle({ color: `#${theme.color}` });
-        this.$refs.map.mapObject.addLayer(this.polygonMap);
-        this.$refs.map.mapObject.fitBounds(this.polygonMap.getBounds());
-        this.tagsOptions = theme.tags.map(tag => tag);
+        if (theme) {
+          this.polygonMap = new L.Polygon(theme.bounds);
+          this.polygonMap.setStyle({ color: `#${theme.color}` });
+          this.$refs.map.mapObject.addLayer(this.polygonMap);
+          this.$refs.map.mapObject.fitBounds(this.polygonMap.getBounds());
+          this.tagsOptions = theme.tags.map(tag => tag);
+        }
       });
     },
 
@@ -377,7 +388,11 @@ export default {
       }
     },
 
-    closeForm() {
+    confirmCancel() {
+      this.confirmIsVisible = !this.confirmIsVisible;
+    },
+
+    confirmClose() {
       router.push({ name: 'my-reports' });
     },
   },

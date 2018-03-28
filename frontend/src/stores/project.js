@@ -40,7 +40,11 @@ export default {
 
   actions: {
     setProjects: async ({ commit }) => {
-      const data = await axios.get('/api/projects');
+      const data = await axios.get('/api/projects', {
+        headers: {
+          Authorization: '',
+        },
+      });
       commit(TYPES.SET_PROJECTS_LIST, data);
     },
 

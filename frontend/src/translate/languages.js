@@ -74,6 +74,7 @@ const messages = {
           btnSend: 'Send report',
           success: 'Report Sent!',
           remove: 'Remove',
+          cancel: 'Cancel',
         },
         editreport: {
           title: 'Edit report',
@@ -118,6 +119,13 @@ const messages = {
           title: 'Results',
           more: 'See more',
           empty: 'No results found',
+        },
+      },
+      shared: {
+        exit: {
+          message: 'Are you sure you want to cancel this report?',
+          yes: 'Yes',
+          no: 'No',
         },
       },
     },

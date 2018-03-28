@@ -105,7 +105,7 @@
           <div class="buttons">
             <div class="columns is-mobile">
               <div class="column">
-                <button class="cancel" @click.prevent="closeForm">Cancel</button>
+                <button class="cancel" @click.prevent="confirmCancel()">{{ $t('message.pages.newreport.cancel') }}</button>
               </div>
 
               <div class="column">
@@ -122,6 +122,12 @@
         </v-map>
       </div>
     </div>
+
+    <confirm-exit
+      @cancel="confirmCancel"
+      @confirm="confirmClose"
+      :isVisible="confirmIsVisible"
+    />
   </div>
 </template>
 
@@ -139,12 +145,14 @@ import markerPixel from '@/assets/img/map-pin.png';
 import HeaderIndex from '@/components/header/Index';
 import LinkItem from '@/components/new-report/Link';
 import FileItem from '@/components/new-report/File';
+import ConfirmExit from '@/components/shared/ConfirmExit';
 
 export default {
   name: 'NewReport',
 
   components: {
     HeaderIndex,
+    ConfirmExit,
     LinkItem,
     FileItem,
     vSelect,
@@ -172,6 +180,7 @@ export default {
       files: [],
       urls: [],
       showMappers: false,
+      confirmIsVisible: false,
 
       marker: null,
       options: { noWrap: true },
@@ -414,7 +423,11 @@ export default {
       }
     },
 
-    closeForm() {
+    confirmCancel() {
+      this.confirmIsVisible = !this.confirmIsVisible;
+    },
+
+    confirmClose() {
       router.push({ name: 'project', params: { path: this.currentProject.path } });
     },
   },
