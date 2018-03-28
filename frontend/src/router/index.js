@@ -18,16 +18,16 @@ import i18n from '@/translate';
 Vue.use(Router);
 
 async function dispatchStores(path) {
-  await stores.dispatch('setProjects');
-  await stores.dispatch('setCurrentProject', path);
-  await stores.dispatch('setCurrentUser');
-
   const token = helper.getItem('token');
 
   if (token) {
     const authorization = 'Authorization';
     axios.defaults.headers.common[authorization] = `Token ${token}`;
   }
+
+  await stores.dispatch('setUserProjects');
+  await stores.dispatch('setCurrentProject', path);
+  await stores.dispatch('setCurrentUser');
 
   return Promise.resolve();
 }
@@ -37,8 +37,12 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Home',
+      name: 'home',
       component: HomePage,
+      beforeEnter: async (to, from, next) => {
+        await dispatchStores({ path: to.params.path });
+        next();
+      },
     },
 
     {

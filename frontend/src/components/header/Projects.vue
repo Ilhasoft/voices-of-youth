@@ -18,6 +18,9 @@
               @click.native="openProject(item)">{{ item.name }}
             </router-link>
           </div>
+          <div class="item">
+            <a href="" @click.prevent="goHome()">Other projects</a>
+          </div>
         </div>
       </div>
     </div>
@@ -54,6 +57,10 @@ export default {
       this.setSideBarConfigs({ isActived: false });
       this.setCurrentProject(item);
       window.location = `/project/${item.path}`;
+    },
+
+    goHome() {
+      window.location = '/';
     },
   },
 };

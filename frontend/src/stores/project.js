@@ -48,6 +48,11 @@ export default {
       commit(TYPES.SET_PROJECTS_LIST, data);
     },
 
+    setUserProjects: async ({ commit }) => {
+      const data = await axios.get('/api/projects');
+      commit(TYPES.SET_PROJECTS_LIST, data);
+    },
+
     setCurrentProject: async ({ commit, state }, obj) => {
       if (obj.id !== undefined) {
         commit(TYPES.SET_CURRENT_PROJECT, obj);
