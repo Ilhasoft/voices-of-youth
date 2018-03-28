@@ -315,7 +315,7 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
             'avatars': mapper.avatar
         }
 
-        context['filter_form'] = self.form_filter_class(request.GET)
+        context['filter_form'] = self.form_filter_class(initial=request.GET)
         context['voy_user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
         context['form_edit_user'] = MapperForm(initial=data)
