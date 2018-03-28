@@ -48,7 +48,7 @@ class VoyUserBaseForm(forms.Form):
                                label=_('Username'),
                                widget=forms.TextInput(
                                    attrs={
-                                       'class': 'form-control',
+                                       'class': 'form-control required',
                                        'placeholder': _('Set the username that will use to Log in to the Voy project.'),
                                        'autocomplete': 'off'
                                    },
@@ -57,7 +57,7 @@ class VoyUserBaseForm(forms.Form):
                            label=_('Name'),
                            widget=forms.TextInput(
                                attrs={
-                                   'class': 'form-control',
+                                   'class': 'form-control required',
                                    'placeholder': _('Set the User full name'),
                                    'autocomplete': 'off'
                                },
@@ -72,7 +72,7 @@ class VoyUserBaseForm(forms.Form):
                              ))
     password = forms.CharField(min_length=6, widget=forms.PasswordInput(
         attrs={
-            'class': 'form-control',
+            'class': 'form-control required',
             'id': 'password-form',
             'autocomplete': 'off'
         }
