@@ -1,7 +1,6 @@
 <template>
-  <div class="column has-text-right">
-    <img class="is-pulled-right img" src="~@/assets/img/header-search.png" @click.prevent="showInputSearch">
-    <input type="text" v-model="inputQuery" v-show="showInput" @keyup.enter="search" ref="search" @blur="showInput = false" />
+  <div class="column is-6 has-text-right">
+    <input type="text" :placeholder="$t('message.header.search.input')" v-model="inputQuery" @keyup.enter="search" ref="search" />
   </div>
 </template>
 

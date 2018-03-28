@@ -167,7 +167,7 @@ export default {
     right: 0;
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.33);
     border-radius: 10px;
-    margin: 15px 90px 0px 0px;
+    margin: 15px 20px 0px 0px;
 
     h4 {
       background: #fff;

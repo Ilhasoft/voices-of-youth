@@ -168,7 +168,7 @@ export default {
   border: solid 2px #00cbff;
   color: #fff;
   background: #00cbff;
-  width: 162px;
+  width: 125px;
 
   .icon-header-plus {
     font-size: 14px;

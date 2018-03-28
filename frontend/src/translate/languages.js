@@ -19,6 +19,9 @@ const messages = {
         back: {
           title: 'Back to map',
         },
+        search: {
+          input: 'Type in a keyword or tag to search',
+        },
       },
       pages: {
         login: {
