@@ -13,6 +13,20 @@
                 {% trans 'Pending reports' %}
             </div>
 
+            <div class="content-heading">
+                <div class="row">
+                    <form action="" method="GET" id="form_search">
+                        <div class="col-lg-1 col-md-1">
+                            <p class="filter">{% trans 'Filter by:' %}</p>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 pull-right">
+                            {{ filter_form.project }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="panel panel-default">
                 <div class="panel-body">
                     {% for report in reports %}
@@ -32,3 +46,12 @@
         </div>
     </section>
 {% endblock content %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        $('#id_project').change(function(e) {
+            e.preventDefault();
+            window.location = '{% url 'voy-admin:reports:pending' %}' + '?project=' + $('#id_project option:selected').val();
+        });
+    </script>
+{% endblock extrajs %}

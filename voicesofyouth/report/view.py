@@ -30,6 +30,7 @@ from voicesofyouth.report.models import REPORT_STATUS_NOTAPPROVED
 from voicesofyouth.report.models import FILE_FORMATS
 from voicesofyouth.report.forms import ReportFilterForm
 from voicesofyouth.report.forms import ReportForm
+from voicesofyouth.report.forms import ReportPendingFilterForm
 
 
 class ReportListView(LoginRequiredMixin, TemplateView):
@@ -395,18 +396,26 @@ class PendingReportView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        page = self.request.GET.get('page')
-
         user = self.request.user
         reports = None
 
-        if user.is_global_admin:
-            reports = Report.objects.filter(status=REPORT_STATUS_PENDING)
-        else:
-            reports = Report.objects.filter(status=REPORT_STATUS_PENDING).filter(theme__in=user.themes)
+        form = ReportPendingFilterForm(data=self.request.GET, user=self.request.user)
+        context['filter_form'] = form
+
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            page = self.request.GET.get('page')
+
+            qs_filter = {}
+            if cleaned_data['project'] is not None:
+                qs_filter['theme__project_id'] = cleaned_data['project'].id
+
+            if user.is_global_admin:
+                reports = Report.objects.filter(status=REPORT_STATUS_PENDING).filter(**qs_filter)
+            else:
+                reports = Report.objects.filter(status=REPORT_STATUS_PENDING).filter(theme__in=user.themes)
 
         context['reports'] = get_paginator(reports, page)
-
         return context
 
 

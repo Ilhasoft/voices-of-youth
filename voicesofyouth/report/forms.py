@@ -170,3 +170,19 @@ class ReportFilterForm(forms.Form):
 
         self.fields['theme'].queryset = theme.project.themes.all()
         self.fields['tag'].queryset = theme.all_tags
+
+
+class ReportPendingFilterForm(forms.Form):
+    project = MyModelChoiceField(queryset=None,
+                                 required=False,
+                                 empty_label='Project',
+                                 widget=forms.Select(attrs={'class': 'form-control m-b'}))
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(ReportPendingFilterForm, self).__init__(*args, **kwargs)
+
+        if self.user.is_global_admin:
+            self.fields['project'].queryset = Project.objects.all()
+        else:
+            self.fields['project'].queryset = self.user.projects.all()
