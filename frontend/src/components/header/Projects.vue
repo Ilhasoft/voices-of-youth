@@ -71,7 +71,7 @@ export default {
   padding: 1px 0px 1px 0px;
 
   .item {
-    height: 38px;
+    min-height: 38px;
     padding: 6px;
     color: #555555;
     text-align: left;
