@@ -29,7 +29,7 @@ class MapperFilterForm(forms.Form):
         project_qs = Project.objects.filter(themes__reports__isnull=False).distinct()
         self.fields['project'].queryset = project_qs
 
-        if 'project' in kwargs.get('initial'):
+        if kwargs is not None and 'project' in kwargs.get('initial'):
             project_id = kwargs.get('initial')['project']
             theme_qs = Theme.objects.filter(project__id=project_id).distinct()
             self.fields['theme'].queryset = theme_qs
