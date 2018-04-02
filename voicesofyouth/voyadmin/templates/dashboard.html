@@ -1,17 +1,30 @@
 {% extends "voyadmin/base.html" %}
 
-{% block content %}
-    <section>
-        <div class="content-wrapper">
-            <div class="content-heading">
-                Dashboard
-            </div>
+{% load i18n %}
 
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <h1>Dashboard template</h1>
+{% block content %}
+<section>
+    <div class="content-wrapper">
+        <div class="content-heading">{% trans 'Dashboard' %}</div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{% trans 'Top Tags' %}</h3>
+                        </div>
+                        <ul class="list-group">
+                            {% for tag in top_tags %}
+                                <li class="list-group-item">
+                                    <span class="badge">{{ tag.items_count }}</span>
+                                    {{ tag.name }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 {% endblock content %}

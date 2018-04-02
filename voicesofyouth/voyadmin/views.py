@@ -5,6 +5,9 @@ from django.shortcuts import redirect, render
 from django.urls.base import reverse
 from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count
+from taggit.models import Tag
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.voyadmin.forms import LoginForm
@@ -15,7 +18,20 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['projects'] = Project.objects.all()
+
+        projects = Project.objects.all() \
+            if self.request.user.is_global_admin else \
+            self.request.user.projects
+
+        ct_project = ContentType.objects.get_for_model(Project)
+        all_tags = Tag.objects.filter(taggit_taggeditem_items__content_type=ct_project,
+                                      taggit_taggeditem_items__object_id__in=projects)
+        top_tags = all_tags \
+            .annotate(items_count=Count('taggit_taggeditem_items')) \
+            .order_by('-items_count')[:10]  # show top 10
+
+        context['projects'] = projects
+        context['top_tags'] = top_tags
         return context
 
 
