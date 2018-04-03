@@ -23,17 +23,19 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        last_week = timezone.now() - datetime.timedelta(days=7)
 
         projects = Project.objects.all() \
             if self.request.user.is_global_admin else \
             self.request.user.projects
         all_reports = Report.objects.filter(theme__project__in=projects)
+        last_week = timezone.now() - datetime.timedelta(days=7)
+        week_reports = all_reports.filter(created_on__gte=last_week)
+        last_month = timezone.now() - datetime.timedelta(days=30)
+        monthly_reports = all_reports.filter(created_on__gte=last_month)
 
         groups_ids = projects.values_list('themes__mappers_group', flat=True)
         all_mappers = MapperUser.objects.filter(groups__id__in=groups_ids)
 
-        week_reports = all_reports.filter(created_on__gte=last_week)
         week_approved_reports = week_reports.approved()
         week_pending_reports = week_reports.pending()
 
@@ -47,6 +49,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         approved_percent = int(week_approved_reports.count() / week_reports.count() * 100)
         pending_percent = int(week_pending_reports.count() / week_reports.count() * 100)
 
+        top_mappers = MapperUser.objects.filter(
+            report_report_creations__in=monthly_reports) \
+            .annotate(report_count=Count('report_report_creations')) \
+            .order_by('-report_count')[:5]
+
         context['projects'] = projects
         context['all_reports'] = all_reports
         context['all_mappers'] = all_mappers
@@ -59,6 +66,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['radial_bar_approved_percent'] = radial_bar_round_down(approved_percent)
         context['radial_bar_pending_percent'] = radial_bar_round_down(pending_percent)
         context['latest_approved_reports'] = all_reports.approved()[:5]
+        context['top_mappers'] = top_mappers
         return context
 
 

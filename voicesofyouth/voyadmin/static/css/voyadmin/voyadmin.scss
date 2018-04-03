@@ -47,3 +47,26 @@
         color: #AA0;
     }
 }
+
+.user-item {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+
+    &-avatar {
+        img {
+            display: block;
+        }
+    }
+
+    &-info {
+        margin-left: 15px;
+
+        &-name {
+            font-size: 18px;
+        }
+        &-numbers {
+            color: #999;
+        }
+    }
+}
