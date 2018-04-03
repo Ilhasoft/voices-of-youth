@@ -232,7 +232,7 @@ class ReportURL(BaseModel):
 
 
 class ReportNotification(BaseModel):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='notifications')
+    report = models.OneToOneField(Report, on_delete=models.CASCADE, related_name='notification')
     status = models.IntegerField(choices=NOTIFICATION_STATUS, blank=False, null=False, verbose_name=_('Status'))
     origin = models.IntegerField(choices=NOTIFICATION_ORIGIN, blank=False, null=False, verbose_name=_('Origin'))
     message = models.TextField(null=True, blank=True, verbose_name=_('Message'))
@@ -287,24 +287,20 @@ def check_report_within_theme_date_period(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Report)
 def send_notification_to_local_admin(sender, instance, **kwargs):
-    if instance.created_by.is_mapper is True:
+    if instance.status != REPORT_COMMENT_STATUS_APPROVED and instance.created_by.is_mapper:
         try:
-            notification = ReportNotification.objects.filter(report=instance).first()
-
-            if instance.status == REPORT_COMMENT_STATUS_PENDING:
-                notification.status = NOTIFICATION_STATUS_PENDING
-
-            elif instance.status == REPORT_STATUS_NOTAPPROVED:
-                notification.status = NOTIFICATION_STATUS_REVALUTION
-
-            notification.read = False
-            notification.save()
-        except Exception as e:
-            ReportNotification.objects.create(
+            notification = ReportNotification.objects.get(report=instance)
+        except ReportNotification.DoesNotExist:
+            notification = ReportNotification(
                 report=instance,
-                status=NOTIFICATION_STATUS_PENDING,
                 origin=NOTIFICATION_ORIGIN_REPORT,
-                read=False,
                 created_by=instance.created_by,
                 modified_by=instance.modified_by,
             )
+
+        if instance.status == REPORT_COMMENT_STATUS_PENDING:
+            notification.status = NOTIFICATION_STATUS_PENDING
+        elif instance.status == REPORT_STATUS_NOTAPPROVED:
+            notification.status = NOTIFICATION_STATUS_REVALUTION
+        notification.read = False
+        notification.save()
