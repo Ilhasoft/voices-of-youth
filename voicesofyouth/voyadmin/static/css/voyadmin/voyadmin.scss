@@ -1,4 +1,7 @@
 .summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px 10px;
 
     &-label {
@@ -12,6 +15,11 @@
             font-size: 16px;
             font-weight: bolder;
         }
+    }
+
+    &-icon {
+        font-size: 34px;
+        color: #CCC;
     }
 }
 
