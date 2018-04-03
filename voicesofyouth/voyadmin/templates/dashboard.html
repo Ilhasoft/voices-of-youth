@@ -11,7 +11,9 @@
                 <h4>{% trans 'Summary' %}</h4>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <p>{{ projects.count }} projects</p>
+                        <p>{{ projects.count }} {% trans 'projects' %}</p>
+                        <p>{{ all_reports.count }} {% trans 'reports' %}</p>
+                        <p>{{ all_mappers.count }} {% trans 'mappers' %}</p>
                     </div>
                 </div>
                 <h4>{% trans 'Most used Tags' %}</h4>

@@ -14,6 +14,7 @@ from taggit.models import Tag
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
+from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.forms import LoginForm
 
 
@@ -28,6 +29,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             if self.request.user.is_global_admin else \
             self.request.user.projects
         all_reports = Report.objects.filter(theme__project__in=projects)
+
+        groups_ids = projects.values_list('themes__mappers_group', flat=True)
+        all_mappers = MapperUser.objects.filter(groups__id__in=groups_ids)
+
         week_reports = all_reports.filter(created_on__gte=last_week)
         week_approved_reports = week_reports.approved()
         week_pending_reports = week_reports.pending()
@@ -40,6 +45,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .order_by('-items_count')[:10]  # show top 10
 
         context['projects'] = projects
+        context['all_reports'] = all_reports
+        context['all_mappers'] = all_mappers
         context['top_tags'] = top_tags
         context['week_reports'] = week_reports
         context['week_approved_reports'] = week_approved_reports
