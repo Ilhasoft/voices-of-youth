@@ -1,30 +1,112 @@
 {% extends "voyadmin/base.html" %}
 
-{% load i18n %}
+{% load i18n static sass_tags %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+<link rel="stylesheet" href="{% sass_src 'css/voyadmin/voyadmin.scss' %}">
+{% endblock %}
 
 {% block content %}
 <section>
     <div class="content-wrapper">
         <div class="content-heading">{% trans 'Dashboard' %}</div>
         <div class="row">
-            <div class="col-md-6">
-                <div class="col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">{% trans 'Top Tags' %}</h3>
+            <div class="col-md-5 col-lg-4">
+                <h4>{% trans 'Summary' %}</h4>
+                <div class="panel panel-default" id="report">
+                    <div class="panel-body">
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ projects.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Active projects' %}</div>
+                            </div>
+                            <div class="summary-item-icon">
+                                <em class="icon-location-pin"></em>
+                            </div>
                         </div>
-                        <ul class="list-group">
-                            {% for tag in top_tags %}
-                                <li class="list-group-item">
-                                    <span class="badge">{{ tag.items_count }}</span>
-                                    {{ tag.name }}
-                                </li>
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ all_reports.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Reports' %}</div>
+                            </div>
+                            <div class="summary-item-icon">
+                                <em class="icon-chart"></em>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ all_mappers.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Mappers' %}</div>
+                            </div>
+                            <div class="summary-item-icon">
+                                <em class="icon-map"></em>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4>{% trans 'Reports of the last 7 days' %}</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body text-center">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div data-label="{{ approved_percent }}%" class="radial-bar radial-bar-{{ radial_bar_approved_percent }} radial-bar-lg radial-bar-success"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div data-label="{{ pending_percent }}%" class="radial-bar radial-bar-{{ radial_bar_pending_percent }} radial-bar-lg radial-bar-warning"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer text-center">
+                        <ol class="breadcrumb" style="margin: 0">
+                            <li>{{ week_reports.count }} reports</li>
+                            <li class="text-approved">{{ week_approved_reports.count }} approved</li>
+                            <li class="text-pending">{{ week_pending_reports.count }} pending</li>
+                        </ol>
+                    </div>
+                </div>
+                <h4>{% trans 'Most used Tags' %}</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body" style="padding: 0">
+                        {% for tag in top_tags %}
+                        <div class="tag-item">
+                            <span class="tag-item-number">{{ tag.items_count }}</span>
+                            <span class="tag-item-text">{{ tag.name }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <h4>{% trans 'Top Mappers of the last 30 days' %}</h4>
+                <div class="panel panel-default">
+                    <div class="panel-body" style="padding: 0">
+                        {% for user in top_mappers %}
+                        <div class="user-item">
+                            <img src="{{ user.get_avatar_display }}" class="user-item-avatar" />
+                            <div class="user-item-info">
+                                <div class="user-item-info-name">{{ user.get_full_name }}</div>
+                                <div class="user-item-info-numbers">{{ user.report_count }} {% trans 'reports' %}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h4>{% trans 'Last approved Reports' %}</h4>
+                <div id="report">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {% for report in latest_approved_reports %}
+                                {% include "report/report_resume.html" with report=report %}
+                            {% empty %}
+                                <div class="row">
+                                    <h4 class="text-center">{% trans 'No reports found' %}</h4>
+                                </div>
                             {% endfor %}
-                        </ul>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </section>
 {% endblock content %}

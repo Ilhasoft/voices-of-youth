@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import Paginator
+from functools import reduce
 
 
 def get_paginator(queryset, page=1, items_per_page=None):
@@ -22,3 +23,10 @@ def get_paginator(queryset, page=1, items_per_page=None):
     paginator.page_range = list(paginator.paginator.page_range)[start_index:end_index]
 
     return paginator
+
+
+round_bar_valids_percents = [x * 5 for x in range(0, 21)]
+def radial_bar_round_down(value):
+    return reduce(
+        lambda current, next: next if value >= next else current,
+        round_bar_valids_percents)
