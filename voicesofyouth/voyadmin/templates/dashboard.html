@@ -7,14 +7,14 @@
     <div class="content-wrapper">
         <div class="content-heading">{% trans 'Dashboard' %}</div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <h4>{% trans 'Summary' %}</h4>
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <p>{{ projects.count }} projects</p>
                     </div>
                 </div>
-                <h4>{% trans 'Top Tags' %}</h4>
+                <h4>{% trans 'Most used Tags' %}</h4>
                 <div class="panel panel-default">
                     <ul class="list-group">
                         {% for tag in top_tags %}
@@ -26,21 +26,37 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-6">
-                <h4>{% trans 'Reports of the last 7 days' %}</h4>
+            <div class="col-md-8">
+                <h4>{% trans 'Last sent reports' %}</h4>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <div class="progress" style="margin: 20px 0">
-                            <div class="progress-bar progress-bar-success" style="width: {{ approved_percent }}%"></div>
-                            <div class="progress-bar progress-bar-warning" style="width: {{ pending_percent }}%"></div>
-                        </div>
+                        {% for report in latest_reports %}
+                            {% include "report/report_resume.html" with report=report %}
+                        {% empty %}
+                            <div class="row">
+                                <h4 class="text-center">{% trans 'No reports found' %}</h4>
+                            </div>
+                        {% endfor %}
                     </div>
-                    <div class="panel-footer text-center">
-                        <ol class="breadcrumb" style="margin: 0">
-                            <li>{{ latest_reports.count }} reports</li>
-                            <li>{{ latest_approved_reports.count }} approved</li>
-                            <li>{{ latest_pending_reports.count }} pending</li>
-                        </ol>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>{% trans 'Reports of the last 7 days' %}</h4>
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="progress" style="margin: 20px 0">
+                                    <div class="progress-bar progress-bar-success" style="width: {{ approved_percent }}%"></div>
+                                    <div class="progress-bar progress-bar-warning" style="width: {{ pending_percent }}%"></div>
+                                </div>
+                            </div>
+                            <div class="panel-footer text-center">
+                                <ol class="breadcrumb" style="margin: 0">
+                                    <li>{{ latest_reports.count }} reports</li>
+                                    <li>{{ latest_approved_reports.count }} approved</li>
+                                    <li>{{ latest_pending_reports.count }} pending</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -22,15 +22,15 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        last_week = timezone.now() - datetime.timedelta(days=7)
 
         projects = Project.objects.all() \
             if self.request.user.is_global_admin else \
             self.request.user.projects
-        last_week = timezone.now() - datetime.timedelta(days=7)
-        latest_reports = Report.objects.filter(theme__project__in=projects,
-                                               created_on__gte=last_week)
-        latest_approved_reports = latest_reports.approved()
-        latest_pending_reports = latest_reports.pending()
+        all_reports = Report.objects.filter(theme__project__in=projects)
+        week_reports = all_reports.filter(created_on__gte=last_week)
+        week_approved_reports = week_reports.approved()
+        week_pending_reports = week_reports.pending()
 
         ct_project = ContentType.objects.get_for_model(Project)
         all_tags = Tag.objects.filter(taggit_taggeditem_items__content_type=ct_project,
@@ -41,11 +41,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         context['projects'] = projects
         context['top_tags'] = top_tags
-        context['latest_reports'] = latest_reports
-        context['latest_approved_reports'] = latest_approved_reports
-        context['latest_pending_reports'] = latest_pending_reports
-        context['approved_percent'] = latest_approved_reports.count() / latest_reports.count() * 100
-        context['pending_percent'] = latest_pending_reports.count() / latest_reports.count() * 100
+        context['week_reports'] = week_reports
+        context['week_approved_reports'] = week_approved_reports
+        context['week_pending_reports'] = week_pending_reports
+        context['approved_percent'] = week_approved_reports.count() / week_reports.count() * 100
+        context['pending_percent'] = week_pending_reports.count() / week_reports.count() * 100
+        context['latest_reports'] = all_reports[:5]
         return context
 
 
