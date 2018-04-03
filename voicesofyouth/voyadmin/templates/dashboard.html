@@ -1,6 +1,26 @@
 {% extends "voyadmin/base.html" %}
 
-{% load i18n %}
+{% load i18n static sass_tags %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
+<style type="text/css">
+    .summary-item {
+        padding: 20px 10px;
+    }
+    .summary-item {}
+    .summary-item > .summary-item-label {}
+    .summary-item > .summary-item-label > .summary-item-label-number {
+        font-size: 28px;
+        color: #999;
+    }
+    .summary-item > .summary-item-label > .summary-item-label-text {
+        color: #00cbff;
+        font-size: 16px;
+        font-weight: bolder;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <section>
@@ -9,11 +29,26 @@
         <div class="row">
             <div class="col-md-5 col-lg-4">
                 <h4>{% trans 'Summary' %}</h4>
-                <div class="panel panel-default">
+                <div class="panel panel-default" id="report">
                     <div class="panel-body">
-                        <p>{{ projects.count }} {% trans 'projects' %}</p>
-                        <p>{{ all_reports.count }} {% trans 'reports' %}</p>
-                        <p>{{ all_mappers.count }} {% trans 'mappers' %}</p>
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ projects.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Active projects' %}</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ all_reports.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Reports' %}</div>
+                            </div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-item-label">
+                                <div class="summary-item-label-number">{{ all_mappers.count }}</div>
+                                <div class="summary-item-label-text">{% trans 'Mappers' %}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <h4>{% trans 'Most used Tags' %}</h4>
@@ -30,15 +65,17 @@
             </div>
             <div class="col-md-7 col-lg-8">
                 <h4>{% trans 'Last sent reports' %}</h4>
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        {% for report in latest_reports %}
-                            {% include "report/report_resume.html" with report=report %}
-                        {% empty %}
-                            <div class="row">
-                                <h4 class="text-center">{% trans 'No reports found' %}</h4>
-                            </div>
-                        {% endfor %}
+                <div id="report">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {% for report in latest_reports %}
+                                {% include "report/report_resume.html" with report=report %}
+                            {% empty %}
+                                <div class="row">
+                                    <h4 class="text-center">{% trans 'No reports found' %}</h4>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
                 <div class="row">
