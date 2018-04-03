@@ -16,7 +16,7 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.forms import LoginForm
-
+from voicesofyouth.voyadmin.utils import radial_bar_round_down
 
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard.html'
@@ -44,6 +44,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .annotate(items_count=Count('taggit_taggeditem_items')) \
             .order_by('-items_count')[:10]  # show top 10
 
+        approved_percent = int(week_approved_reports.count() / week_reports.count() * 100)
+        pending_percent = int(week_pending_reports.count() / week_reports.count() * 100)
+
         context['projects'] = projects
         context['all_reports'] = all_reports
         context['all_mappers'] = all_mappers
@@ -51,8 +54,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['week_reports'] = week_reports
         context['week_approved_reports'] = week_approved_reports
         context['week_pending_reports'] = week_pending_reports
-        context['approved_percent'] = week_approved_reports.count() / week_reports.count() * 100
-        context['pending_percent'] = week_pending_reports.count() / week_reports.count() * 100
+        context['approved_percent'] = approved_percent
+        context['pending_percent'] = pending_percent
+        context['radial_bar_approved_percent'] = radial_bar_round_down(approved_percent)
+        context['radial_bar_pending_percent'] = radial_bar_round_down(pending_percent)
         context['latest_reports'] = all_reports[:5]
         return context
 
