@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,9 +9,11 @@ from django.utils.translation import ugettext as _
 from django.views.generic.base import TemplateView
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
+from django.utils import timezone
 from taggit.models import Tag
 
 from voicesofyouth.project.models import Project
+from voicesofyouth.report.models import Report
 from voicesofyouth.voyadmin.forms import LoginForm
 
 
@@ -22,6 +26,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         projects = Project.objects.all() \
             if self.request.user.is_global_admin else \
             self.request.user.projects
+        last_week = timezone.now() - datetime.timedelta(days=7)
+        latest_reports = Report.objects.filter(theme__project__in=projects,
+                                               created_on__gte=last_week)
+        latest_approved_reports = latest_reports.approved()
+        latest_pending_reports = latest_reports.pending()
 
         ct_project = ContentType.objects.get_for_model(Project)
         all_tags = Tag.objects.filter(taggit_taggeditem_items__content_type=ct_project,
@@ -32,6 +41,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         context['projects'] = projects
         context['top_tags'] = top_tags
+        context['latest_reports'] = latest_reports
+        context['latest_approved_reports'] = latest_approved_reports
+        context['latest_pending_reports'] = latest_pending_reports
+        context['approved_percent'] = latest_approved_reports.count() / latest_reports.count() * 100
+        context['pending_percent'] = latest_pending_reports.count() / latest_reports.count() * 100
         return context
 
 
