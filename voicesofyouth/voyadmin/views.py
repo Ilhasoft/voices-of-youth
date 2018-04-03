@@ -51,7 +51,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
         top_mappers = MapperUser.objects.filter(
             report_report_creations__in=monthly_reports) \
-            .annotate(report_count=Count('report_report_creations')) \
+            .annotate(report_count=Count(
+                'report_report_creations',
+                distinct=True)) \
             .order_by('-report_count')[:5]
 
         context['projects'] = projects
