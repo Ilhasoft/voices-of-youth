@@ -44,7 +44,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                                       taggit_taggeditem_items__object_id__in=projects)
         top_tags = all_tags \
             .annotate(items_count=Count('taggit_taggeditem_items')) \
-            .order_by('-items_count')[:10]  # show top 10
+            .order_by('-items_count')[:5]  # show top 5
 
         approved_percent = int(week_approved_reports.count() / week_reports.count() * 100)
         pending_percent = int(week_pending_reports.count() / week_reports.count() * 100)
@@ -65,7 +65,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['pending_percent'] = pending_percent
         context['radial_bar_approved_percent'] = radial_bar_round_down(approved_percent)
         context['radial_bar_pending_percent'] = radial_bar_round_down(pending_percent)
-        context['latest_approved_reports'] = all_reports.approved()[:5]
+        context['latest_approved_reports'] = all_reports.approved()[:7]
         context['top_mappers'] = top_mappers
         return context
 
