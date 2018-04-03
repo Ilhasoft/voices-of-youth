@@ -4,34 +4,7 @@
 
 {% block extracss %}
 <link rel="stylesheet" href="{% sass_src 'css/report/report.scss' %}">
-<style type="text/css">
-    .summary-item {
-        padding: 20px 10px;
-    }
-    .summary-item {}
-    .summary-item > .summary-item-label {}
-    .summary-item > .summary-item-label > .summary-item-label-number {
-        font-size: 28px;
-        color: #999;
-    }
-    .summary-item > .summary-item-label > .summary-item-label-text {
-        color: #00cbff;
-        font-size: 16px;
-        font-weight: bolder;
-    }
-    .tag-item {
-        padding: 25px;
-        font-size: 20px;
-        font-weight: 300;
-        border-bottom: solid 1px #efefef;
-    }
-    .tag-item > .tag-item-number {
-        float: right;
-    }
-    .tag-item > .tag-item-text {
-        color: #00cbff;
-    }
-</style>
+<link rel="stylesheet" href="{% sass_src 'css/voyadmin/voyadmin.scss' %}">
 {% endblock %}
 
 {% block content %}
