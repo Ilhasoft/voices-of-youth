@@ -58,7 +58,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['pending_percent'] = pending_percent
         context['radial_bar_approved_percent'] = radial_bar_round_down(approved_percent)
         context['radial_bar_pending_percent'] = radial_bar_round_down(pending_percent)
-        context['latest_reports'] = all_reports[:5]
+        context['latest_approved_reports'] = all_reports.approved()[:5]
         return context
 
 

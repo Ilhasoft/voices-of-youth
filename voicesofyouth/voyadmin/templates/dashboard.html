@@ -49,11 +49,11 @@
                 </div>
             </div>
             <div class="col-md-7 col-lg-8">
-                <h4>{% trans 'Last sent reports' %}</h4>
+                <h4>{% trans 'Last approved reports' %}</h4>
                 <div id="report">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            {% for report in latest_reports %}
+                            {% for report in latest_approved_reports %}
                                 {% include "report/report_resume.html" with report=report %}
                             {% empty %}
                                 <div class="row">
