@@ -25,8 +25,10 @@ export default {
     },
 
     [TYPES.SET_CURRENT_PROJECT](state, obj) {
-      state.current = obj;
-      document.title = `Voices of Youth - ${obj.name}`;
+      if (obj) {
+        state.current = obj;
+        document.title = `Voices of Youth - ${obj.name}`;
+      }
     },
 
     [TYPES.SET_DISCLAIMER_PROJECT](state, obj) {
@@ -60,11 +62,10 @@ export default {
       } else {
         const project = JSON.parse(localStorage.getItem('project'));
         if (project) {
-          commit(TYPES.SET_CURRENT_PROJECT, JSON.parse(localStorage.getItem('project')));
+          commit(TYPES.SET_CURRENT_PROJECT, project);
         } else {
           const data = await axios.get('/api/projects');
           const response = data.filter(item => item.path === obj.path)[0];
-
           localStorage.setItem('project', JSON.stringify(response));
           commit(TYPES.SET_CURRENT_PROJECT, response);
         }
