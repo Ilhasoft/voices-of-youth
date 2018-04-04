@@ -44,16 +44,16 @@ def search_admin(search_by, qs=None):
 
 
 def _add_admin(request, admin=None):
-    admin = admin or AdminUser()
-    form = AdminForm(request.POST)
+    form = AdminForm(request.POST, instance=admin)
     error = None
     saved = False
     try:
-        saved = form.save(admin)
-        if not saved:
-            messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
-        else:
+        if form.is_valid():
+            saved = form.save()
             messages.info(request, 'Admin saved successfully!')
+        else:
+            messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
+
     except IntegrityError as exc:
         error = str(exc).split('\n')[0]
         messages.error(request, error)
@@ -152,15 +152,10 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         admin = get_object_or_404(AdminUser, pk=admin_id)
-        data = {
-            'username': admin.username,
-            'name': admin.get_full_name(),
-            'email': admin.email,
-            'avatars': admin.avatar
-        }
+
         context['voy_user'] = admin
         context['user_delete_url'] = reverse('voy-admin:users:admin_detail', args=(admin.id, ))
-        context['form_edit_user'] = AdminForm(initial=data)
+        context['form_edit_user'] = AdminForm(instance=admin)
         context['form_add_user'] = AdminForm()
         context['selected_themes'] = admin.themes.values_list('id', flat=True)
         context['form_edit_user_theme'] = admin.themes.all()
@@ -187,8 +182,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         else:
             form = MapperForm(request.POST)
             if form.is_valid():
-                mapper = MapperUser()
-                form.save(mapper, request.POST.getlist('themes'))
+                form.save()
                 messages.success(request, 'Mapper saved with success!')
             else:
                 messages.error(request, form.errors)
@@ -289,9 +283,10 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
                 mapper.save()
                 messages.success(request, 'Password saved with success!')
         else:
-            form = MapperForm(data=request.POST)
+            form = MapperForm(data=request.POST, instance=mapper)
 
-            if form.save(mapper, request.POST.getlist('themes')):
+            if form.is_valid():
+                form.save()
                 messages.success(request, 'Mapper saved with success!')
             else:
                 messages.error(request, 'Something went wrong when we tried to save the mapper. Please try again!')
@@ -306,19 +301,10 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         mapper = get_object_or_404(MapperUser, pk=mapper_id)
 
-        data = {
-            'username': mapper.username,
-            'name': mapper.get_full_name(),
-            'email': mapper.email,
-            'projects': mapper.projects.all(),
-            'themes': mapper.themes.all(),
-            'avatars': mapper.avatar
-        }
-
         context['filter_form'] = self.form_filter_class(initial=request.GET)
         context['voy_user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
-        context['form_edit_user'] = MapperForm(initial=data)
+        context['form_edit_user'] = MapperForm(instance=mapper)
         context['form_edit_user_theme'] = mapper.themes.all()
         context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)
