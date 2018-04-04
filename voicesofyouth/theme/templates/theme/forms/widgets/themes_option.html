@@ -1,0 +1,1 @@
+{% load theme_utils %}<option data-project="{{ widget.value|theme_project_pk }}" value="{{ widget.value|stringformat:'s' }}"{% include "django/forms/widgets/attrs.html" %} selected>{{ widget.label }}</option>

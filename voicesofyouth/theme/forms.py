@@ -16,6 +16,11 @@ class MyModelChoiceField(forms.ModelChoiceField):
         return obj.name
 
 
+class ThemesWidget(forms.SelectMultiple):
+    template_name = 'theme/forms/widgets/themes.html'
+    option_template_name = 'theme/forms/widgets/themes_option.html'
+
+
 class ThemeForm(forms.Form):
     date_format = [
         '%Y-%m-%d',
