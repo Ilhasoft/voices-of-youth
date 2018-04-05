@@ -2,6 +2,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
+from django.utils import timezone
 
 from leaflet.forms.fields import PointField
 
@@ -138,13 +139,23 @@ class ReportForm(forms.Form):
                                      taggit_taggeditem_items__object_id=project_id)).distinct().values_list('name', flat=True))
 
     def clean_location(self):
-        theme_id = self.cleaned_data['theme']
-        theme = Theme.objects.get(id=theme_id)
-        if not theme.bounds.contains(self.cleaned_data['location']):
-            msg = _(f'You cannot create a report outside the theme bounds.')
-            raise forms.ValidationError(msg)
+        theme_id = self.cleaned_data.get('theme')
+        if theme_id:
+            theme = Theme.objects.get(id=theme_id)
+            if not theme.bounds.contains(self.cleaned_data['location']):
+                msg = _(f'You cannot create a report outside the theme bounds.')
+                raise forms.ValidationError(msg)
 
         return self.cleaned_data['location']
+
+    def clean_theme(self):
+        theme_id = self.cleaned_data.get('theme')
+        theme = Theme.objects.get(id=theme_id)
+        if theme.start_at and theme.end_at:
+            if theme.start_at > timezone.localdate() or theme.end_at < timezone.localdate():
+                msg = _(f'You cannot create a report out of the theme period.')
+                raise forms.ValidationError(msg)
+        return theme_id
 
 
 class ReportFilterForm(forms.Form):
