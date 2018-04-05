@@ -114,8 +114,7 @@ class VoyUserBaseForm(forms.ModelForm):
             })
         super().__init__(*args, instance=instance, initial=initial, **kwargs)
         if instance:
-            self.fields['password'].required = False
-            self.fields['password'].widget = forms.HiddenInput()
+            self.fields.pop('password')
 
     def clean(self, *args, **kwargs):
         cleaned_data = super().clean(*args, **kwargs)
