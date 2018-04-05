@@ -114,7 +114,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
         context['users'] = AdminUser.objects.all()
         context['search_form'] = AdminFilterForm(self.request.GET)
         context['form_add_user'] = AdminForm()
-        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
+        context['default_avatar'] = dict(AVATARS).get(DEFAULT_AVATAR)
         context['modal_add_title'] = "Add admin"
         context['title'] = "Admins"
         context['avatars'] = AVATARS
@@ -228,7 +228,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         context['filter_form'] = self.form_class(initial=request.GET)
         context['search_form'] = self.form_class(initial=request.GET)
         context['form_add_user'] = MapperForm()
-        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
+        context['default_avatar'] = dict(AVATARS).get(DEFAULT_AVATAR)
         context['modal_add_title'] = "Add mapper"
         context['title'] = "Mappers"
         context['avatars'] = AVATARS
