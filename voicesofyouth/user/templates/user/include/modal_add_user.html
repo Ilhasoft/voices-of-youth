@@ -20,8 +20,8 @@
                             {% endif %}
                         </h4>
                     </div>
-                    <div style="display: none" id="avatars">
-                        {% for id, avatar_url in avatars %}
+                    <div style="display: none" id="avatar">
+                        {% for id, avatar_url in form_add_user.fields.avatar.choices %}
                             <img src="{{ avatar_url }}" id="avatar_{{ id }}" style="cursor: pointer">
                         {% endfor %}
                     </div>

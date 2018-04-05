@@ -180,7 +180,10 @@ class AdminForm(VoyUserBaseForm):
         model = AdminUser
         fields = VoyUserBaseForm.Meta.fields
 
-    global_admin = forms.ChoiceField(choices=(('global', 'Global admin'), ('local', 'Local admin')),
+    global_admin = forms.ChoiceField(choices=[
+                                         ('global', 'Global admin'),
+                                         ('local', 'Local admin'),
+                                     ],
                                      widget=forms.RadioSelect(
                                          attrs={
                                              'class': 'admin-profile-selector radio-inline'
@@ -198,6 +201,17 @@ class AdminForm(VoyUserBaseForm):
                                               ))
     field_order = ('username', 'name', 'email', 'global_admin', 'projects')
 
+    def __init__(self, *args, instance=None, initial=None, **kwargs):
+        if instance:
+            if not initial:
+                initial = {}
+            initial.update({
+                'global_admin': 'global' if instance.is_superuser else 'local',
+                'projects': instance.projects.all(),
+            })
+            print(initial)
+        super().__init__(*args, instance=instance, initial=initial, **kwargs)
+
     def save(self, *args, commit=True, **kwargs):
         super().save(*args, **kwargs)
 
@@ -208,16 +222,16 @@ class AdminForm(VoyUserBaseForm):
         if commit:
             self.instance.save()
 
-        project_model = Project.objects.all()
-        for project in project_model:
+        for project in self.instance.projects.all():
             project.local_admin_group.user_set.remove(self.instance)
 
-        for project in projects:
-            project.local_admin_group.user_set.add(self.instance)
+        if global_admin == 'local':
+            for project in projects:
+                project.local_admin_group.user_set.add(self.instance)
 
     def clean(self):
         cleaned_data = super().clean()
-        global_admin = cleaned_data['global_admin']
+        global_admin = cleaned_data.get('global_admin')
         projects = cleaned_data.get('projects')
 
         if global_admin != 'global' and not projects:
