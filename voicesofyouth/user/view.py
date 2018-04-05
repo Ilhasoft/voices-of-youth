@@ -44,16 +44,16 @@ def search_admin(search_by, qs=None):
 
 
 def _add_admin(request, admin=None):
-    form = AdminForm(request.POST, instance=admin)
+    admin = admin or AdminUser()
+    form = AdminForm(request.POST)
     error = None
     saved = False
     try:
-        if form.is_valid():
-            saved = form.save()
-            messages.info(request, 'Admin saved successfully!')
-        else:
+        saved = form.save(admin)
+        if not saved:
             messages.error(request, 'Somethings wrong happened when save the admin user. Please try again!')
-
+        else:
+            messages.info(request, 'Admin saved successfully!')
     except IntegrityError as exc:
         error = str(exc).split('\n')[0]
         messages.error(request, error)
@@ -114,7 +114,7 @@ class AdminListView(LoginRequiredMixin, TemplateView):
         context['users'] = AdminUser.objects.all()
         context['search_form'] = AdminFilterForm(self.request.GET)
         context['form_add_user'] = AdminForm()
-        context['default_avatar'] = dict(AVATARS).get(DEFAULT_AVATAR)
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         context['modal_add_title'] = "Add admin"
         context['title'] = "Admins"
         context['avatars'] = AVATARS
@@ -152,10 +152,15 @@ class AdminDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
 
         admin = get_object_or_404(AdminUser, pk=admin_id)
-
+        data = {
+            'username': admin.username,
+            'name': admin.get_full_name(),
+            'email': admin.email,
+            'avatars': admin.avatar
+        }
         context['voy_user'] = admin
         context['user_delete_url'] = reverse('voy-admin:users:admin_detail', args=(admin.id, ))
-        context['form_edit_user'] = AdminForm(instance=admin)
+        context['form_edit_user'] = AdminForm(initial=data)
         context['form_add_user'] = AdminForm()
         context['selected_themes'] = admin.themes.values_list('id', flat=True)
         context['form_edit_user_theme'] = admin.themes.all()
@@ -182,7 +187,8 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         else:
             form = MapperForm(request.POST)
             if form.is_valid():
-                form.save()
+                mapper = MapperUser()
+                form.save(mapper, request.POST.getlist('themes'))
                 messages.success(request, 'Mapper saved with success!')
             else:
                 messages.error(request, form.errors)
@@ -228,7 +234,7 @@ class MappersListView(LoginRequiredMixin, TemplateView):
         context['filter_form'] = self.form_class(initial=request.GET)
         context['search_form'] = self.form_class(initial=request.GET)
         context['form_add_user'] = MapperForm()
-        context['default_avatar'] = dict(AVATARS).get(DEFAULT_AVATAR)
+        context['default_avatar'] = AVATARS[DEFAULT_AVATAR][1]
         context['modal_add_title'] = "Add mapper"
         context['title'] = "Mappers"
         context['avatars'] = AVATARS
@@ -283,10 +289,9 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
                 mapper.save()
                 messages.success(request, 'Password saved with success!')
         else:
-            form = MapperForm(data=request.POST, instance=mapper)
+            form = MapperForm(data=request.POST)
 
-            if form.is_valid():
-                form.save()
+            if form.save(mapper, request.POST.getlist('themes')):
                 messages.success(request, 'Mapper saved with success!')
             else:
                 messages.error(request, 'Something went wrong when we tried to save the mapper. Please try again!')
@@ -301,10 +306,19 @@ class MapperDetailView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         mapper = get_object_or_404(MapperUser, pk=mapper_id)
 
+        data = {
+            'username': mapper.username,
+            'name': mapper.get_full_name(),
+            'email': mapper.email,
+            'projects': mapper.projects.all(),
+            'themes': mapper.themes.all(),
+            'avatars': mapper.avatar
+        }
+
         context['filter_form'] = self.form_filter_class(initial=request.GET)
         context['voy_user'] = mapper
         context['user_delete_url'] = reverse('voy-admin:users:mapper_detail', args=(mapper.id, ))
-        context['form_edit_user'] = MapperForm(instance=mapper)
+        context['form_edit_user'] = MapperForm(initial=data)
         context['form_edit_user_theme'] = mapper.themes.all()
         context['form_add_user'] = MapperForm()
         context['selected_themes'] = mapper.themes.values_list('id', flat=True)

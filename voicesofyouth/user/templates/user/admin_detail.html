@@ -11,7 +11,7 @@
         <div class="col-xs-6">
             <h4>Projects</h4>
             <div>
-                {% for project in voy_user.projects.all %}
+                {% for project in user.projects.all %}
                     <div class="badge badge-info">{{ project }}</div>
                 {% endfor %}
             </div>
@@ -19,7 +19,7 @@
         <div class="col">
             <h4>Themes</h4>
             <div>
-                {% for theme in voy_user.themes.all %}
+                {% for theme in user.themes.all %}
                     <div class="badge badge-info">{{ theme }}</div>
                 {% endfor %}
             </div>
@@ -36,4 +36,14 @@
 {% block extrajs %}
     {{ block.super }}
     {% include "./include/common_admin_js.html" %}
+    <script>
+        {# Update the chosen with selected projects. #}
+        var projects = [];
+        {% for project in user.projects.all %}
+            projects.push('{{ project.id }}');
+        {% endfor %}
+
+        const elem = $('form[id=editUserForm] select[id=id_projects]');
+        elem.val(projects).trigger('chosen:updated');
+    </script>
 {% endblock %}

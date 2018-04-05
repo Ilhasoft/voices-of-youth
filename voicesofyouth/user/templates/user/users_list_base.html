@@ -145,17 +145,17 @@
 
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
-            $(evt.target).parents('div').find('#avatar').slideToggle("slow");
+            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
         });
         $('[id=password-form]').attr('required', true);
         $("img[id^='avatar_']").click((evt) => {
             const selected_avatar = $(evt.target);
-            const avatar = $(evt.target).parents('div').find('#avatar');
+            const avatars = $(evt.target).parents('div').find('#avatars');
             const current_avatar = $(evt.target).parents('div').find('#current_avatar');
-            const hidden_avatar = $(evt.target).parents('div').find('#id_avatar');
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
             $(current_avatar).attr('src', selected_avatar.attr('src'));
             hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
-            avatar.slideUp("slow");
+            avatars.slideUp("slow");
         });
 
         $("select[class='select_project_id']").on('change', function(evt, params) {

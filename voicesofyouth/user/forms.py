@@ -3,12 +3,9 @@ from django.utils.translation import ugettext as _
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
-from voicesofyouth.theme.forms import ThemesWidget
 from voicesofyouth.user.models import AVATARS
 from voicesofyouth.user.models import DEFAULT_AVATAR
 from voicesofyouth.user.models import VoyUser
-from voicesofyouth.user.models import MapperUser
-from voicesofyouth.user.models import AdminUser
 
 
 class MapperFilterForm(forms.Form):
@@ -46,17 +43,7 @@ class AdminFilterForm(forms.Form):
                              required=False)
 
 
-class VoyUserBaseForm(forms.ModelForm):
-    class Meta:
-        model = VoyUser
-        fields = [
-            'username',
-            'email',
-            'avatar',
-            'first_name',
-            'last_name',
-        ]
-
+class VoyUserBaseForm(forms.Form):
     username = forms.CharField(max_length=32,
                                label=_('Username'),
                                widget=forms.TextInput(
@@ -66,20 +53,6 @@ class VoyUserBaseForm(forms.ModelForm):
                                        'autocomplete': 'off'
                                    },
                                ))
-    email = forms.EmailField(required=False,
-                             label=_('E-mail'),
-                             widget=forms.EmailInput(
-                                 attrs={
-                                     'class': 'form-control',
-                                     'autocomplete': 'off'
-                                 }
-                             ))
-    password = forms.CharField(min_length=6,
-                               widget=forms.PasswordInput(
-                                   attrs={
-                                       'class': 'form-control required',
-                                       'id': 'password-form',
-                                       'autocomplete': 'off'}))
     name = forms.CharField(max_length=255,
                            label=_('Name'),
                            widget=forms.TextInput(
@@ -89,61 +62,64 @@ class VoyUserBaseForm(forms.ModelForm):
                                    'autocomplete': 'off'
                                },
                            ))
-    first_name = forms.CharField(required=False,
-                                 widget=forms.HiddenInput())
-    last_name = forms.CharField(required=False,
+    email = forms.EmailField(required=False,
+                             label=_('E-mail'),
+                             widget=forms.EmailInput(
+                                 attrs={
+                                     'class': 'form-control',
+                                     'autocomplete': 'off'
+                                 }
+                             ))
+    password = forms.CharField(min_length=6, widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control required',
+            'id': 'password-form',
+            'autocomplete': 'off'
+        }
+    ), required=False)
+    avatars = forms.ChoiceField(choices=AVATARS,
+                                initial=DEFAULT_AVATAR,
                                 widget=forms.HiddenInput())
-    avatar = forms.ChoiceField(choices=AVATARS,
-                               initial=DEFAULT_AVATAR,
-                               widget=forms.HiddenInput())
 
-    field_order = [
-        'username',
-        'email',
-        'password',
-        'name',
-    ]
+    def save(self, user):
+        if self.is_valid():
+            cleaned_data = self.cleaned_data
+            name = cleaned_data.get('name')
+            email = cleaned_data.get('email')
+            username = cleaned_data.get('username')
+            avatar = cleaned_data.get('avatars')
+            password = cleaned_data.get('password')
 
-    def __init__(self, *args, instance=None, initial=None, **kwargs):
-        if instance:
-            if not initial:
-                initial = {}
-            initial.update({
-                'name': instance.get_full_name(),
-                'projects': instance.projects.all()
-            })
-        super().__init__(*args, instance=instance, initial=initial, **kwargs)
-        if instance:
-            self.fields['password'].required = False
-            self.fields['password'].widget = forms.HiddenInput()
+            if len(name.split()) > 1:
+                user.first_name, user.last_name = name.split(maxsplit=1)
+            else:
+                user.first_name = name
 
-    def clean(self, *args, **kwargs):
-        cleaned_data = super().clean(*args, **kwargs)
-        name = cleaned_data.get('name')
-        try:
-            first_name, last_name = name.split(maxsplit=1)
-        except ValueError:
-            first_name = name
-            last_name = ''
-        cleaned_data['first_name'] = first_name
-        cleaned_data['last_name'] = last_name
-        return cleaned_data
+            user.email = email
+            user.username = username
+            user.avatar = avatar
+            if password is not None and password is not '':
+                user.set_password(password)
+            user.save()
+            return True
+        else:
+            return False
 
-    def save(self, commit=True):
-        super().save(commit=commit)
-        password = self.cleaned_data.get('password')
-        if password:
-            self.instance.set_password(password)
-            if commit:
-                self.instance.save()
+    # TODO: Username validation
+    # def clean_username(self):
+    #     try:
+    #         user = VoyUser.objects.get(username=self.cleaned_data['username'])
+    #         if user is not None:
+    #             msg = _(f'Username already exists')
+    #             raise forms.ValidationError(msg)
+    #     except VoyUser.DoesNotExist:
+    #         pass
+
+    #     return self.cleaned_data['username']
 
 
 class MapperForm(VoyUserBaseForm):
-    class Meta:
-        model = MapperUser
-        fields = VoyUserBaseForm.Meta.fields
-
-    projects = forms.ModelMultipleChoiceField(queryset=Project.objects,
+    projects = forms.ModelMultipleChoiceField(queryset=None,
                                               label=_('Project'),
                                               required=False,
                                               widget=forms.SelectMultiple(
@@ -153,107 +129,83 @@ class MapperForm(VoyUserBaseForm):
                                                       'data-placeholder': _('Select one or more projects'),
                                                   }
                                               ))
-    themes = forms.ModelMultipleChoiceField(queryset=Theme.objects.none(),
-                                            label=_('Themes'),
-                                            required=False,
-                                            widget=ThemesWidget(
-                                                attrs={
-                                                    'multiple': True,
-                                                    'class': 'chosen-select form-control',
-                                                    'data-placeholder': _('Select one or more themes'),
-                                                }))
 
-    def __init__(self, *args, instance=None, initial=None, **kwargs):
-        if instance:
-            if not initial:
-                initial = {}
-            initial.update({
-                'themes': instance.themes,
-            })
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['projects'].queryset = Project.objects.all()
 
-        super().__init__(*args, instance=instance, initial=initial, **kwargs)
+    def save(self, mapper, themes):
+        if super().save(mapper):
+            # Remove mapper from a group.
+            for group in mapper.groups.exclude(theme_mappers__id__in=themes):
+                group.user_set.remove(mapper)
 
-        if self.data.get('themes'):
-            projects = Project.objects.filter(themes__id__in=self.data.get('themes'))
-        elif instance:
-            projects = instance.projects
+            # Add mapper to a group
+            for theme in Theme.objects.filter(id__in=themes):
+                theme.mappers_group.user_set.add(mapper)
+
+            return True
         else:
-            projects = []
-
-        self.fields['themes'].queryset = Theme.objects.filter(project__in=projects)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        themes = self.cleaned_data.get('themes')
-
-        # Remove mapper from a group.
-        for group in self.instance.groups.exclude(theme_mappers__id__in=themes):
-            group.user_set.remove(self.instance)
-
-        # Add mapper to a group
-        for theme in themes:
-            theme.mappers_group.user_set.add(self.instance)
-
-        return self.instance
+            return False
 
 
 class AdminForm(VoyUserBaseForm):
-    class Meta:
-        model = AdminUser
-        fields = VoyUserBaseForm.Meta.fields
-
-    global_admin = forms.ChoiceField(choices=[('global', 'Global admin'), ('local', 'Local admin')],
+    global_admin = forms.ChoiceField(choices=(('global', 'Global admin'), ('local', 'Local admin')),
                                      widget=forms.RadioSelect(
                                          attrs={
                                              'class': 'admin-profile-selector radio-inline'
                                          }
     ),
         label=_('Profile'))
-    projects = forms.ModelMultipleChoiceField(queryset=Project.objects.all(),
+    projects = forms.ModelMultipleChoiceField(queryset=None,
                                               label=_('Project'),
                                               required=False,
                                               widget=forms.SelectMultiple(
                                                   attrs={
                                                       'multiple': True,
-                                                      'class': 'chosen-select form-control'}))
+                                                      'class': 'chosen-select form-control',
+                                                  }
+                                              ))
+    field_order = ('username', 'name', 'email', 'global_admin', 'projects')
 
-    def __init__(self, *args, instance=None, initial=None, **kwargs):
-        if instance:
-            if not initial:
-                initial = {}
-            initial.update({
-                'global_admin': 'global' if instance.is_superuser else 'local',
-                'projects': instance.projects.all(),
-            })
-        super().__init__(*args, instance=instance, initial=initial, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['projects'].queryset = Project.objects.all()
 
-    def save(self, *args, commit=True, **kwargs):
-        super().save(*args, **kwargs)
+    def save(self, admin):
+        if super().save(admin):
+            global_admin = self.cleaned_data.pop('global_admin')
+            projects = self.cleaned_data.pop('projects')
+            password = self.cleaned_data.pop('password')
 
-        global_admin = self.cleaned_data.get('global_admin')
-        projects = self.cleaned_data.get('projects')
+            for field, value in self.cleaned_data.items():
+                setattr(admin, field, value)
+            admin.is_superuser = global_admin == 'global'
 
-        self.instance.is_superuser = global_admin == 'global'
-        if commit:
-            self.instance.save()
+            if password is not None and password is not '':
+                admin.set_password(password)
 
-        for project in self.instance.projects.all():
-            project.local_admin_group.user_set.remove(self.instance)
+            admin.save()
 
-        if global_admin == 'local':
+            project_model = Project.objects.all()
+            for project in project_model:
+                project.local_admin_group.user_set.remove(admin)
+
             for project in projects:
-                project.local_admin_group.user_set.add(self.instance)
+                project.local_admin_group.user_set.add(admin)
+
+            return True
+        else:
+            return False
 
     def clean(self):
-        cleaned_data = super().clean()
-        global_admin = cleaned_data.get('global_admin')
-        projects = cleaned_data.get('projects')
+        global_admin = self.cleaned_data['global_admin']
+        projects = self.cleaned_data.get('projects')
 
         if global_admin != 'global' and not projects:
             self.add_error('projects', _('You must inform at least one theme for local admin.'))
 
-        return cleaned_data
+        return self.cleaned_data
 
 
 class UserResetPasswordForm(forms.Form):
