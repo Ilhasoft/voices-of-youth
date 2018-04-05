@@ -20,8 +20,8 @@
                             {% endif %}
                         </h4>
                     </div>
-                    <div style="display: none" id="avatars">
-                        {% for id, avatar_url in avatars %}
+                    <div style="display: none" id="avatar">
+                        {% for id, avatar_url in form_add_user.fields.avatar.choices %}
                             <img src="{{ avatar_url }}" id="avatar_{{ id }}" style="cursor: pointer">
                         {% endfor %}
                     </div>
@@ -35,11 +35,6 @@
                 <div class="modal-body">
                     {% csrf_token %}
                     {{ form_add_user }}
-
-                    <div id="themes_select">
-                        <label for="id_theme">{% trans "Themes" %}:</label>
-                        <select name="themes" id="id_themes" multiple="multiple" required="required" class="chosen-select form-control" data-placeholder="{% trans 'Select one or more themes' %}"></select>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button

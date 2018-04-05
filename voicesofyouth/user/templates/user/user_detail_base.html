@@ -58,8 +58,8 @@
                         <div>
                             <h4 id="modalEditUserProfileLabel" class="modal-title">{% trans "Edit Profile" %}</h4>
                         </div>
-                        <div style="display: none" id="avatars">
-                            {% for id, avatar_url in form_add_user.fields.avatars.choices %}
+                        <div style="display: none" id="avatar">
+                            {% for id, avatar_url in form_add_user.fields.avatar.choices %}
                                 <img src="{{ avatar_url }}" alt="" id="avatar_{{ id }}" style="cursor: pointer">
                             {% endfor %}
                         </div>
@@ -79,15 +79,6 @@
                     <div class="modal-body">
                         {% csrf_token %}
                         {{ form_edit_user }}
-
-                        <div id="themes_select">
-                            <label for="id_theme">{% trans "Themes" %}:</label>
-                            <select name="themes" id="id_themes" multiple="multiple" class="chosen-select form-control">
-                                {% for theme in form_edit_user_theme %}
-                                <option data-project="{{ theme.project.pk }}" value="{{ theme.pk }}" selected>{{ theme }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button
@@ -158,17 +149,17 @@
     {{ block.super }}
     <script type="text/javascript">
         $("img[id='current_avatar']").click((evt) => {
-            $(evt.target).parents('div').find('#avatars').slideToggle("slow");
+            $(evt.target).parents('div').find('#avatar').slideToggle("slow");
         });
 
         $("img[id^='avatar_']").click((evt) => {
             const selected_avatar = $(evt.target);
-            const avatars = $(evt.target).parents('div').find('#avatars');
+            const avatar = $(evt.target).parents('div').find('#avatar');
             const current_avatar = $(evt.target).parents('div').find('#current_avatar');
-            const hidden_avatar = $(evt.target).parents('div').find('#id_avatars');
+            const hidden_avatar = $(evt.target).parents('div').find('#id_avatar');
             $(current_avatar).attr('src', selected_avatar.attr('src'));
             hidden_avatar.val(selected_avatar.attr('id').split('_')[1]);
-            avatars.slideUp("slow");
+            avatar.slideUp("slow");
         });
     </script>
     <script type="text/javascript">
@@ -212,11 +203,5 @@
                 swal('{% trans "Something wrong happened!" %}', '{% trans "Please try again!" %}', "error");
             })
         });
-
-        {% if user.id %}
-            $('[for=password-form],[id=password-form]').hide();
-        {% else %}
-            $('[id=password-form]').attr('required', true);
-        {% endif %}
     </script>
 {% endblock %}
