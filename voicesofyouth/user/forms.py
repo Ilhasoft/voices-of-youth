@@ -12,14 +12,14 @@ from voicesofyouth.user.models import AdminUser
 
 
 class MapperFilterForm(forms.Form):
-    project = forms.ModelChoiceField(queryset=None,
+    project = forms.ModelChoiceField(queryset=Project.objects.all(),
                                      required=False,
                                      widget=forms.Select(
                                          attrs={'class': 'select_project_id'}
                                      ),
                                      empty_label=_('Select a project'))
     theme = forms.ModelChoiceField(required=False,
-                                   queryset=None,
+                                   queryset=Theme.objects.none(),
                                    widget=forms.Select(choices=[],
                                                        attrs={'class': 'select_themes_id'}
                                                        ))
@@ -29,15 +29,11 @@ class MapperFilterForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        project_qs = Project.objects.filter(themes__reports__isnull=False).distinct()
-        self.fields['project'].queryset = project_qs
 
-        if 'project' in kwargs.get('initial'):
-            project_id = kwargs.get('initial')['project']
+        project_id = self.data.get('project')
+        if project_id:
             theme_qs = Theme.objects.filter(project__id=project_id).distinct()
             self.fields['theme'].queryset = theme_qs
-        else:
-            self.fields['theme'].queryset = Theme.objects.none()
 
 
 class AdminFilterForm(forms.Form):

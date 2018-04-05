@@ -192,18 +192,17 @@ class MappersListView(LoginRequiredMixin, TemplateView):
     def get(self, request):
         context = self.get_context_data(request=request)
         filter_form = context['filter_form']
+        page = request.GET.get('page')
+        qs = context.get('users_query')
 
         if filter_form.is_valid():
             cleaned_data = filter_form.cleaned_data
-            project = cleaned_data['project']
-            theme = cleaned_data['theme']
-            search = cleaned_data['search']
-            page = request.GET.get('page')
+            project = cleaned_data.get('project')
+            theme = cleaned_data.get('theme')
+            search = cleaned_data.get('search')
 
-            if project and theme:
+            if theme:
                 qs = MapperUser.objects.filter(groups=theme.mappers_group)
-            elif theme:
-                qs = theme.mappers_group.user_set.all()
             elif project:
                 groups_ids = project.themes.values_list('mappers_group__id')
                 qs = MapperUser.objects.filter(groups__id__in=groups_ids)
@@ -217,16 +216,16 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             elif search:
                 qs = search_user(search)
 
-            context['users'] = get_paginator(qs, page)
+        context['users'] = get_paginator(qs, page)
 
         return render(request, self.template_name, context)
 
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = MapperUser.objects.all()
+        context['users_query'] = MapperUser.objects.all()
         context['projects'] = Project.objects.filter()
-        context['filter_form'] = self.form_class(initial=request.GET)
-        context['search_form'] = self.form_class(initial=request.GET)
+        context['filter_form'] = self.form_class(request.GET)
+        context['search_form'] = self.form_class(request.GET)
         context['form_add_user'] = MapperForm()
         context['default_avatar'] = dict(AVATARS).get(DEFAULT_AVATAR)
         context['modal_add_title'] = "Add mapper"
