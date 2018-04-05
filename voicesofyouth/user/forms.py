@@ -172,8 +172,12 @@ class MapperForm(VoyUserBaseForm):
 
         super().__init__(*args, instance=instance, initial=initial, **kwargs)
 
-        if self.data.get('themes'):
-            projects = Project.objects.filter(themes__id__in=self.data.get('themes'))
+        try:
+            projects_ids = self.data.getlist('projects')
+        except AttributeError as e:
+            projects_ids = self.data.get('projects')
+        if projects_ids:
+            projects = Project.objects.filter(id__in=projects_ids)
         elif instance:
             projects = instance.projects
         else:
