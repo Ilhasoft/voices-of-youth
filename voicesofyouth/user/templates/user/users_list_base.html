@@ -163,9 +163,13 @@
             themesSelect = $('#' + currentFormId + ' select[class=select_themes_id]');
 
             themesSelect.empty();
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.innerText = '---------';
+            themesSelect.append(emptyOption);
             themesSelect.trigger('chosen:updated');
 
-            if (params.selected !== undefined) {
+            if (params.selected !== undefined && params.selected !== '') {
                 axios.get('{% url "voy-api:themes-list" %}' + '?project=' + params.selected).then((response) => {
                     response.data.map((item) => {
                         themesSelect.append('<option data-project="' + params.selected + '" value="' + item.id + '" selected="selected">' + item.name + '</option>');
