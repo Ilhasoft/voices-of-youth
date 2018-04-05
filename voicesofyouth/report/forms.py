@@ -124,8 +124,6 @@ class ReportForm(forms.Form):
         else:
             self.fields['project'].queryset = self.user.projects.all()
 
-        self.fields['tags'].choices = Tag.objects.all().order_by('name').values_list('name', 'name')
-
     def clean_location(self):
         theme_id = self.cleaned_data['theme']
         theme = Theme.objects.get(id=theme_id)
