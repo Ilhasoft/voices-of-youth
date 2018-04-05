@@ -46,8 +46,11 @@ class DashboardView(LoginRequiredMixin, TemplateView):
             .annotate(items_count=Count('taggit_taggeditem_items')) \
             .order_by('-items_count')[:5]  # show top 5
 
-        approved_percent = int(week_approved_reports.count() / week_reports.count() * 100)
-        pending_percent = int(week_pending_reports.count() / week_reports.count() * 100)
+        week_reports_count = week_reports.count()
+        approved_percent = int(week_approved_reports.count() / week_reports_count * 100) \
+            if week_reports_count > 0 else 0
+        pending_percent = int(week_pending_reports.count() / week_reports_count * 100) \
+            if week_reports_count > 0 else 0
 
         top_mappers = MapperUser.objects.filter(
             report_report_creations__in=monthly_reports) \
