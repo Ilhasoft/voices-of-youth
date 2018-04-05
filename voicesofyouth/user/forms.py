@@ -66,6 +66,20 @@ class VoyUserBaseForm(forms.ModelForm):
                                        'autocomplete': 'off'
                                    },
                                ))
+    email = forms.EmailField(required=False,
+                             label=_('E-mail'),
+                             widget=forms.EmailInput(
+                                 attrs={
+                                     'class': 'form-control',
+                                     'autocomplete': 'off'
+                                 }
+                             ))
+    password = forms.CharField(min_length=6,
+                               widget=forms.PasswordInput(
+                                   attrs={
+                                       'class': 'form-control required',
+                                       'id': 'password-form',
+                                       'autocomplete': 'off'}))
     name = forms.CharField(max_length=255,
                            label=_('Name'),
                            widget=forms.TextInput(
@@ -79,17 +93,16 @@ class VoyUserBaseForm(forms.ModelForm):
                                  widget=forms.HiddenInput())
     last_name = forms.CharField(required=False,
                                 widget=forms.HiddenInput())
-    email = forms.EmailField(required=False,
-                             label=_('E-mail'),
-                             widget=forms.EmailInput(
-                                 attrs={
-                                     'class': 'form-control',
-                                     'autocomplete': 'off'
-                                 }
-                             ))
     avatar = forms.ChoiceField(choices=AVATARS,
-                                initial=DEFAULT_AVATAR,
-                                widget=forms.HiddenInput())
+                               initial=DEFAULT_AVATAR,
+                               widget=forms.HiddenInput())
+
+    field_order = [
+        'username',
+        'email',
+        'password',
+        'name',
+    ]
 
     def __init__(self, *args, instance=None, initial=None, **kwargs):
         if instance:
@@ -100,6 +113,9 @@ class VoyUserBaseForm(forms.ModelForm):
                 'projects': instance.projects.all()
             })
         super().__init__(*args, instance=instance, initial=initial, **kwargs)
+        if instance:
+            self.fields['password'].required = False
+            self.fields['password'].widget = forms.HiddenInput()
 
     def clean(self, *args, **kwargs):
         cleaned_data = super().clean(*args, **kwargs)
@@ -112,6 +128,14 @@ class VoyUserBaseForm(forms.ModelForm):
         cleaned_data['first_name'] = first_name
         cleaned_data['last_name'] = last_name
         return cleaned_data
+
+    def save(self, commit=True):
+        super().save(commit=commit)
+        password = self.cleaned_data.get('password')
+        if password:
+            self.instance.set_password(password)
+            if commit:
+                self.instance.save()
 
 
 class MapperForm(VoyUserBaseForm):
@@ -137,8 +161,7 @@ class MapperForm(VoyUserBaseForm):
                                                     'multiple': True,
                                                     'class': 'chosen-select form-control',
                                                     'data-placeholder': _('Select one or more themes'),
-                                                }
-                                            ))
+                                                }))
 
     def __init__(self, *args, instance=None, initial=None, **kwargs):
         if instance:
@@ -180,10 +203,7 @@ class AdminForm(VoyUserBaseForm):
         model = AdminUser
         fields = VoyUserBaseForm.Meta.fields
 
-    global_admin = forms.ChoiceField(choices=[
-                                         ('global', 'Global admin'),
-                                         ('local', 'Local admin'),
-                                     ],
+    global_admin = forms.ChoiceField(choices=[('global', 'Global admin'), ('local', 'Local admin')],
                                      widget=forms.RadioSelect(
                                          attrs={
                                              'class': 'admin-profile-selector radio-inline'
@@ -196,10 +216,7 @@ class AdminForm(VoyUserBaseForm):
                                               widget=forms.SelectMultiple(
                                                   attrs={
                                                       'multiple': True,
-                                                      'class': 'chosen-select form-control',
-                                                  }
-                                              ))
-    field_order = ('username', 'name', 'email', 'global_admin', 'projects')
+                                                      'class': 'chosen-select form-control'}))
 
     def __init__(self, *args, instance=None, initial=None, **kwargs):
         if instance:
@@ -209,7 +226,6 @@ class AdminForm(VoyUserBaseForm):
                 'global_admin': 'global' if instance.is_superuser else 'local',
                 'projects': instance.projects.all(),
             })
-            print(initial)
         super().__init__(*args, instance=instance, initial=initial, **kwargs)
 
     def save(self, *args, commit=True, **kwargs):
