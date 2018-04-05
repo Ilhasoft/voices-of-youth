@@ -1,5 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
 from leaflet.forms.fields import PointField
 
@@ -17,7 +19,7 @@ class MyModelChoiceField(forms.ModelChoiceField):
 
 class ReportForm(forms.Form):
     project = MyModelChoiceField(
-        queryset=None,
+        queryset=Project.objects.all(),
         label=_('Project'),
         empty_label=_('Select a project'),
         required=True,
@@ -119,10 +121,21 @@ class ReportForm(forms.Form):
         self.user = kwargs.pop('user')
         super(ReportForm, self).__init__(*args, **kwargs)
 
-        if self.user.is_global_admin:
-            self.fields['project'].queryset = Project.objects.all()
-        else:
+        if not self.user.is_global_admin:
             self.fields['project'].queryset = self.user.projects.all()
+
+        project_id = self.data.get('project')
+        theme_id = self.data.get('theme')
+        if project_id and theme_id:
+            ct_project = ContentType.objects.get_for_model(Project)
+            ct_theme = ContentType.objects.get_for_model(Theme)
+
+            self.fields['tags'].choices = map(
+                lambda x: (x, x,),
+                Tag.objects.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
+                                     taggit_taggeditem_items__object_id=theme_id) |
+                                     Q(taggit_taggeditem_items__content_type=ct_project,
+                                     taggit_taggeditem_items__object_id=project_id)).distinct().values_list('name', flat=True))
 
     def clean_location(self):
         theme_id = self.cleaned_data['theme']
