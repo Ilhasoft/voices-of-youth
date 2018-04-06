@@ -59,8 +59,8 @@ class ReportForm(forms.Form):
         )
     )
 
-    tags = forms.MultipleChoiceField(
-        choices=[],
+    tags = forms.ModelMultipleChoiceField(
+        queryset=Tag.objects.none(),
         label=_('Tags'),
         required=True,
         widget=forms.SelectMultiple(
@@ -125,18 +125,13 @@ class ReportForm(forms.Form):
         if not self.user.is_global_admin:
             self.fields['project'].queryset = self.user.projects.all()
 
-        project_id = self.data.get('project')
-        theme_id = self.data.get('theme')
-        if project_id and theme_id:
-            ct_project = ContentType.objects.get_for_model(Project)
+        theme_id = self.data.get('theme', self.initial.get('project'))
+        if theme_id:
             ct_theme = ContentType.objects.get_for_model(Theme)
 
-            self.fields['tags'].choices = map(
-                lambda x: (x, x,),
-                Tag.objects.filter(Q(taggit_taggeditem_items__content_type=ct_theme,
-                                     taggit_taggeditem_items__object_id=theme_id) |
-                                     Q(taggit_taggeditem_items__content_type=ct_project,
-                                     taggit_taggeditem_items__object_id=project_id)).distinct().values_list('name', flat=True))
+            self.fields['tags'].queryset = Tag.objects.filter(
+                taggit_taggeditem_items__content_type=ct_theme,
+                taggit_taggeditem_items__object_id=theme_id).distinct()
 
     def clean_location(self):
         theme_id = self.cleaned_data.get('theme')
