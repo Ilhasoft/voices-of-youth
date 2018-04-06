@@ -80,7 +80,7 @@
 
                                                 <div class="col-md-10">
                                                     {% if file.media_type == 'image' %}
-                                                        <img src="{{ file.file.url }}" class="media-object thumb48"
+                                                        <img src="{{ file.thumbnail.url }}" class="media-object thumb48"
                                                              alt="">
                                                     {% elif file.media_type == 'video' %}
                                                         <img src="{% static 'img/video.png' %}"

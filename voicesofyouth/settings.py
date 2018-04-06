@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'sass_processor',
     'qurl_templatetag',
     'leaflet',
+    'easy_thumbnails',
     'docs',
     'voicesofyouth.core',
     'voicesofyouth.user',
@@ -216,4 +217,19 @@ ITEMS_PER_PAGE = 10
 
 LEAFLET_CONFIG = {
     'RESET_VIEW': False
+}
+
+
+# Thumbs
+
+THUMBNAIL_ALIASES = {
+    '': {
+        'report_file_thumb': {
+            'size': (200, 200),
+            'crop': True,
+        },
+        'report_file_cropped': {
+            'size': (1920, 1920),
+        }
+    },
 }

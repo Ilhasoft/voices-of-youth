@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
+from easy_thumbnails.files import get_thumbnailer
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.tag.models import _ReportTaggableManager
@@ -188,6 +189,13 @@ class Report(BaseModel):
     def videos(self):
         return self.files.filter(media_type=FILE_TYPE_VIDEO)
 
+    @property
+    def thumbnail(self):
+        last = self.files.last()
+        if last:
+            return last.thumbnail
+        return None
+
 
 class ReportComment(BaseModel):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='comments')
@@ -210,12 +218,35 @@ class ReportFile(BaseModel):
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
     file = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('File'))
     media_type = models.CharField(max_length=5, choices=FILE_TYPES, verbose_name=_('Type'))
-    thumbnail = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('Thumbnail'))
+    _thumbnail = models.FileField(upload_to=get_content_file_path, blank=True, verbose_name=_('Thumbnail'))
 
     class Meta:
         verbose_name = _('Report file')
         verbose_name_plural = _('Reports files')
         db_table = 'report_report_files'
+
+    def get_thumbnail(self):
+        if self.media_type == FILE_TYPE_IMAGE:
+            return get_thumbnailer(self.file)['report_file_thumb']
+        return self._thumbnail
+
+    def set_thumbnail(self, value):
+        self.thumbnail = value
+
+    thumbnail = property(get_thumbnail, set_thumbnail)
+
+    @property
+    def cropped(self):
+        if self.media_type == FILE_TYPE_IMAGE:
+            return get_thumbnailer(self.file)['report_file_cropped']
+        return None
+
+    @property
+    def out(self):
+        cropped = self.cropped
+        if cropped:
+            return cropped
+        return self.file
 
 
 class ReportURL(BaseModel):
