@@ -125,10 +125,8 @@ class ReportForm(forms.Form):
         if not self.user.is_global_admin:
             self.fields['project'].queryset = self.user.projects.all()
 
-        project_id = self.data.get('project', self.initial.get('project'))
         theme_id = self.data.get('theme', self.initial.get('project'))
-        if project_id and theme_id:
-            ct_project = ContentType.objects.get_for_model(Project)
+        if theme_id:
             ct_theme = ContentType.objects.get_for_model(Theme)
 
             self.fields['tags'].queryset = Tag.objects.filter(
