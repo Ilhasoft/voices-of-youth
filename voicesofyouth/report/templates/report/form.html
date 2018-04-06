@@ -179,27 +179,27 @@
         $('#id_project').change(function(e) {
             e.preventDefault();
             loadThemes(e.target.value);
-            updateTags(e.target.value);
+            updateTags();
         });
 
         $('#id_theme').change(function(e) {
             e.preventDefault();
             loadMappers(e.target.value);
             loadThemeBounds(e.target.value);
-            updateTags($('#id_project').val(), e.target.value);
+            updateTags(e.target.value);
         });
 
         function submitForm() {
             $('#form-report').submit();
         }
 
-        function updateTags(project, theme) {
+        function updateTags(theme) {
             $('#id_tags').empty();
             $('#id_tags').trigger('chosen:updated');
 
-            if (!project) return false;
+            if (!theme) return false;
 
-            return axios.get('{% url "voy-api:tags-list" %}?project=' + project + '&themes=' + (theme || '')).then((response) => {
+            return axios.get('{% url "voy-api:tags-list" %}?theme=' + (theme || '')).then((response) => {
                 $('#id_tags').empty();
                 $('#id_tags').trigger('chosen:updated');
 
