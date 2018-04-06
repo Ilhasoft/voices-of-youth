@@ -217,7 +217,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
                 status=REPORT_STATUS_APPROVED
             )
             report.save()
-            report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
+            report.tags.add(*[tag.name for tag in form.cleaned_data.get('tags')])
 
             files = request.FILES.getlist('files')
 
@@ -381,7 +381,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             'theme': report.theme.id,
             'mapper': report.created_by.id,
             'location': report.location,
-            'tags': report.tags.names(),
+            'tags': report.tags.all(),
         }
 
         context['editing'] = True

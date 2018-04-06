@@ -199,12 +199,12 @@
 
             if (!theme) return false;
 
-            return axios.get('{% url "voy-api:tags-list" %}?theme=' + (theme || '')).then((response) => {
+            return axios.get('{% url "voy-api:tags-list" %}?theme=' + theme).then((response) => {
                 $('#id_tags').empty();
                 $('#id_tags').trigger('chosen:updated');
 
                 response.data.map((item) => {
-                    $('#id_tags').append('<option value="' + item.tag + '">' + item.tag + '</option>');
+                    $('#id_tags').append('<option value="' + item.id + '">' + item.tag + '</option>');
                     $('#id_tags').trigger('chosen:updated');
                 });
             });
@@ -234,15 +234,6 @@
                     loadMappers(selected, {{ data_form.mapper.value }});
                     loadThemeBounds(selected);
                 }
-            }).then(() => {
-                {% if selected_tags %}
-                    const tags = [];
-                    {% for tag in selected_tags %}
-                        tags.push('{{ tag }}');
-                    {% endfor %}
-                    $('#id_tags').val(tags);
-                    $('#id_tags').trigger('chosen:updated');
-                {% endif %}
             });
         }
 
