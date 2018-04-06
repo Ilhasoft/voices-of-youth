@@ -4,6 +4,8 @@ from taggit.managers import _TaggableManager
 from taggit.models import Tag
 
 
+Tag._meta.ordering = ['name']
+
 class InvalidTag(Exception):
     pass
 
