@@ -231,7 +231,7 @@ class ReportFile(BaseModel):
         return self._thumbnail
 
     def set_thumbnail(self, value):
-        self.thumbnail = value
+        self._thumbnail = value
 
     thumbnail = property(get_thumbnail, set_thumbnail)
 
