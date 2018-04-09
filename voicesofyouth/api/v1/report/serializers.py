@@ -32,7 +32,7 @@ class ReportFilesSerializer(VoySerializer):
     file = serializers.FileField()
     thumbnail = serializers.FileField(required=False)
     report = serializers.SerializerMethodField()
-    out = serializers.FileField()
+    out = serializers.FileField(read_only=True)
 
     class Meta:
         model = ReportFile
