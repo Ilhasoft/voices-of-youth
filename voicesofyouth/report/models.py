@@ -238,7 +238,7 @@ class ReportFile(BaseModel):
     @property
     def cropped(self):
         if self.media_type == FILE_TYPE_IMAGE:
-            return get_thumbnailer(self.file)['report_file_cropped']
+            return get_thumbnailer(self.file)['report_file_resized']
         return None
 
     @property

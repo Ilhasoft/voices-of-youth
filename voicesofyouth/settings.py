@@ -228,7 +228,7 @@ THUMBNAIL_ALIASES = {
             'size': (200, 200),
             'crop': True,
         },
-        'report_file_cropped': {
+        'report_file_resized': {
             'size': (1920, 1920),
         }
     },
