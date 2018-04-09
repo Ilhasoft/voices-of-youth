@@ -11,6 +11,7 @@ class ProjectSerializer(VoySerializer):
     years = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    thumbnail_cropped = serializers.FileField()
 
     class Meta:
         model = Project
@@ -24,7 +25,8 @@ class ProjectSerializer(VoySerializer):
             'thumbnail',
             'window_title',
             'languages',
-            'years'
+            'years',
+            'thumbnail_cropped',
         )
 
     def get_languages(self, obj):

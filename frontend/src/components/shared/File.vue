@@ -2,7 +2,8 @@
   <li>
     <div class="div">
       <div class="item">
-        <img :src="file.file" alt="">
+        <img :src="file.blob" v-if="file.blob">
+        <img :src="file.thumbnail" v-if="file.thumbnail">
       </div>
       <div tabindex="-1" class="media-item-remove close">
         <i class="media-item-button" @click.prevent="$emit('remove-file')">
@@ -22,7 +23,7 @@
 
 <script>
 export default {
-  name: 'EditFile',
+  name: 'File',
 
   props: {
     file: {

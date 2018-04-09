@@ -4,8 +4,8 @@
     <div class="col-lg-2 col-md-2 d-flex align-items-center">
         <div class="badge-image">
             <span class="text">{{ report.files.count }}</span>
-            {% if report.images %}
-                <img src="{{ report.images.first.file.url }}" class="img-responsive img" alt="">
+            {% if report.thumbnail %}
+                <img src="{{ report.thumbnail.url }}" class="img-responsive img" alt="">
             {% else %}
                 <img src="{% static 'img/video.png' %}" class="img-responsive" alt="">
             {% endif %}

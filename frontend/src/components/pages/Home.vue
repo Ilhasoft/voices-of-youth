@@ -8,7 +8,7 @@
             <small>A UNICEF Mobile and Web Digital Mapping Solution</small>
             <p>This project explores tools to help youth build impactful, communicative digital maps using mobile and web technologies. A phone application allows youth to produce a portrait of their community through geo-located photos and videos, organized in thematic maps.</p>
           </div>
-          
+
           <div class="column is-5 m-auto">
             <img src="~@/assets/img/home.png" class="img-home" alt="">
           </div>
@@ -21,7 +21,7 @@
 
       <div class="columns is-marginless m-bottom" :key="item.id" v-for="item in projectsList">
         <div class="column is-2 is-paddingless image">
-          <img :src="item.thumbnail" v-if="item.thumbnail" alt="" />
+          <img :src="item.thumbnail_cropped" v-if="item.thumbnail_cropped" alt="" />
         </div>
 
         <div class="column is-marginless p-top">
@@ -167,7 +167,7 @@ export default {
   }
 
   .button {
-    margin-top: 10px; 
+    margin-top: 10px;
     display: block;
     width: 115px;
     height: 41px;

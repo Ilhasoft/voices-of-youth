@@ -135,8 +135,8 @@ import router from '@/router/';
 import i18n from '@/translate/';
 import markerPixel from '@/assets/img/map-pin.png';
 import HeaderIndex from '@/components/header/Index';
-import LinkItem from '@/components/new-report/Link';
-import FileItem from '@/components/new-report/File';
+import LinkItem from '@/components/shared/Link';
+import FileItem from '@/components/shared/File';
 import ConfirmExit from '@/components/shared/ConfirmExit';
 
 export default {

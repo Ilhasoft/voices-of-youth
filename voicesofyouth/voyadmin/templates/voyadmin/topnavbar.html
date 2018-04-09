@@ -42,8 +42,8 @@
                                 <a href="{% url 'voy-admin:reports:view' notification.report.pk %}{% if notification.origin == 2 %}#comments{% endif %}" class="list-group-item">
                                     <div class="media-box">
                                         <div class="pull-left">
-                                            {% if notification.report.last_image %}
-                                                <img src="/media/{{ notification.report.last_image.file }}" width="40" height="40" alt="">
+                                            {% if notification.report.thumbnail %}
+                                                <img src="/media/{{ notification.report.thumbnail.url }}" width="40" height="40" alt="">
                                             {% endif %}
                                         </div>
                                         <div class="media-box-body clearfix">

@@ -1,25 +1,25 @@
 <template>
-  <div 
-    class="column is-2 notification-box" 
-    @mouseover.prevent="isVisible = true" 
+  <div
+    class="column is-2 notification-box"
+    @mouseover.prevent="isVisible = true"
     @mouseout="isVisible = false"
     v-if="userIsLogged && userIsMapper">
-    
+
     <div class="label" v-if="notifications.length"></div>
     <img class="img" src="~@/assets/img/header-bell.png">
-    
-    <div 
-      class="notification-item" 
-      @mouseover.prevent="isVisible = true" 
-      @mouseout="isVisible = false" 
+
+    <div
+      class="notification-item"
+      @mouseover.prevent="isVisible = true"
+      @mouseout="isVisible = false"
       :class="[isVisible ? 'fade-in' : 'fade-out']">
       <h4>{{ $t('message.header.notifications.title') }}</h4>
-      
+
       <div class="item" v-if="notifications.length" :key="key" v-for="(item, key) in notifications">
         <a href="" @click.prevent="cleanNotification(item)">
-          <div class="item-left" v-if="item.report.last_image">
+          <div class="item-left" v-if="item.report.thumbnail">
             <div class="thumbnail">
-              <img :src="item.report.last_image.file" alt="">
+              <img :src="item.report.thumbnail" alt="">
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export default {
         text-align: left;
         padding: 6px 0px 0px 0px;
         margin-left: 10px;
-        
+
         .title {
           color: #4a4a4a;
         }

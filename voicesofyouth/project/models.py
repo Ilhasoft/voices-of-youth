@@ -16,10 +16,10 @@ from django.utils.translation import ugettext_lazy as _
 from taggit.managers import TaggableManager
 from taggit.models import Tag
 from unipath import Path
+from easy_thumbnails.files import get_thumbnailer
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
-from voicesofyouth.core.utils import resize_image
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
@@ -96,6 +96,11 @@ class Project(BaseModel):
                                   Q(taggit_taggeditem_items__content_type=ct_project,
                                     taggit_taggeditem_items__object_id=self.id)).distinct()
 
+    @property
+    def thumbnail_cropped(self):
+        if self.thumbnail:
+            return get_thumbnailer(self.thumbnail)['project_thumbnail_cropped']
+
     def get_absolute_url(self):
         return f'not-implemented/{self.id}'
 
@@ -145,10 +150,3 @@ def change_group_permission(instance, action, model, pk_set, **_):
             project.local_admin_group.permissions.add(*model.objects.filter(id__in=pk_set))
         elif action == 'post_remove' and project.local_admin_group.permissions.filter(id__in=pk_set).exists():
             project.local_admin_group.permissions.remove(*model.objects.filter(id__in=pk_set))
-
-
-@receiver(post_save, sender=Project)
-def resize_thumbnail(sender, instance, **kwargs):
-    if instance.thumbnail:
-        size = 139, 139
-        resize_image(instance.thumbnail.file.name, size)

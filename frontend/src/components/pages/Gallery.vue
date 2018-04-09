@@ -18,10 +18,10 @@
           <div class="card">
             <div class="card-image">
               <figure class="image">
-                <img :src="image.file" alt="" @click.prevent="openReport(image.report_id)">
+                <img :src="image.thumbnail" alt="" @click.prevent="openReport(image.report_id)">
               </figure>
             </div>
-            
+
             <div class="card-content">
               <div class="media">
                 <div class="media-content">
