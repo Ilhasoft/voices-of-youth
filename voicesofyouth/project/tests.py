@@ -58,17 +58,6 @@ class ProjectTestCase(TestCase):
         '''
         self.assertEqual(self.project.window_title, self.project.name)
 
-    def test_thumbnail_resize(self):
-        """
-        The thumbnail file are resized when saving?
-        """
-        test_img = Path(__file__).absolute().ancestor(2).child('test', 'assets', 'python.png')
-        with self.settings(MEDIA_ROOT='/tmp'), open(test_img, 'rb') as image:
-            fake_thumbnail = ImageFile(image)
-            project = mommy.make(Project, thumbnail=fake_thumbnail)
-            resized = Image.open(project.thumbnail.file)
-            self.assertEqual(resized.size, (139, 139))
-
 
 class ProjectLocalAdminGroupTestCase(TestCase):
     def setUp(self):

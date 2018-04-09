@@ -230,6 +230,10 @@ THUMBNAIL_ALIASES = {
         },
         'report_file_resized': {
             'size': (1920, 1920),
-        }
+        },
+        'project_thumbnail_cropped': {
+            'size': (139, 139),
+            'crop': True,
+        },
     },
 }
