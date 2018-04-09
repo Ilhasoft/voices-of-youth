@@ -1,7 +1,7 @@
 <template>
   <div class="columns item">
     <div class="column is-3">
-      <img :src="report.last_image.file" alt="" v-if="report.last_image">
+      <img :src="report.thumbnail" alt="" v-if="report.thumbnail">
     </div>
 
     <div class="column text">

@@ -19,7 +19,7 @@
               <div class="column">
                 <ul class="images">
                   <li v-for="(file, key) in files" :key="key" v-cloak>
-                    <img v-if="file.media_type == 'image'" :src="file.file" @click.prevent="openFile(file)" alt="" v-cloak>
+                    <img v-if="file.media_type == 'image'" :src="file.thumbnail" @click.prevent="openFile(file)" alt="" v-cloak>
                     <img v-if="file.media_type == 'video'" src="~@/assets/img/video.png" @click.prevent="openFile(file)" alt="" v-cloak>
                   </li>
                 </ul>
@@ -144,7 +144,7 @@ export default {
 
     checkPreview() {
       if (this.files.length > 0) {
-        this.filePreview = this.files[0].file;
+        this.filePreview = this.files[0].out;
         this.filePreviewType = this.files[0].media_type;
       } else {
         this.filePreview = '';
@@ -153,7 +153,7 @@ export default {
     },
 
     openFile(item) {
-      this.filePreview = item.file;
+      this.filePreview = item.out;
       this.filePreviewType = item.media_type;
     },
 

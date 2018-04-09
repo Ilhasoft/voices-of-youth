@@ -4,14 +4,14 @@
       :title="$t('message.sidebar.search.title')"
       :backButton="false"
       :closeButton="true" />
-  
+
     <div class="map-box">
       <div class="columns">
         <div class="column scrolling">
           <div v-if="reports.length">
             <div class="columns is-mobile item" :key="key" v-for="(item, key) in reports">
               <div class="column is-3 m-auto center">
-                <img v-if="item.last_image" :src="item.last_image.file" alt=""/>
+                <img v-if="item.thumbnail" :src="item.thumbnail" alt=""/>
               </div>
 
               <div class="column m-auto">
@@ -166,16 +166,11 @@ export default {
         text-align: left;
         color: #000000;
       }
-      
+
       small {
         font-size: 12px;
         font-weight: 500;
         text-align: left;
-      }
-
-      img {
-        width: 89px;
-        height: 89px;
       }
 
       .m-auto {
