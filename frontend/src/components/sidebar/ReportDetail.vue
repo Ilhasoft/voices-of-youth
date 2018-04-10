@@ -1,11 +1,11 @@
 <template>
   <div>
     <navigation-bar
-      :title="item.theme_name"
+      :title="searchQuery || item.theme_name"
       :backButton="backButton"
       :closeButton="true"
       backTo="Theme"
-      @openComponent="openTheme" />
+      @openComponent="goBack" />
 
       <div class="map-box">
         <div class="box-flex scroll">
@@ -124,6 +124,7 @@ export default {
       item: 'getReport',
       files: 'getReportFiles',
       currentProject: 'getCurrentProject',
+      searchQuery: 'searchQuery',
     }),
   },
 
@@ -201,6 +202,21 @@ export default {
         return this.item.created_by.username;
       }
       return '';
+    },
+
+    goBack() {
+      if (this.searchQuery) {
+        this.searchReports(this.searchQuery).then(() => {
+          this.setSideBarConfigs({
+            title: 'Results',
+            tabActived: 'Search',
+            backButton: false,
+            isActived: true,
+          });
+        });
+      } else {
+        this.openTheme();
+      }
     },
 
     openTheme() {

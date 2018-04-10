@@ -56,6 +56,7 @@ export default {
   methods: {
     ...mapActions([
       'setSideBarConfigs',
+      'setSearchQuery',
     ]),
 
     backSideBar() {
@@ -63,6 +64,7 @@ export default {
     },
 
     closeSideBar() {
+      this.setSearchQuery('');
       this.setSideBarConfigs({
         isActived: false,
         backButton: false,
