@@ -49,6 +49,8 @@ export default {
 
     const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
     this.$refs.map.mapObject.fitBounds(bounds);
+
+    setTimeout(() => this.flyToReport(), 500);
   },
 
   computed: {
@@ -62,14 +64,7 @@ export default {
 
   watch: {
     report() {
-      if (this.report && this.report.location) {
-        const moveTo = L.latLng(
-          this.report.location.coordinates[1],
-          this.report.location.coordinates[0],
-        );
-        const zoom = this.$refs.map.mapObject.getZoom();
-        this.$refs.map.mapObject.flyTo(moveTo, (zoom < 5 ? 11 : zoom));
-      }
+      this.flyToReport();
     },
 
     sideBarActived() {
@@ -96,6 +91,17 @@ export default {
           this.getReport(item.id);
         }
       });
+    },
+
+    flyToReport() {
+      if (this.report && this.report.location) {
+        const moveTo = L.latLng(
+          this.report.location.coordinates[1],
+          this.report.location.coordinates[0],
+        );
+        const zoom = this.$refs.map.mapObject.getZoom();
+        this.$refs.map.mapObject.flyTo(moveTo, (zoom < 5 ? 11 : zoom));
+      }
     },
   },
 };
