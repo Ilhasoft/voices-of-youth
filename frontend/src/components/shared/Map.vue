@@ -83,9 +83,11 @@ export default {
     ...mapActions([
       'setSideBarConfigs',
       'getReport',
+      'setSearchQuery',
     ]),
 
     openReport(item) {
+      this.setSearchQuery('');
       this.setSideBarConfigs({
         tabActived: 'ReportDetail',
         isActived: true,

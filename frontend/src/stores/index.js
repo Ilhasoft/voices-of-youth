@@ -10,6 +10,7 @@ import ThemeStore from './theme';
 import ReportStore from './report';
 import GalleryStore from './gallery';
 import NotifyStore from './notify';
+import SearchStore from './search';
 
 Vue.use(Vuex);
 
@@ -28,5 +29,6 @@ export default new Vuex.Store({
     ReportStore,
     GalleryStore,
     NotifyStore,
+    SearchStore,
   },
 });
