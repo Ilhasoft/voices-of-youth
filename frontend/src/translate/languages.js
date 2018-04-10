@@ -112,6 +112,7 @@ const messages = {
           share: 'Share',
           comment: 'Comments',
           by: 'By',
+          searchtitle: 'Search',
         },
         comments: {
           title: 'Comments',

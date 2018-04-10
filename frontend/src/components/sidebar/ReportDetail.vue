@@ -1,7 +1,7 @@
 <template>
   <div>
     <navigation-bar
-      :title="searchQuery || item.theme_name"
+      :title="searchQuery && `${$t('message.sidebar.report.searchtitle')}: ${searchQuery}` || item.theme_name"
       :backButton="backButton"
       :closeButton="true"
       backTo="Theme"

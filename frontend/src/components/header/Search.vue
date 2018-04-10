@@ -20,6 +20,7 @@ export default {
     return {
       inputClass: '',
       showInput: false,
+      timeout: null,
     };
   },
 
@@ -37,6 +38,10 @@ export default {
     updateQuery(event) {
       const value = event.target.value;
       this.setSearchQuery(value);
+      if (this.timeout) clearTimeout(this.timeout);
+      this.timeout = setTimeout(() => {
+        this.search();
+      }, 750);
     },
 
     showInputSearch() {
@@ -47,14 +52,20 @@ export default {
     },
 
     search() {
-      this.searchReports(this.searchQuery).then(() => {
-        this.setSideBarConfigs({
-          title: 'Results',
-          tabActived: 'Search',
-          backButton: false,
-          isActived: true,
+      if (this.searchQuery) {
+        this.searchReports(this.searchQuery).then(() => {
+          this.setSideBarConfigs({
+            title: 'Results',
+            tabActived: 'Search',
+            backButton: false,
+            isActived: true,
+          });
         });
-      });
+      } else {
+        this.setSideBarConfigs({
+          isActived: false,
+        });
+      }
     },
   },
 };
