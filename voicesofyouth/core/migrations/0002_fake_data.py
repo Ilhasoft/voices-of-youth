@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         ('theme', '0006_theme_allow_links'),
         ('tag', '0001_initial'),
         ('report', '0014_auto_20180410_1220'),
-        ('user', '0004_remove_voyuser_created_on'),
+        ('user', '0006_auto_20180216_1215'),
     ]
 
     operations = []
