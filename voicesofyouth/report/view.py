@@ -202,7 +202,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        form = ReportForm(data=request.POST, user=request.user)
+        form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
 
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
@@ -221,25 +221,24 @@ class AddReportView(LoginRequiredMixin, TemplateView):
 
             files = request.FILES.getlist('files')
 
-            if files:
-                for file in files:
-                    mime_type = magic.from_buffer(file.read(), mime=True)
-                    if mime_type in FILE_FORMATS:
-                        media_type = mime_type.split('/')[0]
+            for file in files:
+                mime_type = magic.from_buffer(file.read(), mime=True)
+                if mime_type in FILE_FORMATS:
+                    media_type = mime_type.split('/')[0]
 
-                        try:
-                            report_file = ReportFile(
-                                report=report,
-                                title=file.name,
-                                description=file.name,
-                                media_type=media_type,
-                                file=ImageFile(file),
-                                created_by=mapper,
-                                modified_by=mapper
-                            )
-                            report_file.save()
-                        except Exception as e:
-                            return HttpResponse(status=500)
+                    try:
+                        report_file = ReportFile(
+                            report=report,
+                            title=file.name,
+                            description=file.name,
+                            media_type=media_type,
+                            file=ImageFile(file),
+                            created_by=mapper,
+                            modified_by=mapper
+                        )
+                        report_file.save()
+                    except Exception as e:
+                        return HttpResponse(status=500)
 
             links = request.POST.getlist('links[]')
 
