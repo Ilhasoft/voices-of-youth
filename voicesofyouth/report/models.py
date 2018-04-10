@@ -263,7 +263,7 @@ class ReportURL(BaseModel):
 
 
 class ReportNotification(BaseModel):
-    report = models.OneToOneField(Report, on_delete=models.CASCADE, related_name='notification')
+    report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='notifications')
     status = models.IntegerField(choices=NOTIFICATION_STATUS, blank=False, null=False, verbose_name=_('Status'))
     origin = models.IntegerField(choices=NOTIFICATION_ORIGIN, blank=False, null=False, verbose_name=_('Origin'))
     message = models.TextField(null=True, blank=True, verbose_name=_('Message'))
