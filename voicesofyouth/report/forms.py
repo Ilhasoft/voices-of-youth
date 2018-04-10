@@ -112,7 +112,7 @@ class ReportForm(forms.Form):
     )
 
     files = forms.FileField(
-        required=False,
+        required=True,
         widget=forms.ClearableFileInput(attrs={
             'multiple': True
         })

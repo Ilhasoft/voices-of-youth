@@ -380,7 +380,11 @@ export default {
     },
 
     saveReport() {
-      if (this.name && this.description && this.themeSelected && this.location) {
+      if (this.name &&
+            this.description &&
+            this.themeSelected &&
+            this.location &&
+            this.files.length > 0) {
         this.lockButtonSend();
 
         const dataToSave = {
@@ -397,26 +401,21 @@ export default {
         }
 
         this.saveNewReport(dataToSave).then((data) => {
-          if (this.files.length > 0) {
-            const promiseAll = this.files.map((file) => {
-              const promiseUpload = new Promise((resolve, reject) => {
-                this.saveFiles({
-                  id: data.id,
-                  file: file.item[0],
-                }).then(() => resolve(),
-                ).catch(() => reject());
-              });
-              return promiseUpload;
+          const promiseAll = this.files.map((file) => {
+            const promiseUpload = new Promise((resolve, reject) => {
+              this.saveFiles({
+                id: data.id,
+                file: file.item[0],
+              }).then(() => resolve(),
+              ).catch(() => reject());
             });
+            return promiseUpload;
+          });
 
-            Promise.all(promiseAll).then(() => {
-              this.cleanForm();
-              this.unlockButtonSend();
-            });
-          } else {
+          Promise.all(promiseAll).then(() => {
             this.cleanForm();
             this.unlockButtonSend();
-          }
+          });
         }).catch(() => {
           this.unlockButtonSend();
         });
