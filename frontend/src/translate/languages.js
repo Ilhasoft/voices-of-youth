@@ -20,7 +20,7 @@ const messages = {
           title: 'Back to map',
         },
         search: {
-          input: 'Type in a keyword or tag to search',
+          input: 'Type in a keyword',
         },
       },
       pages: {
@@ -70,7 +70,7 @@ const messages = {
           name: 'Title',
           description: 'Description',
           tags: 'Tags',
-          photos: 'Add photos and videos',
+          photos: 'Add photos and videos (at least 1 file is needed)',
           info: 'Remember, use only your own photos or photos that you are allowed to use',
           links: 'Add link from website',
           btnWait: 'Wait please',
