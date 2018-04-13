@@ -128,6 +128,10 @@ export default {
       commit(TYPES.SET_REPORT_MEDIAS, files.results);
     },
 
+    cleanReport: ({ commit }) => {
+      commit(TYPES.SET_CURRENT_REPORT, {});
+    },
+
     getComments: async ({ commit, dispatch }, obj) => {
       const data = await axios.get(`/api/report-comments/?report=${obj}`);
       commit(TYPES.SET_REPORT_COMMENTS, data);
