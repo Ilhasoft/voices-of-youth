@@ -14,33 +14,9 @@ __status__ = 'Development'
 
 DEFAULT_AVATAR = 1
 AVATAR_FILE_EXTENSION = '.png'
-AVATARS = (
-    (1, f'{settings.MEDIA_URL}users/avatars/group-1{AVATAR_FILE_EXTENSION}'),
-    (2, f'{settings.MEDIA_URL}users/avatars/group-2{AVATAR_FILE_EXTENSION}'),
-    (3, f'{settings.MEDIA_URL}users/avatars/group-3{AVATAR_FILE_EXTENSION}'),
-    (4, f'{settings.MEDIA_URL}users/avatars/group-4{AVATAR_FILE_EXTENSION}'),
-    (5, f'{settings.MEDIA_URL}users/avatars/group-5{AVATAR_FILE_EXTENSION}'),
-    (6, f'{settings.MEDIA_URL}users/avatars/group-6{AVATAR_FILE_EXTENSION}'),
-    (7, f'{settings.MEDIA_URL}users/avatars/group-7{AVATAR_FILE_EXTENSION}'),
-    (8, f'{settings.MEDIA_URL}users/avatars/group-8{AVATAR_FILE_EXTENSION}'),
-    (9, f'{settings.MEDIA_URL}users/avatars/group-9{AVATAR_FILE_EXTENSION}'),
-    (10, f'{settings.MEDIA_URL}users/avatars/group-10{AVATAR_FILE_EXTENSION}'),
-    (11, f'{settings.MEDIA_URL}users/avatars/group-11{AVATAR_FILE_EXTENSION}'),
-    (12, f'{settings.MEDIA_URL}users/avatars/group-12{AVATAR_FILE_EXTENSION}'),
-    (13, f'{settings.MEDIA_URL}users/avatars/group-13{AVATAR_FILE_EXTENSION}'),
-    (14, f'{settings.MEDIA_URL}users/avatars/group-14{AVATAR_FILE_EXTENSION}'),
-    (15, f'{settings.MEDIA_URL}users/avatars/group-15{AVATAR_FILE_EXTENSION}'),
-    (16, f'{settings.MEDIA_URL}users/avatars/group-16{AVATAR_FILE_EXTENSION}'),
-    (17, f'{settings.MEDIA_URL}users/avatars/group-17{AVATAR_FILE_EXTENSION}'),
-    (18, f'{settings.MEDIA_URL}users/avatars/group-18{AVATAR_FILE_EXTENSION}'),
-    (19, f'{settings.MEDIA_URL}users/avatars/group-19{AVATAR_FILE_EXTENSION}'),
-    (20, f'{settings.MEDIA_URL}users/avatars/group-20{AVATAR_FILE_EXTENSION}'),
-    (21, f'{settings.MEDIA_URL}users/avatars/group-21{AVATAR_FILE_EXTENSION}'),
-    (22, f'{settings.MEDIA_URL}users/avatars/group-22{AVATAR_FILE_EXTENSION}'),
-    (23, f'{settings.MEDIA_URL}users/avatars/group-23{AVATAR_FILE_EXTENSION}'),
-    (24, f'{settings.MEDIA_URL}users/avatars/group-24{AVATAR_FILE_EXTENSION}'),
-    (25, f'{settings.MEDIA_URL}users/avatars/group-25{AVATAR_FILE_EXTENSION}'),
-)
+AVATARS = list(map(
+    lambda x: (x, f'{settings.MEDIA_URL}users/avatars/group-{x}{AVATAR_FILE_EXTENSION}'),
+    range(1, 43)))
 
 
 class VoyUser(AbstractUser):
