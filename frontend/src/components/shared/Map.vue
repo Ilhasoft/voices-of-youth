@@ -40,6 +40,7 @@ export default {
         disableClusteringAtZoom: 17,
         animate: false,
       },
+      popup: null,
     };
   },
 
@@ -94,13 +95,26 @@ export default {
     },
 
     flyToReport() {
+      if (this.popup) this.popup.remove();
+
       if (this.report && this.report.location) {
-        const moveTo = L.latLng(
+        const latLng = L.latLng(
           this.report.location.coordinates[1],
           this.report.location.coordinates[0],
         );
-        const zoom = this.$refs.map.mapObject.getZoom();
-        this.$refs.map.mapObject.flyTo(moveTo, (zoom < 5 ? 11 : zoom));
+        this.$refs.map.mapObject.flyTo(latLng, 18);
+
+        this.popup = L.popup({
+          offset: L.point(0, -23),
+          closeButton: false,
+          autoClose: false,
+          closeOnEscapeKey: false,
+          closeOnClick: false,
+          maxWidth: 100,
+        })
+          .setLatLng(latLng)
+          .setContent(`<div class="report-popup-content">${this.report.name}</div>`)
+          .openOn(this.$refs.map.mapObject);
       }
     },
   },

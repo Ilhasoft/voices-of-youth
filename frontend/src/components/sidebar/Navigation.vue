@@ -57,10 +57,12 @@ export default {
     ...mapActions([
       'setSideBarConfigs',
       'setSearchQuery',
+      'cleanReport',
     ]),
 
     backSideBar() {
       this.$emit('openComponent', { name: this.backTo });
+      this.cleanReport();
     },
 
     closeSideBar() {
@@ -70,6 +72,7 @@ export default {
         backButton: false,
         title: '',
       });
+      this.cleanReport();
 
       bus.$emit('clearFields', {});
       bus.$emit('resetMap', {});
