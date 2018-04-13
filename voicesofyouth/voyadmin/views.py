@@ -16,17 +16,28 @@ from voicesofyouth.project.models import Project
 from voicesofyouth.report.models import Report
 from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyadmin.forms import LoginForm
+from voicesofyouth.voyadmin.forms import DashboardFilterForm
 from voicesofyouth.voyadmin.utils import radial_bar_round_down
 
 class DashboardView(LoginRequiredMixin, TemplateView):
-    template_name = 'dashboard.html'
+    template_name = 'voyadmin/dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        projects = Project.objects.all() \
+        available_projects = Project.objects.all() \
             if self.request.user.is_global_admin else \
             self.request.user.projects
+        filter_form = DashboardFilterForm(
+            self.request.GET or None,
+            available_projects=available_projects)
+        selected_project = None
+        if filter_form.is_valid():
+            selected_project = filter_form.cleaned_data.get('project')
+            projects = Project.objects.filter(
+                pk=selected_project.pk)
+        else:
+            projects = available_projects
         all_reports = Report.objects.filter(theme__project__in=projects)
         last_week = timezone.now() - datetime.timedelta(days=7)
         week_reports = all_reports.filter(created_on__gte=last_week)
@@ -39,9 +50,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         week_approved_reports = week_reports.approved()
         week_pending_reports = week_reports.pending()
 
-        ct_project = ContentType.objects.get_for_model(Project)
+        ct_project = ContentType.objects.get_for_model(Report)
         all_tags = Tag.objects.filter(taggit_taggeditem_items__content_type=ct_project,
-                                      taggit_taggeditem_items__object_id__in=projects)
+                                      taggit_taggeditem_items__object_id__in=all_reports)
         top_tags = all_tags \
             .annotate(items_count=Count('taggit_taggeditem_items')) \
             .order_by('-items_count')[:5]  # show top 5
@@ -59,6 +70,8 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                 distinct=True)) \
             .order_by('-report_count')[:5]
 
+        context['available_projects'] = available_projects
+        context['selected_project'] = selected_project
         context['projects'] = projects
         context['all_reports'] = all_reports
         context['all_mappers'] = all_mappers
@@ -72,6 +85,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['radial_bar_pending_percent'] = radial_bar_round_down(pending_percent)
         context['latest_approved_reports'] = all_reports.approved()[:7]
         context['top_mappers'] = top_mappers
+        context['filter_form'] = filter_form
         return context
 
 

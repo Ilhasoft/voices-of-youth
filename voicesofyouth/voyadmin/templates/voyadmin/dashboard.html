@@ -12,10 +12,21 @@
     <div class="content-wrapper">
         <div class="content-heading">{% trans 'Dashboard' %}</div>
         <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form method="GET" id="form_search" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="id_project" class="col-sm-4 control-label">{% trans 'Filter by project:' %}</label>
+                        <div class="col-sm-8">{{ filter_form.project }}</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-5 col-lg-4">
                 <h4>{% trans 'Summary' %}</h4>
                 <div class="panel panel-default" id="report">
                     <div class="panel-body">
+                        {% if not selected_project %}
                         <div class="summary-item">
                             <div class="summary-item-label">
                                 <div class="summary-item-label-number">{{ projects.count }}</div>
@@ -25,6 +36,7 @@
                                 <em class="icon-location-pin"></em>
                             </div>
                         </div>
+                        {% endif %}
                         <div class="summary-item">
                             <div class="summary-item-label">
                                 <div class="summary-item-label-number">{{ all_reports.count }}</div>
@@ -110,3 +122,11 @@
         </div>
 </section>
 {% endblock content %}
+
+{% block extrajs %}
+<script type="text/javascript">
+    $('#id_project').change(function() {
+        $('#form_search').submit();
+    });
+</script>
+{% endblock %}
