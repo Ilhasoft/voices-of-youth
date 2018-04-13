@@ -7,11 +7,11 @@
     &-label {
         &-number {
             font-size: 28px;
-            color: #999;
+            color: #616161;
         }
 
         &-text {
-            color: #00cbff;
+            color: #BDBDBD;
             font-size: 16px;
             font-weight: bolder;
         }
@@ -31,10 +31,12 @@
 
     &-number {
         float: right;
+        color: #616161;
+        font-weight: bolder;
     }
 
     &-text {
-        color: #00cbff;
+        color: #9E9E9E;
     }
 }
 
