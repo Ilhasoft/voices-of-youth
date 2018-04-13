@@ -50,9 +50,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         week_approved_reports = week_reports.approved()
         week_pending_reports = week_reports.pending()
 
-        ct_project = ContentType.objects.get_for_model(Project)
+        ct_project = ContentType.objects.get_for_model(Report)
         all_tags = Tag.objects.filter(taggit_taggeditem_items__content_type=ct_project,
-                                      taggit_taggeditem_items__object_id__in=projects)
+                                      taggit_taggeditem_items__object_id__in=all_reports)
         top_tags = all_tags \
             .annotate(items_count=Count('taggit_taggeditem_items')) \
             .order_by('-items_count')[:5]  # show top 5
