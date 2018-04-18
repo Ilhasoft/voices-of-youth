@@ -2,7 +2,9 @@
   <v-map :zoom="3" :minZoom="3" :maxZoom="18" :options="optionsMap" :center="center" ref="map">
     <v-tilelayer :url="url" :attribution="attribution" :options="options"></v-tilelayer>
     <v-marker-cluster :options="optionsCluster">
-      <v-marker @l-click="openReport(item)" :key="item.text" v-for="item in reports" :lat-lng="item.latlng" :icon="item.icon" />
+      <v-marker
+        @l-click="openReport(item)"
+        :key="item.text" v-for="item in reports" :lat-lng="item.latlng" :icon="item.icon" />
     </v-marker-cluster>
   </v-map>
 </template>
@@ -33,8 +35,8 @@ export default {
           [85.0, 180.0],
         ],
       },
-      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+      url: 'https://maps.wikimedia.org/osm/{z}/{x}/{y}.png',
+      attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
       center: [0, 0],
       optionsCluster: {
         disableClusteringAtZoom: 17,
