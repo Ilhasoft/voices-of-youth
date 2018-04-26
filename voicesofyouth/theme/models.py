@@ -124,7 +124,7 @@ class Theme(BaseModel):
 def generate_color(sender, instance, **kwargs):
     if not instance.color:
         instance.color = 1
-    generate_pin(instance.color, THEMES_COLORS[instance.color])
+    generate_pin(instance.color, THEMES_COLORS[int(instance.color)])
 
 
 @receiver(pre_save, sender=Theme)
