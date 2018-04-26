@@ -1,11 +1,8 @@
-import random
-
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.gis.db import models as gismodels
 from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator
 from django.db import models
 from django.db.models.query_utils import Q
 from django.db.models.signals import m2m_changed
@@ -79,10 +76,7 @@ class Theme(BaseModel):
     start_at = models.DateField(null=True, blank=True)
     end_at = models.DateField(null=True, blank=True)
     tags = TaggableManager(blank=True)
-    color = models.CharField(max_length=6,
-                             validators=[MinLengthValidator(6), ],
-                             null=True,
-                             blank=True)
+    color = models.SmallIntegerField(null=False, blank=False)
     translations = GenericRelation(Translation)
 
     class Meta:
@@ -120,7 +114,7 @@ class Theme(BaseModel):
     @property
     def get_color(self):
         if self.color:
-            return THEMES_COLORS[int(self.color)]
+            return THEMES_COLORS[self.color]
 
 
 ###############################################################################
@@ -129,9 +123,8 @@ class Theme(BaseModel):
 @receiver(pre_save, sender=Theme)
 def generate_color(sender, instance, **kwargs):
     if not instance.color:
-        instance.color = '%06x' % random.randint(0, 0xFFFFFF)
-    print(THEMES_COLORS[int(instance.color)])
-    generate_pin(instance.color, THEMES_COLORS[int(instance.color)])
+        instance.color = 1
+    generate_pin(instance.color, THEMES_COLORS[instance.color])
 
 
 @receiver(pre_save, sender=Theme)

@@ -20,10 +20,10 @@ class Migration(migrations.Migration):
         ('core', '0001_initial'),
         ('translation', '0001_initial'),
         ('project', '0006_project_enabled'),
-        ('theme', '0006_theme_allow_links'),
+        ('theme', '0007_auto_20180426_1932'),
         ('tag', '0001_initial'),
         ('report', '0014_auto_20180410_1220'),
-        ('user', '0006_auto_20180216_1215'),
+        ('user', '0007_auto_20180426_1932'),
     ]
 
     operations = []
@@ -49,7 +49,7 @@ if settings.DEBUG:
     from voicesofyouth.translation.models import TranslatableField
     from voicesofyouth.translation.models import Translation
     from voicesofyouth.translation.models import create_translatable_model
-    from voicesofyouth.user.models import User, MapperUser, GlobalUserAdmin
+    from voicesofyouth.user.models import MapperUser, GlobalUserAdmin
 
     import lorem
     from model_mommy import mommy
@@ -229,6 +229,7 @@ if settings.DEBUG:
                                description=lorem.paragraph(),
                                created_by=local_admin,
                                modified_by=local_admin,
+                               color=random.randint(0, 18),
                                bounds=project.bounds)
             theme.tags.add(*random.choices(tags, (len(t) for t in tags), k=random.randint(1, 6)))
             lang_idx = random.randint(0, len(settings.LANGUAGES) - 1)
