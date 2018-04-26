@@ -423,7 +423,11 @@ export default {
     },
 
     confirmCancel() {
-      this.confirmIsVisible = !this.confirmIsVisible;
+      if (this.name || this.description) {
+        this.confirmIsVisible = !this.confirmIsVisible;
+      } else {
+        this.confirmClose();
+      }
     },
 
     confirmClose() {
