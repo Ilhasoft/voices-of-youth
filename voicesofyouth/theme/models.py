@@ -114,7 +114,7 @@ class Theme(BaseModel):
     @property
     def get_color(self):
         if self.color:
-            return THEMES_COLORS[self.color]
+            return THEMES_COLORS[int(self.color)]
 
 
 ###############################################################################
