@@ -203,7 +203,6 @@ class AddReportView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         form = ReportForm(data=request.POST, files=request.FILES, user=request.user)
-
         if form.is_valid():
             mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
 
@@ -285,20 +284,21 @@ class EditReportView(LoginRequiredMixin, TemplateView):
     template_name = 'report/form.html'
 
     def post(self, request, *args, **kwargs):
-        form = ReportForm(data=request.POST, user=self.request.user)
+        form = ReportForm(data=request.POST, files=request.FILES, user=self.request.user)
 
         if form.is_valid():
             try:
                 report_id = kwargs['report']
                 report = get_object_or_404(Report, pk=report_id)
                 mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
-
+                
                 report.theme = Theme.objects.get(id=form.cleaned_data.get('theme'))
                 report.name = form.cleaned_data.get('title')
                 report.description = form.cleaned_data.get('description')
                 report.created_by = mapper
                 report.modified_by = mapper
                 report.location = form.cleaned_data.get('location')
+                report.tags.remove(*report.tags.all())
                 report.tags.add(*[tag for tag in form.cleaned_data.get('tags')])
                 report.save()
 
@@ -364,7 +364,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
-        context['data_form'] = ReportForm(initial=context['data'], user=self.request.user)
+        context['data_form'] = ReportForm(initial=context['data'], files=context['files_list'], user=self.request.user)
 
         return render(request, self.template_name, context)
 
@@ -374,6 +374,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
         report = get_object_or_404(Report, pk=report_id)
 
         context['data'] = {
+            'id': report.id,
             'title': report.name,
             'description': report.description,
             'project': report.theme.project.id,

@@ -22,6 +22,7 @@
                             <div class="panel-body">
                                 <fieldset>
                                     {% csrf_token %}
+                                    {{ data_form.id }}
                                     <div class="form-group {% if data_form.project.errors %}has-error{% endif %}">
                                         <label>{% trans 'Project' %}</label>
                                         {{ data_form.project }}

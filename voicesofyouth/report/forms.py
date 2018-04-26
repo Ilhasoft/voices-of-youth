@@ -10,6 +10,7 @@ from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.tag.models import Tag
+from voicesofyouth.report.models import Report
 
 
 class MyModelChoiceField(forms.ModelChoiceField):
@@ -19,6 +20,11 @@ class MyModelChoiceField(forms.ModelChoiceField):
 
 
 class ReportForm(forms.Form):
+    id = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
+
     project = MyModelChoiceField(
         queryset=Project.objects.all(),
         label=_('Project'),
@@ -112,14 +118,15 @@ class ReportForm(forms.Form):
     )
 
     files = forms.FileField(
-        required=True,
-        widget=forms.ClearableFileInput(attrs={
+        required=False,
+        widget=forms.FileInput(attrs={
             'multiple': True
         })
     )
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
+        self._files = kwargs.pop('files', None)
         super(ReportForm, self).__init__(*args, **kwargs)
 
         if not self.user.is_global_admin:
@@ -151,6 +158,20 @@ class ReportForm(forms.Form):
                 msg = _(f'You cannot create a report out of the theme period.')
                 raise forms.ValidationError(msg)
         return theme_id
+
+    def clean(self):
+        report_id = self.cleaned_data.get('id')
+        msg = _(f'You cannot create a report without files.')
+        validation_error = forms.ValidationError({'files': [msg, ]})
+
+        if report_id == "" and len(self._files) == 0:
+            raise validation_error
+        elif report_id and report_id is not None:
+            report = Report.objects.get(id=report_id)
+            if report.files.count() == 0 and len(self._files) == 0:
+                raise validation_error
+
+        return self.cleaned_data
 
 
 class ReportFilterForm(forms.Form):
