@@ -104,10 +104,10 @@ export default {
           this.report.location.coordinates[1],
           this.report.location.coordinates[0],
         );
-        this.$refs.map.mapObject.flyTo(latLng, 18);
+        this.$refs.map.mapObject.panTo(latLng, 18);
 
         this.popup = L.popup({
-          offset: L.point(0, -23),
+          offset: L.point(-4, -23),
           closeButton: false,
           autoClose: false,
           closeOnEscapeKey: false,
