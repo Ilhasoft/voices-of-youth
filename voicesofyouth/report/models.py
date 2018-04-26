@@ -171,7 +171,7 @@ class Report(BaseModel):
 
     @cached_property
     def theme_color(self):
-        return self.theme.color
+        return self.theme.get_color
 
     @cached_property
     def theme_name(self):

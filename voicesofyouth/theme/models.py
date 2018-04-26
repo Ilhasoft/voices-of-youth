@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.models import Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
@@ -17,6 +19,7 @@ from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import MAPPER_GROUP_TEMPLATE
 from voicesofyouth.project.models import Project
 from voicesofyouth.tag.models import Tag
+from voicesofyouth.theme.utils import generate_pin
 from voicesofyouth.translation.fields import CharFieldTranslatable
 from voicesofyouth.translation.fields import TextFieldTranslatable
 from voicesofyouth.translation.models import Translation
@@ -114,10 +117,23 @@ class Theme(BaseModel):
     def get_absolute_url(self):
         return f'not-implemented/{self.id}'
 
+    @property
+    def get_color(self):
+        if self.color:
+            return THEMES_COLORS[int(self.color)]
+
 
 ###############################################################################
 # Signals handlers
 ###############################################################################
+@receiver(pre_save, sender=Theme)
+def generate_color(sender, instance, **kwargs):
+    if not instance.color:
+        instance.color = '%06x' % random.randint(0, 0xFFFFFF)
+    print(THEMES_COLORS[int(instance.color)])
+    generate_pin(instance.color, THEMES_COLORS[int(instance.color)])
+
+
 @receiver(pre_save, sender=Theme)
 def set_theme_area(sender, instance, **kwargs):
     """

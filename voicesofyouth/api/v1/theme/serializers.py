@@ -17,6 +17,7 @@ class ThemeSerializer(VoySerializer):
     )
     name = serializers.SerializerMethodField()
     pin = serializers.SerializerMethodField()
+    color = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     bounds = serializers.SerializerMethodField()
 
@@ -56,3 +57,6 @@ class ThemeSerializer(VoySerializer):
 
     def get_bounds(self, obj):
         return obj.coordinates
+
+    def get_color(self, obj):
+        return obj.get_color

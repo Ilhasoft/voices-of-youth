@@ -26,7 +26,7 @@
                 {% for theme in themes %}
                     <div class="col-lg-3 col-md-6">
                         <div class="panel box">
-                            <div class="panel-heading header" style="background-color: #{{ theme.color }};">
+                            <div class="panel-heading header" style="background-color: #{{ theme.get_color }};">
                                 <div class="row">
                                     <div class="col-xs-12 text-center">
                                         <h4>{{ theme.name }}</h4>
