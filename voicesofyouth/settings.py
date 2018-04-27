@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'voicesofyouth.api',
     'voicesofyouth.translation',
     'voicesofyouth.voyadmin',
+    'voicesofyouth.voyhome',
 ]
 
 if DEBUG:
@@ -233,6 +234,10 @@ THUMBNAIL_ALIASES = {
         },
         'project_thumbnail_cropped': {
             'size': (139, 139),
+            'crop': True,
+        },
+        'home_thumbnail_cropped': {
+            'size': (200, 200),
             'crop': True,
         },
     },

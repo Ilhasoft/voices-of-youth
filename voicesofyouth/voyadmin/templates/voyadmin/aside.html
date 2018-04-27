@@ -56,6 +56,13 @@
                         <span>{% trans 'Mappers' %}</span>
                     </a>
                 </li>
+
+                <li class="{% if css_menu_active == 'dashboard' %}active{% endif %}">
+                    <a href="{% url 'voy-admin:home:index_slide' %}" title="{% trans 'Home Slide' %}">
+                        <em class="fa fa-image"></em>
+                        <span>{% trans 'Home Slide' %}</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

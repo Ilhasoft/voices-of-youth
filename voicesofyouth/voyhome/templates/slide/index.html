@@ -1,0 +1,52 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/theme/theme.scss' %}">
+    <link rel="stylesheet" href="{% sass_src 'css/theme/layout.scss' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper" id="theme">
+            <div class="content-heading">
+                {% trans 'Home Slide' %}
+                <a href="{% url 'voy-admin:home:new_slide' %}" class="btn btn-oval btn-new-theme">{% trans 'New Image' %}</a>
+            </div>
+
+            <ol class="breadcrumb">
+                <li>{% trans 'Home Slide' %}</li>
+            </ol>
+
+            <div class="flex-content">
+                {% for image in images %}
+                    <div class="col-lg-3 col-md-3">
+                        <div class="panel box">
+                            <div class="panel-heading header">
+                                <div class="row">
+                                    <div class="col-xs-12 text-center">
+                                        <img src="{{ image.thumbnail.url }}" alt="">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body text-left">
+                                <div class="row buttons">
+                                    <div class="col-sm-12 text-center">
+                                        <a href="{% url 'voy-admin:home:remove_slide' image.pk %}"
+                                           class="btn btn-oval btn-lg btn-default">{% trans 'Remove' %}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 text-center"><h4>{% trans 'No results found' %}</h4></div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock content %}

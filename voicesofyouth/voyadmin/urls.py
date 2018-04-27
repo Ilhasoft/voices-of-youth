@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^themes/', include('voicesofyouth.theme.urls', namespace='themes')),
     url(r'^reports/', include('voicesofyouth.report.urls', namespace='reports')),
     url(r'^users/', include('voicesofyouth.user.urls', namespace='users')),
+    url(r'^home/', include('voicesofyouth.voyhome.urls', namespace='home')),
     url(r'^login/', LoginView.as_view(), name='login'),
     url(r'^logout/', logout, name='logout'),
 ]
