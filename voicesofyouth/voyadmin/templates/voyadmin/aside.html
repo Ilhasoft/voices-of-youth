@@ -63,6 +63,13 @@
                         <span>{% trans 'Home Slide' %}</span>
                     </a>
                 </li>
+
+                <li class="{% if css_menu_active == 'index_about' %}active{% endif %}">
+                    <a href="{% url 'voy-admin:home:index_about' %}" title="{% trans 'About Project' %}">
+                        <em class="fa fa-file-text-o"></em>
+                        <span>{% trans 'About Project' %}</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

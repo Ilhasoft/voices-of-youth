@@ -33,7 +33,29 @@ class Slide(BaseModel):
     @property
     def thumbnail(self):
         if self.image:
-            return get_thumbnailer(self.image)['home_thumbnail_cropped']
+            return get_thumbnailer(self.image)['home_slide_thumbnail_cropped']
+
+    def get_absolute_url(self):
+        return f'not-implemented/{self.id}'
+
+
+class About(BaseModel):
+    image = models.ImageField(upload_to=upload_to)
+    about_project = models.TextField(null=False, blank=False, verbose_name=_('About The Project'))
+    about_voy = models.TextField(null=False, blank=False, verbose_name=_('About VoY'))
+
+    class Meta:
+        verbose_name = _('About')
+        verbose_name_plural = _('About')
+        db_table = 'home_about'
+
+    def __str__(self):
+        return self.about_project
+
+    @property
+    def thumbnail(self):
+        if self.image:
+            return get_thumbnailer(self.image)['home_about_thumbnail_cropped']
 
     def get_absolute_url(self):
         return f'not-implemented/{self.id}'
