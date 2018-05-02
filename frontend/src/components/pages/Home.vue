@@ -18,7 +18,7 @@
 
     <div class="container">
       <div class="columns is-marginless">
-        <div class="column is-5 is-offset-1 about">
+        <div class="column is-4 is-offset-1 about">
           <img src="~@/assets/img/img_about.png" alt="">
 
           <div class="columns">
@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <div class="column is-4 is-offset-1 is-mobile">
+        <div class="column is-4 is-offset-2 is-mobile">
           <div class="digital-mapper">
             <div class="columns is-mobile">
               <div class="column is-3">
@@ -123,7 +123,7 @@
     </div>
 
     <div class="columns is-marginless about-voy">
-      <div class="column is-offset-4">
+      <div class="column is-half is-offset-one-quarter">
         <div class="text">
           <h1>Voices of youth</h1>
           <p>Voices of Youth offers inspiring, original insight and opinion from across the globe – from young people, for young people.</p>
@@ -477,12 +477,14 @@ export default {
   height: 305px;
 
   .text {
-    margin-left: 50px;
-    margin-top: 57px;
+    // margin-left: 50px;
+    // margin-top: 57px;
+    margin: auto;
     width: 26em;
     word-wrap: break-word;
 
     h1 {
+      margin-top: 57px;
       font-size: 55px;
       font-weight: bold;
     }
@@ -492,11 +494,13 @@ export default {
     }
   }
 
-  @media (max-width: 990px) {
+  @media (max-width: 495px) {
     .text {
+      h1 {
+        font-size: 44px;
+      }
+
       width: 19rem;
-      margin-top: 0px;
-      margin-top: 0px;
     }
   }
 }
