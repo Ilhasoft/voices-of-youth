@@ -6424,6 +6424,10 @@ void-elements@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
+vue-carousel@^0.7.3:
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/vue-carousel/-/vue-carousel-0.7.3.tgz#5febab5bb3be4bd12ada37df22efd189f8789465"
+
 vue-hot-reload-api@^2.2.0:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.2.4.tgz#683bd1d026c0d3b3c937d5875679e9a87ec6cd8f"
@@ -6449,6 +6453,10 @@ vue-loader@^13.0.4:
     vue-hot-reload-api "^2.2.0"
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.6.0"
+
+vue-recaptcha@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vue-recaptcha/-/vue-recaptcha-1.1.0.tgz#d628e1ff708b66e599eedaef9eec11444f887a03"
 
 vue-router@^2.7.0:
   version "2.8.1"
