@@ -23,6 +23,15 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = Project.objects.all().filter(enabled=True)
 
+        limit = self.request.query_params.get('limit')
+        order = self.request.query_params.get('order')
+
+        if order:
+            queryset = queryset.order_by('-created_on')
+
+        if limit:
+            queryset = queryset[:int(limit)]
+
         try:
             token = request.META.get('HTTP_AUTHORIZATION').split()[1]
             user = MapperUser.objects.filter(auth_token=token).first()

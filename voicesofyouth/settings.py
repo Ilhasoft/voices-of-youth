@@ -236,6 +236,10 @@ THUMBNAIL_ALIASES = {
             'size': (139, 139),
             'crop': True,
         },
+        'project_thumbnail_home_responsive_cropped': {
+            'size': (141, 94),
+            'crop': True,
+        },
         'home_slide_thumbnail_cropped': {
             'size': (200, 200),
             'crop': True,

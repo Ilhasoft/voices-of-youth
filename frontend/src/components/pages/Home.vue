@@ -13,16 +13,15 @@
     <div class="container">
       <div class="slide">
         <carousel :per-page="1" paginationColor="#009ee3" :mouse-drag="true">
-          <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
-          <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
-          <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
-          <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
+          <slide v-for="(image, key) in images" :key="key">
+            <img :src="image.thumbnail" alt="">
+          </slide>
         </carousel>
       </div>
 
       <div class="columns is-marginless">
         <div class="column is-4 is-offset-1 about">
-          <img src="~@/assets/img/img_about.png" class="is-hidden-mobile" alt="">
+          <img :src="about.thumbnail" class="is-hidden-mobile" alt="">
 
           <div class="columns">
             <div class="column">
@@ -32,7 +31,7 @@
 
           <div class="columns">
             <div class="column">
-              <p>Voices of Youth offers inspiring, original insight and opinion from across the globe – from young people, for young people. Did you ever ask yourself, where are all the young people who actually do give a damn? Well, they’re right here. Countering disheartening headlines about today’s young generation, the Voices of Youth community proves that young people ARE making a difference, each and every day. But making a difference doesn’t have to be boring – we bring you fresh and honest views and stories, written and filmed by our unbeatable international youth bloggers. Want to be part of our pool of youth bloggers? Do it! Anybody is welcome to write, film, comment and engage in discussions – let’s go!</p>
+              <p v-html="about.project"></p>
             </div>
           </div>
         </div>
@@ -125,12 +124,12 @@
         <div class="is-hidden-desktop">
           <div>
             <div class="columns is-marginless is-mobile is-variable is-1 scroll">
-              <div class="column is-5" v-for="item in [0, 1, 2, 3]" :key="item">
+              <div class="column is-5" v-for="(project, key) in projectsToMobile" :key="key">
                 <div class="is-paddingless box">
-                  <img src="~@/assets/img/report-example-1.png" alt="">
+                  <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
                   <div class="text">
-                    <h4>Mongólia</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur…</p>
+                    <h4>{{ project.name }}</h4>
+                    <p>{{ project.description }}</p>
                   </div>
                 </div>
               </div>
@@ -151,7 +150,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="text">
           <h1>Voices of youth</h1>
-          <p>Voices of Youth offers inspiring, original insight and opinion from across the globe – from young people, for young people.</p>
+          <p>{{ about.voy }}</p>
         </div>
       </div>
     </div>
@@ -262,12 +261,34 @@ export default {
   data() {
     return {
       items: [1, 2, 3],
+      images: [],
+      projects: [],
+      projectsToMobile: [],
+      about: {
+        thumbnail: null,
+        project: '',
+        voy: '',
+      },
     };
   },
 
   mounted() {
-    this.setProjects();
-    window.localStorage.clear();
+    // this.setProjects();
+    this.getHomeSlide().then((images) => {
+      this.images = images;
+    });
+
+    this.getAboutProject().then((about) => {
+      this.about.thumbnail = about.thumbnail;
+      this.about.project = about.about_project.replace('\n', '<br/>');
+      this.about.voy = about.about_voy;
+    });
+
+    this.getProjects().then((projects) => {
+      // this.projects = projects;
+      this.projects = this.chunck(projects, 3);
+      this.projectsToMobile = projects;
+    });
   },
 
   computed: {
@@ -278,9 +299,12 @@ export default {
 
   methods: {
     ...mapActions([
-      'setProjects',
+      // 'setProjects',
       'setCurrentProject',
       'showDisclaimerProject',
+      'getHomeSlide',
+      'getAboutProject',
+      'getProjects',
     ]),
 
     openProject(item) {
@@ -288,6 +312,12 @@ export default {
         router.push({ name: 'project', params: { path: item.path } });
         this.showDisclaimerProject(true);
       });
+    },
+
+    chunck(r, j) {
+      /* eslint-disable no-confusing-arrow */
+      const array = r.reduce((a, b, i, g) => !(i % j) ? a.concat([g.slice(i, i + j)]) : a, []);
+      return array;
     },
   },
 
@@ -464,6 +494,7 @@ export default {
           }
   
           p {
+            width: 9rem;
             margin-top: 0px;
             font-size: 12px;
           }
