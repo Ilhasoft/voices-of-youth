@@ -123,13 +123,15 @@
         </div>
 
         <div class="is-hidden-desktop">
-          <div class="columns is-marginless is-mobile scroll">
-            <div class="column is-4" v-for="item in [0, 1, 2, 3]" :key="item">
-              <div class="is-paddingless box">
-                <img src="~@/assets/img/report-example-1.png" alt="">
-                <div class="text">
-                  <h4>Mongólia</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur…</p>
+          <div>
+            <div class="columns is-marginless is-mobile is-variable is-1 scroll">
+              <div class="column is-5" v-for="item in [0, 1, 2, 3]" :key="item">
+                <div class="is-paddingless box">
+                  <img src="~@/assets/img/report-example-1.png" alt="">
+                  <div class="text">
+                    <h4>Mongólia</h4>
+                    <p>Lorem ipsum dolor sit amet, consectetur…</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -298,10 +300,6 @@ export default {
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 .header {
   background-color: #009ee3;
   width: 100%;
@@ -312,7 +310,7 @@ export default {
 }
 
 .scroll {
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .container {
