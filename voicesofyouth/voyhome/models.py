@@ -35,9 +35,6 @@ class Slide(BaseModel):
         if self.image:
             return get_thumbnailer(self.image)['home_slide_thumbnail_cropped']
 
-    def get_absolute_url(self):
-        return f'not-implemented/{self.id}'
-
 
 class About(BaseModel):
     image = models.ImageField(upload_to=upload_to)
