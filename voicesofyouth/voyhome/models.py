@@ -35,6 +35,11 @@ class Slide(BaseModel):
         if self.image:
             return get_thumbnailer(self.image)['home_slide_thumbnail_cropped']
 
+    @property
+    def thumbnail_home(self):
+        if self.image:
+            return get_thumbnailer(self.image)['home_slide_cropped']
+
 
 class About(BaseModel):
     image = models.ImageField(upload_to=upload_to)
@@ -53,6 +58,3 @@ class About(BaseModel):
     def thumbnail(self):
         if self.image:
             return get_thumbnailer(self.image)['home_about_thumbnail_cropped']
-
-    def get_absolute_url(self):
-        return f'not-implemented/{self.id}'

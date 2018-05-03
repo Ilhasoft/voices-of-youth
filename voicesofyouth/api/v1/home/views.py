@@ -1,8 +1,10 @@
 from rest_framework import permissions, viewsets
-from rest_framework.response import Response
 
 from voicesofyouth.voyhome.models import Slide
+from voicesofyouth.voyhome.models import About
+
 from .serializers import HomeSlideSerializer
+from .serializers import HomeAboutSerializer
 
 
 class HomeSlideEndPoint(viewsets.ReadOnlyModelViewSet):
@@ -14,7 +16,12 @@ class HomeSlideEndPoint(viewsets.ReadOnlyModelViewSet):
     serializer_class = HomeSlideSerializer
     queryset = Slide.objects.all()
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = HomeSlideSerializer(queryset, many=True)
-        return Response(serializer.data)
+
+class HomeAboutEndPoint(viewsets.ReadOnlyModelViewSet):
+    """
+    list:
+    Return a list of images.
+    """
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
+    serializer_class = HomeAboutSerializer
+    queryset = About.objects.all()

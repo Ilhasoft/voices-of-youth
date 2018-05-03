@@ -15,6 +15,7 @@ from voicesofyouth.api.v1.user.views import UsersEndPoint
 from voicesofyouth.api.v1.project.views import ProjectsViewSet
 from voicesofyouth.api.v1.theme.views import ThemesViewSet
 from voicesofyouth.api.v1.home.views import HomeSlideEndPoint
+from voicesofyouth.api.v1.home.views import HomeAboutEndPoint
 
 
 router = DefaultRouter()
@@ -29,6 +30,7 @@ router.register(r'report-files', ReportFilesViewSet, base_name='report-files')
 router.register(r'report-search', ReportSearchViewSet, base_name='report-search')
 router.register(r'report-notification', ReportNotificationViewSet, base_name='report-notification')
 router.register(r'home-slide', HomeSlideEndPoint, base_name='home-slide')
+router.register(r'home-about', HomeAboutEndPoint, base_name='home-about')
 
 urlpatterns = [
     url(r'^get_auth_token/$', rest_framework_views.obtain_auth_token, name='get_auth_token'),
