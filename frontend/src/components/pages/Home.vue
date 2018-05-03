@@ -1,10 +1,16 @@
 <template>
   <div>
     <div class="header">
-      <div class="logo">
-        <img src="~@/assets/img/logo-home.png" alt="">
+      <div class="container">
+        <div class="columns is-marginless is-paddingless header">
+          <div class="column is-offset-1">
+            <img src="~@/assets/img/logo-home.png" alt="">
+          </div>
+        </div>
       </div>
+    </div>
 
+    <div class="container">
       <div class="slide">
         <carousel :per-page="1" paginationColor="#009ee3" :mouse-drag="true">
           <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
@@ -12,14 +18,11 @@
           <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
           <slide><img src="~@/assets/img/slide-home.png" alt=""></slide>
         </carousel>
-        <!-- <img src="~@/assets/img/slide-home.png" alt=""> -->
       </div>
-    </div>
 
-    <div class="container">
       <div class="columns is-marginless">
         <div class="column is-4 is-offset-1 about">
-          <img src="~@/assets/img/img_about.png" alt="">
+          <img src="~@/assets/img/img_about.png" class="is-hidden-mobile" alt="">
 
           <div class="columns">
             <div class="column">
@@ -62,10 +65,10 @@
           <div class="columns is-mobile feature">
             <div class="column">
               <div class="columns is-mobile">
-                <div class="column is-2">
+                <div class="column is-2 is-hidden-mobile">
                   <img src="~@/assets/img/home-group.png" alt="">
                 </div>
-                <div class="column m-auto no-pad-l">
+                <div class="column m-auto">
                   <h4>Featured Reports</h4>
                 </div>
               </div>
@@ -84,7 +87,10 @@
                     </div>
                   </div>
                   <div class="has-text-right">
-                    <a href="">See all</a>
+                    <router-link
+                      :to="{ name: 'reports' }">
+                      See all
+                    </router-link>
                   </div>
                 </div>
               </div>
@@ -100,7 +106,7 @@
       </div>
 
       <div class="projects">
-        <div class="columns is-marginless" v-for="item in [0, 1]" :key="item">
+        <div class="columns is-marginless is-hidden-touch" v-for="item in [0, 1]" :key="item">
           <div class="column is-10 is-offset-1">
             <div class="columns">
               <div class="column" v-for="item in items" :key="item">
@@ -115,11 +121,28 @@
             </div>
           </div>
         </div>
+
+        <div class="is-hidden-desktop">
+          <div class="columns is-marginless is-mobile scroll">
+            <div class="column is-4" v-for="item in [0, 1, 2, 3]" :key="item">
+              <div class="is-paddingless box">
+                <img src="~@/assets/img/report-example-1.png" alt="">
+                <div class="text">
+                  <h4>Mongólia</h4>
+                  <p>Lorem ipsum dolor sit amet, consectetur…</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="has-text-centered see-all">
-          <a href="#">See all</a>
+          <router-link
+            :to="{ name: 'projects' }">
+            See all
+          </router-link>
         </div>
       </div>
-    <!-- // end container -->
     </div>
 
     <div class="columns is-marginless about-voy">
@@ -275,40 +298,25 @@ export default {
 <style lang="scss" scoped>
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .header {
+  background-color: #009ee3;
   width: 100%;
-  margin: 0px;
-
-  .logo {
-    background-color: #009ee3;
-    padding-top: 9px;
-    padding-bottom: 9px;
-    height: 49px;
-
-    img {
-      margin-left: 18%;
-      position: absolute;
-    }
-
-    @media (max-width: 990px) {
-      img {
-        margin-left: 45%;
-      }
-    }
-  }
 }
 
 .slide {
   text-align: center;
 }
 
-.container {
-  // padding: 30px 100px 0 100px;
-  font-weight: 400;
+.scroll {
+  overflow-y: auto;
+}
 
-  @media (max-width: 990px) {
-    padding: 30px 0px 0px 0px;
-  }
+.container {
+  font-weight: 400;
 
   .m-auto {
     margin: auto;
@@ -448,6 +456,22 @@ export default {
         }
       }
 
+      @media (max-width: 495px) {
+        .text {
+          padding: 0px 8px 8px 8px;
+
+          h4 {
+            font-size: 14px;
+            font-weight: 500;
+          }
+  
+          p {
+            margin-top: 0px;
+            font-size: 12px;
+          }
+        }
+      }
+
       img {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
@@ -477,10 +501,8 @@ export default {
   height: 305px;
 
   .text {
-    // margin-left: 50px;
-    // margin-top: 57px;
     margin: auto;
-    width: 26em;
+    width: 26rem;
     word-wrap: break-word;
 
     h1 {
@@ -497,7 +519,7 @@ export default {
   @media (max-width: 495px) {
     .text {
       h1 {
-        font-size: 44px;
+        font-size: 42px;
       }
 
       width: 19rem;

@@ -10,6 +10,8 @@ import MyReportsPage from '@/components/pages/MyReports';
 import GalleryPage from '@/components/pages/Gallery';
 import NewReportPage from '@/components/pages/NewReport';
 import EditReportPage from '@/components/pages/EditReport';
+import ProjectsPage from '@/components/pages/Projects';
+import ReportsPage from '@/components/pages/Reports';
 
 import stores from '@/stores';
 import helper from '@/helper';
@@ -39,6 +41,26 @@ export default new Router({
       path: '/',
       name: 'home',
       component: HomePage,
+      beforeEnter: async (to, from, next) => {
+        await dispatchStores({ path: to.params.path });
+        next();
+      },
+    },
+
+    {
+      path: '/projects',
+      name: 'projects',
+      component: ProjectsPage,
+      beforeEnter: async (to, from, next) => {
+        await dispatchStores({ path: to.params.path });
+        next();
+      },
+    },
+
+    {
+      path: '/reports',
+      name: 'reports',
+      component: ReportsPage,
       beforeEnter: async (to, from, next) => {
         await dispatchStores({ path: to.params.path });
         next();

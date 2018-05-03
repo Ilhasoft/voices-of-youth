@@ -65,9 +65,11 @@ export default {
           commit(TYPES.SET_CURRENT_PROJECT, project);
         } else {
           const data = await axios.get('/api/projects');
-          const response = data.filter(item => item.path === obj.path)[0];
-          localStorage.setItem('project', JSON.stringify(response));
-          commit(TYPES.SET_CURRENT_PROJECT, response);
+          if (obj.path) {
+            const response = data.filter(item => item.path === obj.path)[0];
+            localStorage.setItem('project', JSON.stringify(response));
+            commit(TYPES.SET_CURRENT_PROJECT, response);
+          }
         }
       }
     },
