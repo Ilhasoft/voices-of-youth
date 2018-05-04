@@ -147,6 +147,7 @@ class Report(BaseModel):
     can_receive_comments = models.BooleanField(default=True, verbose_name=_('Can receive comments'))
     editable = models.BooleanField(default=True, verbose_name=_('Editable'))
     visible = models.BooleanField(default=True, verbose_name=_('Visible'))
+    featured = models.BooleanField(default=False, verbose_name=_('Featured'))
     status = models.IntegerField(verbose_name=_('Status'), choices=REPORT_STATUS_CHOICES, default=REPORT_STATUS_PENDING)
     tags = TaggableManager(blank=True, manager=_ReportTaggableManager)
     objects = ReportManager()

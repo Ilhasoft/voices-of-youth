@@ -4,6 +4,7 @@ from rest_framework import serializers
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.theme.models import Theme
 from voicesofyouth.translation.models import Translation
+from voicesofyouth.api.v1.project.serializers import ProjectSerializer
 
 
 class ThemeSerializer(VoySerializer):
@@ -11,10 +12,7 @@ class ThemeSerializer(VoySerializer):
         read_only=True,
         many=True
     )
-    project = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        view_name='voy-api:projects-detail'
-    )
+    project = ProjectSerializer()
     name = serializers.SerializerMethodField()
     pin = serializers.SerializerMethodField()
     color = serializers.SerializerMethodField()

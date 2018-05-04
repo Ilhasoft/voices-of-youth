@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
 from django.utils import timezone
 
 from leaflet.forms.fields import PointField
@@ -122,6 +121,11 @@ class ReportForm(forms.Form):
         widget=forms.FileInput(attrs={
             'multiple': True
         })
+    )
+
+    featured = forms.BooleanField(
+        label=_('Featured'),
+        required=False
     )
 
     def __init__(self, *args, **kwargs):
