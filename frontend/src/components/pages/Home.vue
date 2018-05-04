@@ -74,14 +74,14 @@
 
               <div class="columns">
                 <div class="column">
-                  <div class="report" v-for="item in items" :key="item">
+                  <div class="report" v-for="(report, key) in reports" :key="key">
                     <div class="columns is-gapless is-mobile">
                       <div class="column is-3">
-                        <img src="~@/assets/img/home-report.png" alt="">
+                        <img :src="report.thumbnail" v-if="report.thumbnail" alt="">
                       </div>
                       <div class="column text">
-                        <h1>Trash in the streets</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut labore et dolore magna aliqua.</p>
+                        <h1>{{ report.name }}</h1>
+                        <p>{{ report.description }}</p>
                       </div>
                     </div>
                   </div>
@@ -125,7 +125,7 @@
           <div>
             <div class="columns is-marginless is-mobile is-variable is-1 scroll">
               <div class="column is-5" v-for="(project, key) in projectsToMobile" :key="key">
-                <div class="is-paddingless box">
+                <div @click.prevent="openProject(project)" class="is-paddingless box">
                   <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
                   <div class="text">
                     <h4>{{ project.name }}</h4>
@@ -215,7 +215,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
 import VueRecaptcha from 'vue-recaptcha';
 import { Carousel, Slide } from 'vue-carousel';
 import router from '@/router/';
@@ -229,6 +229,7 @@ export default {
     return {
       items: [1, 2, 3],
       images: [],
+      reports: [],
       projects: [],
       projectsToMobile: [],
       about: {
@@ -250,26 +251,24 @@ export default {
       this.about.voy = about.about_voy;
     });
 
-    this.getProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
+    this.getHomeProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
       this.projects = this.chunck(projects.results, 3);
       this.projectsToMobile = projects.results;
     });
-  },
 
-  computed: {
-    ...mapGetters({
-      projectsList: 'getAllProjects',
-    }),
+    this.getHomeReports({ pageSize: 3, page: 1 }).then((reports) => {
+      this.reports = reports.results;
+    });
   },
 
   methods: {
     ...mapActions([
-      // 'setProjects',
       'setCurrentProject',
       'showDisclaimerProject',
       'getHomeSlide',
       'getAboutProject',
-      'getProjects',
+      'getHomeProjects',
+      'getHomeReports',
     ]),
 
     openProject(item) {
@@ -431,6 +430,7 @@ export default {
     .box {
       border: 1px solid #c3c3c3;
       border-radius: 8px;
+      cursor: pointer;
 
       .text {
         font-family: 'Roboto';

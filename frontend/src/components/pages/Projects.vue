@@ -14,41 +14,86 @@
       <div class="columns is-marginless">
         <div class="column is-12 is-offset-1">
           <div class="nav">
-            <a href="">Home</a>&nbsp;&gt;&nbsp;All projects
+            <router-link :to="{ name: 'home' }">Home</router-link>&nbsp;&gt;&nbsp;All projects
           </div>
           <h4>All projects</h4>
           <div class="columns">
             <div class="column is-10 projects">
-              <div class="project" v-for="item in [0, 1, 2, 3]" :key="item">
+              <div class="project" v-for="(project, key) in projects" :key="key">
                 <div class="columns">
                   <div class="column">
-                    <div class="columns is-mobile">
-                      <div class="column is-2">
-                        <img src="~@/assets/img/home-report.png" alt="">
+                    <a href="" @click.prevent="openProject(project)">
+                      <div class="columns is-mobile">
+                        <div class="column is-2">
+                          <img :src="project.thumbnail" v-if="project.thumbnail" alt="" />
+                        </div>
+                        <div class="column no-pad-l text">
+                          <h1>{{ project.name }}</h1>
+                          <p>{{ project.description }}</p>
+                        </div>
                       </div>
-                      <div class="column no-pad-l text">
-                        <h1>Chili</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporut labore et dolore magna aliqua.</p>
-                      </div>
-                    </div>
+                    </a>
                   </div>
                 </div>
               </div>
-              <div class="has-text-centered show-more">
-                <a href="">Show more</a>
+              <div v-if="next" class="has-text-centered show-more">
+                <a href="" @click.prevent="showMore">Show more</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+import router from '@/router/';
+
 export default {
   name: 'Projects',
+
+  data() {
+    return {
+      projects: [],
+      page: 0,
+      next: '',
+    };
+  },
+
+  mounted() {
+    this.getProjects(1);
+  },
+
+  methods: {
+    ...mapActions([
+      'getHomeProjects',
+      'setCurrentProject',
+      'showDisclaimerProject',
+    ]),
+
+    showMore() {
+      if (this.next) {
+        this.getProjects(this.page + 1);
+      }
+    },
+
+    getProjects(currentPage) {
+      this.getHomeProjects({ pageSize: 2, page: currentPage }).then((projects) => {
+        this.page = currentPage;
+        this.next = projects.next;
+        projects.results.map(item => this.projects.push(item));
+      });
+    },
+
+    openProject(item) {
+      this.setCurrentProject(item).then(() => {
+        router.push({ name: 'project', params: { path: item.path } });
+        this.showDisclaimerProject(true);
+      });
+    },
+  },
 };
 </script>
 

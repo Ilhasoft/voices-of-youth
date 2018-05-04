@@ -31,7 +31,6 @@ class ProjectsViewSet(mixins.ListModelMixin,
 
     def list(self, request, *args, **kwargs):
         order = self.request.query_params.get('order')
-
         queryset = self.filter_queryset(self.get_queryset())
 
         if order:

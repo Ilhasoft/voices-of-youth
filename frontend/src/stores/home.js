@@ -49,7 +49,7 @@ export default {
       return data[0];
     },
 
-    getProjects: async ({ commit }, obj) => {
+    getHomeProjects: async ({ commit }, obj) => {
       let queryString = '';
 
       if (obj && obj.page) {
@@ -57,6 +57,17 @@ export default {
       }
 
       const data = await axios.get(`/api/projects/${queryString}`);
+      return data;
+    },
+
+    getHomeReports: async ({ commit }, obj) => {
+      let queryString = '';
+
+      if (obj && obj.page) {
+        queryString = `&page=${obj.page}&page_size=${obj.pageSize}`;
+      }
+
+      const data = await axios.get(`/api/reports/?featured=1${queryString}`);
       return data;
     },
   },

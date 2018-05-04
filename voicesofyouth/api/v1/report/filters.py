@@ -10,10 +10,11 @@ class ReportFilter(filters.FilterSet):
     theme = filters.NumberFilter(name='theme__id', help_text='Filter reports by theme id.')
     mapper = filters.NumberFilter(name='created_by__id', help_text='Filter reports by mapper id.')
     status = filters.NumberFilter(name='status', help_text='Filter reports by status.')
+    featured = filters.BooleanFilter(name='featured', help_text='Filter reports by featured')
 
     class Meta:
         model = Report
-        fields = ('theme', 'project', 'mapper', 'status')
+        fields = ('theme', 'project', 'mapper', 'status', 'featured')
 
 
 class ReportFileFilter(filters.FilterSet):

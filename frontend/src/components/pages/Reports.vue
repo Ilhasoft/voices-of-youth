@@ -14,41 +14,74 @@
       <div class="columns is-marginless">
         <div class="column is-12 is-offset-1">
           <div class="nav">
-            <a href="">Home</a>&nbsp;&gt;&nbsp;All Featured Reports
+            <router-link :to="{ name: 'home' }">Home</router-link>&nbsp;&gt;&nbsp;All Featured Reports
           </div>
           <h4>All Featured Reports</h4>
           <div class="columns">
-            <div class="column is-10 projects">
-              <div class="project" v-for="item in [0, 1, 2, 3]" :key="item">
+            <div class="column is-10 reports">
+              <div class="report" v-for="(report, key) in reports" :key="key">
                 <div class="columns">
                   <div class="column">
                     <div class="columns is-mobile">
                       <div class="column is-2">
-                        <img src="~@/assets/img/home-report.png" alt="">
+                        <img :src="report.thumbnail" v-if="report.thumbnail" alt="" />
                       </div>
                       <div class="column no-pad-l text">
-                        <h1>Chili</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporut labore et dolore magna aliqua.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temporut labore et dolore magna aliqua.</p>
+                        <h1>{{ report.name }}</h1>
+                        <p>{{ report.description }}</p>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="has-text-centered show-more">
-                <a href="">Show more</a>
+              <div v-if="next" class="has-text-centered show-more">
+                <a href="" @click.prevent="showMore">Show more</a>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
-  name: 'Projects',
+  name: 'Reports',
+
+  data() {
+    return {
+      reports: [],
+      page: 0,
+      next: '',
+    };
+  },
+
+  mounted() {
+    this.getReports(1);
+  },
+
+  methods: {
+    ...mapActions([
+      'getHomeReports',
+    ]),
+
+    showMore() {
+      if (this.next) {
+        this.getReports(this.page + 1);
+      }
+    },
+
+    getReports(currentPage) {
+      this.getHomeReports({ pageSize: 10, page: currentPage }).then((reports) => {
+        this.page = currentPage;
+        this.next = reports.next;
+        reports.results.map(item => this.reports.push(item));
+      });
+    },
+  },
 };
 </script>
 
@@ -90,10 +123,10 @@ export default {
     color: #4a90e2;
   }
 
-  .projects {
+  .reports {
     margin-top: 41px;
 
-    .project {
+    .report {
       min-height: 163px;
       width: 100%;
       background-color: #ffffff;

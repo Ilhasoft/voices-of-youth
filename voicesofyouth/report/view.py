@@ -210,6 +210,7 @@ class AddReportView(LoginRequiredMixin, TemplateView):
                 theme=Theme.objects.get(id=form.cleaned_data.get('theme')),
                 name=form.cleaned_data.get('title'),
                 description=form.cleaned_data.get('description'),
+                featured=form.cleaned_data.get('featured'),
                 created_by=mapper,
                 modified_by=mapper,
                 location=form.cleaned_data.get('location'),
@@ -291,10 +292,11 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                 report_id = kwargs['report']
                 report = get_object_or_404(Report, pk=report_id)
                 mapper = VoyUser.objects.get(id=int(form.cleaned_data.get('mapper')))
-                
+
                 report.theme = Theme.objects.get(id=form.cleaned_data.get('theme'))
                 report.name = form.cleaned_data.get('title')
                 report.description = form.cleaned_data.get('description')
+                report.featured = form.cleaned_data.get('featured')
                 report.created_by = mapper
                 report.modified_by = mapper
                 report.location = form.cleaned_data.get('location')
@@ -377,6 +379,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
             'id': report.id,
             'title': report.name,
             'description': report.description,
+            'featured': report.featured,
             'project': report.theme.project.id,
             'theme': report.theme.id,
             'mapper': report.created_by.id,
