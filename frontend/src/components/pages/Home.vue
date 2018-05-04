@@ -105,15 +105,15 @@
       </div>
 
       <div class="projects">
-        <div class="columns is-marginless is-hidden-touch" v-for="item in [0, 1]" :key="item">
+        <div class="columns is-marginless is-hidden-touch" v-for="(project, key) in projects" :key="key">
           <div class="column is-10 is-offset-1">
             <div class="columns">
-              <div class="column" v-for="item in items" :key="item">
+              <div class="column" v-for="(item, key2) in projects[key]" :key="key2">
                 <div class="is-paddingless box">
-                  <img src="~@/assets/img/report-example-1.png" alt="">
+                  <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
                   <div class="text">
-                    <h4>Mongólia</h4>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore</p>
+                    <h4>{{ item.name }}</h4>
+                    <p>{{ item.description }}</p>
                   </div>
                 </div>
               </div>
@@ -211,39 +211,6 @@
         </div>
       </div>
     </div>
-    
-    
-    
-      <!-- <div class="header-info container">
-        <div class="columns is-marginless">
-          <div class="column is-5 m-auto">
-            <h1>Visualizing Risk and Resilience</h1>
-            <small>A UNICEF Mobile and Web Digital Mapping Solution</small>
-            <p>This project explores tools to help youth build impactful, communicative digital maps using mobile and web technologies. A phone application allows youth to produce a portrait of their community through geo-located photos and videos, organized in thematic maps.</p>
-          </div>
-
-          <div class="column is-5 m-auto">
-            <img src="~@/assets/img/home.png" class="img-home" alt="">
-          </div>
-        </div>
-      </div> -->
-    
-
-    <!-- <div class="body container">
-      <h1>Projects</h1>
-
-      <div class="columns is-marginless m-bottom" :key="item.id" v-for="item in projectsList">
-        <div class="column is-2 is-paddingless image">
-          <img :src="item.thumbnail_cropped" v-if="item.thumbnail_cropped" alt="" />
-        </div>
-
-        <div class="column is-marginless p-top">
-          <h2>{{ item.name }}</h2>
-          <small>{{ item.description }}</small>
-          <a href="" @click.prevent="openProject(item)" class="button">See more</a>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -273,7 +240,6 @@ export default {
   },
 
   mounted() {
-    // this.setProjects();
     this.getHomeSlide().then((images) => {
       this.images = images;
     });
@@ -284,10 +250,9 @@ export default {
       this.about.voy = about.about_voy;
     });
 
-    this.getProjects().then((projects) => {
-      // this.projects = projects;
-      this.projects = this.chunck(projects, 3);
-      this.projectsToMobile = projects;
+    this.getProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
+      this.projects = this.chunck(projects.results, 3);
+      this.projectsToMobile = projects.results;
     });
   },
 
@@ -497,6 +462,9 @@ export default {
             width: 9rem;
             margin-top: 0px;
             font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
         }
       }

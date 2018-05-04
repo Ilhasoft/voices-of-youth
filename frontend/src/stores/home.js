@@ -49,12 +49,14 @@ export default {
       return data[0];
     },
 
-    getProjects: async () => {
-      const data = await axios.get('/api/projects/?limit=6&order=1', {
-        headers: {
-          Authorization: '',
-        },
-      });
+    getProjects: async ({ commit }, obj) => {
+      let queryString = '';
+
+      if (obj && obj.page) {
+        queryString = `?page=${obj.page}&page_size=${obj.pageSize}${(obj.order ? '&order=1' : '')}`;
+      }
+
+      const data = await axios.get(`/api/projects/${queryString}`);
       return data;
     },
   },

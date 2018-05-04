@@ -14,6 +14,7 @@ class ProjectSerializer(VoySerializer):
     description = serializers.SerializerMethodField()
     thumbnail_cropped = serializers.FileField()
     thumbnail_home_responsive = serializers.SerializerMethodField()
+    thumbnail_home = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -30,6 +31,7 @@ class ProjectSerializer(VoySerializer):
             'years',
             'thumbnail_cropped',
             'thumbnail_home_responsive',
+            'thumbnail_home',
         )
 
     def get_languages(self, obj):
@@ -53,3 +55,7 @@ class ProjectSerializer(VoySerializer):
     def get_thumbnail_home_responsive(self, obj):
         request = self.context['request']
         return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_responsive_cropped'].url)
+
+    def get_thumbnail_home(self, obj):
+        request = self.context['request']
+        return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_cropped'].url)
