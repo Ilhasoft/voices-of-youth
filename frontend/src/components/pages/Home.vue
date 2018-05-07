@@ -50,13 +50,15 @@
 
             <div class="columns">
               <div class="column">
-                <select name="" id="" class="select"></select>
+                <select class="select" v-model="project">
+                  <option v-bind:value="project" v-for="(project, key) in allProjects" :key="key">{{ project.name }}</option>
+                </select>
               </div>
             </div>
 
             <div class="columns">
               <div class="column has-text-right">
-                <button class="button">Enter</button>
+                <button @click.prevent="openProject(project)" class="button">Enter</button>
               </div>
             </div>
           </div>
@@ -75,15 +77,17 @@
               <div class="columns">
                 <div class="column">
                   <div class="report" v-for="(report, key) in reports" :key="key">
-                    <div class="columns is-gapless is-mobile">
-                      <div class="column is-3">
-                        <img :src="report.thumbnail" v-if="report.thumbnail" alt="">
+                    <a :href="report.share">
+                      <div class="columns is-gapless is-mobile">
+                        <div class="column is-3">
+                          <img :src="report.thumbnail" v-if="report.thumbnail" alt="">
+                        </div>
+                        <div class="column text">
+                          <h1>{{ report.name }}</h1>
+                          <p>{{ report.description }}</p>
+                        </div>
                       </div>
-                      <div class="column text">
-                        <h1>{{ report.name }}</h1>
-                        <p>{{ report.description }}</p>
-                      </div>
-                    </div>
+                    </a>
                   </div>
                   <div class="has-text-right">
                     <router-link
@@ -215,7 +219,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import VueRecaptcha from 'vue-recaptcha';
 import { Carousel, Slide } from 'vue-carousel';
 import router from '@/router/';
@@ -231,6 +235,7 @@ export default {
       images: [],
       reports: [],
       projects: [],
+      project: null,
       projectsToMobile: [],
       about: {
         thumbnail: null,
@@ -241,6 +246,7 @@ export default {
   },
 
   mounted() {
+    document.title = 'Voices of Youth - Home';
     this.getHomeSlide().then((images) => {
       this.images = images;
     });
@@ -260,6 +266,10 @@ export default {
       this.reports = reports.results;
     });
   },
+
+  computed: mapGetters({
+    allProjects: 'getAllProjects',
+  }),
 
   methods: {
     ...mapActions([
@@ -390,7 +400,6 @@ export default {
     a {
       color: #4a90e2;
       font-size: 18px;
-      color: #4a90e2;
       text-align: right;
     }
 
@@ -400,6 +409,11 @@ export default {
       border: 1px solid #c3c3c3;
       border-radius: 8px;
       padding: 15px;
+
+      a {
+        text-align: left;
+        font-weight: 400;
+      }
 
       .text {
         padding-left: 12px !important;

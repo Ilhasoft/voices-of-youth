@@ -117,6 +117,7 @@ export default {
 
     a {
       color: #4a90e2;
+      font-weight: 400px;
     }
   }
 
@@ -137,6 +138,10 @@ export default {
 
   .projects {
     margin-top: 41px;
+
+    a {
+      font-weight: 400;
+    }
 
     .project {
       min-height: 163px;

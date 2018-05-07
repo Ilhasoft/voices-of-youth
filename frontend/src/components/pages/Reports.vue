@@ -22,15 +22,17 @@
               <div class="report" v-for="(report, key) in reports" :key="key">
                 <div class="columns">
                   <div class="column">
-                    <div class="columns is-mobile">
-                      <div class="column is-2">
-                        <img :src="report.thumbnail" v-if="report.thumbnail" alt="" />
+                    <a :href="report.share">
+                      <div class="columns is-mobile">
+                        <div class="column is-2">
+                          <img :src="report.thumbnail" v-if="report.thumbnail" alt="" />
+                        </div>
+                        <div class="column no-pad-l text">
+                          <h1>{{ report.name }}</h1>
+                          <p>{{ report.description }}</p>
+                        </div>
                       </div>
-                      <div class="column no-pad-l text">
-                        <h1>{{ report.name }}</h1>
-                        <p>{{ report.description }}</p>
-                      </div>
-                    </div>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -125,6 +127,10 @@ export default {
 
   .reports {
     margin-top: 41px;
+
+    a {
+      font-weight: 400;
+    }
 
     .report {
       min-height: 163px;
