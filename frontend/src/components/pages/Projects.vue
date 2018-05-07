@@ -80,7 +80,7 @@ export default {
     },
 
     getProjects(currentPage) {
-      this.getHomeProjects({ pageSize: 2, page: currentPage }).then((projects) => {
+      this.getHomeProjects({ pageSize: 10, page: currentPage }).then((projects) => {
         this.page = currentPage;
         this.next = projects.next;
         projects.results.map(item => this.projects.push(item));
