@@ -24,6 +24,7 @@ class Migration(migrations.Migration):
         ('tag', '0001_initial'),
         ('report', '0015_report_featured'),
         ('user', '0007_auto_20180426_1932'),
+        ('voyhome', '0003_contact'),
     ]
 
     operations = []

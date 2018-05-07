@@ -70,5 +70,17 @@ export default {
       const data = await axios.get(`/api/reports/?featured=1${queryString}`);
       return data;
     },
+
+    submitFormContact: async ({ commit }, obj) => {
+      const promise = new Promise(async (resolve, reject) => {
+        try {
+          const data = await axios.post('/api/home-contact/', obj);
+          resolve(data);
+        } catch (error) {
+          reject(error.response.data);
+        }
+      });
+      return promise;
+    },
   },
 };

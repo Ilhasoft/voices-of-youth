@@ -166,37 +166,57 @@
           <p>If you wish to become a mapper, fill out the form and we will get back to you</p>
 
           <form action="" class="form">
-            <p>
-              <input type="text" name="" placeholder="Name" />
-            </p>
-            <p>
-              <input type="email" name="" placeholder="Email" />
-            </p>
-            <p>
-              <select name="" id="" class="select">
-                <option value="">What do you want?</option>
-                <option value="">I wanna be a mapper?</option>
-                <option value="">Questions or suggestions</option>
+            <div class="notification is-success" v-show="msgSuccess">
+              Message send with success!
+            </div>
+
+            <div class="field">
+              <div class="control">
+                <input v-bind:class="{'is-danger': hasError('name')}" type="text" v-model="form.name" placeholder="Name" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <input v-bind:class="{'is-danger': hasError('email')}" type="email" v-model="form.email" placeholder="Email" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <select v-model="form.want" v-bind:class="[{'is-danger': hasError('want')}, 'select']">
+                <option value="" selected="selected">What do you want?</option>
+                <option value="1">I wanna be a mapper?</option>
+                <option value="2">Questions or suggestions</option>
               </select>
-            </p>
-            <p>
-              <select name="" id="" class="select">
-                <option value="">Choose a project?</option>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <select v-model="form.project" v-bind:class="[{'is-danger': hasError('project')}, 'select']">
+                <option value="" selected="selected">Choose a project?</option>
+                <option v-bind:value="project.id" v-for="(project, key) in allProjects" :key="key">{{ project.name }}</option>
               </select>
-            </p>
-            <p>
-              <textarea name="" id="" cols="30" rows="10"></textarea>
-            </p>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <textarea v-bind:class="{'is-danger': hasError('description')}" v-model="form.description" cols="30" rows="10"></textarea>
+              </div>
+            </div>
             <div class="columns buttons">
               <div class="column">
                 <div class="columns">
                   <div class="column">
-                    <vue-recaptcha class="g-recaptcha" sitekey="6Lcp41YUAAAAAGNhDzBMW2ZzO33JJ6LdAY_aeE9g" />
+                    <vue-recaptcha
+                      @verify="onVerify"
+                      @expired="onExpired"
+                      class="g-recaptcha"
+                      ref="recaptcha"
+                      sitekey="6Lcp41YUAAAAAGNhDzBMW2ZzO33JJ6LdAY_aeE9g" />
                   </div>
                 </div>
                 <div class="columns">
                   <div class="column is-4 btn-submit">
-                    <button class="submit">Send</button>
+                    <button class="submit" @click.prevent="sendForm()">Send</button>
                   </div>
                 </div>
               </div>
@@ -205,7 +225,7 @@
         </div>
 
         <div class="column is-offset-1">
-          <!-- <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe> -->
+          <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
         </div>
       </div>
 
@@ -231,7 +251,6 @@ export default {
 
   data() {
     return {
-      items: [1, 2, 3],
       images: [],
       reports: [],
       projects: [],
@@ -242,6 +261,16 @@ export default {
         project: '',
         voy: '',
       },
+      form: {
+        captcha: '',
+        name: '',
+        email: '',
+        description: '',
+        want: '',
+        project: '',
+        errors: [],
+      },
+      msgSuccess: false,
     };
   },
 
@@ -267,9 +296,11 @@ export default {
     });
   },
 
-  computed: mapGetters({
-    allProjects: 'getAllProjects',
-  }),
+  computed: {
+    ...mapGetters({
+      allProjects: 'getAllProjects',
+    }),
+  },
 
   methods: {
     ...mapActions([
@@ -279,6 +310,7 @@ export default {
       'getAboutProject',
       'getHomeProjects',
       'getHomeReports',
+      'submitFormContact',
     ]),
 
     openProject(item) {
@@ -293,10 +325,44 @@ export default {
       const array = r.reduce((a, b, i, g) => !(i % j) ? a.concat([g.slice(i, i + j)]) : a, []);
       return array;
     },
-  },
 
-  beforeCreate: () => {
-    document.body.className = 'home';
+    hasError(field) {
+      return this.form.errors.indexOf(field) > -1 || false;
+    },
+
+    sendForm() {
+      this.form.errors = [];
+      this.msgSuccess = false;
+      this.submitFormContact(this.form).then(() => {
+        this.cleanForm();
+      }).catch((errors) => {
+        Object.keys(errors).forEach((key) => {
+          this.form.errors.push(key);
+        });
+      });
+    },
+
+    cleanForm() {
+      this.form = {
+        captcha: '',
+        name: '',
+        email: '',
+        description: '',
+        want: '',
+        project: '',
+        errors: [],
+      };
+      this.$refs.recaptcha.reset();
+      this.msgSuccess = true;
+    },
+
+    onVerify(response) {
+      this.form.captcha = response;
+    },
+
+    onExpired() {
+      this.form.captcha = '';
+    },
   },
 };
 </script>
@@ -556,6 +622,10 @@ export default {
   .form {
     margin-top: 40px;
 
+    .is-danger {
+      border: 1px solid #ff3860;
+    }
+
     input, select, textarea {
       margin: 10px 0px 10px 0px;
       background-color: #ffffff;
@@ -607,6 +677,7 @@ export default {
           font-size: 16px;
           font-weight: bold;
           color: #ffffff;
+          cursor: pointer;
         }
       }
     }

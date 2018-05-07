@@ -258,3 +258,7 @@ THUMBNAIL_ALIASES = {
         },
     },
 }
+
+# RECAPTCHA
+
+RECAPTCHA_SECRET_KEY = config('RECAPTCHA_SECRET_KEY', default='6Lcp41YUAAAAAObG-uoMInZpBbsX70YlKc4jOZsz')

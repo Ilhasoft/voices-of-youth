@@ -7,6 +7,13 @@ from unipath import Path
 from easy_thumbnails.files import get_thumbnailer
 
 from voicesofyouth.core.models import BaseModel
+from voicesofyouth.project.models import Project
+
+
+CONTACT_CHOICES = (
+    (1, _('Be a Mapper')),
+    (2, _('Questions or suggestions')),
+)
 
 
 def upload_to(instance, filename):
@@ -58,3 +65,19 @@ class About(BaseModel):
     def thumbnail(self):
         if self.image:
             return get_thumbnailer(self.image)['home_about_thumbnail_cropped']
+
+
+class Contact(BaseModel):
+    name = models.CharField(null=False, blank=False, max_length=255, verbose_name=_('Name'))
+    email = models.EmailField(null=False, blank=False, max_length=255, verbose_name=_('Email'))
+    want = models.IntegerField(verbose_name=_('What do you want'), choices=CONTACT_CHOICES)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
+    description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
+
+    class Meta:
+        verbose_name = _('Contact Form')
+        verbose_name_plural = _('Contact Form')
+        db_table = 'home_contact'
+
+    def __str__(self):
+        return self.name
