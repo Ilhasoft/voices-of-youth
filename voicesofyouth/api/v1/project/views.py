@@ -1,12 +1,19 @@
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, mixins
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from voicesofyouth.project.models import Project
 from voicesofyouth.user.models import MapperUser
 from .serializers import ProjectSerializer
 
 
-class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
+class ProjectsPagination(PageNumberPagination):
+    page_size = None
+    page_size_query_param = 'page_size'
+
+
+class ProjectsViewSet(mixins.ListModelMixin,
+                      viewsets.GenericViewSet):
     """
     list:
     Return a list of projects.
@@ -19,9 +26,15 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
     """
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, ]
     serializer_class = ProjectSerializer
+    queryset = Project.objects.all().filter(enabled=True)
+    pagination_class = ProjectsPagination
 
     def list(self, request, *args, **kwargs):
-        queryset = Project.objects.all().filter(enabled=True)
+        order = self.request.query_params.get('order')
+        queryset = self.filter_queryset(self.get_queryset())
+
+        if order:
+            queryset = queryset.order_by('-created_on')
 
         try:
             token = request.META.get('HTTP_AUTHORIZATION').split()[1]
@@ -29,6 +42,11 @@ class ProjectsViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = user.projects.all()
         except Exception:
             pass
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

@@ -10,6 +10,7 @@ from voicesofyouth.user.models import VoyUser
 
 from voicesofyouth.translation.forms import TranslationsField
 
+
 class ProjectForm(forms.Form):
     name = forms.CharField(
         label=_('Name'),

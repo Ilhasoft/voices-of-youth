@@ -4,6 +4,7 @@ from unipath import Path
 from django.utils import timezone
 from django.conf import settings
 from rest_framework import serializers
+from easy_thumbnails.files import get_thumbnailer
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.api.v1.user.serializers import UserSerializer

@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'voicesofyouth.api',
     'voicesofyouth.translation',
     'voicesofyouth.voyadmin',
+    'voicesofyouth.voyhome',
 ]
 
 if DEBUG:
@@ -235,5 +236,29 @@ THUMBNAIL_ALIASES = {
             'size': (139, 139),
             'crop': True,
         },
+        'project_thumbnail_home_cropped': {
+            'size': (300, 200),
+            'crop': True,
+        },
+        'project_thumbnail_home_responsive_cropped': {
+            'size': (141, 94),
+            'crop': True,
+        },
+        'home_slide_thumbnail_cropped': {
+            'size': (200, 200),
+            'crop': True,
+        },
+        'home_slide_cropped': {
+            'size': (1440, 426),
+            'crop': True,
+        },
+        'home_about_thumbnail_cropped': {
+            'size': (461, 250),
+            'crop': True,
+        },
     },
 }
+
+# RECAPTCHA
+
+RECAPTCHA_SECRET_KEY = config('RECAPTCHA_SECRET_KEY', default='6Lcp41YUAAAAAObG-uoMInZpBbsX70YlKc4jOZsz')

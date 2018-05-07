@@ -1,0 +1,55 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/home/home.scss' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <form action="" enctype="multipart/form-data" method="post" role="form" id="form-slide">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <h3>{% if editing %} {% trans 'Edit Image' %} {% else %}
+                                            {% trans 'New Image' %} {% endif %}</h3>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group {% if data_form.image.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Image' %}</label>
+                                            {{ data_form.image }}
+                                            {{ data_form.image.errors }}
+                                        </div>
+
+                                        <a href="javascript:"
+                                            onclick="submitForm()"
+                                            class="pull-right btn btn-oval btn-home-form">
+                                            {% if editing %} {% trans 'Save' %} {% else %} {% trans 'Create' %} {% endif %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        function submitForm() {
+            $('#form-slide').submit();
+        }
+    </script>
+{% endblock %}

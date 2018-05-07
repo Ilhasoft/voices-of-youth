@@ -1,5 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
+from easy_thumbnails.files import get_thumbnailer
 
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.project.models import Project
@@ -12,6 +13,8 @@ class ProjectSerializer(VoySerializer):
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
     thumbnail_cropped = serializers.FileField()
+    thumbnail_home_responsive = serializers.SerializerMethodField()
+    thumbnail_home = serializers.SerializerMethodField()
 
     class Meta:
         model = Project
@@ -27,6 +30,8 @@ class ProjectSerializer(VoySerializer):
             'languages',
             'years',
             'thumbnail_cropped',
+            'thumbnail_home_responsive',
+            'thumbnail_home',
         )
 
     def get_languages(self, obj):
@@ -46,3 +51,11 @@ class ProjectSerializer(VoySerializer):
         lang_code = request.query_params.get('lang', '').strip()
         Translation.objects.translate_object(obj, lang_code=lang_code)
         return obj.description
+
+    def get_thumbnail_home_responsive(self, obj):
+        request = self.context['request']
+        return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_responsive_cropped'].url)
+
+    def get_thumbnail_home(self, obj):
+        request = self.context['request']
+        return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_cropped'].url)

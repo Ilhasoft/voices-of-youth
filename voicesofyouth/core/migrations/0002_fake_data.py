@@ -22,8 +22,9 @@ class Migration(migrations.Migration):
         ('project', '0006_project_enabled'),
         ('theme', '0007_auto_20180426_1932'),
         ('tag', '0001_initial'),
-        ('report', '0014_auto_20180410_1220'),
+        ('report', '0015_report_featured'),
         ('user', '0007_auto_20180426_1932'),
+        ('voyhome', '0003_contact'),
     ]
 
     operations = []

@@ -1,0 +1,69 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/home/home.scss' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <form action="" enctype="multipart/form-data" method="post" role="form" id="form-about">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12 text-center">
+                                        <h3>{% trans 'About The Project' %}</h3>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group {% if data_form.image.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Image' %}</label>
+                                            {{ data_form.image }}
+                                            {{ data_form.image.errors }}
+                                            {% if image %}
+                                                <div class="m-t-10"><img src="{{ image.url }}" alt=""></div>
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.about_project.errors %}has-error{% endif %}">
+                                            <label>{% trans 'About The Project' %}</label>
+                                            {{ data_form.about_project }}
+                                            {{ data_form.about_project.errors }}
+                                        </div>
+
+                                        <div class="form-group {% if data_form.about_voy.errors %}has-error{% endif %}">
+                                            <label>{% trans 'About Voices of Youth' %}</label>
+                                            {{ data_form.about_voy }}
+                                            {{ data_form.about_voy.errors }}
+                                        </div>
+
+                                        <a href="javascript:"
+                                            onclick="submitForm()"
+                                            class="pull-right btn btn-oval btn-home-form">
+                                            {% trans 'Save' %}
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block extrajs %}
+    <script type="text/javascript">
+        function submitForm() {
+            $('#form-about').submit();
+        }
+    </script>
+{% endblock %}
