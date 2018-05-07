@@ -36,6 +36,7 @@ class HomeContactEndPoint(mixins.CreateModelMixin,
     create:
     Create a new contact message.
     """
+    permission_classes = [permissions.AllowAny, ]
     serializer_class = HomeContactSerializer
 
     def create(self, request, *args, **kwargs):
