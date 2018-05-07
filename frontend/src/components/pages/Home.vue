@@ -114,11 +114,13 @@
             <div class="columns">
               <div class="column" v-for="(item, key2) in projects[key]" :key="key2">
                 <div class="is-paddingless box">
-                  <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
-                  <div class="text">
-                    <h4>{{ item.name }}</h4>
-                    <p>{{ item.description }}</p>
-                  </div>
+                  <a href="" @click.prevent="openProject(item)">
+                    <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
+                    <div class="text">
+                      <h4>{{ item.name }}</h4>
+                      <p>{{ item.description }}</p>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
@@ -129,12 +131,14 @@
           <div>
             <div class="columns is-marginless is-mobile is-variable is-1 scroll">
               <div class="column is-5" v-for="(project, key) in projectsToMobile" :key="key">
-                <div @click.prevent="openProject(project)" class="is-paddingless box">
-                  <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
-                  <div class="text">
-                    <h4>{{ project.name }}</h4>
-                    <p>{{ project.description }}</p>
-                  </div>
+                <div class="is-paddingless box">
+                  <a href="" @click.prevent="openProject(project)">
+                    <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
+                    <div class="text">
+                      <h4>{{ project.name }}</h4>
+                      <p>{{ project.description }}</p>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
@@ -224,7 +228,7 @@
           </form>
         </div>
 
-        <div class="column is-offset-1">
+        <div class="column is-offset-1 is-hidden-touch">
           <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
         </div>
       </div>
@@ -511,6 +515,10 @@ export default {
       border: 1px solid #c3c3c3;
       border-radius: 8px;
       cursor: pointer;
+
+      a {
+        font-weight: 400;
+      }
 
       .text {
         font-family: 'Roboto';
