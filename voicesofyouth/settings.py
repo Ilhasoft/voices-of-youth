@@ -267,7 +267,7 @@ RECAPTCHA_SECRET_KEY = config('RECAPTCHA_SECRET_KEY', default='6Lcp41YUAAAAAObG-
 
 EMAIL_HOST = config('EMAIL_HOST', default='')
 EMAIL_PORT = config('EMAIL_PORT', default=465)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=False)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True)
 EMAIL_FROM = config('EMAIL_FROM', default='')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
