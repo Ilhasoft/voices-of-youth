@@ -30,11 +30,13 @@ class VoyUser(AbstractUser):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    related_name="%(app_label)s_%(class)s_creations",
                                    null=True,
-                                   blank=True)
+                                   blank=True,
+                                   on_delete=models.CASCADE)
     modified_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     related_name="%(app_label)s_%(class)s_modifications",
                                     null=True,
-                                    blank=True)
+                                    blank=True,
+                                    on_delete=models.CASCADE)
     modified_on = models.DateTimeField(auto_now=True, editable=False, blank=True)
 
     @cached_property
