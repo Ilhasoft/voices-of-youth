@@ -191,7 +191,7 @@ export default {
 
     h1 {
       font-size: 20px;
-      font-weight: bold;
+      font-weight: 500;
       letter-spacing: -0.5px;
       text-align: left;
     }
@@ -224,7 +224,7 @@ export default {
 
     small {
       font-size: 18px;
-      font-weight: bold;
+      font-weight: 500;
       letter-spacing: -0.4px;
       text-align: left;
       color: #9012fe;
@@ -241,7 +241,7 @@ export default {
 
   h1 {
     font-size: 25px;
-    font-weight: bold;
+    font-weight: 500;
     letter-spacing: -0.6px;
     text-align: left;
     color: #ffffff;

@@ -372,8 +372,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
-
 .header {
   background-color: #009ee3;
   width: 100%;

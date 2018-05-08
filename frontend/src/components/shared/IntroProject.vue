@@ -88,7 +88,7 @@ export default {
 
     h3 {
       font-size: 32px;
-      font-weight: bold;
+      font-weight: 500;
       letter-spacing: -0.8px;
       text-align: center;
       color: #7412fe;

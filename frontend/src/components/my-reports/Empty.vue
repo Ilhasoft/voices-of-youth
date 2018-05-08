@@ -39,7 +39,7 @@ export default {
 
   h1 {
     font-size: 25px;
-    font-weight: bold;
+    font-weight: 500;
     text-align: center;
     color: #4a4a4a;
   }

@@ -321,6 +321,10 @@ export default {
 .map-box {
   margin: auto;
 
+  strong {
+    font-weight: 500;
+  }
+
   .box-flex {
     display: flex;
     flex-direction: column;
