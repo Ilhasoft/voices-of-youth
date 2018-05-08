@@ -99,6 +99,9 @@ class ReportQuerySet(models.QuerySet):
     def pending(self):
         return self.filter(status=REPORT_STATUS_PENDING)
 
+    def approved_and_pending(self):
+        return self.filter(status__in=[REPORT_COMMENT_STATUS_APPROVED, REPORT_COMMENT_STATUS_PENDING])
+
 
 class ReportManager(models.Manager):
     def get_queryset(self):
