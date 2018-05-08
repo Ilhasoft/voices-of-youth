@@ -26,7 +26,7 @@
         </div>
     </div>
     <hr>
-    <h4>{{ voy_user.reports.count }} reports by {{ voy_user.first_name }}</h4>
+    <h4>{{ voy_user.reports.approved_and_pending.count }} reports by {{ voy_user.first_name }}</h4>
     <hr>
     <div class="row">
         {% for report in voy_user.reports.approved_and_pending %}
