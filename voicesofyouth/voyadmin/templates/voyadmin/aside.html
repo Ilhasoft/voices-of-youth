@@ -70,6 +70,13 @@
                         <span>{% trans 'About Project' %}</span>
                     </a>
                 </li>
+
+                <li class="{% if css_menu_active == 'index_contact' %}active{% endif %}">
+                    <a href="{% url 'voy-admin:home:index_contact' %}" title="{% trans 'Contact' %}">
+                        <em class="icon-envelope-letter"></em>
+                        <span>{% trans 'Contact' %}</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

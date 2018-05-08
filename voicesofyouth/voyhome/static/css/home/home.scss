@@ -9,3 +9,15 @@
 .m-t-10 {
     margin-top: 10px;
 }
+
+.btn-delete {
+    border-radius: 50px;
+    font-weight: bold;
+    border-color: #DE486B;
+}
+
+.btn-delete:hover {
+    color: #fff;
+    background-color: #DE486B;
+    border-color: #DE486B;
+}

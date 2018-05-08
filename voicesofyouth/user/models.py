@@ -2,10 +2,13 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import UserManager
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.db import models
 from django.db.models.query_utils import Q
 from django.urls.base import reverse
 from django.utils.functional import cached_property
+from django.core.mail import send_mail
 
 
 __author__ = ['Elton Pereira', 'Eduardo Douglas']
@@ -166,3 +169,19 @@ class AdminUser(VoyUser):
 
 # We put this code here to centralize all references to User model.
 User = get_user_model()
+
+###############################################################################
+# Signals handlers
+###############################################################################
+
+
+@receiver(post_save, sender=MapperUser)
+def send_mapper_email(sender, instance, created, **kwargs):
+    if instance.email and created:
+        send_mail(
+            'Welcome to Voices of Youth',
+            'Hi {}! You are a new mapper.'.format(instance.first_name),
+            settings.EMAIL_FROM,
+            [instance.email],
+            fail_silently=True,
+        )
