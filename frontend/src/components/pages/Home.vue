@@ -108,7 +108,11 @@
                     <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
                     <div class="text">
                       <h4>{{ item.name }}</h4>
-                      <p>{{ item.description }}</p>
+                      <div class="description">
+                        <div class="description-content">
+                            <p>{{ item.description }}</p>
+                        </div>
+                      </div>
                     </div>
                   </a>
                 </div>
@@ -520,8 +524,28 @@ export default {
         }
 
         p {
-          margin-top: 36px;
-          font-size: 14px;
+            font-size: 14px;
+        }
+
+        .description {
+          height: 55px;
+          margin: 36px 0;
+
+          &-content {
+            position: relative;
+            height: 85px;
+            overflow: hidden;
+
+            &:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 35px;
+                background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));;
+            }
+          }
         }
       }
 
