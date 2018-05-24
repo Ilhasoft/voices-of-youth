@@ -157,7 +157,7 @@
     <div class="columns is-marginless about-voy">
       <div class="column is-half is-offset-one-quarter">
         <div class="text">
-          <h1>Voices of youth</h1>
+          <h1>Voices of Youth</h1>
           <p>{{ about.voy }}</p>
         </div>
       </div>
@@ -397,7 +397,7 @@ export default {
     text-align: left;
     font-family: 'Roboto';
 
-    h4 {  
+    h4 {
       font-size: 40px;
       font-weight: bold;
     }
@@ -543,7 +543,7 @@ export default {
             font-size: 14px;
             font-weight: 500;
           }
-  
+
           p {
             width: 9rem;
             margin-top: 0px;
@@ -618,7 +618,7 @@ export default {
 
   h4 {
     font-size: 40px;
-    font-weight: bold;  
+    font-weight: bold;
   }
 
   p {
@@ -651,7 +651,7 @@ export default {
     .select {
       height: 37px;
       width: 100%;
-      
+
       border-radius: 8px;
       font-size: 18px;
       color: #7b7b7b;
