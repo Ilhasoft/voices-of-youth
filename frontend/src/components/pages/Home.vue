@@ -94,7 +94,7 @@
 
       <div class="columns is-12 is-marginless">
         <div class="column is-offset-1 explore">
-          <h1>Explore where young<br/>people are mapping</h1>
+          <h1><strong>Explore where young people are mapping</strong></h1>
         </div>
       </div>
 
