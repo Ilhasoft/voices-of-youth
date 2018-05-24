@@ -22,18 +22,8 @@
       <div class="columns is-marginless">
         <div class="column is-4 is-offset-1 about">
           <img :src="about.thumbnail" class="is-hidden-mobile" alt="">
-
-          <div class="columns">
-            <div class="column">
-              <h4>About The Project</h4>
-            </div>
-          </div>
-
-          <div class="columns">
-            <div class="column">
-              <p v-html="about.project"></p>
-            </div>
-          </div>
+          <h4 class="about-the-project-title">About The Project</h4>
+          <p class="about-the-project" v-html="about.project"></p>
         </div>
 
         <div class="column is-4 is-offset-2 is-mobile">
@@ -693,5 +683,13 @@ export default {
   .terms {
     margin-top: 145px;
   }
+}
+
+.about-the-project-title {
+    margin: 45px 0 50px 0;
+}
+
+.about-the-project {
+    margin-bottom: 80px;
 }
 </style>
