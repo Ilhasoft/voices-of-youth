@@ -20,13 +20,13 @@
       </div>
 
       <div class="columns is-marginless">
-        <div class="column is-4 is-offset-1 about">
+        <div class="column is-5 is-offset-1 about">
           <img :src="about.thumbnail" class="is-hidden-mobile" alt="">
           <h4 class="about-the-project-title">About The Project</h4>
-          <p class="about-the-project" v-html="about.project"></p>
+          <p class="about-the-project has-text-justified" v-html="about.project"></p>
         </div>
 
-        <div class="column is-4 is-offset-2 is-mobile">
+        <div class="column is-4 is-offset-1 is-mobile">
           <div class="digital-mapper">
             <div class="columns is-mobile">
               <div class="column is-3">
