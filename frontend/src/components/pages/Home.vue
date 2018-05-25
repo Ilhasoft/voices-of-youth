@@ -10,15 +10,15 @@
       </div>
     </div>
 
-    <div class="container">
-      <div class="slide">
-        <carousel :per-page="1" paginationColor="#009ee3" :mouse-drag="true">
-          <slide v-for="(image, key) in images" :key="key">
-            <img :src="image.thumbnail" alt="">
-          </slide>
-        </carousel>
-      </div>
+    <div class="slide">
+      <carousel :autoplay="true" :per-page="1" paginationColor="#009ee3" paginationActiveColor="white" :mouse-drag="true">
+        <slide v-for="(image, key) in images" :key="key">
+          <img :src="image.thumbnail" alt="">
+        </slide>
+      </carousel>
+    </div>
 
+    <div class="container">
       <div class="columns is-marginless">
         <div class="column is-5 is-offset-1 about">
           <img :src="about.thumbnail" class="is-hidden-mobile" alt="">
@@ -718,5 +718,18 @@ export default {
 
 .about-the-project {
     margin-bottom: 80px;
+}
+</style>
+
+<style lang="scss">
+.VueCarousel {
+    position: relative;
+
+    &-pagination {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+    }
 }
 </style>
