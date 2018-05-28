@@ -11,7 +11,13 @@
     </div>
 
     <div class="slide">
-      <carousel :autoplay="true" :per-page="1" paginationColor="#009ee3" paginationActiveColor="white" :mouse-drag="true">
+      <carousel
+        v-if="images"
+        autoplay
+        :per-page="1"
+        paginationColor="#009ee3"
+        paginationActiveColor="white"
+        :mouse-drag="true">
         <slide v-for="(image, key) in images" :key="key">
           <img :src="image.thumbnail" alt="">
         </slide>
@@ -249,7 +255,7 @@ export default {
 
   data() {
     return {
-      images: [],
+      images: null,
       reports: [],
       projects: [],
       project: null,
