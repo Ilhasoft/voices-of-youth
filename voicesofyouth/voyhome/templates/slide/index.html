@@ -25,6 +25,18 @@
                         <div class="panel box">
                             <div class="panel-heading header">
                                 <div class="row">
+                                    <div class="col-sm-6 text-left">
+                                        <a href="{% url 'voy-admin:home:reorder_slide' image.pk 'up' %}">
+                                            <span class="glyphicon glyphicon-chevron-left"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-sm-6 text-right">
+                                            <a href="{% url 'voy-admin:home:reorder_slide' image.pk 'down' %}">
+                                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                            </a>
+                                        </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-xs-12 text-center">
                                         <img src="{{ image.thumbnail.url }}" alt="">
                                     </div>

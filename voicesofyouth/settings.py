@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'leaflet',
     'easy_thumbnails',
     'docs',
+    'ordered_model',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',

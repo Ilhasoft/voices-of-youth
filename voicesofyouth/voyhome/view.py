@@ -70,6 +70,17 @@ class RemoveSlideView(LoginRequiredMixin, TemplateView):
             messages.success(request, _('Image removed'))
         return redirect(reverse('voy-admin:home:index_slide'))
 
+class ReorderSlideView(LoginRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        image_id = kwargs['image']
+        act = kwargs['act']
+        if image_id:
+            image = get_object_or_404(Slide, pk=image_id)
+            if act == 'up':
+                image.up()
+            elif act == 'down':
+                image.down()
+        return redirect(reverse('voy-admin:home:index_slide'))
 
 class AboutView(LoginRequiredMixin, TemplateView):
     template_name = 'about/form.html'

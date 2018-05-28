@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from unipath import Path
 from easy_thumbnails.files import get_thumbnailer
+from ordered_model.models import OrderedModel
 
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.project.models import Project
@@ -26,13 +27,14 @@ def upload_to(instance, filename):
     return f'home/{PROJECT_UUID}/thumbnail/{FILE_UUID}{FILE_EXT}'
 
 
-class Slide(BaseModel):
+class Slide(OrderedModel, BaseModel):
     image = models.ImageField(upload_to=upload_to)
 
     class Meta:
         verbose_name = _('Home Slide')
         verbose_name_plural = _('Home Slide')
         db_table = 'home_slide'
+        ordering = ('order',)
 
     def __str__(self):
         return self.image.file
