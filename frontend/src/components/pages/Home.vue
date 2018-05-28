@@ -632,7 +632,7 @@ export default {
   color: #ffffff;
   text-align: left;
   padding-bottom: 0px;
-  margin-top: -1px;
+  margin-top: -10px;
 
   h4 {
     font-size: 40px;
