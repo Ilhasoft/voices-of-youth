@@ -152,7 +152,7 @@
       <div class="column is-half is-offset-one-quarter">
         <div class="text">
           <h1>Voices of Youth</h1>
-          <p>{{ about.voy }}</p>
+          <p v-html="about.voy"></p>
         </div>
       </div>
     </div>
@@ -284,7 +284,10 @@ export default {
         .split(/\n/gm)
         .map(line => `<p>${line.trim() || '&nbsp;'}</p>`)
         .join('');
-      this.about.voy = about.about_voy;
+      this.about.voy = about.about_voy
+        .split(/\n/gm)
+        .map(line => `<p>${line.trim() || '&nbsp;'}</p>`)
+        .join('');
     });
 
     this.getHomeProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
