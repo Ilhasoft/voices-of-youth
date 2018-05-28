@@ -281,7 +281,7 @@ export default {
     this.getAboutProject().then((about) => {
       this.about.thumbnail = about.thumbnail;
       this.about.project = about.about_project
-        .split(/(\r\n\t|\n|\r\t)/gm)
+        .split(/\n/gm)
         .map(line => `<p>${line.trim() || '&nbsp;'}</p>`)
         .join('');
       this.about.voy = about.about_voy;
