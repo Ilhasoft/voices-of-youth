@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'leaflet',
     'easy_thumbnails',
     'docs',
+    'ordered_model',
     'voicesofyouth.core',
     'voicesofyouth.user',
     'voicesofyouth.project',
@@ -249,8 +250,9 @@ THUMBNAIL_ALIASES = {
             'crop': True,
         },
         'home_slide_cropped': {
-            'size': (1440, 426),
+            'size': (1920, 480),
             'crop': True,
+            'upscale': True,
         },
         'home_about_thumbnail_cropped': {
             'size': (461, 250),

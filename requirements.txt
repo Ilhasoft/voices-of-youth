@@ -26,3 +26,4 @@ libsass
 django-docs
 python-magic
 easy-thumbnails
+django-ordered-model

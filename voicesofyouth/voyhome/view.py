@@ -70,12 +70,28 @@ class RemoveSlideView(LoginRequiredMixin, TemplateView):
             messages.success(request, _('Image removed'))
         return redirect(reverse('voy-admin:home:index_slide'))
 
+class ReorderSlideView(LoginRequiredMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        image_id = kwargs['image']
+        act = kwargs['act']
+        if image_id:
+            image = get_object_or_404(Slide, pk=image_id)
+            if act == 'up':
+                image.up()
+            elif act == 'down':
+                image.down()
+        return redirect(reverse('voy-admin:home:index_slide'))
 
 class AboutView(LoginRequiredMixin, TemplateView):
     template_name = 'about/form.html'
 
     def post(self, request, *args, **kwargs):
-        form = AboutForm(request.POST, request.FILES)
+        context = self.get_context_data()
+
+        form = AboutForm(
+            request.POST,
+            request.FILES,
+            instance=context.get('instance'))
 
         if form.is_valid():
             about = About.objects.all().first()
@@ -96,7 +112,6 @@ class AboutView(LoginRequiredMixin, TemplateView):
             messages.success(request, _('About saved'))
             return redirect(reverse('voy-admin:home:index_about'))
         else:
-            context = self.get_context_data()
             context['data_form'] = form
             messages.error(request, form.non_field_errors())
 
@@ -117,14 +132,9 @@ class AboutView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         about = About.objects.first()
 
-        data = {
-            'image': about.image if hasattr(about, 'image') else None,
-            'about_project': about.about_project if hasattr(about, 'about_project') else None,
-            'about_voy': about.about_voy if hasattr(about, 'about_voy') else None
-        }
-
-        context['data_form'] = AboutForm(initial=data)
+        context['data_form'] = AboutForm(instance=about)
         context['image'] = about.thumbnail if hasattr(about, 'image') else None
+        context['instance'] = about
         return context
 
 
