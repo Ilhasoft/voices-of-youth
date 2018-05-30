@@ -255,7 +255,7 @@ THUMBNAIL_ALIASES = {
             'upscale': True,
         },
         'home_about_thumbnail_cropped': {
-            'size': (461, 250),
+            'size': (560, 300),
             'crop': True,
         },
     },
