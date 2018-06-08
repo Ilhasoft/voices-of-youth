@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   voy-database:
-      image: unicef/voy-db-dev:latest
+      image: eltonplima/voy-db-dev:latest
       build:
         context: .
       ports:
@@ -17,3 +17,16 @@ services:
         - PGADMIN_DEFAULT_PASSWORD=SuperSecret
       ports:
         - 8080:80
+  voy-app:
+    image: eltonplima/voy-app:latest
+    build:
+      context: ..
+      dockerfile: docker/app.Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=True
+      - DATABASE_URL=postgis://postgres:development@voy-database/voydev
+      - ALLOWED_HOSTS=*
+      - GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so.1
+      - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
