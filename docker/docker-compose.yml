@@ -15,17 +15,30 @@ services:
         - PGADMIN_DEFAULT_EMAIL=dba@unicef.com
         - PGADMIN_DEFAULT_PASSWORD=SuperSecret
       ports:
-        - 8080:80
+        - 8088:80
   voy_dashboard:
     image: unicef/voy_dashboard:latest
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    depends_on:
+      - voy_database
     ports:
       - 8000:8000
     environment:
       - DEBUG=${DEBUG:-True}
       - DATABASE_URL=postgis://voy:development@voy_database/voydev
       - ALLOWED_HOSTS=*
-      # - GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so.1
       - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
+
+  voy_frontend:
+    image: unicef/voy_frontend:latest
+    build:
+      context: ..
+      dockerfile: docker/frontend.Dockerfile
+    depends_on:
+      - voy_dashboard
+    ports:
+      - 8080:80
+    environment:
+      - BACKEND_SERVER=voy_dashboard:8000
