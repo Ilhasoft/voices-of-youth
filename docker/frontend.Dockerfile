@@ -25,5 +25,4 @@ RUN npm install && npm run build
 FROM nginx:alpine
 
 COPY --from=builder /home/app/frontend/dist/ /home/voy/frontend/
-RUN ls -l --color /home/voy/frontend/
 COPY docker/voy_frontend.conf /etc/nginx/conf.d/default.conf
