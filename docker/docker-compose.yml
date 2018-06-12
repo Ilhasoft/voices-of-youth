@@ -1,15 +1,14 @@
 version: '3.3'
 
 services:
-  voy-database:
-      image: unicef/voy-db-dev:latest
-      build:
-        context: .
+  voy_database:
+      image: mdillon/postgis
       ports:
         - 5432:5432
       environment:
-        - POSTGRES_PASSWORD=development
-      command: -c fsync=off
+        - POSTGRES_USER=${POSTGRES_USER:-voy}
+        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-development}
+        - POSTGRES_DB=${POSTGRES_DB:-voydev}
   pgadmin:
       image: dpage/pgadmin4
       environment:
@@ -17,3 +16,16 @@ services:
         - PGADMIN_DEFAULT_PASSWORD=SuperSecret
       ports:
         - 8080:80
+  voy_dashboard:
+    image: unicef/voy_dashboard:latest
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      - DEBUG=${DEBUG:-True}
+      - DATABASE_URL=postgis://voy:development@voy_database/voydev
+      - ALLOWED_HOSTS=*
+      # - GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so.1
+      - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
