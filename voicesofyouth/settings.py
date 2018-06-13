@@ -74,13 +74,6 @@ INSTALLED_APPS = [
     'voicesofyouth.voyhome',
 ]
 
-GRAPHENE = {
-    'SCHEMA': 'voicesofyouth.api.graphql.schema.schema',
-    'MIDDLEWARE': [
-        'graphene_django.debug.DjangoDebugMiddleware',
-    ]
-}
-
 if DEBUG:
     from voicesofyouth.core.model_mommy import MOMMY_SPATIAL_FIELDS
     MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
