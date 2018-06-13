@@ -6,6 +6,7 @@
 FROM node:8-alpine as builder
 
 ENV HOME /home/app
+ENV NODE_ENV production
 
 WORKDIR $HOME
 
