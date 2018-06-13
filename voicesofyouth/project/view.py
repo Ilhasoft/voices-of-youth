@@ -114,7 +114,7 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
         project_id = kwargs['project']
 
         project = get_object_or_404(Project, pk=project_id)
-        form = ProjectForm(request.POST, request.FILES)
+        form = ProjectForm(request.POST, request.FILES, on_edit=True)
 
         if form.is_valid():
             project.name = form.cleaned_data.get('name')
@@ -122,8 +122,10 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             project.description = form.cleaned_data.get('description')
             project.language = form.cleaned_data.get('language')
             project.bounds = form.cleaned_data.get('bounds')
-            project.thumbnail = form.cleaned_data.get('thumbnail')
             project.enabled = form.cleaned_data.get('enabled')
+
+            if form.cleaned_data.get('thumbnail'):
+                project.thumbnail = form.cleaned_data.get('thumbnail')
 
             project.tags.remove(*project.tags.all())
             project.tags.add(*form.cleaned_data.get('tags').split(','))
@@ -177,7 +179,7 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
         context['editing'] = True
         context['selected_tags'] = project.all_tags
         context['selected_local_admins'] = project.local_admin_group.user_set.all().values_list('id', 'username')
-        context['data_form'] = ProjectForm(initial=data)
+        context['data_form'] = ProjectForm(initial=data, on_edit=True)
 
         context['translate_data_form'] = ProjectTranslationForm(prefix='translate')
         context['project'] = project

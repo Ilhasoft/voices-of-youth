@@ -58,13 +58,17 @@ export default {
       'setSideBarConfigs',
       'saveNewComment',
       'getComments',
+      'getReport',
       'deleteComment',
     ]),
 
     openReport() {
+      const reportId = this.currentReport.id;
       this.setSideBarConfigs({
         tabActived: 'ReportDetail',
         isActived: true,
+      }).then(() => {
+        this.getReport(reportId);
       });
     },
 

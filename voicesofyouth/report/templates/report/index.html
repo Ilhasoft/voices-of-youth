@@ -38,13 +38,6 @@
                         <div class="col-lg-2 col-md-2">
                             {{ filter_form.status }}
                         </div>
-
-                        <div class="col-lg-3 col-md-3 pull-right">
-                            <div class="input-group m-b">
-                                {{ filter_form.search }}
-                                <span class="input-group-addon fa fa-search" onclick="search()"></span>
-                            </div>
-                        </div>
                     </form>
                 </div>
             </div>
@@ -71,36 +64,30 @@
 
 {% block extrajs %}
     <script type="text/javascript">
-        var theme = $('#id_theme option:selected').val();
-        var tag = $('#id_tag option:selected').val();
-        var status = $('#id_status option:selected').val();
-        var search = $('#id_search').val();
+        const theme = $('#id_theme option:selected').val();
+        const tag = $('#id_tag option:selected').val();
+        const status = $('#id_status option:selected').val();
 
         $('#id_theme').change(function (e) {
             e.preventDefault();
-            var theme = e.target.value;
+            const theme = e.target.value;
             if (theme) {
-                filterList(theme, tag, status, search);
+                filterList(theme, tag, status);
             }
         });
 
         $('#id_tag').change(function (e) {
             e.preventDefault();
-            filterList(theme, e.target.value, status, search);
+            filterList(theme, e.target.value, status);
         });
 
         $('#id_status').change(function (e) {
             e.preventDefault();
-            filterList(theme, tag, e.target.value, search);
+            filterList(theme, tag, e.target.value);
         });
 
-        $('#id_search').bind('enterKey', function (e) {
-            e.preventDefault();
-            filterList(theme, tag, status, e.target.value);
-        });
-
-        function filterList(theme, tag, status, search) {
-            window.location = '{% url 'voy-admin:reports:filter' %}' + theme + '?tag=' + tag + '&status=' + status + '&search=' + search;
+        function filterList(theme, tag, status) {
+            window.location = '{% url 'voy-admin:reports:filter' %}' + theme + '?tag=' + tag + '&status=' + status;
         }
     </script>
 {% endblock extrajs %}

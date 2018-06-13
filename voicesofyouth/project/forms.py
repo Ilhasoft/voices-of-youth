@@ -93,10 +93,9 @@ class ProjectForm(forms.Form):
 
     thumbnail = forms.FileField(
         label=_('Thumbnail'),
-        required=False,
+        required=True,
         widget=forms.ClearableFileInput(
             attrs={
-                'required': False,
                 'class': 'form-control',
             }
         )
@@ -120,8 +119,15 @@ class ProjectForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        on_edit = kwargs.get('on_edit', False)
+        if 'on_edit' in kwargs:
+            kwargs.pop('on_edit')
+
         super(ProjectForm, self).__init__(*args, **kwargs)
         self.fields['local_admin'].queryset = VoyUser.objects.filter(groups__name__contains='- local admin').distinct()
+
+        if on_edit:
+            self.fields['thumbnail'].required = False
 
     def clean(self):
         cleaned_data = super(ProjectForm, self).clean()

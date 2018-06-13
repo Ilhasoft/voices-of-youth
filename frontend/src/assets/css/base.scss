@@ -1,19 +1,11 @@
 $color:#555555;
 $font_family: 'Roboto', sans-serif;
 
-body.white {
-  background-color: #fff;
-}
-
-body.grey {
-  background-color: #f6f6f6;
-}
-
 body {
   color: $color;
   font-family: $font_family;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.4px;
 
   a {
@@ -21,7 +13,7 @@ body {
     text-decoration: none;
     font-family: $font_family;
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
 
     &:hover {
       color: $color;

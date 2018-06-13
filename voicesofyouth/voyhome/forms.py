@@ -1,5 +1,6 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from voicesofyouth.voyhome.models import About
 
 
 class SlideForm(forms.Form):
@@ -18,11 +19,19 @@ class SlideForm(forms.Form):
         super(SlideForm, self).__init__(*args, **kwargs)
 
 
-class AboutForm(forms.Form):
-    image = forms.FileField(
+class AboutForm(forms.ModelForm):
+    class Meta:
+        model = About
+        fields = [
+            'image',
+            'about_project',
+            'about_voy',
+        ]
+
+    image = forms.ImageField(
         label=_('Image'),
         required=True,
-        widget=forms.FileInput(
+        widget=forms.ClearableFileInput(
             attrs={
                 'required': False,
                 'class': 'form-control',

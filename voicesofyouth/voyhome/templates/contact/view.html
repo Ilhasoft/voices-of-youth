@@ -1,0 +1,45 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/home/home.scss' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                {% trans 'Join Requests' %}
+            </div>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'voy-admin:dashboard' %}">{% trans 'Dashboard' %}</a></li>
+                <li><a href="{% url 'voy-admin:home:index_contact' %}">{% trans 'Join Requests' %}</a></li>
+                <li>{% trans 'Message' %}</li>
+            </ol>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <form action="{% url 'voy-admin:home:message_view' message.pk %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="pull-right btn btn-delete btn-sm">Delete</button>
+                    </form>
+                    <h3 class="mt0">Date: {{ message.created_on|date:'Y/m/d - H:i:s' }}</h3>
+                    <hr>
+                    <p><strong>{% trans 'Name:' %}</strong> {{ message.name }}</p>
+                    <p><strong>{% trans 'Email:' %}</strong> {{ message.email }}</p>
+                    <p>
+                        <strong>{% trans 'Subject:' %}</strong> 
+                        {% if message.want %}
+                            {% trans 'Be a mapper' %}
+                        {% else %}
+                            {% trans 'Questions or suggestions' %}
+                        {% endif %}
+                    </p>
+                    <p><strong>{% trans 'Project:' %}</strong> {{ message.project.name }}</p>
+                    <p><strong>{% trans 'Message:' %}</strong> {{ message.description }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

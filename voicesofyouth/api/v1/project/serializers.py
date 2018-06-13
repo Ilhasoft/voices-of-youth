@@ -53,9 +53,13 @@ class ProjectSerializer(VoySerializer):
         return obj.description
 
     def get_thumbnail_home_responsive(self, obj):
-        request = self.context['request']
-        return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_responsive_cropped'].url)
+        if obj.thumbnail:
+            request = self.context['request']
+            return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_responsive_cropped'].url)
+        return ""
 
     def get_thumbnail_home(self, obj):
-        request = self.context['request']
-        return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_cropped'].url)
+        if obj.thumbnail:
+            request = self.context['request']
+            return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_cropped'].url)
+        return ""

@@ -10,33 +10,29 @@
       </div>
     </div>
 
+    <div class="slide">
+      <carousel
+        v-if="images"
+        autoplay
+        :per-page="1"
+        paginationColor="#009ee3"
+        paginationActiveColor="white"
+        :mouse-drag="true">
+        <slide v-for="(image, key) in images" :key="key">
+          <img :src="image.thumbnail" alt="">
+        </slide>
+      </carousel>
+    </div>
+
     <div class="container">
-      <div class="slide">
-        <carousel :per-page="1" paginationColor="#009ee3" :mouse-drag="true">
-          <slide v-for="(image, key) in images" :key="key">
-            <img :src="image.thumbnail" alt="">
-          </slide>
-        </carousel>
-      </div>
-
       <div class="columns is-marginless">
-        <div class="column is-4 is-offset-1 about">
+        <div class="column is-5 is-offset-1 about">
           <img :src="about.thumbnail" class="is-hidden-mobile" alt="">
-
-          <div class="columns">
-            <div class="column">
-              <h4>About The Project</h4>
-            </div>
-          </div>
-
-          <div class="columns">
-            <div class="column">
-              <p v-html="about.project"></p>
-            </div>
-          </div>
+          <h4 class="about-the-project-title">About The Project</h4>
+          <p class="about-the-project has-text-justified" v-html="about.project"></p>
         </div>
 
-        <div class="column is-4 is-offset-2 is-mobile">
+        <div class="column is-4 is-offset-1 is-mobile">
           <div class="digital-mapper">
             <div class="columns is-mobile">
               <div class="column is-3">
@@ -104,7 +100,7 @@
 
       <div class="columns is-12 is-marginless">
         <div class="column is-offset-1 explore">
-          <h1>Explore where young<br/>people are mapping</h1>
+          <h1><strong>Explore where young people are mapping</strong></h1>
         </div>
       </div>
 
@@ -114,11 +110,17 @@
             <div class="columns">
               <div class="column" v-for="(item, key2) in projects[key]" :key="key2">
                 <div class="is-paddingless box">
-                  <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
-                  <div class="text">
-                    <h4>{{ item.name }}</h4>
-                    <p>{{ item.description }}</p>
-                  </div>
+                  <a href="" @click.prevent="openProject(item)">
+                    <img :src="item.thumbnail_home" v-if="item.thumbnail_home" alt="">
+                    <div class="text">
+                      <h4>{{ item.name }}</h4>
+                      <div class="description">
+                        <div class="description-content">
+                            <p>{{ item.description }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
@@ -129,12 +131,14 @@
           <div>
             <div class="columns is-marginless is-mobile is-variable is-1 scroll">
               <div class="column is-5" v-for="(project, key) in projectsToMobile" :key="key">
-                <div @click.prevent="openProject(project)" class="is-paddingless box">
-                  <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
-                  <div class="text">
-                    <h4>{{ project.name }}</h4>
-                    <p>{{ project.description }}</p>
-                  </div>
+                <div class="is-paddingless box">
+                  <a href="" @click.prevent="openProject(project)">
+                    <img :src="project.thumbnail_home_responsive" v-if="project.thumbnail_home_responsive" alt="">
+                    <div class="text">
+                      <h4>{{ project.name }}</h4>
+                      <p>{{ project.description }}</p>
+                    </div>
+                  </a>
                 </div>
               </div>
             </div>
@@ -153,8 +157,8 @@
     <div class="columns is-marginless about-voy">
       <div class="column is-half is-offset-one-quarter">
         <div class="text">
-          <h1>Voices of youth</h1>
-          <p>{{ about.voy }}</p>
+          <h1>Voices of Youth</h1>
+          <p v-html="about.voy"></p>
         </div>
       </div>
     </div>
@@ -224,7 +228,7 @@
           </form>
         </div>
 
-        <div class="column is-offset-1">
+        <div class="column is-offset-1 is-hidden-touch">
           <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
         </div>
       </div>
@@ -251,7 +255,7 @@ export default {
 
   data() {
     return {
-      images: [],
+      images: null,
       reports: [],
       projects: [],
       project: null,
@@ -282,8 +286,14 @@ export default {
 
     this.getAboutProject().then((about) => {
       this.about.thumbnail = about.thumbnail;
-      this.about.project = about.about_project.replace('\n', '<br/>');
-      this.about.voy = about.about_voy;
+      this.about.project = about.about_project
+        .split(/\n/gm)
+        .map(line => `<p>${line.trim() || '&nbsp;'}</p>`)
+        .join('');
+      this.about.voy = about.about_voy
+        .split(/\n/gm)
+        .map(line => `<p>${line.trim() || '&nbsp;'}</p>`)
+        .join('');
     });
 
     this.getHomeProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
@@ -368,8 +378,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
-
 .header {
   background-color: #009ee3;
   width: 100%;
@@ -395,7 +403,7 @@ export default {
     text-align: left;
     font-family: 'Roboto';
 
-    h4 {  
+    h4 {
       font-size: 40px;
       font-weight: bold;
     }
@@ -512,6 +520,10 @@ export default {
       border-radius: 8px;
       cursor: pointer;
 
+      a {
+        font-weight: 400;
+      }
+
       .text {
         font-family: 'Roboto';
         color: #000000;
@@ -524,8 +536,28 @@ export default {
         }
 
         p {
-          margin-top: 36px;
-          font-size: 14px;
+            font-size: 14px;
+        }
+
+        .description {
+          height: 55px;
+          margin: 36px 0;
+
+          &-content {
+            position: relative;
+            height: 85px;
+            overflow: hidden;
+
+            &:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 35px;
+                background: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));;
+            }
+          }
         }
       }
 
@@ -537,7 +569,7 @@ export default {
             font-size: 14px;
             font-weight: 500;
           }
-  
+
           p {
             width: 9rem;
             margin-top: 0px;
@@ -609,10 +641,11 @@ export default {
   color: #ffffff;
   text-align: left;
   padding-bottom: 0px;
+  margin-top: -10px;
 
   h4 {
     font-size: 40px;
-    font-weight: bold;  
+    font-weight: bold;
   }
 
   p {
@@ -645,7 +678,7 @@ export default {
     .select {
       height: 37px;
       width: 100%;
-      
+
       border-radius: 8px;
       font-size: 18px;
       color: #7b7b7b;
@@ -686,5 +719,26 @@ export default {
   .terms {
     margin-top: 145px;
   }
+}
+
+.about-the-project-title {
+    margin: 45px 0 50px 0;
+}
+
+.about-the-project {
+    margin-bottom: 80px;
+}
+</style>
+
+<style lang="scss">
+.VueCarousel {
+    position: relative;
+
+    &-pagination {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+    }
 }
 </style>

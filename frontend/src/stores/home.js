@@ -19,7 +19,11 @@ export default {
         queryString = `?page=${obj.page}&page_size=${obj.pageSize}${(obj.order ? '&order=1' : '')}`;
       }
 
-      const data = await axios.get(`/api/projects/${queryString}`);
+      const data = await axios.get(`/api/projects/${queryString}`, {
+        headers: {
+          Authorization: '',
+        },
+      });
       return data;
     },
 

@@ -67,7 +67,14 @@
                 <li class="{% if css_menu_active == 'index_about' %}active{% endif %}">
                     <a href="{% url 'voy-admin:home:index_about' %}" title="{% trans 'About Project' %}">
                         <em class="fa fa-file-text-o"></em>
-                        <span>{% trans 'About Project' %}</span>
+                        <span>{% trans 'About The Project' %}</span>
+                    </a>
+                </li>
+
+                <li class="{% if css_menu_active == 'index_contact' %}active{% endif %}">
+                    <a href="{% url 'voy-admin:home:index_contact' %}" title="{% trans 'Contact' %}">
+                        <em class="icon-envelope-letter"></em>
+                        <span>{% trans 'Join Requests' %}</span>
                     </a>
                 </li>
             </ul>

@@ -159,7 +159,7 @@ export default {
 .map-box {
   margin: auto;
   padding-left: 25px;
-
+  
   .filter {
     width: 20% !important;
   }
@@ -206,7 +206,7 @@ export default {
 
   h1 {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 400;
     letter-spacing: -0.5px;
     text-align: left;
     color: #000000;

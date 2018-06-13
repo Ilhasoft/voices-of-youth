@@ -4,7 +4,7 @@ from rest_framework.response import Response
 
 from voicesofyouth.voyhome.models import Slide
 from voicesofyouth.voyhome.models import About
-
+from voicesofyouth.user.models import VoyUser
 from .serializers import HomeSlideSerializer
 from .serializers import HomeAboutSerializer
 from .serializers import HomeContactSerializer
@@ -36,6 +36,7 @@ class HomeContactEndPoint(mixins.CreateModelMixin,
     create:
     Create a new contact message.
     """
+    permission_classes = [permissions.AllowAny, ]
     serializer_class = HomeContactSerializer
 
     def create(self, request, *args, **kwargs):
@@ -46,4 +47,5 @@ class HomeContactEndPoint(mixins.CreateModelMixin,
         return Response(instance, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user, modified_by=self.request.user)
+        user = VoyUser.objects.get(username='guest')
+        serializer.save(created_by=user, modified_by=user)
