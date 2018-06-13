@@ -3,12 +3,11 @@ import multiprocessing
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 bind = '0.0.0.0:8000'
-workers = multiprocessing.cpu_count() * 2 + 1
-threads = workers
-name = 'voy-graphql'
+workers = multiprocessing.cpu_count() * 2
+name = 'voy'
 env = 'DJANGO_SETTINGS_MODULE=voicesofyouth.settings'
-proc_name = 'voy-graphql'
+proc_name = 'voy'
 default_proc_name = proc_name
 chdir = current_path
-#python_path = ','.join([os.path.join(current_path, 'env'),])
 loglevel = 'info'
+timeout = 120

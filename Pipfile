@@ -1,0 +1,55 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dj-database-url = "*"
+Django = "<1.12,>=1.11.7"
+djangorestframework = "*"
+djangorestframework-gis = "*"
+django-cors-headers = "*"
+django_compressor = "*"
+"psycopg2" = "*"
+python-decouple = "*"
+whitenoise = "*"
+Unipath = "*"
+smartmin = "*"
+coreapi = "*"
+coreapi-cli = "*"
+Pillow = "*"
+PyYAML = "*"
+django-resized = "*"
+django-taggit = "*"
+GDAL = ">=2.2,<2.3"
+django-filter = "*"
+django-crispy-forms = "*"
+django-sass-processor = "*"
+django-leaflet = "*"
+numpy = "*"
+libsass = "*"
+master = {git = "git://github.com/eltonplima/django-qurl-templatetag.git", editable = true}
+django-docs = "*"
+python-magic = "*"
+easy-thumbnails = "*"
+ipython = "*"
+django-debug-toolbar = "*"
+model_mommy = "*"
+django-extensions = "*"
+coverage = "*"
+Werkzeug = "*"
+"flake8" = "*"
+Sphinx = "*"
+sphinxcontrib-napoleon = "*"
+sphinx-autodoc-napoleon-typehints = "*"
+sphinx-autodoc-typehints = "*"
+mommy_spatial_generators = {git = "https://github.com/sigma-geosistemas/mommy_spatial_generators.git", editable = true}
+sphinx_rtd_theme = "*"
+lorem = "*"
+"psycopg2-binary" = "*"
+
+[dev-packages]
+pylint = "*"
+
+[requires]
+python_version = "3.6"
