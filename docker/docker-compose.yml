@@ -15,7 +15,7 @@ services:
         - PGADMIN_DEFAULT_EMAIL=dba@unicef.com
         - PGADMIN_DEFAULT_PASSWORD=SuperSecret
       ports:
-        - 8088:80
+        - 9000:80
   voy_dashboard:
     image: unicef/voy_dashboard:latest
     build:
@@ -39,6 +39,6 @@ services:
     depends_on:
       - voy_dashboard
     ports:
-      - 8080:80
+      - 7000:80
     environment:
       - BACKEND_SERVER=voy_dashboard:8000
