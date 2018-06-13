@@ -1,5 +1,4 @@
 ###############################################################################
-# Build stage
 # Creation date: 06/02/2018
 # Author: eltonplima
 ###############################################################################
@@ -21,9 +20,6 @@ apt-get install -y python3-pip gdal-bin libgdal-dev git && \
 pip3 install -U pip pipenv setuptools gunicorn
 
 COPY . .
-RUN pipenv install --system
-RUN chmod +x docker/entrypoint.sh
-RUN python3 manage.py collectstatic --noinput
-
+RUN pipenv install --system && python3 manage.py collectstatic --noinput
 ENTRYPOINT ["gunicorn", "voicesofyouth.wsgi", "-c", "gunicorn.conf.py"]
 EXPOSE 8000
