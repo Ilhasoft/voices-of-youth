@@ -5,8 +5,6 @@
 ###############################################################################
 FROM ubuntu:18.04
 
-LABEL maintainer="eltonplima@gmail.com"
-
 ENV HOME /home/app
 ENV C_INCLUDE_PATH=/usr/include/gdal
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
