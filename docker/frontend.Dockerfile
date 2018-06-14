@@ -5,8 +5,9 @@
 ###############################################################################
 FROM node:8-alpine as builder
 
+ARG NODE_ENV
+ARG BACKEND_SERVER
 ENV HOME /home/app
-ENV NODE_ENV production
 
 WORKDIR $HOME
 
