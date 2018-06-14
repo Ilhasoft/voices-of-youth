@@ -19,7 +19,7 @@ import i18n from '@/translate';
 
 Vue.use(Router);
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.BACKEND_SERVER) {
   axios.defaults.baseURL = process.env.BACKEND_SERVER;
 }
 

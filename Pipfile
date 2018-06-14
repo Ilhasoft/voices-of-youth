@@ -47,6 +47,7 @@ mommy_spatial_generators = {git = "https://github.com/sigma-geosistemas/mommy_sp
 sphinx_rtd_theme = "*"
 lorem = "*"
 "psycopg2-binary" = "*"
+django-ordered-model = "*"
 
 [dev-packages]
 pylint = "*"
