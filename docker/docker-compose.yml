@@ -36,6 +36,9 @@ services:
     build:
       context: ..
       dockerfile: docker/frontend.Dockerfile
+      args:
+        NODE_ENV: production
+        BACKEND_SERVER: http://voy_dashboard:8000/api
     depends_on:
       - voy_dashboard
     ports:
