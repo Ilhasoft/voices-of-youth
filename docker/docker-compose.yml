@@ -29,19 +29,16 @@ services:
       - DEBUG=${DEBUG:-True}
       - DATABASE_URL=postgis://voy:development@voy_database/voydev
       - ALLOWED_HOSTS=*
+      - CORS_ORIGIN_ALLOW_ALL=${CORS_ORIGIN_ALLOW_ALL:-True}
       - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
-
   voy_frontend:
     image: unicef/voy_frontend:latest
     build:
       context: ..
       dockerfile: docker/frontend.Dockerfile
       args:
-        NODE_ENV: production
-        BACKEND_SERVER: http://voy_dashboard:8000/api
+        BACKEND_SERVER: http://0.0.0.0:8000
     depends_on:
       - voy_dashboard
     ports:
       - 7000:80
-    environment:
-      - BACKEND_SERVER=http://voy_dashboard:8000/api

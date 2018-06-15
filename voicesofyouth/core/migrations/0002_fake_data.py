@@ -36,6 +36,7 @@ if settings.DEBUG:
     from django.core.files.images import ImageFile
     from django.db import transaction
     from django.db.utils import IntegrityError
+    from django.contrib.gis.geos import GEOSGeometry
 
     from voicesofyouth.project.models import Project
     from voicesofyouth.report.models import REPORT_STATUS_CHOICES
@@ -211,6 +212,7 @@ if settings.DEBUG:
                                      name=project_name,
                                      thumbnail=fake_thumbnail,
                                      description=lorem.paragraph(),
+                                     bounds=GEOSGeometry('POLYGON((-124.815187 26.72476, -124.815187 49.609375, -68.60202 49.609375, -68.60202 26.72476, -124.815187 26.72476))'),
                                      created_by=global_admin,
                                      modified_by=global_admin,
                                      enabled=True)

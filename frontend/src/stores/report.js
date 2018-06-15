@@ -121,7 +121,7 @@ export default {
       commit(TYPES.SET_CURRENT_REPORT, {});
       commit(TYPES.SET_REPORT_MEDIAS, {});
 
-      const data = await axios.get(`/api/reports/${obj}`);
+      const data = await axios.get(`/api/reports/${obj}/`);
       commit(TYPES.SET_CURRENT_REPORT, data);
 
       const files = await axios.get(`/api/report-files/?report=${obj}`);
