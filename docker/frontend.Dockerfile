@@ -13,7 +13,6 @@ WORKDIR $HOME
 
 RUN apk update && apk add git
 
-COPY package.json .
 COPY . .
 
 RUN npm install && npm run build
