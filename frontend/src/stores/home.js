@@ -3,12 +3,12 @@ import axios from 'axios';
 export default {
   actions: {
     getHomeSlide: async () => {
-      const data = await axios.get('/api/home-slide');
+      const data = await axios.get('/api/home-slide/');
       return data;
     },
 
     getAboutProject: async () => {
-      const data = await axios.get('/api/home-about');
+      const data = await axios.get('/api/home-about/');
       return data[0];
     },
 

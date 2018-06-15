@@ -23,13 +23,6 @@ if (process.env.BACKEND_SERVER) {
   axios.defaults.baseURL = process.env.BACKEND_SERVER;
 }
 
-axios.interceptors.request.use((config) => {
-  if (config.url[config.url.length-1] !== '/') {
-    config.url += '/';
-  }
-  return config;
-});
-
 async function dispatchStores(path) {
   const token = helper.getItem('token');
 

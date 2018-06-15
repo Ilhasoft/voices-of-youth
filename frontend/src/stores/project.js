@@ -42,7 +42,7 @@ export default {
 
   actions: {
     setProjects: async ({ commit }) => {
-      const data = await axios.get('/api/projects', {
+      const data = await axios.get('/api/projects/', {
         headers: {
           Authorization: '',
         },
@@ -51,7 +51,7 @@ export default {
     },
 
     setUserProjects: async ({ commit }) => {
-      const data = await axios.get('/api/projects');
+      const data = await axios.get('/api/projects/');
       commit(TYPES.SET_PROJECTS_LIST, data);
     },
 
@@ -64,7 +64,7 @@ export default {
         if (project) {
           commit(TYPES.SET_CURRENT_PROJECT, project);
         } else {
-          const data = await axios.get('/api/projects');
+          const data = await axios.get('/api/projects/');
           if (obj.path) {
             const response = data.filter(item => item.path === obj.path)[0];
             localStorage.setItem('project', JSON.stringify(response));
