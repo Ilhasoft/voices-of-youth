@@ -949,7 +949,7 @@
     TranslateInput.prototype.updateVal = function () {
       this.$input.val(JSON.stringify(this.value));
       this.$itemsList.html(this.createItems());
-      this.$itemsList.find('span').after(' ');
+      this.$itemsList.find('> span').after(' ');
     };
     TranslateInput.prototype.itemClick = function (fn) {
       this.onItemClick = fn;
