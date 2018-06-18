@@ -927,44 +927,42 @@
         this.$language_input.change();
     }
     TranslateInput.prototype.createItems = function () {
-        var self = this;
+      var self = this;
 
-        return Object.keys(this.value).map(function (language) {
-            var data = self.value[language];
-            var $item = $('<span class="tag clickable label label-info">' + (data.label || language) + '</span>');
-            var $remove = $('<span data-role="remove"></span>');
-            $item.append($remove);
-
-            $item.click(function () {
-                self.$language_input.val(language).change();
-                if (self.onItemClick) self.onItemClick();
-            });
-
-            $remove.click(function () {
-                delete self.value[language];
-                self.updateVal();
-                return false;
-            });
-
-            return $item;
+      return Object.keys(this.value).map(function (language) {
+        var data = self.value[language];
+        var $item = $('<span class="tag clickable label label-info">' + (data.label || language) + '</span>');
+        var $remove = $('<span data-role="remove"></span>');
+        $item.append($remove);
+        $item.click(function () {
+            self.$language_input.val(language).change();
+            if (self.onItemClick) self.onItemClick();
         });
+        $remove.click(function () {
+            delete self.value[language];
+            self.updateVal();
+            return false;
+        });
+        return $item;
+      });
     };
     TranslateInput.prototype.updateVal = function () {
-        this.$input.val(JSON.stringify(this.value));
-        this.$itemsList.html(this.createItems());
+      this.$input.val(JSON.stringify(this.value));
+      this.$itemsList.html(this.createItems());
+      this.$itemsList.find('span').after(' ');
     };
     TranslateInput.prototype.itemClick = function (fn) {
-        this.onItemClick = fn;
+      this.onItemClick = fn;
     };
     TranslateInput.prototype.save = function () {
-        var language = this.$language_input.val();
-        var language_data = this.$translate_form.serializeArray();
+      var language = this.$language_input.val();
+      var language_data = this.$translate_form.serializeArray();
 
-        this.value[language] = {
-            label: this.$language_input.find(":selected").text(),
-            fields: language_data,
-        };
-        this.updateVal();
+      this.value[language] = {
+        label: this.$language_input.find(":selected").text(),
+        fields: language_data,
+      };
+      this.updateVal();
     };
 
     $.fn.translateinput = function (arg1, arg2) {
