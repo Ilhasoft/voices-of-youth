@@ -2,13 +2,14 @@
   <div class="p-left">
     <div class="columns p-top">
       <div class="column is-2">
-        <a href="#" onclick="window.history.back();">
+        <router-link
+          :to="{ name: 'project', params: { path: currentProject.path }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24">
             <g fill="none" fill-rule="evenodd" stroke="#00CBFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
               <path d="M22.68 11.676H3.264M12.052 21.38l-9.705-9.704 9.705-9.706"/>
             </g>
           </svg>
-        </a>
+        </router-link>
       </div>
       <div class="column t-align is-hidden-touch">
         <router-link
