@@ -206,6 +206,12 @@
               <textarea v-bind:class="{'is-danger': hasError('description')}" v-model="form.description" cols="30" rows="10"></textarea>
               </div>
             </div>
+            <div class="field accept">
+              <label>
+                <input type="checkbox">
+                I have read and accepted the <a href="#">Terms of Use and Privacy Policy</a>
+              </label>
+            </div>
             <div class="columns buttons">
               <div class="column">
                 <div class="columns">
@@ -228,14 +234,18 @@
           </form>
         </div>
 
-        <div class="column is-offset-1 is-hidden-touch">
-          <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=340&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="340" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
-        </div>
-      </div>
-
-      <div class="columns terms">
-        <div class="column">
-          <p class="has-text-centered">Privacy policy and terms of use</p>
+        <div class="column is-offset-1">
+          <div class="columns">
+            <div class="column is-7 is-marginless">
+              <div class="is-hidden-touch">
+                <iframe src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fvoicesofyouth&tabs=timeline&width=363&height=500&small_header=false&adapt_container_width=true&hide_cover=true&show_facepile=true&appId" width="363" height="500" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+              </div>
+              <div class="cancel">
+                <h1>Cancel registration</h1>
+                <p>If you wish to cancel your pending registration, contact us at <strong>info@voicesofyouth.org</strong></p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -273,6 +283,7 @@ export default {
         want: '',
         project: '',
         errors: [],
+        onCheck: false,
       },
       msgSuccess: false,
     };
@@ -694,6 +705,16 @@ export default {
       color: #7b7b7b;
     }
 
+    .accept {
+      color: #fff;
+
+      a {
+        color: #fff;
+        text-decoration: underline;
+        font-weight: bold;
+      }
+    }
+
     .buttons {
       margin-top: 40px;
 
@@ -716,8 +737,28 @@ export default {
     }
   }
 
-  .terms {
-    margin-top: 145px;
+  .cancel {
+    background-color: #0197d8;
+    border-radius: 10px;
+    color: #ffffff;
+    text-align: left;
+    padding: 10px;
+    margin-top: 30px;
+
+    h1 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    p {
+      margin-top: 15px;
+      font-size: 14px;
+
+      strong {
+        font-weight: bold;
+        color: #ffffff;
+      }
+    }
   }
 }
 
