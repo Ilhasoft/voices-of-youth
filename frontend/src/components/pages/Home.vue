@@ -208,7 +208,7 @@
             </div>
             <div class="field accept">
               <label>
-                <input type="checkbox" v-model="form.accepted" @change.prevent="setTimeTermsAccept">
+                <input type="checkbox" v-model="form.termsAccepted" @change.prevent="setTimeTermsAccept">
                 I have read and accepted the <a href="#">Terms of Use and Privacy Policy</a>
               </label>
             </div>
@@ -283,8 +283,8 @@ export default {
         want: '',
         project: '',
         errors: [],
-        accepted: false,
-        timeOnTermsAccept: null,
+        termsAccepted: false,
+        accepted: null,
       },
       msgSuccess: false,
     };
@@ -353,7 +353,7 @@ export default {
     },
 
     sendForm() {
-      if (this.form.termsAccept) {
+      if (this.form.termsAccepted) {
         this.form.errors = [];
         this.msgSuccess = false;
         this.submitFormContact(this.form).then(() => {
@@ -375,9 +375,10 @@ export default {
         want: '',
         project: '',
         errors: [],
-        accepted: false,
-        timeOnTermsAccept: null,
+        termsAccepted: false,
+        accepted: null,
       };
+      this.msgSuccess = true;
       this.$refs.recaptcha.reset();
     },
 
@@ -390,8 +391,7 @@ export default {
     },
 
     setTimeTermsAccept() {
-      const date = new Date();
-      this.form.timeOnTermsAccept = this.form.accepted ? date : null;
+      this.form.accepted = this.form.termsAccepted ? Math.floor(Date.now() / 1000) : null;
     },
   },
 };
