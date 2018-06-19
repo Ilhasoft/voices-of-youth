@@ -77,11 +77,10 @@ INSTALLED_APPS = [
 if DEBUG:
     from voicesofyouth.core.model_mommy import MOMMY_SPATIAL_FIELDS
     MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
-
-INSTALLED_APPS.append('django_extensions')
-INSTALLED_APPS.append('model_mommy')
-INSTALLED_APPS.append('mommy_spatial_generators')
-INTERNAL_IPS = ('127.0.0.1', 'localhost')
+    INSTALLED_APPS.append('django_extensions')
+    INSTALLED_APPS.append('model_mommy')
+    INSTALLED_APPS.append('mommy_spatial_generators')
+    INTERNAL_IPS = ('127.0.0.1', 'localhost')
 
 DOCS_ROOT = os.path.join(BASE_DIR, '../docs/users/build/html')
 # DOCS_ACCESS = 'staff'
