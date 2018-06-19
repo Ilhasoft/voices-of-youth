@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='contact',
             name='accepted',
             field=models.DateTimeField(blank=True, default=django.utils.timezone.now),
