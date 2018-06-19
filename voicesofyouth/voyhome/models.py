@@ -76,7 +76,7 @@ class Contact(BaseModel):
     want = models.IntegerField(verbose_name=_('What do you want'), choices=CONTACT_CHOICES)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
-    accepted = models.DateTimeField(default=timezone.now, editable=False, blank=True)
+    accepted = models.DateTimeField(default=timezone.now, blank=True)
 
     class Meta:
         verbose_name = _('Contact Form')
