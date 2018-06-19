@@ -141,7 +141,7 @@ WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASE_NAME = 'db.sqlite3'
-DEFAULT_DATABASE = config('DEFAULT_DATABASE', default='postgis://postgres:development@localhost:5432/voydev')
+DEFAULT_DATABASE = config('DATABASE_URL', default='postgis://postgres:development@localhost:5432/voydev')
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(default=DEFAULT_DATABASE)
 
