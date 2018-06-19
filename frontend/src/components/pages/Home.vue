@@ -208,7 +208,7 @@
             </div>
             <div class="field accept">
               <label>
-                <input type="checkbox">
+                <input type="checkbox" v-model="form.termsAccepted" @change.prevent="setTimeTermsAccept">
                 I have read and accepted the <a href="#">Terms of Use and Privacy Policy</a>
               </label>
             </div>
@@ -283,7 +283,8 @@ export default {
         want: '',
         project: '',
         errors: [],
-        onCheck: false,
+        termsAccepted: false,
+        accepted: null,
       },
       msgSuccess: false,
     };
@@ -352,15 +353,17 @@ export default {
     },
 
     sendForm() {
-      this.form.errors = [];
-      this.msgSuccess = false;
-      this.submitFormContact(this.form).then(() => {
-        this.cleanForm();
-      }).catch((errors) => {
-        Object.keys(errors).forEach((key) => {
-          this.form.errors.push(key);
+      if (this.form.termsAccepted) {
+        this.form.errors = [];
+        this.msgSuccess = false;
+        this.submitFormContact(this.form).then(() => {
+          this.cleanForm();
+        }).catch((errors) => {
+          Object.keys(errors).forEach((key) => {
+            this.form.errors.push(key);
+          });
         });
-      });
+      }
     },
 
     cleanForm() {
@@ -372,9 +375,11 @@ export default {
         want: '',
         project: '',
         errors: [],
+        termsAccepted: false,
+        accepted: null,
       };
-      this.$refs.recaptcha.reset();
       this.msgSuccess = true;
+      this.$refs.recaptcha.reset();
     },
 
     onVerify(response) {
@@ -383,6 +388,10 @@ export default {
 
     onExpired() {
       this.form.captcha = '';
+    },
+
+    setTimeTermsAccept() {
+      this.form.accepted = this.form.termsAccepted ? Math.floor(Date.now() / 1000) : null;
     },
   },
 };
