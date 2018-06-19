@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
 from unipath import Path
 from easy_thumbnails.files import get_thumbnailer
@@ -75,6 +76,7 @@ class Contact(BaseModel):
     want = models.IntegerField(verbose_name=_('What do you want'), choices=CONTACT_CHOICES)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
     description = models.TextField(null=False, blank=False, verbose_name=_('Description'))
+    accepted = models.DateTimeField(default=timezone.now, editable=False, blank=True)
 
     class Meta:
         verbose_name = _('Contact Form')

@@ -1,5 +1,4 @@
 import requests
-import json
 
 from rest_framework import serializers
 from voicesofyouth.voyhome.models import Slide
@@ -48,6 +47,7 @@ class HomeContactSerializer(serializers.ModelSerializer):
             'description',
             'want',
             'project',
+            'accepted',
         )
 
     def validate(self, data):
