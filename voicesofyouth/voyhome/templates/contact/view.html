@@ -36,6 +36,7 @@
                             {% trans 'Questions or suggestions' %}
                         {% endif %}
                     </p>
+                    <p><strong>{% trans 'Terms accepted on:' %}</strong> {{ message.accepted|date:'Y/m/d - H:i:s' }}</p>
                     <p><strong>{% trans 'Project:' %}</strong> {{ message.project.name }}</p>
                     <p><strong>{% trans 'Message:' %}</strong> {{ message.description }}</p>
                 </div>
