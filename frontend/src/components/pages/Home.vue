@@ -207,9 +207,10 @@
               </div>
             </div>
             <div class="field accept">
-              <label>
-                <input type="checkbox" v-model="form.termsAccepted" @change.prevent="setTimeTermsAccept">
-                I have read and accepted the <a href="#">Terms of Use and Privacy Policy</a>
+              <label class="check-container">
+                <input type="checkbox" v-model="form.termsAccepted" @change.prevent="setTimeTermsAccept" />
+                <span class="checkmark"></span>
+                I have read and accepted the <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
               </label>
             </div>
             <div class="columns buttons">
@@ -226,7 +227,7 @@
                 </div>
                 <div class="columns">
                   <div class="column is-4 btn-submit">
-                    <button class="submit" @click.prevent="sendForm()">Send</button>
+                    <button class="submit" :disabled="disableBtnSend" @click.prevent="sendForm()">Send</button>
                   </div>
                 </div>
               </div>
@@ -287,6 +288,7 @@ export default {
         accepted: null,
       },
       msgSuccess: false,
+      disableBtnSend: true,
     };
   },
 
@@ -392,6 +394,7 @@ export default {
 
     setTimeTermsAccept() {
       this.form.accepted = this.form.termsAccepted ? Math.floor(Date.now() / 1000) : null;
+      this.disableBtnSend = !this.form.termsAccepted;
     },
   },
 };
@@ -742,6 +745,67 @@ export default {
           color: #ffffff;
           cursor: pointer;
         }
+
+        :disabled {
+          opacity: .5;
+        }
+      }
+    }
+
+    .check-container {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #fff;
+      }
+
+      :hover input ~ .checkmark {
+        background-color: #ccc;
+      }
+
+      input:checked ~ .checkmark {
+        background-color: #fff;
+      }
+
+      .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
+
+      input:checked ~ .checkmark:after {
+        display: block;
+      }
+
+      .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid #009ee3;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
       }
     }
   }
