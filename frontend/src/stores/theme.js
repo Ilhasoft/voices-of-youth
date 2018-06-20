@@ -23,7 +23,7 @@ export default {
   /* eslint-disable no-param-reassign */
   mutations: {
     [TYPES.SET_THEMES](state, obj) {
-      state.all = obj;
+      state.all = obj.filter(item => item.reports_count > 0);
     },
 
     [TYPES.SET_CURRENT_THEME](state, obj) {
