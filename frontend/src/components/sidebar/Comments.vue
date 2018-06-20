@@ -121,16 +121,16 @@ export default {
   
   .send {
     width: 95.5px;
-    height: 51.7px;
-    border-radius: 100px;
-    border: solid 2px #00cbff;
     text-align: center;
     margin: auto;
     margin-right: 22px;
-    background-color: #fff;
 
     a {
-      margin: auto;
+      padding: 15px;
+      border-radius: 100px;
+      border: solid 2px #00cbff;
+      background-color: #fff;
+      padding: 15px 25px 15px 25px;
     }
   }
 }
