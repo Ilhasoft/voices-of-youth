@@ -77,11 +77,10 @@ INSTALLED_APPS = [
 if DEBUG:
     from voicesofyouth.core.model_mommy import MOMMY_SPATIAL_FIELDS
     MOMMY_CUSTOM_FIELDS_GEN = MOMMY_SPATIAL_FIELDS
-
-INSTALLED_APPS.append('django_extensions')
-INSTALLED_APPS.append('model_mommy')
-INSTALLED_APPS.append('mommy_spatial_generators')
-INTERNAL_IPS = ('127.0.0.1', 'localhost')
+    INSTALLED_APPS.append('django_extensions')
+    INSTALLED_APPS.append('model_mommy')
+    INSTALLED_APPS.append('mommy_spatial_generators')
+    INTERNAL_IPS = ('127.0.0.1', 'localhost')
 
 DOCS_ROOT = os.path.join(BASE_DIR, '../docs/users/build/html')
 # DOCS_ACCESS = 'staff'
@@ -110,9 +109,11 @@ CORS_ORIGIN_WHITELIST = (
     '127.0.0.1:8000',
     'localhost:8080',
     '127.0.0.1:8080',
-)
+) + config('CORS_ORIGIN_WHITELIST',
+           cast=lambda v: tuple(h.strip() for h in v.split(',')),
+           default='')
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = config('CORS_ALLOW_CREDENTIALS', default=True, cast=bool)
 
 CORS_ORIGIN_ALLOW_ALL = config('CORS_ORIGIN_ALLOW_ALL', default=False, cast=bool)
 
@@ -141,7 +142,7 @@ WSGI_APPLICATION = '{}.wsgi.application'.format(PROJECT_NAME)
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASE_NAME = 'db.sqlite3'
-DEFAULT_DATABASE = config('DEFAULT_DATABASE', default='postgis://postgres:development@localhost:5432/voydev')
+DEFAULT_DATABASE = config('DATABASE_URL', default='postgis://postgres:development@localhost:5432/voydev')
 DATABASES = {}
 DATABASES['default'] = dj_database_url.config(default=DEFAULT_DATABASE)
 
