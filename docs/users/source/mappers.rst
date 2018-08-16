@@ -1,6 +1,6 @@
 Mapper
 ------
-Mapper are the platform’s target users, young people, that can create reports.
+Mappers are the platform’s target users - young people - that can create reports.
 
 .. note::
     To be able to create and submit reports, mappers must be registered in the VoY system.
