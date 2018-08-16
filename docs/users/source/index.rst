@@ -1,7 +1,7 @@
-.. Voices of Youth documentation master file, created by
-   sphinx-quickstart on Mon Oct  9 16:28:27 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+..  Voices of Youth master documentation file, created by
+    sphinx-quickstart on Mon Oct 09, 16:28:27, 2017.
+    You can adapt this whole file, but it must contain the `toctree` root directive.
+
 
 Welcome to Voices of Youth's user documentation!
 ================================================

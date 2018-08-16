@@ -1,44 +1,40 @@
 Permissions and groups
 ======================
 
-The core concept behind the access control management, is the group(or if you prefer, profile).
+The main concept behind the access control management is the group (or, if you prefer, profile).
 
-Basically we have two category of groups, the **group** itself and **template group**, but what is the difference
-between them?
+Basically, there are two categories of groups: the **group** itself and the **template group**.
+You mught be wondering: what’s the difference between them?
 
-* **group** - Is where we insert users, and automatically the user inherit all permissions associated with that group.
-* **template group** - Works like a repository of permissions, any permission added or removed from this template group
-  is replicated to all groups associated with it. You can freely change permissions in any template group, but, you
-  **cannot** insert users in this type of group.
+
+* **group** - This is where we insert users and automatically the user inherits all the permissions associated with it.
+* **template group** - It works like a repository of permissions. Any permission added or removed from this template group is replicated to all associated groups. You can freely change template group permissions, but you **can’t** insert users in that group type.
+
 
 .. warning::
-    Be careful when change the permissions. Any mistake in this part of the system will grant/revoke permission to all
-    users associated with that profile.
+    Be careful when you change template permissions. Any errors in this part of the system will grant/revoke the permission for all users associated with this profile.
 
 Built in group
 --------------
-The VoY system automatically create the group **super admin**, any user inside this group can do anything.
+The VoY system automatically creates the **super admin** group. Any user in this group are virtually unlimited and can do anything in the system.
 
 Built in template
 -----------------
 The VoY system automatically creates two **template groups**:
 
 Local admin template
-    * Can create mappers and link them with the theme;
+    * Can create mappers and link them with a theme;
     * Can moderate report and comments;
-    * Can do anything that mapper template group can.
+    * Can do anything that the mapper template group can do.
 
 Mapper template
-    * Can create/edit report;
-    * Can comment on reports of other mappers.
+    * Can create/edit reports;
+    * Can comment on reports from other mappers.
 
 How VoY manage groups
 ---------------------
 
-Firstly of all, you **cannot** create groups manually neither change permissions directly to a specific group.
+First, you **can’t** create groups manually or directly change permissions of a specific group.
+Each project has its own **local admin group**, this group is created automatically when a new project is created and inherits all permissions from the template group **local admin template**.
 
-Each project have your own **local admin group**, this group is created automatically when a new project is created, and
-inherit all permissions of the template group **local admin template**.
-
-Each theme have your own **mapper group**, this group is created automatically when a new theme is created, and
-inherit all permissions of the template group **mapper template**.
+Each theme has its own **mapper group**. This group is created automatically with new themes and will inherit all permissions from the **mapper template** group.
