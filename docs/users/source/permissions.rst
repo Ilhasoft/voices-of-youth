@@ -4,7 +4,7 @@ Permissions and groups
 The main concept behind the access control management is the group (or, if you prefer, profile).
 
 Basically, there are two categories of groups: the **group** itself and the **template group**.
-You mught be wondering: what’s the difference between them?
+You might be wondering: what’s the difference between them?
 
 
 * **group** - This is where we insert users and automatically the user inherits all the permissions associated with it.
