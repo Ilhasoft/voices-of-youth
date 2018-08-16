@@ -61,4 +61,4 @@ Global admin is a Jedi master. Only users with this profile can manage the proje
 
 Local admin
 -----------
-Local admin is the people who can manage: ref: `theme` e: ref:` mapper`.
+Local admin are able to manage ref: `theme` and ref:` mapper`.

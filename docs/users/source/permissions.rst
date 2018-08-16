@@ -16,7 +16,7 @@ You might be wondering: what’s the difference between them?
 
 Built in group
 --------------
-The VoY system automatically creates the **super admin** group. Any user in this group are virtually unlimited and can do anything in the system.
+The VoY system automatically creates the **super admin** group. Any user in this group is virtually unlimited and can do anything in the system.
 
 Built in template
 -----------------
