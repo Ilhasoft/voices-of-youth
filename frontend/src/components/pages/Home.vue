@@ -312,7 +312,7 @@ export default {
 
     this.getHomeProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
       this.projects = this.chunck(projects.results, 3);
-      this.projectsToMobile = projects.results;
+      this.projectsToMobile = this.chunck(projects.results, 3);
     });
 
     this.getHomeReports({ pageSize: 3, page: 1 }).then((reports) => {
