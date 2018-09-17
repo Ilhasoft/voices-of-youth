@@ -4,8 +4,8 @@ from voicesofyouth.user.models import MapperUser
 
 
 class MapperUserFilter(filters.FilterSet):
-    theme = filters.NumberFilter(name='groups__theme_mappers', help_text='Filter mappers by theme id.')
+    theme = filters.NumberFilter('groups__theme_mappers', help_text='Filter mappers by theme id.')
 
     class Meta:
         model = MapperUser
-        fields = ('theme',)
+        fields = ('theme', )

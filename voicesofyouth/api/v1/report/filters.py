@@ -6,11 +6,11 @@ from voicesofyouth.report.models import ReportFile
 
 
 class ReportFilter(filters.FilterSet):
-    project = filters.NumberFilter(name='theme__project__id', help_text='Filter reports by project id.')
-    theme = filters.NumberFilter(name='theme__id', help_text='Filter reports by theme id.')
-    mapper = filters.NumberFilter(name='created_by__id', help_text='Filter reports by mapper id.')
-    status = filters.NumberFilter(name='status', help_text='Filter reports by status.')
-    featured = filters.BooleanFilter(name='featured', help_text='Filter reports by featured')
+    project = filters.NumberFilter('theme__project__id', help_text='Filter reports by project id.')
+    theme = filters.NumberFilter('theme__id', help_text='Filter reports by theme id.')
+    mapper = filters.NumberFilter('created_by__id', help_text='Filter reports by mapper id.')
+    status = filters.NumberFilter('status', help_text='Filter reports by status.')
+    featured = filters.BooleanFilter('featured', help_text='Filter reports by featured')
 
     class Meta:
         model = Report
@@ -18,13 +18,13 @@ class ReportFilter(filters.FilterSet):
 
 
 class ReportFileFilter(filters.FilterSet):
-    theme = filters.NumberFilter(name='report__theme',
+    theme = filters.NumberFilter('report__theme',
                                  help_text='Get all files from the all reports linked with the theme id.')
-    report = filters.NumberFilter(name='report__id',
+    report = filters.NumberFilter('report__id',
                                   help_text='Get all files from the reports id.')
-    project = filters.NumberFilter(name='report__theme__project__id',
+    project = filters.NumberFilter('report__theme__project__id',
                                    help_text='Get all files from the project id.')
-    media_type = filters.CharFilter(name='media_type',
+    media_type = filters.CharFilter('media_type',
                                     help_text='Get all files from the media type')
 
     class Meta:
@@ -33,7 +33,7 @@ class ReportFileFilter(filters.FilterSet):
 
 
 class ReportCommentFilter(filters.FilterSet):
-    report = filters.NumberFilter(name='report__id', help_text='Get all comments from the report id.')
+    report = filters.NumberFilter('report__id', help_text='Get all comments from the report id.')
 
     class Meta:
         model = ReportComment
