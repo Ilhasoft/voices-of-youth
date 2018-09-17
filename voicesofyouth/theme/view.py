@@ -138,7 +138,7 @@ class EditThemeView(LoginRequiredMixin, TemplateView):
                 translation.save()
 
             messages.success(request, _('Theme edited'))
-            return redirect(reverse('voy-admin:themes:index', kwargs={'project': theme.project.id}))
+            return redirect(reverse('voy-admin:themes:edit', kwargs={'theme': theme.id}))
         else:
             context = self.get_context_data()
             context['selected_tags'] = request.POST.getlist('tags')

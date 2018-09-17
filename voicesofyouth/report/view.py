@@ -348,7 +348,7 @@ class EditReportView(LoginRequiredMixin, TemplateView):
                             return HttpResponse(status=500)
 
                 messages.success(request, _('Report edited'))
-                return redirect(reverse('voy-admin:reports:index', kwargs={'theme': report.theme.id}))
+                return redirect(reverse('voy-admin:reports:pending'))
             except Exception:
                 return HttpResponse(status=500)
         else:
