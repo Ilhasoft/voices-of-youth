@@ -177,11 +177,14 @@ User = get_user_model()
 
 @receiver(post_save, sender=MapperUser)
 def send_mapper_email(sender, instance, created, **kwargs):
+    from django.conf import settings
+
     if instance.email and created:
-        send_mail(
-            'Welcome to Voices of Youth',
-            'Hi {}! You are a new mapper.'.format(instance.first_name),
-            settings.EMAIL_FROM,
-            [instance.email],
-            fail_silently=True,
-        )
+        if settings.EMAIL_HOST:
+            send_mail(
+                'Welcome to Voices of Youth',
+                'Hi {}! You are a new mapper.'.format(instance.first_name),
+                settings.EMAIL_FROM,
+                [instance.email],
+                fail_silently=True,
+            )
