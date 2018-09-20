@@ -37,7 +37,7 @@ services:
       context: ..
       dockerfile: docker/frontend.Dockerfile
       args:
-        BACKEND_SERVER: http://0.0.0.0:8000
+        BACKEND_SERVER: https://voy.unicef.io
     depends_on:
       - voy_dashboard
     ports:

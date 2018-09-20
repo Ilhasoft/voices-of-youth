@@ -222,7 +222,7 @@
                       @expired="onExpired"
                       class="g-recaptcha"
                       ref="recaptcha"
-                      sitekey="6Lcp41YUAAAAAGNhDzBMW2ZzO33JJ6LdAY_aeE9g" />
+                      sitekey="6Ldly2kUAAAAALOaSl25bLe6JcWGEaoTK_luzvu0" />
                   </div>
                 </div>
                 <div class="columns">
