@@ -6,6 +6,7 @@ from taggit.models import Tag
 
 Tag._meta.ordering = ['name']
 
+
 class InvalidTag(Exception):
     pass
 

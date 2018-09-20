@@ -25,8 +25,8 @@ PROJECT_NAME = BASE_DIR.name
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='%3)=j$(#mt8!$t+kps2y8&2v*x63lb%hjjyw6k3desjg2*#5^#')
-GEOS_LIBRARY_PATH=config('GEOS_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/libgeos_c.so')  # Ubuntu default path
-GDAL_LIBRARY_PATH=config('GDAL_LIBRARY_PATH', '/usr/lib/libgdal.so')  # Ubuntu default path
+GEOS_LIBRARY_PATH = config('GEOS_LIBRARY_PATH', '/usr/lib/x86_64-linux-gnu/libgeos_c.so')  # Ubuntu default path
+GDAL_LIBRARY_PATH = config('GDAL_LIBRARY_PATH', '/usr/lib/libgdal.so')  # Ubuntu default path
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 DEBUG_TOOLBAR = config('DEBUG_TOOLBAR', default=False, cast=bool)
@@ -277,3 +277,12 @@ EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=True)
 EMAIL_FROM = config('EMAIL_FROM', default='')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+
+# SESSION
+
+SESSION_COOKIE_AGE = 1800  # 30 minutes
+
+
+# TAGS
+
+TAGGIT_CASE_INSENSITIVE = True

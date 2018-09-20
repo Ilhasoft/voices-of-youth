@@ -19,6 +19,7 @@ from voicesofyouth.voyadmin.forms import LoginForm
 from voicesofyouth.voyadmin.forms import DashboardFilterForm
 from voicesofyouth.voyadmin.utils import radial_bar_round_down
 
+
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'voyadmin/dashboard.html'
 
@@ -55,7 +56,7 @@ class DashboardView(LoginRequiredMixin, TemplateView):
                                       taggit_taggeditem_items__object_id__in=all_reports)
         top_tags = all_tags \
             .annotate(items_count=Count('taggit_taggeditem_items')) \
-            .order_by('-items_count')[:5]  # show top 5
+            .order_by('-items_count')[:10]  # show top 5
 
         week_reports_count = week_reports.count()
         approved_percent = int(week_approved_reports.count() / week_reports_count * 100) \
