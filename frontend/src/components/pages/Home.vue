@@ -4,7 +4,7 @@
       <div class="container">
         <div class="columns is-marginless is-paddingless header">
           <div class="column is-offset-1">
-            <img src="~@/assets/img/logo-home.png" alt="">
+            <img src="~@/assets/img/voy-logo-home.svg" class="logo" alt="">
           </div>
         </div>
       </div>
@@ -310,9 +310,9 @@ export default {
         .join('');
     });
 
-    this.getHomeProjects({ pageSize: 6, order: 1, page: 1 }).then((projects) => {
-      this.projects = this.chunck(projects.results, 3);
-      this.projectsToMobile = this.chunck(projects.results, 3);
+    this.getHomeProjects({ pageSize: 4, order: 1, page: 1 }).then((projects) => {
+      this.projects = this.chunck(projects.results, 4);
+      this.projectsToMobile = projects.results;
     });
 
     this.getHomeReports({ pageSize: 3, page: 1 }).then((reports) => {
@@ -401,6 +401,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.logo {
+    height: 50px;
+}
+
 .header {
   background-color: #009ee3;
   width: 100%;
