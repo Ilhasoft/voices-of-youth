@@ -1,6 +1,3 @@
-PERMISSIONS:
-
-
 Permissions and groups
 ======================
  

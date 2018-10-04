@@ -1,10 +1,8 @@
-PROJECT:
- 
 Project
 =======
- 
+
 On :ref:`VoY`, projects are the entry point.
- 
+
 When creating a new project, you can see these fields:
  
 * name - Project name;

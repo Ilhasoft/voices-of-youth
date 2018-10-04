@@ -1,8 +1,8 @@
 Terms
 =====
- 
+
 .. _voy:
- 
+
 Voices of Youth(VoY)
 --------------------
 To simplify your VoY overview, let's take a simple analogy:
