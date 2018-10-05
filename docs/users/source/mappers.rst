@@ -1,12 +1,12 @@
 Mapper
 ------
-Mapper is the young people that can create report s.
+Mappers are the platform’s target users, young people, who can create reports. 
 
-.. note::
-    The mapper must be registered in VoY system before create a report.
+.. Note::
+To be able to create and submit reports, mappers must be registered in the VoY system. 
 
-.. note::
-    The mapper only can create report inside the boundry region configured on theme.
+.. Note::
+A mapper can only create a report within the boundaries of the theme’s georeferenced region. 
 
-.. note::
-    Only global-admin or local-admin can create then.
+.. Note::
+Only global and local admins can create themes.
