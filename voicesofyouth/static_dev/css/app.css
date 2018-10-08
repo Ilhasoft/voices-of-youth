@@ -8017,12 +8017,21 @@ margin-right: 2%;
   list-style: none;
 }
 
-#id_operations_released li{
-
+#id_operations_released li {
   float: left;
   margin-right: 50px;
 }
 
 .input-error {
   border: 2px solid red;
+}
+
+.logo {
+    width: 66px;
+    height: 41px;
+}
+
+.logo-collapsed {
+    width: 52px;
+    height: 71px;
 }
