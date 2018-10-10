@@ -35,6 +35,12 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] + config('ALLOWED_HOSTS',
                                                     cast=lambda v: [h for h in v.split(',')],
                                                     default='')
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+
 # Application definition
 
 INSTALLED_APPS = [
