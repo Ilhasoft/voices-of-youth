@@ -2,13 +2,13 @@ version: '3.3'
 
 services:
   voy_database:
-      image: mdillon/postgis
-      ports:
-        - 5432:5432
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER:-voy}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-development}
-        - POSTGRES_DB=${POSTGRES_DB:-voydev}
+    image: mdillon/postgis
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-voy}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-development}
+      - POSTGRES_DB=${POSTGRES_DB:-voydev}
     volumes:
       - voy_database_volume:/var/lib/postgresql/data
   pgadmin:
