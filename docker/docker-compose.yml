@@ -14,8 +14,8 @@ services:
   pgadmin:
       image: dpage/pgadmin4
       environment:
-        - PGADMIN_DEFAULT_EMAIL=dba@unicef.com
-        - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+        - PGADMIN_DEFAULT_EMAIL={PGADMIN_DEFAULT_EMAIL:-dba@unicef.com}
+        - PGADMIN_DEFAULT_PASSWORD={PGADMIN_DEFAULT_PASSWORD:-SuperSecret}
       ports:
         - 9000:80
   voy_dashboard:
@@ -32,10 +32,10 @@ services:
       - 8000:8000
     environment:
       - DEBUG=${DEBUG:-False}
-      - DATABASE_URL=postgis://voy:development@voy_database/voydev
-      - ALLOWED_HOSTS=*
+      - DATABASE_URL=${DATABASE_URL:-postgis://voy:development@voy_database/voydev}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
       - CORS_ORIGIN_ALLOW_ALL=${CORS_ORIGIN_ALLOW_ALL:-True}
-      - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
+      - GDAL_LIBRARY_PATH=${GDAL_LIBRARY_PATH:-/usr/lib/libgdal.so.20}
   voy_frontend:
     image: unicef/voy_frontend:latest
     build:
