@@ -2,22 +2,27 @@ version: '3.3'
 
 services:
   voy_database:
-      image: mdillon/postgis
-      ports:
-        - 5432:5432
-      environment:
-        - POSTGRES_USER=${POSTGRES_USER:-voy}
-        - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-development}
-        - POSTGRES_DB=${POSTGRES_DB:-voydev}
+    image: mdillon/postgis
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-voy}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-development}
+      - POSTGRES_DB=${POSTGRES_DB:-voydev}
+    volumes:
+      - voy_database_volume:/var/lib/postgresql/data
   pgadmin:
       image: dpage/pgadmin4
       environment:
-        - PGADMIN_DEFAULT_EMAIL=dba@unicef.com
-        - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+        - PGADMIN_DEFAULT_EMAIL={PGADMIN_DEFAULT_EMAIL:-dba@unicef.com}
+        - PGADMIN_DEFAULT_PASSWORD={PGADMIN_DEFAULT_PASSWORD:-SuperSecret}
       ports:
         - 9000:80
   voy_dashboard:
     image: unicef/voy_dashboard:latest
+    volumes:
+      - voy_dashboard_media_content_volume:/home/app/voicesofyouth/media/content
+      - voy_dashboard_media_projects_volume:/home/app/voicesofyouth/media/projects
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -26,11 +31,11 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DEBUG=${DEBUG:-True}
-      - DATABASE_URL=postgis://voy:development@voy_database/voydev
-      - ALLOWED_HOSTS=*
+      - DEBUG=${DEBUG:-False}
+      - DATABASE_URL=${DATABASE_URL:-postgis://voy:development@voy_database/voydev}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
       - CORS_ORIGIN_ALLOW_ALL=${CORS_ORIGIN_ALLOW_ALL:-True}
-      - GDAL_LIBRARY_PATH=/usr/lib/libgdal.so.20
+      - GDAL_LIBRARY_PATH=${GDAL_LIBRARY_PATH:-/usr/lib/libgdal.so.20}
   voy_frontend:
     image: unicef/voy_frontend:latest
     build:
@@ -42,3 +47,8 @@ services:
       - voy_dashboard
     ports:
       - 7000:80
+
+volumes:
+  voy_database_volume:
+  voy_dashboard_media_projects_volume:
+  voy_dashboard_media_content_volume:
