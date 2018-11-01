@@ -31,7 +31,7 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DEBUG=${DEBUG:-True}
+      - DEBUG=${DEBUG:-False}
       - DATABASE_URL=postgis://voy:development@voy_database/voydev
       - ALLOWED_HOSTS=*
       - CORS_ORIGIN_ALLOW_ALL=${CORS_ORIGIN_ALLOW_ALL:-True}
