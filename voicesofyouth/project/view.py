@@ -69,6 +69,7 @@ class AddProjectView(LoginRequiredMixin, TemplateView):
                 bounds=form.cleaned_data.get('bounds'),
                 thumbnail=form.cleaned_data.get('thumbnail'),
                 enabled=form.cleaned_data.get('enabled'),
+                enabled_in_signup_form=form.cleaned_data.get('enabled_in_signup_form'),
                 created_by=request.user,
                 modified_by=request.user,
             )
@@ -123,6 +124,7 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             project.language = form.cleaned_data.get('language')
             project.bounds = form.cleaned_data.get('bounds')
             project.enabled = form.cleaned_data.get('enabled')
+            project.enabled_in_signup_form = form.cleaned_data.get('enabled_in_signup_form')
 
             if form.cleaned_data.get('thumbnail'):
                 project.thumbnail = form.cleaned_data.get('thumbnail')
@@ -173,6 +175,7 @@ class EditProjectView(LoginRequiredMixin, TemplateView):
             'bounds': project.bounds,
             'thumbnail': project.thumbnail,
             'enabled': project.enabled,
+            'enabled_in_signup_form': project.enabled_in_signup_form,
             'translations': project.translations.all()
         }
 

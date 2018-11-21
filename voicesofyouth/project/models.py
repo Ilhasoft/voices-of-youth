@@ -77,6 +77,7 @@ class Project(BaseModel):
     translations = GenericRelation(Translation, blank=True, null=True)
     tags = TaggableManager()
     enabled = models.BooleanField(default=True, verbose_name=_('Enabled'))
+    enabled_in_signup_form = models.BooleanField(default=True, verbose_name=_('View in sign up form'))
 
     class Meta:
         verbose_name = _('Project')

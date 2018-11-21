@@ -106,6 +106,11 @@ class ProjectForm(forms.Form):
         required=False
     )
 
+    enabled_in_signup_form = forms.BooleanField(
+        label=_('View in sign up form'),
+        required=False
+    )
+
     translations = TranslationsField(
         Project,
         label=_('Languages'),

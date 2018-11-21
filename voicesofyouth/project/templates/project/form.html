@@ -63,6 +63,15 @@
                                             {{ data_form.enabled.errors }}
                                         </div>
 
+                                        <div class="form-group {% if data_form.enabled_in_signup_form.errors %}has-error{% endif %}">
+                                            <label>{% trans 'Enabled in Signup Form' %}</label>
+                                            <label class="switch switch-sm pull-right">
+                                                {{ data_form.enabled_in_signup_form }}
+                                                <span></span>
+                                            </label>
+                                            {{ data_form.enabled_in_signup_form.errors }}
+                                        </div>
+
                                         <div class="form-group {% if data_form.thumbnail.errors %}has-error{% endif %}">
                                             <label>{% trans 'Thumbnail' %}</label>
                                             {{ data_form.thumbnail }}
