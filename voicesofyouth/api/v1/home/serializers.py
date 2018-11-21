@@ -5,7 +5,8 @@ import pytz
 from rest_framework import serializers
 from voicesofyouth.voyhome.models import Slide
 from voicesofyouth.voyhome.models import About
-from voicesofyouth.voyhome.models import Contact
+from voicesofyouth.user.models import MapperUser
+from voicesofyouth.project.models import Project
 from voicesofyouth.settings import RECAPTCHA_SECRET_KEY
 
 
@@ -39,16 +40,22 @@ class HomeAboutSerializer(serializers.ModelSerializer):
 
 class HomeContactSerializer(serializers.ModelSerializer):
     captcha = serializers.CharField()
+    password = serializers.CharField()
     accepted = serializers.IntegerField()
+    project = serializers.IntegerField()
+    name = serializers.CharField()
 
     class Meta:
-        model = Contact
+        model = MapperUser
         fields = (
             'captcha',
             'name',
+            'username',
+            'password',
             'email',
-            'description',
-            'want',
+            'country',
+            'age',
+            'tell_about',
             'project',
             'accepted',
         )
@@ -73,4 +80,22 @@ class HomeContactSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         validated_data.pop('captcha')
-        return Contact.objects.create(**validated_data)
+        validated_data.pop('accepted')
+
+        project_id = validated_data.get('project')
+        validated_data.pop('project')
+
+        first_name = validated_data.get('name')
+        validated_data.pop('name')
+
+        mapper = MapperUser.objects.create(**validated_data)
+        mapper.is_active = False
+        mapper.set_password(validated_data.get('name'))
+        mapper.first_name = first_name
+        mapper.save()
+
+        project = Project.objects.get(pk=project_id)
+        theme = project.themes.first()
+        theme.mappers_group.user_set.add(mapper)
+
+        return mapper

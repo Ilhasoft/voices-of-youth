@@ -30,6 +30,9 @@ class VoyUser(AbstractUser):
     '''
     language = models.CharField(max_length=90, choices=settings.LANGUAGES, default='en')
     avatar = models.IntegerField(choices=AVATARS, default=DEFAULT_AVATAR)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    age = models.CharField(max_length=100, null=True, blank=True)
+    tell_about = models.TextField(null=True, blank=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                    related_name="%(app_label)s_%(class)s_creations",
                                    null=True,

@@ -27,6 +27,15 @@ export default {
       return data;
     },
 
+    getProjectsFormSignup: async () => {
+      const data = await axios.get('/api/projects/?order=1&enabled_in_signup_form=true', {
+        headers: {
+          Authorization: '',
+        },
+      });
+      return data;
+    },
+
     getHomeReports: async ({ commit }, obj) => {
       let queryString = '';
 

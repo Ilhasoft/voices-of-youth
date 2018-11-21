@@ -176,7 +176,26 @@
 
             <div class="field">
               <div class="control">
+              <select v-model="form.project" v-bind:class="[{'is-danger': hasError('project')}, 'select']">
+                <option value="" selected="selected">Choose a project?</option>
+                <option v-bind:value="project.id" v-for="(project, key) in projectsEnabledSignup" :key="key">{{ project.name }}</option>
+              </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <div class="control">
                 <input v-bind:class="{'is-danger': hasError('name')}" type="text" v-model="form.name" placeholder="Name" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <input v-bind:class="{'is-danger': hasError('username')}" type="text" v-model="form.username" placeholder="Username" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
+              <input v-bind:class="{'is-danger': hasError('password')}" type="password" v-model="form.password" placeholder="Password" />
               </div>
             </div>
             <div class="field">
@@ -186,24 +205,17 @@
             </div>
             <div class="field">
               <div class="control">
-              <select v-model="form.want" v-bind:class="[{'is-danger': hasError('want')}, 'select']">
-                <option value="" selected="selected">What do you want?</option>
-                <option value="1">I wanna be a mapper?</option>
-                <option value="2">Questions or suggestions</option>
-              </select>
+              <input v-bind:class="{'is-danger': hasError('country')}" type="text" v-model="form.country" placeholder="Country" />
               </div>
             </div>
             <div class="field">
               <div class="control">
-              <select v-model="form.project" v-bind:class="[{'is-danger': hasError('project')}, 'select']">
-                <option value="" selected="selected">Choose a project?</option>
-                <option v-bind:value="project.id" v-for="(project, key) in allProjects" :key="key">{{ project.name }}</option>
-              </select>
+              <input v-bind:class="{'is-danger': hasError('age')}" type="text" v-model="form.age" placeholder="Age (between 12 and 25)" />
               </div>
             </div>
             <div class="field">
               <div class="control">
-              <textarea v-bind:class="{'is-danger': hasError('description')}" v-model="form.description" cols="30" rows="10"></textarea>
+              <textarea v-bind:class="{'is-danger': hasError('tell_about')}" v-model="form.tell_about" cols="30" rows="10" placeholder="Tell us why you want to be a mapper"></textarea>
               </div>
             </div>
             <div class="field accept">
@@ -271,6 +283,7 @@ export default {
       projects: [],
       project: null,
       projectsToMobile: [],
+      projectsEnabledSignup: [],
       about: {
         thumbnail: null,
         project: '',
@@ -279,9 +292,12 @@ export default {
       form: {
         captcha: '',
         name: '',
+        username: '',
+        password: '',
         email: '',
-        description: '',
-        want: '',
+        country: '',
+        age: '',
+        tell_about: '',
         project: '',
         errors: [],
         termsAccepted: false,
@@ -318,6 +334,10 @@ export default {
     this.getHomeReports({ pageSize: 3, page: 1 }).then((reports) => {
       this.reports = reports.results;
     });
+
+    this.getProjectsFormSignup().then((projects) => {
+      this.projectsEnabledSignup = projects;
+    });
   },
 
   computed: {
@@ -334,6 +354,7 @@ export default {
       'getAboutProject',
       'getHomeProjects',
       'getHomeReports',
+      'getProjectsFormSignup',
       'submitFormContact',
     ]),
 
@@ -372,9 +393,12 @@ export default {
       this.form = {
         captcha: '',
         name: '',
+        username: '',
+        password: '',
         email: '',
-        description: '',
-        want: '',
+        country: '',
+        age: '',
+        tell_about: '',
         project: '',
         errors: [],
         termsAccepted: false,
@@ -693,7 +717,7 @@ export default {
       border: none;
     }
 
-    input[type='text'], input[type='email'] {
+    input[type='text'], input[type='email'], input[type='password'] {
       border-radius: 4px;
       height: 37px;
       width: 100%;

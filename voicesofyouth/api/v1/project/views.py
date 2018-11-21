@@ -5,6 +5,7 @@ from rest_framework.pagination import PageNumberPagination
 from voicesofyouth.project.models import Project
 from voicesofyouth.user.models import MapperUser
 from .serializers import ProjectSerializer
+from .filters import ProjectFilter
 
 
 class ProjectsPagination(PageNumberPagination):
@@ -28,6 +29,7 @@ class ProjectsViewSet(mixins.ListModelMixin,
     serializer_class = ProjectSerializer
     queryset = Project.objects.all().filter(enabled=True)
     pagination_class = ProjectsPagination
+    filter_class = ProjectFilter
 
     def list(self, request, *args, **kwargs):
         order = self.request.query_params.get('order')
