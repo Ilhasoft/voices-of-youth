@@ -202,12 +202,12 @@ class MappersListView(LoginRequiredMixin, TemplateView):
             search = cleaned_data.get('search')
 
             if theme:
-                qs = MapperUser.objects.filter(groups=theme.mappers_group)
+                qs = MapperUser.objects.filter(groups=theme.mappers_group, is_active=True)
             elif project:
                 groups_ids = project.themes.values_list('mappers_group__id')
-                qs = MapperUser.objects.filter(groups__id__in=groups_ids)
+                qs = MapperUser.objects.filter(groups__id__in=groups_ids, is_active=True)
             else:
-                qs = MapperUser.objects.all()
+                qs = MapperUser.objects.filter(is_active=True)
 
             if not isinstance(qs, list):
                 qs = qs.order_by('first_name')
