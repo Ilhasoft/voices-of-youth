@@ -90,7 +90,7 @@ class HomeContactSerializer(serializers.ModelSerializer):
 
         mapper = MapperUser.objects.create(**validated_data)
         mapper.is_active = False
-        mapper.set_password(validated_data.get('name'))
+        mapper.set_password(validated_data.get('password'))
         mapper.first_name = first_name
         mapper.save()
 
