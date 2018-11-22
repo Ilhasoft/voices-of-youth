@@ -1,3 +1,6 @@
+$color_approve: #8CD644;
+$color_delete: #DE486B;
+
 .btn-home-form {
     border-radius: 50px;
     color: #fff;
@@ -10,14 +13,34 @@
     margin-top: 10px;
 }
 
-.btn-delete {
-    border-radius: 50px;
-    font-weight: bold;
-    border-color: #DE486B;
-}
+#requests {
+    .buttons a {
+        width: 100px;
+        margin: 15px 5px;
+        height: 39px;
+        border-radius: 50px;
+        font-weight: bold;
+        background-color: #fff;
+        padding-top: 10px;
+    }
 
-.btn-delete:hover {
-    color: #fff;
-    background-color: #DE486B;
-    border-color: #DE486B;
+    .btn-danger {
+        border-color: $color_delete;
+    }
+
+    .btn-danger:hover {
+        color: #fff;
+        background-color: $color_delete;
+        border-color: $color_delete;
+    }
+
+    .approve {
+        color: #333;
+        border-color: $color_approve;
+    }
+
+    .approve:hover {
+        background-color: $color_approve;
+        color: #fff;
+    }
 }

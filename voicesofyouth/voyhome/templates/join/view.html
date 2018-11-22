@@ -1,0 +1,46 @@
+{% extends "voyadmin/base.html" %}
+
+{% load static i18n sass_tags %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% sass_src 'css/home/home.scss' %}">
+{% endblock %}
+
+{% block content %}
+    <section>
+        <div class="content-wrapper">
+            <div class="content-heading">
+                {% trans 'Join Requests' %}
+            </div>
+            <ol class="breadcrumb">
+                <li><a href="{% url 'voy-admin:dashboard' %}">{% trans 'Dashboard' %}</a></li>
+                <li><a href="{% url 'voy-admin:home:index_requests' %}">{% trans 'Join Requests' %}</a></li>
+                <li>{% trans 'Mapper' %}</li>
+            </ol>
+
+            <div class="panel" id="requests">
+                <div class="panel-body">
+                    <div class="pull-right buttons">
+                        <a href="{% url 'voy-admin:home:requests_remove' mapper.pk %}" class="btn btn-danger reject">{% trans 'Not Approve' %}</a>
+                        <a href="{% url 'voy-admin:home:requests_approve' mapper.pk %}" class="btn btn-success approve">{% trans 'Approve' %}</a>
+                    </div>
+
+                    <h3 class="mt0">{% trans 'Date' %}: {{ mapper.date_joined|date:'Y/m/d - H:i:s' }}</h3>
+
+                    <div class="row mb-lg">
+                        <div class="col-lg-12 col-md-12">
+                            <hr>
+                            <p><strong>{% trans 'Project' %}:</strong> {{ mapper.themes.first }}</p>
+                            <p><strong>{% trans 'Name' %}:</strong> {{ mapper.first_name }}</p>
+                            <p><strong>{% trans 'Username' %}:</strong> {{ mapper.username }}</p>
+                            <p><strong>{% trans 'Email' %}:</strong> {{ mapper.email }}</p>
+                            <p><strong>{% trans 'Country' %}:</strong> {{ mapper.country }}</p>
+                            <p><strong>{% trans 'Age' %}:</strong> {{ mapper.age }}</p>
+                            <p><strong>{% trans 'Description' %}:</strong> {{ mapper.tell_about }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

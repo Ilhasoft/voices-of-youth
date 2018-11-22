@@ -4,10 +4,12 @@ from django.contrib import messages
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from django.conf import settings
+from django.core.mail import send_mail
 
 from voicesofyouth.voyhome.models import Slide
 from voicesofyouth.voyhome.models import About
-from voicesofyouth.voyhome.models import Contact
+from voicesofyouth.user.models import MapperUser
 from voicesofyouth.voyhome.forms import SlideForm
 from voicesofyouth.voyhome.forms import AboutForm
 
@@ -70,6 +72,7 @@ class RemoveSlideView(LoginRequiredMixin, TemplateView):
             messages.success(request, _('Image removed'))
         return redirect(reverse('voy-admin:home:index_slide'))
 
+
 class ReorderSlideView(LoginRequiredMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         image_id = kwargs['image']
@@ -81,6 +84,7 @@ class ReorderSlideView(LoginRequiredMixin, TemplateView):
             elif act == 'down':
                 image.down()
         return redirect(reverse('voy-admin:home:index_slide'))
+
 
 class AboutView(LoginRequiredMixin, TemplateView):
     template_name = 'about/form.html'
@@ -138,8 +142,8 @@ class AboutView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ContactView(LoginRequiredMixin, TemplateView):
-    template_name = 'contact/index.html'
+class JoinRequestsView(LoginRequiredMixin, TemplateView):
+    template_name = 'join/index.html'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -152,20 +156,12 @@ class ContactView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['contacts'] = Contact.objects.order_by('-created_on')
+        context['requests'] = MapperUser.objects.filter(is_active=False).order_by('-modified_on')
         return context
 
 
-class ContactMessageView(LoginRequiredMixin, TemplateView):
-    template_name = 'contact/view.html'
-
-    def post(self, request, *args, **kwargs):
-        contact_id = self.kwargs['contact']
-        if contact_id:
-            contact = get_object_or_404(Contact, pk=contact_id)
-            contact.delete()
-            messages.success(request, _('Contact removed'))
-        return redirect(reverse('voy-admin:home:index_contact'))
+class JoinRequestsDetailView(LoginRequiredMixin, TemplateView):
+    template_name = 'join/view.html'
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
@@ -178,6 +174,40 @@ class ContactMessageView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        contact_id = self.kwargs['contact']
-        context['message'] = get_object_or_404(Contact, pk=contact_id)
+        mapper_id = self.kwargs['mapper']
+        context['mapper'] = get_object_or_404(MapperUser, pk=mapper_id)
         return context
+
+
+class ApproveRequestsView(LoginRequiredMixin, TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        mapper_id = kwargs['mapper']
+        if mapper_id:
+            mapper = get_object_or_404(MapperUser, pk=mapper_id)
+            mapper.is_active = True
+            mapper.save()
+
+            if settings.EMAIL_HOST:
+                send_mail(
+                    'Welcome to Voices of Youth',
+                    'Hi {}! You are a new mapper.'.format(mapper.first_name),
+                    settings.EMAIL_FROM,
+                    [mapper.email],
+                    fail_silently=True,
+                )
+
+            messages.success(request, _('Mapper approved'))
+        return redirect(reverse('voy-admin:home:index_requests'))
+
+
+class RemoveRequestsView(LoginRequiredMixin, TemplateView):
+
+    def get(self, request, *args, **kwargs):
+        mapper_id = kwargs['mapper']
+        if mapper_id:
+            mapper = get_object_or_404(MapperUser, pk=mapper_id)
+            mapper.delete()
+
+            messages.success(request, _('Mapper removed'))
+        return redirect(reverse('voy-admin:home:index_requests'))
