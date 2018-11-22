@@ -200,6 +200,11 @@
             </div>
             <div class="field">
               <div class="control">
+              <input v-bind:class="{'is-danger': hasError('password2')}" type="password" v-model="form.password2" placeholder="Confirm Password" />
+              </div>
+            </div>
+            <div class="field">
+              <div class="control">
               <input v-bind:class="{'is-danger': hasError('email')}" type="email" v-model="form.email" placeholder="Email" />
               </div>
             </div>
@@ -210,7 +215,7 @@
             </div>
             <div class="field">
               <div class="control">
-              <input v-bind:class="{'is-danger': hasError('age')}" type="text" v-model="form.age" placeholder="Age (between 12 and 25)" />
+              <input v-bind:class="{'is-danger': hasError('age')}" type="number" min="12" max="25" v-model="form.age" placeholder="Age (between 12 and 25)" />
               </div>
             </div>
             <div class="field">
@@ -294,6 +299,7 @@ export default {
         name: '',
         username: '',
         password: '',
+        password2: '',
         email: '',
         country: '',
         age: '',
@@ -376,7 +382,10 @@ export default {
     },
 
     sendForm() {
-      if (this.form.termsAccepted) {
+      if (this.form.password !== this.form.password2) {
+        this.form.errors.push('password');
+        this.form.errors.push('password2');
+      } else if (this.form.termsAccepted) {
         this.form.errors = [];
         this.msgSuccess = false;
         this.submitFormContact(this.form).then(() => {
@@ -395,6 +404,7 @@ export default {
         name: '',
         username: '',
         password: '',
+        password2: '',
         email: '',
         country: '',
         age: '',
@@ -717,7 +727,7 @@ export default {
       border: none;
     }
 
-    input[type='text'], input[type='email'], input[type='password'] {
+    input[type='text'], input[type='email'], input[type='password'], input[type='number'] {
       border-radius: 4px;
       height: 37px;
       width: 100%;
