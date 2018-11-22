@@ -177,7 +177,7 @@
             <div class="field">
               <div class="control">
               <select v-model="form.project" v-bind:class="[{'is-danger': hasError('project')}, 'select']">
-                <option value="" selected="selected">Choose a project?</option>
+                <option value="" selected="selected">Choose a project</option>
                 <option v-bind:value="project.id" v-for="(project, key) in projectsEnabledSignup" :key="key">{{ project.name }}</option>
               </select>
               </div>
