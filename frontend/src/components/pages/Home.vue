@@ -391,6 +391,7 @@ export default {
         this.submitFormContact(this.form).then(() => {
           this.cleanForm();
         }).catch((errors) => {
+          this.$refs.recaptcha.reset();
           Object.keys(errors).forEach((key) => {
             this.form.errors.push(key);
           });
