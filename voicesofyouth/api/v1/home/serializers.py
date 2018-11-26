@@ -41,8 +41,9 @@ class HomeAboutSerializer(serializers.ModelSerializer):
 class HomeContactSerializer(serializers.ModelSerializer):
     captcha = serializers.CharField()
     password = serializers.CharField()
+    password_confirm = serializers.CharField()
     accepted = serializers.IntegerField()
-    project = serializers.IntegerField()
+    project = serializers.CharField()
     name = serializers.CharField()
 
     class Meta:
@@ -52,6 +53,7 @@ class HomeContactSerializer(serializers.ModelSerializer):
             'name',
             'username',
             'password',
+            'password_confirm',
             'email',
             'country',
             'age',
@@ -78,9 +80,34 @@ class HomeContactSerializer(serializers.ModelSerializer):
 
         return value
 
+    def validate_email(self, value):
+        if value:
+            return value
+        raise serializers.ValidationError('Invalid Email.')
+
+    def validate_country(self, value):
+        if value:
+            return value
+        raise serializers.ValidationError('Invalid Country.')
+
+    def validate_password_confirm(self, value):
+        if value:
+            return value
+        raise serializers.ValidationError('Invalid Confirm Password.')
+
+    def validate_age(self, value):
+        if value:
+            age = int(value, base=10)
+            if age < 12 or age > 25:
+                raise serializers.ValidationError('Only allow users between 12 and 25 years.')
+            return value
+
+        raise serializers.ValidationError('Invalid Age.')
+
     def create(self, validated_data):
         validated_data.pop('captcha')
         validated_data.pop('accepted')
+        validated_data.pop('password_confirm')
 
         project_id = validated_data.get('project')
         validated_data.pop('project')

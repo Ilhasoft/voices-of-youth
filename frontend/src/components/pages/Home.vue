@@ -200,7 +200,7 @@
             </div>
             <div class="field">
               <div class="control">
-              <input v-bind:class="{'is-danger': hasError('password2')}" type="password" v-model="form.password2" placeholder="Confirm Password" />
+              <input v-bind:class="{'is-danger': hasError('password_confirm')}" type="password" v-model="form.password_confirm" placeholder="Confirm Password" />
               </div>
             </div>
             <div class="field">
@@ -299,7 +299,7 @@ export default {
         name: '',
         username: '',
         password: '',
-        password2: '',
+        password_confirm: '',
         email: '',
         country: '',
         age: '',
@@ -382,9 +382,9 @@ export default {
     },
 
     sendForm() {
-      if (this.form.password !== this.form.password2) {
+      if (this.form.password !== this.form.password_confirm) {
         this.form.errors.push('password');
-        this.form.errors.push('password2');
+        this.form.errors.push('password_confirm');
       } else if (this.form.termsAccepted) {
         this.form.errors = [];
         this.msgSuccess = false;
@@ -404,7 +404,7 @@ export default {
         name: '',
         username: '',
         password: '',
-        password2: '',
+        password_confirm: '',
         email: '',
         country: '',
         age: '',
