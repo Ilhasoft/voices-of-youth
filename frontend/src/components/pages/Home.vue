@@ -215,7 +215,7 @@
             </div>
             <div class="field">
               <div class="control">
-              <input v-bind:class="{'is-danger': hasError('age')}" type="number" min="12" max="25" v-model="form.age" placeholder="Age (between 12 and 25)" />
+              <input v-bind:class="{'is-danger': hasError('age')}" type="number" min="13" max="25" v-model="form.age" placeholder="Age (between 13 and 25)" />
               </div>
             </div>
             <div class="field">

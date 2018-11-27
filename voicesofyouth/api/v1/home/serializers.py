@@ -98,7 +98,7 @@ class HomeContactSerializer(serializers.ModelSerializer):
     def validate_age(self, value):
         if value:
             age = int(value, base=10)
-            if age < 12 or age > 25:
+            if age < 13 or age > 25:
                 raise serializers.ValidationError('Only allow users between 12 and 25 years.')
             return value
 

@@ -2,9 +2,9 @@
   <div class="header logo">
     <div class="columns is-mobile h-height">
       <div class="column is-4 p-left is-hidden-touch">
-        <img class="logo-img" src="~@/assets/img/logo.png">
+        <img src="~@/assets/img/logo.svg" class="logo-img" alt="">
       </div>
-      
+
       <div class="column project">
         <p class="link" @mouseover.prevent="isVisible = true" @mouseout="isVisible = false">
           {{ currentProject.name }}
@@ -100,7 +100,9 @@ export default {
 
   .logo-img {
     margin-left: 1.5em;
-    margin-top: 1em;
+    margin-top: 0.7em;
+    width: 117px;
+    height: 48px;
   }
 
   .h-height {

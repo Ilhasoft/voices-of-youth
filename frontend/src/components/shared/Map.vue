@@ -51,8 +51,9 @@ export default {
     L.control.zoom({ minZoom: 3, position: 'topright' }).addTo(this.$refs.map.mapObject);
 
     const bounds = this.reports.map(item => [item.latlng.lat, item.latlng.lng]);
-    this.$refs.map.mapObject.fitBounds(bounds);
-
+    if (bounds.length) {
+      this.$refs.map.mapObject.fitBounds(bounds);
+    }
     setTimeout(() => this.flyToReport(), 500);
   },
 

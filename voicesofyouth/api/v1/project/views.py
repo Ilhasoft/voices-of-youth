@@ -14,6 +14,7 @@ class ProjectsPagination(PageNumberPagination):
 
 
 class ProjectsViewSet(mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
                       viewsets.GenericViewSet):
     """
     list:
