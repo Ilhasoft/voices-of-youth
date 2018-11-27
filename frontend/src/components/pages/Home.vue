@@ -581,6 +581,8 @@ export default {
       border: 1px solid #c3c3c3;
       border-radius: 8px;
       cursor: pointer;
+      text-align: center;
+      max-width: 256px;
 
       a {
         font-weight: 400;
@@ -646,7 +648,7 @@ export default {
       img {
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
-        width: 100%;
+        // width: 100%;
       }
     }
 
