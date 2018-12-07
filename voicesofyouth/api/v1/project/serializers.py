@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework import serializers
 from easy_thumbnails.files import get_thumbnailer
 
+from voicesofyouth.core.tools.image import is_a_valid_image
 from voicesofyouth.api.v1.serializers import VoySerializer
 from voicesofyouth.project.models import Project
 from voicesofyouth.translation.models import Translation
@@ -12,6 +13,7 @@ class ProjectSerializer(VoySerializer):
     years = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     description = serializers.SerializerMethodField()
+    thumbnail = serializers.SerializerMethodField()
     thumbnail_cropped = serializers.FileField()
     thumbnail_home_responsive = serializers.SerializerMethodField()
     thumbnail_home = serializers.SerializerMethodField()
@@ -52,14 +54,20 @@ class ProjectSerializer(VoySerializer):
         Translation.objects.translate_object(obj, lang_code=lang_code)
         return obj.description
 
+    def get_thumbnail(self, obj):
+        if obj.thumbnail and is_a_valid_image(obj.thumbnail):
+            request = self.context['request']
+            return request.build_absolute_uri(obj.thumbnail.url)
+        return ""
+
     def get_thumbnail_home_responsive(self, obj):
-        if obj.thumbnail:
+        if obj.thumbnail and is_a_valid_image(obj.thumbnail):
             request = self.context['request']
             return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_responsive_cropped'].url)
         return ""
 
     def get_thumbnail_home(self, obj):
-        if obj.thumbnail:
+        if obj.thumbnail and is_a_valid_image(obj.thumbnail):
             request = self.context['request']
             return request.build_absolute_uri(get_thumbnailer(obj.thumbnail)['project_thumbnail_home_cropped'].url)
         return ""

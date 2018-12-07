@@ -1,12 +1,14 @@
 from django import forms
 from django.utils.translation import ugettext as _
 from voicesofyouth.voyhome.models import About
+from voicesofyouth.core.tools.image import validate_file_extension
 
 
 class SlideForm(forms.Form):
     image = forms.FileField(
         label=_('Image'),
         required=True,
+        validators=[validate_file_extension],
         widget=forms.ClearableFileInput(
             attrs={
                 'required': True,

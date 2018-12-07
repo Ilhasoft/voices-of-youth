@@ -6,8 +6,8 @@ from leaflet.forms.fields import PolygonField
 
 from .models import Project
 
+from voicesofyouth.core.tools.image import validate_file_extension
 from voicesofyouth.user.models import VoyUser
-
 from voicesofyouth.translation.forms import TranslationsField
 
 
@@ -94,6 +94,7 @@ class ProjectForm(forms.Form):
     thumbnail = forms.FileField(
         label=_('Thumbnail'),
         required=True,
+        validators=[validate_file_extension],
         widget=forms.ClearableFileInput(
             attrs={
                 'class': 'form-control',

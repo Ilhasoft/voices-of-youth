@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from leaflet.forms.fields import PointField
 
+from voicesofyouth.core.tools.image import validate_file_extension
 from voicesofyouth.report.models import REPORT_STATUS_CHOICES
 from voicesofyouth.project.models import Project
 from voicesofyouth.theme.models import Theme
@@ -118,6 +119,7 @@ class ReportForm(forms.Form):
 
     files = forms.FileField(
         required=False,
+        validators=[validate_file_extension],
         widget=forms.FileInput(attrs={
             'multiple': True
         })

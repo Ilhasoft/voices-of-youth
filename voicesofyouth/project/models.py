@@ -18,6 +18,7 @@ from taggit.models import Tag
 from unipath import Path
 from easy_thumbnails.files import get_thumbnailer
 
+from voicesofyouth.core.tools.image import is_a_valid_image
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.core.models import LOCAL_ADMIN_GROUP_TEMPLATE
 from voicesofyouth.translation.fields import CharFieldTranslatable
@@ -99,7 +100,7 @@ class Project(BaseModel):
 
     @property
     def thumbnail_cropped(self):
-        if self.thumbnail:
+        if self.thumbnail and is_a_valid_image(self.thumbnail):
             return get_thumbnailer(self.thumbnail)['project_thumbnail_cropped']
 
     def get_absolute_url(self):

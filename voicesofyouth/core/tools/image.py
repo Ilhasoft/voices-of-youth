@@ -1,7 +1,10 @@
 import os
+import magic
+import numpy as np
 
 from PIL import Image
-import numpy as np
+from django.core.exceptions import ValidationError
+from voicesofyouth.settings import MEDIA_ROOT
 
 
 def change_colors(original_image, dest_image, from_colors, to_color):
@@ -51,3 +54,15 @@ def change_color(original_image, dest_image, from_color, to_color):
 
     im2 = Image.fromarray(data)
     im2.save(dest_image)
+
+
+def validate_file_extension(value):
+    ext = os.path.splitext(value.name)[1]
+    valid_extensions = ['.jpg', '.png', '.jpeg', '.gif']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+
+
+def is_a_valid_image(value):
+    mime_type = magic.from_file('{}/{}'.format(MEDIA_ROOT, value), mime=True)
+    return mime_type.startswith('image')
