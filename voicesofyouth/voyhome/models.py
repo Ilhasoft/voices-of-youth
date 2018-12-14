@@ -8,6 +8,7 @@ from unipath import Path
 from easy_thumbnails.files import get_thumbnailer
 from ordered_model.models import OrderedModel
 
+from voicesofyouth.core.tools.image import is_a_valid_image
 from voicesofyouth.core.models import BaseModel
 from voicesofyouth.project.models import Project
 
@@ -42,12 +43,12 @@ class Slide(OrderedModel, BaseModel):
 
     @property
     def thumbnail(self):
-        if self.image:
+        if self.image and is_a_valid_image(self.image):
             return get_thumbnailer(self.image)['home_slide_thumbnail_cropped']
 
     @property
     def thumbnail_home(self):
-        if self.image:
+        if self.image and is_a_valid_image(self.image):
             return get_thumbnailer(self.image)['home_slide_cropped']
 
 
@@ -66,7 +67,7 @@ class About(BaseModel):
 
     @property
     def thumbnail(self):
-        if self.image:
+        if self.image and is_a_valid_image(self.image):
             return get_thumbnailer(self.image)['home_about_thumbnail_cropped']
 
 
